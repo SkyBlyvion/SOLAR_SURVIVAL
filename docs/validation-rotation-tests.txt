@@ -1,0 +1,78 @@
+   Compiling solar_survival v0.2.0 (/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL)
+    Finished `test` profile [optimized] target(s) in 0.99s
+     Running unittests src/lib.rs (target/debug/deps/solar_survival-e59e61f27a7caa37)
+
+running 10 tests
+test camera::tests::surface_pose_and_render_origin_follow_rotation_without_a_physics_tick ... ok
+test camera::tests::actual_ecs_controls_select_visit_and_release_cursor ... ok
+test rendering::terrain::tests::tile_mesh_positions_match_physical_vertices_and_shared_edges ... ok
+test rendering::terrain::tests::rotating_site_keeps_local_proxies_and_meshes_but_changes_sun_direction ... ok
+test rendering::terrain::tests::streaming_is_bounded_reuses_assets_and_releases_old_meshes ... ok
+test camera::tests::surface_mouse_delta_is_integrated_once_without_delta_time ... ok
+test camera::tests::actual_ecs_camera_movement_is_frame_rate_independent ... ok
+test camera::tests::surface_entry_and_all_space_exits_preserve_navigation ... ok
+test camera::tests::pause_freezes_site_rotation_but_walk_and_jump_match_accelerated_time ... ok
+test camera::tests::orbital_pause_and_acceleration_do_not_change_surface_physics ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running unittests src/main.rs (target/debug/deps/solar_survival-62f3ff6086a09f67)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/foundations.rs (target/debug/deps/foundations-20648a87211edc64)
+
+running 21 tests
+test astronomical_unit_is_exact_iau_definition ... ok
+test catalogue_contains_ten_unique_bodies_and_real_dimensions ... ok
+test circular_orbit_quarter_turn_and_inclination ... ok
+test earth_moon_barycentre_preserved ... ok
+test cube_sphere_patches_are_valid_reproducible_and_bounded ... ok
+test elliptical_orbit_has_correct_perihelion_and_aphelion ... ok
+test frame_composition_and_conversion ... ok
+test gravity_points_toward_mars_in_any_orientation ... ok
+test interplanetary_distance_retains_small_offsets ... ok
+test jpl_validity_boundaries_match_gregorian_dates ... ok
+test kepler_solver_residual_for_all_catalogue_eccentricities ... ok
+test moon_returns_after_sidereal_period ... ok
+test orbit_changes_with_time_without_rendering ... ok
+test periods_match_jpl_sidereal_years_approximately ... ok
+test positions_finite_through_valid_jpl_interval ... ok
+test reference_frame_roundtrip_near_neptune_preserves_submillimetres ... ok
+test render_proxies_preserve_angular_size_and_bound_coordinates ... ok
+test simulation_clock_is_independent_of_frame_rate_and_pauses ... ok
+test solar_gravity_predicts_earth_year ... ok
+test swept_collision_prevents_hypervelocity_tunnelling ... ok
+test visits_and_frame_detach_preserve_global_location ... ok
+
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/surface.rs (target/debug/deps/surface-ed3b242869b8dc8e)
+
+running 15 tests
+test catalog_rotation_keeps_tilt_signed_period_and_j2000_phase ... ok
+test footprint_contact_is_continuous_across_negative_grid_boundaries ... ok
+test rest_and_airborne_pose_follow_the_same_rotating_site_as_obstacles ... ok
+test radial_up_and_eye_height_follow_an_arbitrarily_oriented_mars_site ... ok
+test surface_entry_uses_the_lit_side_at_arbitrary_epochs ... ok
+test swept_player_volume_blocks_walls_and_slides_along_them ... ok
+test bounded_site_cannot_leave_supported_terrain ... ok
+test swept_volume_handles_box_tops_and_ceiling ... ok
+test jump_pressed_between_two_physics_ticks_is_not_lost_or_repeated ... ok
+test walking_into_an_obstacle_reports_zero_resolved_forward_velocity ... ok
+test jump_has_martian_height_and_lands_without_penetration ... ok
+test release_stops_input_but_gravity_continues_and_long_stalls_are_bounded ... ok
+test surface_walk_and_run_are_independent_of_frame_rate ... ok
+test box_top_rest_is_stable_and_can_jump_on_every_physics_tick ... ok
+test falls_twenty_metres_and_stays_on_the_triangle_surface ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+   Doc-tests solar_survival
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

@@ -1,6 +1,6 @@
 //! Champ de hauteur local sur la sphère moyenne de Mars, en mètres/f64.
 //! Le relief est artistique. Un seul LOD, neuf tuiles autour du joueur.
-use crate::universe::{catalog::SolarSystem, celestial_body::BodyId};
+use crate::universe::{catalog::SolarSystem, celestial_body::BodyId, coordinates::ReferenceFrame};
 use bevy::math::{DQuat, DVec3};
 use bevy::prelude::*;
 
@@ -13,7 +13,8 @@ pub const SITE_LIMIT_M: f64 = 4096.0;
 pub struct MarsTerrain {
     pub radius_m: f64,
     pub seed: u64,
-    /// Orientation fixe du site dans le repère translatoire de Mars.
+    /// Orientation fixe du site dans le repère du corps tournant de Mars.
+    /// La rotation quotidienne ne modifie ni ce champ ni la révision des meshes.
     pub orientation: DQuat,
     pub revision: u64,
 }
@@ -33,8 +34,22 @@ impl MarsTerrain {
         self.orientation = DQuat::from_rotation_arc(DVec3::Y, outward.normalize());
         self.revision = self.revision.wrapping_add(1);
     }
+    /// Coordonnées centrées sur Mars dans les axes du site (avant rotation).
+    pub fn site_relative(&self, point: DVec3) -> DVec3 {
+        point + DVec3::Y * self.radius_m
+    }
+    /// Repère du site → axes héliocentriques, origine relative au centre de Mars.
+    /// Ajouter la position orbitale seulement pour obtenir une position globale.
+    pub fn inertial_frame(&self, body_rotation: DQuat) -> ReferenceFrame {
+        let orientation = body_rotation * self.orientation;
+        ReferenceFrame {
+            origin: orientation * (DVec3::Y * self.radius_m),
+            orientation,
+        }
+    }
+    /// Position dans les axes du corps tournant, pas dans les axes inertiels.
     pub fn body_relative(&self, point: DVec3) -> DVec3 {
-        self.orientation * (point + DVec3::Y * self.radius_m)
+        self.orientation * self.site_relative(point)
     }
     pub fn chart(&self, body_relative: DVec3) -> DVec3 {
         self.orientation.inverse() * body_relative - DVec3::Y * self.radius_m

@@ -108,8 +108,8 @@ pub fn step(
     jump: bool,
     mu: f64,
 ) {
-    let up = terrain.body_relative(*feet).normalize();
-    let local_up = terrain.orientation.inverse() * up;
+    let relative = terrain.site_relative(*feet);
+    let local_up = relative.normalize();
     // Commande tangentielle ; on conserve la vitesse verticale pour la chute/le saut.
     let vertical = velocity.dot(local_up);
     *velocity = desired - local_up * desired.dot(local_up) + local_up * vertical;
@@ -117,9 +117,9 @@ pub fn step(
         *velocity += local_up * JUMP_MPS;
         *grounded = false;
     }
-    *velocity += terrain.orientation.inverse()
-        * radial_gravity(terrain.body_relative(*feet), mu)
-        * STEP_SECONDS;
+    // Gravité centrale dans les axes du site : pas de forces d'inertie du
+    // repère tournant. Le calendrier orbital n'entre pas dans ce contrôleur.
+    *velocity += radial_gravity(relative, mu) * STEP_SECONDS;
     let was_grounded = *grounded;
     // Le contrôleur impose l'adhérence sur ces pentes douces : la composante
     // horizontale de la pesanteur ne doit pas faire dériver un joueur au repos.

@@ -76,6 +76,8 @@ fn setup(
     reason = "Paramètres de système injectés par Bevy ECS."
 )]
 pub(crate) fn controls(
+    menu: Option<Res<crate::ui::menu::MenuState>>,
+    settings: Option<Res<crate::ui::menu::PlayerSettings>>,
     keys: Res<ButtonInput<KeyCode>>,
     mouse: Res<ButtonInput<MouseButton>>,
     motion: Res<AccumulatedMouseMotion>,
@@ -87,6 +89,15 @@ pub(crate) fn controls(
     mut surface: ResMut<SurfaceState>,
 ) {
     let (window, mut cursor) = window.into_inner();
+    if menu.is_some_and(|m| m.is_open()) {
+        pilot.captured = false;
+        pilot.boosted = false;
+        cursor.visible = true;
+        cursor.grab_mode = CursorGrabMode::None;
+        *request = NavigationRequest::default();
+        return;
+    }
+    let sensitivity = settings.map_or(1.0, |s| s.sensitivity());
     if keys.just_pressed(KeyCode::Escape) || !window.focused {
         pilot.captured = false;
     }
@@ -101,13 +112,13 @@ pub(crate) fn controls(
     };
     if pilot.captured {
         if pilot.mode == MovementMode::Surface {
-            surface.look(motion.delta);
+            surface.look(motion.delta * sensitivity as f32);
         } else {
             let (yaw, pitch, _) = pilot.rotation.to_euler(EulerRot::YXZ);
             pilot.rotation = DQuat::from_euler(
                 EulerRot::YXZ,
-                yaw - motion.delta.x as f64 * 0.002,
-                (pitch - motion.delta.y as f64 * 0.002).clamp(-1.55, 1.55),
+                yaw - motion.delta.x as f64 * 0.002 * sensitivity,
+                (pitch - motion.delta.y as f64 * 0.002 * sensitivity).clamp(-1.55, 1.55),
                 0.0,
             );
         }
@@ -219,11 +230,18 @@ pub(crate) fn navigate(
     *request = NavigationRequest::default();
     if pilot.mode == MovementMode::Surface {
         surface.advance(
-            &mut pilot,
+            &pilot,
             &terrain,
             &keys,
             time.delta_secs_f64(),
             solar.body(BodyId::MARS).gravitational_parameter,
+        );
+        surface.sync(
+            &mut pilot,
+            &terrain,
+            solar
+                .body(BodyId::MARS)
+                .rotation(clock.seconds_since_epoch()),
         );
     } else {
         let mut position = pilot.global(&solar, clock.jd);
@@ -382,11 +400,17 @@ mod tests {
     fn surface_entry_and_all_space_exits_preserve_navigation() {
         for exit in [KeyCode::KeyM, KeyCode::KeyG, KeyCode::KeyO, KeyCode::KeyU] {
             let mut app = app(60);
+            app.world_mut()
+                .resource_mut::<SimulationClock>()
+                .speed_index = 3;
             press(&mut app, KeyCode::KeyM);
             let pilot = app.world().resource::<Explorer>();
             assert_eq!(pilot.mode, MovementMode::Surface);
             assert_eq!(pilot.anchor, Some(BodyId::MARS));
             assert!(pilot.local_m.length() < 3_389_510.0);
+            for _ in 0..60 {
+                app.update();
+            }
             press(&mut app, exit);
             let pilot = app.world().resource::<Explorer>();
             assert_eq!(pilot.mode, MovementMode::Space);
@@ -447,5 +471,208 @@ mod tests {
             assert!((state.yaw - (std::f64::consts::TAU - 0.2)).abs() < 1e-12);
             assert!((state.pitch + 0.1).abs() < 1e-12);
         }
+    }
+
+    #[test]
+    fn surface_pose_and_render_origin_follow_rotation_without_a_physics_tick() {
+        let mut app = app(144);
+        press(&mut app, KeyCode::KeyM);
+        let local_m = app.world().resource::<Explorer>().local_m;
+        let rotation = app.world().resource::<Explorer>().rotation;
+        let feet = app.world().resource::<SurfaceState>().feet;
+        app.world_mut().resource_mut::<SurfaceState>().accumulator = 0.0;
+        app.world_mut()
+            .resource_mut::<SimulationClock>()
+            .speed_index = 3;
+        app.insert_resource(TimeUpdateStrategy::ManualDuration(Duration::from_millis(1)));
+        app.update();
+        let world = app.world_mut();
+        let pilot = world.resource::<Explorer>();
+        let terrain = world.resource::<MarsTerrain>();
+        let state = world.resource::<SurfaceState>();
+        let solar = world.resource::<SolarSystem>();
+        let clock = world.resource::<SimulationClock>();
+        assert_eq!(state.feet, feet);
+        assert!(pilot.local_m.distance(local_m) > 100.0);
+        assert!((pilot.rotation * DVec3::Y).distance(rotation * DVec3::Y) > 1e-5);
+        let frame = terrain.inertial_frame(
+            solar
+                .body(BodyId::MARS)
+                .rotation(clock.seconds_since_epoch()),
+        );
+        assert!(pilot.local_m.distance(frame.to_global(state.eye(terrain))) < 1e-9);
+        assert_eq!(
+            world.resource::<RenderOrigin>().0,
+            pilot.global(solar, clock.jd)
+        );
+        let expected_rotation = pilot.rotation.as_quat();
+        let camera = world
+            .query_filtered::<&Transform, With<SpaceCamera>>()
+            .single(world)
+            .unwrap();
+        assert_eq!(camera.rotation, expected_rotation);
+        assert_eq!(camera.translation, Vec3::ZERO);
+    }
+
+    #[test]
+    fn pause_freezes_site_rotation_but_walk_and_jump_match_accelerated_time() {
+        let mut paused = app(60);
+        let mut fast = app(60);
+        for app in [&mut paused, &mut fast] {
+            press(app, KeyCode::KeyM);
+            app.world_mut().resource_mut::<Explorer>().captured = true;
+            let mut keys = app.world_mut().resource_mut::<ButtonInput<KeyCode>>();
+            keys.press(KeyCode::KeyD);
+            keys.press(KeyCode::Space);
+        }
+        paused.world_mut().resource_mut::<SimulationClock>().paused = true;
+        fast.world_mut()
+            .resource_mut::<SimulationClock>()
+            .speed_index = 3;
+        let start = paused.world().resource::<Explorer>().local_m;
+        let jd = paused.world().resource::<SimulationClock>().jd;
+        let mut peak: f64 = 0.0;
+        for _ in 0..240 {
+            for app in [&mut paused, &mut fast] {
+                app.update();
+                app.world_mut()
+                    .resource_mut::<ButtonInput<KeyCode>>()
+                    .clear();
+            }
+            let a = paused.world().resource::<SurfaceState>();
+            let b = fast.world().resource::<SurfaceState>();
+            assert!(a.feet.distance(b.feet) < 1e-10);
+            assert!(a.velocity.distance(b.velocity) < 1e-10);
+            assert_eq!(a.grounded, b.grounded);
+            peak = peak.max(a.feet.y);
+        }
+        assert!(peak > 2.0);
+        assert!(paused.world().resource::<SurfaceState>().grounded);
+        assert!(paused.world().resource::<SurfaceState>().feet.x > 17.9);
+        assert_eq!(paused.world().resource::<SimulationClock>().jd, jd);
+        assert!(
+            paused
+                .world()
+                .resource::<Explorer>()
+                .local_m
+                .distance(start)
+                < 20.0
+        );
+        assert!(fast.world().resource::<Explorer>().local_m.distance(start) > 100_000.0);
+        // Les vraies touches P/T reprennent le calendrier puis changent sa vitesse.
+        press(&mut paused, KeyCode::KeyP);
+        press(&mut paused, KeyCode::KeyT);
+        assert!(!paused.world().resource::<SimulationClock>().paused);
+        assert_eq!(paused.world().resource::<SimulationClock>().speed_index, 1);
+        assert!(paused.world().resource::<SimulationClock>().jd > jd);
+    }
+
+    #[test]
+    fn long_interruption_updates_orbit_and_pose_but_caps_airborne_local_physics() {
+        let mut interrupted = app(60);
+        let mut capped = app(60);
+        for app in [&mut interrupted, &mut capped] {
+            press(app, KeyCode::KeyM);
+            app.world_mut()
+                .resource_mut::<SimulationClock>()
+                .speed_index = 3;
+            let mut state = app.world_mut().resource_mut::<SurfaceState>();
+            state.feet.y += 10.0;
+            state.grounded = false;
+            state.accumulator = 0.0;
+        }
+        let jd = interrupted.world().resource::<SimulationClock>().jd;
+        let revision = interrupted.world().resource::<MarsTerrain>().revision;
+        interrupted.insert_resource(TimeUpdateStrategy::ManualDuration(Duration::from_secs(12)));
+        capped.insert_resource(TimeUpdateStrategy::ManualDuration(Duration::from_millis(
+            250,
+        )));
+        interrupted.update();
+        capped.update();
+        let a = interrupted.world().resource::<SurfaceState>();
+        let b = capped.world().resource::<SurfaceState>();
+        assert!(!a.grounded);
+        assert!(a.feet.distance(b.feet) < 1e-10);
+        assert!(a.velocity.distance(b.velocity) < 1e-10);
+        let clock = interrupted.world().resource::<SimulationClock>();
+        assert!(((clock.jd - jd) * crate::universe::units::DAY - 12_000.0).abs() < 0.001);
+        let terrain = interrupted.world().resource::<MarsTerrain>();
+        assert_eq!(terrain.revision, revision);
+        let solar = interrupted.world().resource::<SolarSystem>();
+        let frame = terrain.inertial_frame(
+            solar
+                .body(BodyId::MARS)
+                .rotation(clock.seconds_since_epoch()),
+        );
+        let pilot = interrupted.world().resource::<Explorer>();
+        assert!(pilot.local_m.distance(frame.to_global(a.eye(terrain))) < 1e-9);
+        assert_eq!(
+            interrupted.world().resource::<RenderOrigin>().0,
+            pilot.global(solar, clock.jd)
+        );
+        interrupted.insert_resource(TimeUpdateStrategy::ManualDuration(Duration::from_secs_f64(
+            1.0 / 60.0,
+        )));
+        for _ in 0..2 {
+            for (phase, key) in [KeyCode::KeyM, KeyCode::KeyG, KeyCode::KeyO, KeyCode::KeyU]
+                .into_iter()
+                .enumerate()
+            {
+                interrupted.world_mut().resource_mut::<SimulationClock>().jd += phase as f64 * 0.25;
+                press(&mut interrupted, key);
+                assert_eq!(
+                    interrupted.world().resource::<Explorer>().mode,
+                    MovementMode::Space
+                );
+                press(&mut interrupted, KeyCode::KeyM);
+                assert_eq!(
+                    interrupted.world().resource::<Explorer>().mode,
+                    MovementMode::Surface
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn p2_scenario_exits_surface_twice_with_each_navigation_command() {
+        let mut app = app(60);
+        app.world_mut().resource_mut::<GameConfig>().p2_seconds = Some(160.0);
+        app.insert_resource(TimeUpdateStrategy::ManualDuration(Duration::from_millis(
+            500,
+        )));
+        app.add_systems(
+            Update,
+            crate::config::validation::p2_input
+                .before(controls)
+                .in_set(GameSet::Input),
+        );
+        let mut exits = [false; 8];
+        for _ in 0..296 {
+            app.update();
+            let elapsed = app.world().resource::<Time<Real>>().elapsed_secs_f64();
+            if (114.0..146.0).contains(&elapsed) {
+                let index = ((elapsed - 114.0) / 2.0) as usize;
+                let pilot = app.world().resource::<Explorer>();
+                if index.is_multiple_of(2) {
+                    assert_eq!(pilot.mode, MovementMode::Surface, "entrée {index}");
+                } else {
+                    assert_eq!(pilot.mode, MovementMode::Space, "sortie {index}");
+                    assert_eq!(
+                        pilot.anchor,
+                        if (index / 2) % 4 < 2 {
+                            Some(BodyId::MARS)
+                        } else {
+                            None
+                        }
+                    );
+                    exits[index / 2] = true;
+                }
+            }
+        }
+        assert!(exits.into_iter().all(|seen| seen));
+        assert_eq!(
+            app.world().resource::<Explorer>().mode,
+            MovementMode::Surface
+        );
     }
 }

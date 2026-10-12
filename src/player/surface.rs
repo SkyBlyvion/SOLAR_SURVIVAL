@@ -2,7 +2,11 @@ use crate::{
     physics::surface::{self, EYE_HEIGHT_M, HALF_WIDTH_M, STEP_SECONDS},
     planets::terrain::MarsTerrain,
     player::{Explorer, MovementMode},
-    universe::{catalog::SolarSystem, celestial_body::BodyId},
+    universe::{
+        catalog::SolarSystem,
+        celestial_body::BodyId,
+        units::{DAY, J2000},
+    },
 };
 use bevy::{
     math::{DQuat, DVec3},
@@ -11,6 +15,7 @@ use bevy::{
 
 #[derive(Resource, Default)]
 pub struct SurfaceState {
+    /// État autoritaire dans les axes du site tournant, mètres et m/s réelles.
     pub feet: DVec3,
     pub velocity: DVec3,
     pub grounded: bool,
@@ -29,14 +34,17 @@ impl SurfaceState {
     ) {
         let sun = -solar.position(BodyId::MARS, jd).normalize();
         let outward = (sun + sun.cross(DVec3::Y).normalize_or_zero() * 0.8).normalize();
-        terrain.set_site(outward);
+        let rotation = solar.body(BodyId::MARS).rotation((jd - J2000) * DAY);
+        // Choisir le côté éclairé dans les axes globaux, puis fixer ce site
+        // dans les axes du corps, y compris à une époque différente de J2000.
+        terrain.set_site(rotation.inverse() * outward);
         *self = Self::default();
         self.feet.y = terrain.support_height(self.feet, HALF_WIDTH_M) + 0.002;
         self.grounded = true;
         pilot.anchor = Some(BodyId::MARS);
         pilot.selected = BodyId::MARS;
         pilot.mode = MovementMode::Surface;
-        self.sync(pilot, terrain);
+        self.sync(pilot, terrain, rotation);
     }
     pub fn look(&mut self, delta: Vec2) {
         self.yaw = (self.yaw - delta.x as f64 * 0.002).rem_euclid(std::f64::consts::TAU);
@@ -44,7 +52,7 @@ impl SurfaceState {
     }
     pub fn advance(
         &mut self,
-        pilot: &mut Explorer,
+        pilot: &Explorer,
         terrain: &MarsTerrain,
         keys: &ButtonInput<KeyCode>,
         seconds: f64,
@@ -76,17 +84,21 @@ impl SurfaceState {
             self.jump_pending = false;
             self.accumulator = (self.accumulator - STEP_SECONDS).max(0.0);
         }
-        self.sync(pilot, terrain);
     }
-    pub fn sync(&self, pilot: &mut Explorer, terrain: &MarsTerrain) {
-        let feet = terrain.body_relative(self.feet);
-        let up = feet.normalize();
-        pilot.local_m = feet + up * EYE_HEIGHT_M;
-        // Verticale radiale, sans faire dépendre la visée du Transform de rendu.
-        let local_up = terrain.orientation.inverse() * up;
-        pilot.rotation = terrain.orientation
-            * DQuat::from_rotation_arc(DVec3::Y, local_up)
+    pub fn eye(&self, terrain: &MarsTerrain) -> DVec3 {
+        self.feet + terrain.site_relative(self.feet).normalize() * EYE_HEIGHT_M
+    }
+    /// Visée dans le site : indépendante de l'orbite et des proxies f32.
+    pub fn local_rotation(&self, terrain: &MarsTerrain) -> DQuat {
+        DQuat::from_rotation_arc(DVec3::Y, terrain.site_relative(self.feet).normalize())
             * DQuat::from_rotation_y(self.yaw)
-            * DQuat::from_rotation_x(self.pitch);
+            * DQuat::from_rotation_x(self.pitch)
+    }
+    /// Publication de la pose après la physique ; également sans sous-pas.
+    /// En l'air, le joueur reste dans le repère tournant (compromis cinématique).
+    pub fn sync(&self, pilot: &mut Explorer, terrain: &MarsTerrain, body_rotation: DQuat) {
+        let frame = terrain.inertial_frame(body_rotation);
+        pilot.local_m = frame.to_global(self.eye(terrain));
+        pilot.rotation = frame.orientation * self.local_rotation(terrain);
     }
 }

@@ -1,0 +1,13 @@
+2026-10-12T12:59:11.604508Z  INFO bevy_render::renderer: AdapterInfo { name: "NVIDIA GeForce GTX 1060 3GB (NVK GP106)", vendor: 4318, device: 7170, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "NVK", driver_info: "Mesa 25.2.8-0ubuntu0.24.04.2", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: false }
+2026-10-12T12:59:11.699138Z  INFO bevy_pbr::cluster: GPU clustering is supported on this device.
+2026-10-12T12:59:11.699181Z  INFO bevy_render::batching::gpu_preprocessing: GPU preprocessing is fully supported on this device.
+2026-10-12T12:59:11.699506Z  INFO solar_survival::config::profiling: Profilage GPU : timestamps true, encoders true, passes true
+2026-10-12T12:59:11.699642Z  INFO bevy_winit::system: Creating new window Solar Survival · 0.2 · Mars (63v0)
+2026-10-12T12:59:11.700344Z  INFO winit::platform_impl::linux::x11::window: Guessed window scale factor: 1
+2026-10-12T12:59:11.707176Z  INFO solar_survival::config::profiling: Profilage msaa_off phase warmup, pieds DVec3(0.0, 0.0, 0.0)
+2026-10-12T12:59:21.719535Z  INFO solar_survival::config::profiling: Profilage msaa_off phase rest, pieds DVec3(0.0, 0.01694195750567887, 0.0)
+2026-10-12T12:59:26.721186Z  INFO solar_survival::config::profiling: Profilage msaa_off phase contact, pieds DVec3(0.0, 0.01694195750567887, 0.0)
+2026-10-12T12:59:31.711742Z  INFO solar_survival::config::profiling: Profilage msaa_off phase streaming, pieds DVec3(116.0, 0.07646562193984095, 0.0)
+2026-10-12T12:59:36.712664Z  INFO solar_survival::config::profiling: Profilage msaa_off phase space, pieds DVec3(155.93333326864456, -0.20669671886471422, 0.0)
+2026-10-12T12:59:41.717172Z  INFO solar_survival::config::profiling: Profilage msaa_off phase finished, pieds DVec3(155.93333326864456, -0.20669671886471422, 0.0)
+2026-10-12T12:59:41.729280Z  INFO solar_survival::config::profiling: Profilage terminé : 20 métriques, CSV docs/p2-profile-smoke.csv

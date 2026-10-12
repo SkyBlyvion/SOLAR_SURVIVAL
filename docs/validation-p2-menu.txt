@@ -1,0 +1,20 @@
+2026-10-12T12:50:45.234717Z  INFO bevy_render::renderer: AdapterInfo { name: "NVIDIA GeForce GTX 1060 3GB (NVK GP106)", vendor: 4318, device: 7170, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "NVK", driver_info: "Mesa 25.2.8-0ubuntu0.24.04.2", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: false }
+2026-10-12T12:50:45.360715Z  INFO bevy_pbr::cluster: GPU clustering is supported on this device.
+2026-10-12T12:50:45.360770Z  INFO bevy_render::batching::gpu_preprocessing: GPU preprocessing is fully supported on this device.
+2026-10-12T12:50:45.361220Z  INFO bevy_winit::system: Creating new window Solar Survival · 0.2 · Mars (63v0)
+2026-10-12T12:50:45.361766Z  INFO winit::platform_impl::linux::x11::window: Guessed window scale factor: 1
+2026-10-12T12:51:15.921857Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/p2-menu/capture-00.png
+2026-10-12T12:51:34.466363Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/p2-menu/capture-01.png
+2026-10-12T12:52:21.964062Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/p2-menu/capture-02.png
+2026-10-12T12:52:32.105314Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/p2-menu/capture-03.png
+2026-10-12T12:53:03.300947Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/p2-menu/capture-04.png
+2026-10-12T12:53:40.222759Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/p2-menu/capture-05.png
+2026-10-12T12:53:50.326360Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/p2-menu/capture-06.png
+2026-10-12T12:54:03.447129Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/p2-menu/capture-07.png
+2026-10-12T12:54:06.297595Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/p2-menu/capture-08.png
+2026-10-12T12:55:02.267865Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/p2-menu/capture-09.png
+2026-10-12T12:55:35.411177Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/p2-menu/capture-10.png
+2026-10-12T12:55:59.706180Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/p2-menu/capture-11.png
+2026-10-12T12:56:31.354456Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/p2-menu/capture-12.png
+2026-10-12T12:57:05.257292Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/p2-menu/capture-13.png
+2026-10-12T12:57:07.404419Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/p2-menu/capture-14.png

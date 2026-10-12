@@ -6,7 +6,11 @@ use solar_survival::{
     physics::surface::{self, HALF_WIDTH_M, STEP_SECONDS, SolidBox},
     planets::terrain::{MarsTerrain, SITE_LIMIT_M},
     player::{Explorer, surface::SurfaceState},
-    universe::{catalog::SolarSystem, celestial_body::BodyId, units::J2000},
+    universe::{
+        catalog::SolarSystem,
+        celestial_body::BodyId,
+        units::{DAY, J2000},
+    },
 };
 
 fn terrain() -> MarsTerrain {
@@ -128,7 +132,7 @@ fn walk(fps: usize, boost: bool) -> DVec3 {
     let mut keys = ButtonInput::<KeyCode>::default();
     keys.press(KeyCode::KeyD);
     for _ in 0..2 * fps {
-        state.advance(&mut pilot, &terrain, &keys, 1.0 / fps as f64, mu());
+        state.advance(&pilot, &terrain, &keys, 1.0 / fps as f64, mu());
         keys.clear();
     }
     assert!(state.grounded);
@@ -164,7 +168,7 @@ fn radial_up_and_eye_height_follow_an_arbitrarily_oriented_mars_site() {
         ..default()
     };
     let mut pilot = Explorer::default();
-    state.sync(&mut pilot, &terrain);
+    state.sync(&mut pilot, &terrain, DQuat::IDENTITY);
     let feet = terrain.body_relative(state.feet);
     assert!((pilot.local_m.distance(feet) - surface::EYE_HEIGHT_M).abs() < 1e-8);
     assert!((pilot.rotation * DVec3::Y).distance(feet.normalize()) < 1e-12);
@@ -183,11 +187,11 @@ fn release_stops_input_but_gravity_continues_and_long_stalls_are_bounded() {
     let mut keys = ButtonInput::<KeyCode>::default();
     keys.press(KeyCode::KeyW);
     keys.press(KeyCode::Space);
-    state.advance(&mut pilot, &terrain, &keys, 100.0, mu());
+    state.advance(&pilot, &terrain, &keys, 100.0, mu());
     assert!(state.feet.y > 9.0);
     assert!(state.velocity.y < 0.0);
     for _ in 0..600 {
-        state.advance(&mut pilot, &terrain, &keys, STEP_SECONDS, mu());
+        state.advance(&pilot, &terrain, &keys, STEP_SECONDS, mu());
     }
     assert!(state.grounded);
     assert!(state.feet.z.abs() < 0.001);
@@ -225,7 +229,7 @@ fn walking_into_an_obstacle_reports_zero_resolved_forward_velocity() {
     let mut keys = ButtonInput::<KeyCode>::default();
     keys.press(KeyCode::KeyW);
     for _ in 0..600 {
-        state.advance(&mut pilot, &terrain, &keys, STEP_SECONDS, mu());
+        state.advance(&pilot, &terrain, &keys, STEP_SECONDS, mu());
         keys.clear();
     }
     assert!(
@@ -280,13 +284,105 @@ fn jump_pressed_between_two_physics_ticks_is_not_lost_or_repeated() {
     pilot.captured = true;
     let mut keys = ButtonInput::<KeyCode>::default();
     keys.press(KeyCode::Space);
-    state.advance(&mut pilot, &terrain, &keys, STEP_SECONDS * 0.5, mu());
+    state.advance(&pilot, &terrain, &keys, STEP_SECONDS * 0.5, mu());
     assert!(state.jump_pending && state.grounded);
     keys.clear();
-    state.advance(&mut pilot, &terrain, &keys, STEP_SECONDS * 0.5, mu());
+    state.advance(&pilot, &terrain, &keys, STEP_SECONDS * 0.5, mu());
     assert!(!state.grounded && !state.jump_pending && state.velocity.y > 3.9);
     for _ in 0..480 {
-        state.advance(&mut pilot, &terrain, &keys, STEP_SECONDS, mu());
+        state.advance(&pilot, &terrain, &keys, STEP_SECONDS, mu());
     }
     assert!(state.grounded && state.velocity.length() < 1e-6);
+}
+
+#[test]
+fn surface_entry_uses_the_lit_side_at_arbitrary_epochs() {
+    let solar = SolarSystem::default();
+    for jd in [J2000, J2000 + 0.37, 2461325.5] {
+        let mut terrain = terrain();
+        let mut pilot = Explorer::default();
+        let mut state = SurfaceState::default();
+        state.enter(&mut pilot, &mut terrain, &solar, jd);
+        let sun = -solar.position(BodyId::MARS, jd).normalize();
+        let expected = (sun + sun.cross(DVec3::Y).normalize_or_zero() * 0.8).normalize();
+        assert!(pilot.local_m.normalize().distance(expected) < 1e-12);
+        assert!(pilot.local_m.normalize().dot(sun) > 0.7);
+        assert!(state.grounded);
+    }
+}
+
+#[test]
+fn rest_and_airborne_pose_follow_the_same_rotating_site_as_obstacles() {
+    let solar = SolarSystem::default();
+    let mars = solar.body(BodyId::MARS);
+    let mut terrain = terrain();
+    let mut pilot = Explorer::default();
+    let mut state = SurfaceState::default();
+    let jd = J2000 + 123.45;
+    state.enter(&mut pilot, &mut terrain, &solar, jd);
+    let site = terrain.orientation;
+    let revision = terrain.revision;
+    let solid = surface::obstacles(&terrain)[0];
+    let center = (solid.min + solid.max) * 0.5;
+    for airborne in [false, true] {
+        if airborne {
+            state.feet += DVec3::Y * 20.0;
+            state.velocity = DVec3::new(2.0, 4.0, -1.0);
+            state.grounded = false;
+            state.yaw = 0.7;
+            state.pitch = -0.2;
+        }
+        let feet = state.feet;
+        let velocity = state.velocity;
+        let local_rotation = state.local_rotation(&terrain);
+        let eye = state.eye(&terrain);
+        for fraction in [0.0, 0.25, 0.5, 1.0, 1000.25] {
+            let seconds = (jd - J2000) * DAY + mars.rotation_period_s * fraction;
+            let rotation = mars.rotation(seconds);
+            let frame = terrain.inertial_frame(rotation);
+            state.sync(&mut pilot, &terrain, rotation);
+            // L'obstacle et le joueur sont entraînés ensemble, sans vitesse
+            // inertielle stockée dans l'état cinématique du contrôleur.
+            let relative = frame.orientation.inverse() * (frame.to_global(center) - pilot.local_m);
+            assert!(relative.distance(center - eye) < 2e-9);
+            assert!(frame.to_local(pilot.local_m).distance(eye) < 2e-9);
+            assert!(
+                pilot
+                    .local_m
+                    .distance(rotation * terrain.body_relative(eye))
+                    < 2e-9
+            );
+            for axis in [DVec3::X, DVec3::Y, DVec3::Z] {
+                assert!(
+                    (pilot.rotation * axis).distance(frame.orientation * local_rotation * axis)
+                        < 1e-12
+                );
+            }
+            assert_eq!(state.feet, feet);
+            assert_eq!(state.velocity, velocity);
+            assert_eq!(terrain.orientation, site);
+            assert_eq!(terrain.revision, revision);
+        }
+    }
+}
+
+#[test]
+fn catalog_rotation_keeps_tilt_signed_period_and_j2000_phase() {
+    let solar = SolarSystem::default();
+    for body in &solar.bodies {
+        let tilt = if body.rotation_period_s < 0.0 {
+            180.0 - body.axial_tilt_deg
+        } else {
+            body.axial_tilt_deg
+        };
+        let tilted = DQuat::from_rotation_z(tilt.to_radians());
+        for fraction in [0.0, 0.25, 0.5, 1.0, -0.25] {
+            let rotation = body.rotation(body.rotation_period_s.abs() * fraction);
+            let angle = std::f64::consts::TAU * fraction * body.rotation_period_s.signum();
+            let expected_x = tilted * DVec3::new(angle.cos(), 0.0, -angle.sin());
+            assert!((rotation * DVec3::X).distance(expected_x) < 1e-12);
+            assert!((rotation * DVec3::Y).distance(tilted * DVec3::Y) < 1e-12);
+            assert!((rotation.length() - 1.0).abs() < 1e-12);
+        }
+    }
 }

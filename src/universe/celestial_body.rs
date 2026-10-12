@@ -1,5 +1,6 @@
 use super::orbital_mechanics::OrbitalElements;
 use crate::planets::GenerationSettings;
+use bevy::math::DQuat;
 use bevy::prelude::*;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, Component)]
@@ -52,4 +53,20 @@ pub struct CelestialBody {
     pub surface: SurfaceKind,
     pub color: [f32; 3],
     pub generation: GenerationSettings,
+}
+
+impl CelestialBody {
+    /// Orientation corps → axes héliocentriques, avec phase nulle à J2000.
+    /// Inclinaison autour de Z fixe et période signée du catalogue : convention
+    /// historique du rendu, pas une orientation IAU ni une précession du pôle.
+    pub fn rotation(&self, seconds_since_epoch: f64) -> DQuat {
+        let angle =
+            (seconds_since_epoch / self.rotation_period_s).rem_euclid(1.0) * std::f64::consts::TAU;
+        let tilt = if self.rotation_period_s < 0.0 {
+            180.0 - self.axial_tilt_deg
+        } else {
+            self.axial_tilt_deg
+        };
+        DQuat::from_rotation_z(tilt.to_radians()) * DQuat::from_rotation_y(angle)
+    }
 }

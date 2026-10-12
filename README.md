@@ -1,6 +1,8 @@
-# Solar Survival — version 0.2 · prototype FPS Mars
+# Solar Survival — version 0.2 · FPS Mars et repère tournant
 
 Prototype d'exploration 3D de notre système solaire, fondation d'un jeu de survie spatial en première personne. **Les positions, rayons et distances physiques restent en mètres à l'échelle 1:1, en `f64`.** Bevy ne reçoit que des représentations relatives à la caméra.
+
+La suite du développement suit [la roadmap](docs/ROADMAP.md). Le [prompt du prochain chat](docs/NEXT_CHAT.md) est actualisé à chaque fin de chat de développement avec l'état réel et l'objectif suivant.
 
 ## Démarrer sur ce poste Ubuntu
 
@@ -17,7 +19,7 @@ La tâche VS Code **Solar Survival: lancer** fonctionne aussi avec `Terminal →
 cargo run --release
 ```
 
-Appuyez sur **M**, ou sur **Surface Mars / retour** dans le panneau gauche, pour rejoindre le prototype FPS martien. Clic droit capture la souris ; WASD / ZQSD permet de marcher, Shift de courir et Espace de sauter. **M** revient à la visite spatiale de Mars ; G, O et U permettent aussi de quitter la surface. Le jeu commence près de la Terre, à J2000 (1 janvier 2000, 12 h à l'échelle temporelle du modèle). Cliquez droit pour piloter ; Échap libère le curseur. Cliquez sur Mars dans le panneau gauche puis sur **Visiter**, ou utilisez **4 puis G**. La visite est une téléportation de gameplay à une distance de sécurité, avec suivi orbital de la cible.
+Depuis le menu principal, cliquez sur **Jouer** (ou appuyez sur Entrée). Appuyez ensuite sur **M**, ou sur **Surface Mars / retour** dans le panneau gauche, pour rejoindre le prototype FPS martien. Clic droit capture la souris ; WASD / ZQSD permet de marcher, Shift de courir et Espace de sauter. **M** revient à la visite spatiale de Mars ; G, O et U permettent aussi de quitter la surface. Le jeu commence près de la Terre, à J2000 (1 janvier 2000, 12 h à l'échelle temporelle du modèle). Cliquez droit pour piloter ; Échap libère le curseur. Cliquez sur Mars dans le panneau gauche puis sur **Visiter**, ou utilisez **4 puis G**. La visite est une téléportation de gameplay à une distance de sécurité, avec suivi orbital de la cible.
 
 ## Installation sur un autre Ubuntu
 
@@ -52,6 +54,14 @@ cargo build --release
 cargo run
 ```
 
+## Menu principal et options
+
+Le lancement normal affiche **Jouer**, **Options**, **Crédits** et **Quitter**. Après avoir joué, **Reprendre** retrouve la même session et la même pose ; il ne réinitialise pas le site. Le bouton **Menu principal** du HUD et Échap lorsque le curseur est libre ouvrent le menu. Un premier Échap en pilotage libère seulement la souris. Entrée lance/reprend depuis l'écran principal ; Échap revient depuis les sous-écrans.
+
+Les options s'appliquent immédiatement : sensibilité souris ×0,5/1/1,5/2, champ de vision **vertical** 55/65/75/90°, MSAA désactivé/×2/×4, affichage fenêtré/plein écran sans bordure. **Rétablir les valeurs par défaut** restaure ×1, 65°, MSAA ×4 et fenêtré. Les valeurs initiales de rendu restent celles du prototype. Les réglages sont conservés pour la session, sans sauvegarde sur disque. Il n'y a pas d'option sonore car l'audio n'est pas activé.
+
+Le menu libère la souris et bloque les commandes de navigation, P/T et H. Le calendrier orbital continue avec `Time<Real>` ; pour le figer, utiliser P avant d'ouvrir le menu. En surface, la gravité et les contacts continuent, sans entrée de déplacement. Cette convention conserve les deux horloges du prototype. Les scénarios de validation/profilage démarrent directement en jeu.
+
 ## Contrôles
 
 Les touches de déplacement désignent des positions physiques : WASD sur QWERTY, ZQSD sur AZERTY.
@@ -59,7 +69,7 @@ Les touches de déplacement désignent des positions physiques : WASD sur QWERTY
 | Commande | Fonction |
 |---|---|
 | Clic droit | Capturer la souris et activer le pilotage |
-| Échap | Libérer la souris et arrêter le déplacement au clavier |
+| Échap | Libérer la souris ; curseur déjà libre, ouvrir le menu principal ; depuis Options/Crédits, revenir |
 | Souris | Orientation |
 | WASD / ZQSD | Vol orienté en espace ; déplacement tangent en surface |
 | Espace / Ctrl | Monter / descendre en espace ; Espace saute en surface |
@@ -76,7 +86,7 @@ Les touches de déplacement désignent des positions physiques : WASD sur QWERTY
 | P | Pause des orbites et des rotations |
 | H | Masquer / afficher l'interface |
 
-Les vitesses disponibles sont 5 m/s, 250 m/s, 20 km/s, 20 000 km/s, 2 millions km/s et 100 millions km/s. Ce sont des choix de gameplay. En espace, l'interface affiche la **vitesse de déplacement configurée** ; à l'arrêt elle demeure affichée. En surface, elle indique aussi la vitesse résolue après contacts, l'état au sol/en l'air et la hauteur des pieds au-dessus du support. La marche utilise 4,5 m/s, la course 8 m/s et le saut une impulsion de vitesse de 4 m/s : conventions de gameplay. L'accélération temporelle n'affecte pas les contrôles ni l'interface.
+Les vitesses disponibles sont 5 m/s, 250 m/s, 20 km/s, 20 000 km/s, 2 millions km/s et 100 millions km/s. Ce sont des choix de gameplay. En espace, l'interface affiche la **vitesse de déplacement configurée** ; à l'arrêt elle demeure affichée. En surface, elle indique aussi la vitesse résolue après contacts, l'état au sol/en l'air et la hauteur des pieds au-dessus du support. La marche utilise 4,5 m/s, la course 8 m/s et le saut une impulsion de vitesse de 4 m/s : conventions de gameplay. P et T commandent l’orbite et la rotation de Mars ; la marche, la course, le saut et la gravité restent en secondes réelles. La vitesse résolue affichée en surface est relative au site, sans vitesse d’entraînement orbitale ou rotatoire.
 
 ## Fonctionnalités
 
@@ -89,7 +99,7 @@ Les vitesses disponibles sont 5 m/s, 250 m/s, 20 km/s, 20 000 km/s, 2 millions k
 - Garde sphérique avec intersection balayée contre le passage à travers les corps à haute vitesse.
 - Deux meshes de sphère partagés pour le LOD ; étoiles regroupées dans un mesh ; pas de création de mesh par frame.
 - Interface sélectionnable à la souris : FPS, temps, cible, altitude, rayon, repère, vitesse et astre le plus proche. Repères visuels pour les corps trop petits à l'écran.
-- FPS martien : gravité radiale, marche/course/saut, contacts avec terrain et trois obstacles statiques.
+- FPS martien : site fixé au repère tournant de Mars, gravité radiale, marche/course/saut, contacts avec terrain et trois obstacles statiques dans le site.
 - Terrain artistique local courbé sur le rayon moyen de Mars ; neuf tuiles de 128 m, grille de 4 m, chargement et déchargement à chaque changement de tuile.
 - Contrat cube-sphere et graines reproductibles ; structures de survie encore inactives.
 
@@ -98,6 +108,7 @@ Les vitesses disponibles sont 5 m/s, 250 m/s, 20 km/s, 20 000 km/s, 2 millions k
 ```text
 src/main.rs           assemblage fenêtre/plugins
 src/config/validation.rs scénarios graphiques optionnels espace et surface
+src/config/profiling.rs mesures opt-in CPU/GPU et variantes de comparaison
 src/lib.rs            ordre des systèmes Input → Simulation → Navigation → Rendu → UI
 src/universe/         catalogue, unités SI, calculs orbitaux, horloge, repères f64
 src/rendering/        proxies astronomiques et caméra/meshes de terrain en mètres
@@ -107,6 +118,7 @@ src/physics/          garde spatiale, gravité radiale et contacts cinématiques
 src/planets/          clés cube-sphere, graines et géométrie du terrain local
 src/survival/         données vitales et inventaire futur
 src/ui/               panneau de navigation, télémétrie et marqueurs
+src/ui/menu.rs        menu principal, options de session et crédits
 src/config/           paramètres de démarrage
 assets/shaders/       shader WGSL de présentation des planètes
 tests/               tests des fondations physiques et numériques
@@ -129,6 +141,7 @@ SOLAR_JD=2461325.5 cargo run
 RUST_LOG=info cargo run --release
 SOLAR_SMOKE_SECONDS=66 cargo run --release
 SOLAR_SURFACE_SMOKE_SECONDS=50 RUST_LOG=info cargo run --release
+MESA_VK_WSI_PRESENT_MODE=immediate SOLAR_ROTATION_SMOKE_SECONDS=50 RUST_LOG=info cargo run --release
 ```
 
 PowerShell :
@@ -139,7 +152,7 @@ cargo run
 Remove-Item Env:SOLAR_JD
 ```
 
-`SOLAR_SMOKE_SECONDS` active uniquement un lancement borné de validation, avec visite automatique des dix corps, vue globale et captures PNG `docs/v02-space-00.png` à `v02-space-10.png`. `SOLAR_SURFACE_SMOKE_SECONDS` (minimum 40 s, 50 s conseillé) active un autre scénario : repos, marche contre obstacle, saut, déplacement latéral, course à travers les tuiles, libération des commandes, retour spatial et Terre. Il produit `docs/v02-surface-00.png` à `v02-surface-09.png`. Si les deux variables sont définies, le scénario surface est prioritaire. Les entrées sont injectées dans l'ECS, sans simuler les périphériques de l'OS. Ne pas définir ces variables pour jouer normalement.
+`SOLAR_SMOKE_SECONDS` active uniquement un lancement borné de validation, avec visite automatique des dix corps, vue globale et captures PNG `docs/v02-space-00.png` à `v02-space-10.png`. `SOLAR_SURFACE_SMOKE_SECONDS` (minimum 40 s, 50 s conseillé) active un autre scénario : repos, marche contre obstacle, saut, déplacement latéral, course à travers les tuiles, libération des commandes, retour spatial et Terre. Il produit `docs/v02-surface-00.png` à `v02-surface-09.png`. Le scénario `SOLAR_ROTATION_SMOKE_SECONDS` reprend ce parcours en alternant ×1000, pause et ×1 ; il produit `docs/rotation-surface-00.png` à `rotation-surface-09.png`. Priorité si plusieurs variables sont définies : rotation, surface, espace. Les entrées sont injectées dans l'ECS, sans simuler les périphériques de l'OS. Ne pas définir ces variables pour jouer normalement.
 
 Sur cette session Ubuntu/NVK, certains lancements en présentation VSync sont tombés à environ 1 FPS, avec un timeout de présentation. Le lancement suivant a rétabli environ 23 FPS en surface ; c'est un contournement local du pilote, pas une mesure de performance garantie :
 
@@ -149,6 +162,29 @@ MESA_VK_WSI_PRESENT_MODE=immediate cargo run --release
 
 Cette variable est documentée par [Mesa](https://docs.mesa3d.org/envvars.html). Elle peut provoquer du tearing ; elle n'est pas nécessairement utile sur un autre pilote et ne concerne pas le lancement Windows.
 
+## Validation P2 reproductible
+
+Après compilation release, sans compilation ni autre lancement GPU concurrent :
+
+```bash
+MESA_VK_WSI_PRESENT_MODE=immediate SOLAR_P2_SECONDS=160 RUST_LOG=info target/release/solar_survival
+```
+
+`SOLAR_P2_SECONDS` accepte 160 à 300 secondes. Le scénario est prioritaire sur les anciens smoke, mais le profilage reste prioritaire. Il impose J2000, entre sur Mars et maintient ×1000 pendant 96 secondes (plus d'une rotation). Douze captures réparties sur ce cycle précèdent P, une marche en pause, un saut, la reprise à ×1 et trois commandes T. Deux séries d'entrées/sorties M/G/O/U suivent, puis un dernier retour en surface. Il injecte les touches dans `ButtonInput` avant les vrais contrôles. Les images `docs/p2-stage-00.png` à `34.png` et le journal conservent calendrier, vitesse, état local et direction solaire. Ces noms sont remplacés lors d'une répétition : préserver chaque campagne avant de relancer.
+
+Pour capturer un essai manuel du menu : `SOLAR_CAPTURE_DIR=docs/mon-essai-menu` active **F12** et écrit `capture-00.png`, etc. Créer le dossier avant le lancement. Ce diagnostic n'est installé qu'avec cette variable. Une interruption réelle du processus ou de la session doit être distinguée d'un delta manuel dans un test ECS.
+
+## Profilage reproductible
+
+Le [protocole de performance](docs/PERFORMANCE.md) distingue le poste de développement GTX 1060/NVK et la cible annoncée RTX 4050/Core i5. Un mode optionnel mesure repos, contact, franchissement de tuile et visite spatiale dans une scène canonique. Il conserve des échantillons en millisecondes, puis une synthèse moyenne/médiane/p95/p99. Les diagnostics GPU et les variantes de comparaison ne sont pas actifs en partie normale.
+
+```bash
+cargo build --release --locked
+python3 scripts/profile_suite.py --seconds 42 --mesa-immediate --gpu-probe --output docs/profiles/mon-essai
+```
+
+Le script utilise uniquement la bibliothèque standard Python et lance les essais successivement. `--mesa-immediate` est réservé au contournement Mesa de ce poste ; l'omettre sur la machine cible. Choisir un nouveau dossier de sortie pour chaque campagne. Un essai individuel sans Python est décrit dans PERFORMANCE.
+
 ## Limites actuelles et suite
 
 Les données et conventions sont détaillées dans [docs/ASTRONOMY.md](docs/ASTRONOMY.md). Ce modèle képlérien n'est pas une éphéméride scientifique : pas de N-corps, perturbations lunaires, précession exacte, retards lumineux ou éclipses. La phase et l'orientation lunaires sont conventionnelles, explicitement non observées. La période lunaire et ses dimensions sont réelles.
@@ -157,8 +193,18 @@ Le rendu compresse chaque profondeur selon `d_render = 10 000 × d / (d + 10⁸)
 
 En mode espace, la garde de navigation maintient au moins 1 km d'altitude et borne les voyages à 10¹⁶ mètres du Soleil. Elle ne simule pas de contacts physiques, et peut expulser la caméra si une planète mobile la rattrape. Une planète lointaine peut être subpixel : les marqueurs et visites permettent de la retrouver. Le GPU doit supporter les fonctionnalités 3D de Bevy/wgpu. 60 FPS est un objectif à mesurer sur le matériel cible, pas une garantie.
 
-Le prototype FPS utilise un site local **translatoire**, sans rotation de surface, borné à ±4 096 m dans ses deux axes horizontaux. Le terrain est une grille de hauteur sur la sphère moyenne, et non encore un réseau mondial cube-sphere. Ses triangles CPU f64 sont la source commune du rendu et des contacts. Le volume joueur est une boîte de 0,6 × 1,8 × 0,6 m alignée sur le repère du site ; la caméra et la gravité suivent la verticale radiale. Ce contrôleur assume les pentes douces générées, sans grottes, corps dynamiques ni simulation de frottement générale. L'adhérence et la correction de hauteur assurent marche et repos ; les obstacles utilisent des collisions balayées et du glissement.
+Le prototype FPS utilise un site local **tournant avec Mars**, borné à ±4 096 m dans ses deux axes horizontaux. À chaque entrée, le site est choisi côté éclairé puis fixé dans les axes du corps ; il ne suit ensuite plus le Soleil. La rotation réutilise exactement la convention planétaire du prototype (phase nulle à J2000, inclinaison autour de Z fixe), sans orientation IAU exacte ni coordonnées géographiques revendiquées. Les visites spatiales restent translatoires. Le terrain est une grille de hauteur sur la sphère moyenne, et non encore un réseau mondial cube-sphere. Ses triangles CPU f64 sont la source commune du rendu et des contacts. Le volume joueur est une boîte de 0,6 × 1,8 × 0,6 m alignée sur le repère du site ; la caméra et la gravité suivent la verticale radiale. Ce contrôleur assume les pentes douces générées, sans grottes, corps dynamiques ni simulation de frottement générale. L'adhérence et la correction de hauteur assurent marche et repos ; les obstacles utilisent des collisions balayées et du glissement.
 
-Le pas physique est de 1/120 s, alimenté par `Time<Real>` dans `GameSet::Navigation`, après l'orbite. Chaque frame accepte au plus 0,25 s de physique : les longues interruptions sont abandonnées plutôt que rattrapées brutalement. P et T affectent seulement le temps orbital. Échap retire les commandes de mouvement, mais la gravité et les contacts continuent. Le rendu local utilise une seconde caméra et une profondeur distincte ; Mars est masquée comme sphère globale pendant la visite au sol. L'éclairage, le brouillard et le ciel restent artistiques.
+Le pas physique est de 1/120 s, alimenté par `Time<Real>` dans `GameSet::Navigation`, après l'orbite. Chaque frame accepte au plus 0,25 s de physique : les longues interruptions sont abandonnées plutôt que rattrapées brutalement. P et T affectent le calendrier orbital, donc les orbites et la rotation du site, sans accélérer la physique locale. Échap retire les commandes de mouvement, mais la gravité et les contacts continuent. Le rendu local utilise une seconde caméra et une profondeur distincte ; Mars est masquée comme sphère globale pendant la visite au sol. L'éclairage, le brouillard et le ciel restent artistiques.
 
-**Suite :** repère martien tournant, zones cube-sphere au-delà du site borné, profilage du rendu et contrôleur pour géométries plus complexes. Puis oxygène, ressources, inventaire et construction ; les structures de survie ne consomment encore rien.
+`SurfaceState` conserve pieds, vitesse, yaw et pitch dans le site tournant. L’orientation fixe du site appartient à `MarsTerrain` ; `CelestialBody::rotation` fournit la rotation f64 commune à la surface et aux sphères. Après la physique, la navigation compose ces rotations et publie la pose globale dans `Explorer`, puis l’origine flottante. La caméra locale et les obstacles utilisent directement les différences dans le site ; la lumière solaire est convertie vers ses axes. Tourner Mars ne modifie pas les clés de tuiles ni leur révision et ne recrée aucun mesh.
+
+| État du calendrier | Surface entraînée | Contrôleur local |
+|---|---|---|
+| ×1 / ×10 / ×100 / ×1000 | Orbite et rotation à cette vitesse | Marche, gravité et saut en temps réel |
+| Pause P ou borne de date | Centre et rotation figés | Marche, gravité, saut et visée continuent |
+| Longue interruption | Pose au JD courant, sans interpolation de l’entraînement | Au plus 0,25 s de physique par frame |
+
+Même en l’air, le joueur reste exprimé dans le site tournant. Aucune force de Coriolis, centrifuge, d’Euler ni due à l’accélération translatoire orbitale n’est appliquée ; aucune vitesse inertielle n’est transférée lors des téléportations M/G/O/U. Ce contrôleur est un compromis de gameplay, particulièrement visible sous T, pas une intégration inertielle d’un astronaute. Voir les formules et conventions dans [ASTRONOMY](docs/ASTRONOMY.md).
+
+**Suite :** zones cube-sphere au-delà du site borné, profilage du rendu et contrôleur pour géométries plus complexes. Puis oxygène, ressources, inventaire et construction ; les structures de survie ne consomment encore rien.

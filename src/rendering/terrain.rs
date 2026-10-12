@@ -208,8 +208,13 @@ fn stream(
     clippy::type_complexity,
     reason = "Filtres disjoints garantissant les emprunts des Transform ECS."
 )]
+#[expect(
+    clippy::too_many_arguments,
+    reason = "Paramètres de système injectés par Bevy ECS."
+)]
 fn sync(
     pilot: Res<Explorer>,
+    surface: Res<SurfaceState>,
     terrain: Res<MarsTerrain>,
     solar: Res<SolarSystem>,
     clock: Res<SimulationClock>,
@@ -231,7 +236,7 @@ fn sync(
         (Without<SurfaceCamera>, Without<SurfaceSun>),
     >,
     mut light: Single<
-        &mut Transform,
+        (&mut Transform, &mut DirectionalLight),
         (
             With<SurfaceSun>,
             Without<SurfaceCamera>,
@@ -249,8 +254,9 @@ fn sync(
         return;
     }
     transform.translation = Vec3::ZERO;
-    transform.rotation = (terrain.orientation.inverse() * pilot.rotation).as_quat();
-    let eye = terrain.chart(pilot.local_m);
+    transform.rotation = surface.local_rotation(&terrain).as_quat();
+    // Soustraction dans le site en f64, sans aller-retour héliocentrique.
+    let eye = surface.eye(&terrain);
     let solids = obstacles(&terrain);
     for (visual, obstacle, mut transform, mut visibility) in &mut visuals {
         let origin = if let Some(obstacle) = obstacle {
@@ -267,9 +273,23 @@ fn sync(
             *visibility = Visibility::Hidden;
         }
     }
-    let to_sun =
-        terrain.orientation.inverse() * (-solar.position(BodyId::MARS, clock.jd)).normalize();
-    **light = Transform::default().looking_to(-to_sun.as_vec3(), Vec3::Y);
+    let frame = terrain.inertial_frame(
+        solar
+            .body(BodyId::MARS)
+            .rotation(clock.seconds_since_epoch()),
+    );
+    let to_sun = frame.orientation.inverse() * (-pilot.global(&solar, clock.jd)).normalize();
+    let (transform, sunlight) = &mut *light;
+    **transform = Transform::default().looking_to(-to_sun.as_vec3(), Vec3::Y);
+    // La caméra locale ne rend pas la sphère de Mars et les ombres sont désactivées.
+    // Sans ce masque, les parois reçoivent le Soleil même sous l'horizon radial.
+    // Horizon idéal du site : pas d'occlusion du relief, réfraction ou pénombre.
+    let radial_up = terrain.site_relative(eye).normalize();
+    sunlight.illuminance = if to_sun.dot(radial_up) > 0.0 {
+        11000.0
+    } else {
+        0.0
+    };
 }
 
 #[cfg(test)]
@@ -341,5 +361,146 @@ mod tests {
         app.update();
         assert!(app.world().resource::<TileCache>().tiles.is_empty());
         assert!(app.world().resource::<Assets<Mesh>>().is_empty());
+    }
+
+    #[test]
+    fn rotating_site_keeps_local_proxies_and_meshes_but_changes_sun_direction() {
+        use crate::universe::units::{DAY, J2000};
+        let mut app = App::new();
+        // Même composant requis que VisibilityPlugin dans DefaultPlugins,
+        // sans initialiser le renderer GPU dans ce test ECS.
+        app.world_mut()
+            .register_required_components::<Mesh3d, Visibility>();
+        app.add_plugins(MinimalPlugins)
+            .init_resource::<SolarSystem>()
+            .insert_resource(SimulationClock {
+                jd: J2000,
+                speed_index: 0,
+                paused: false,
+            })
+            .init_resource::<Explorer>()
+            .init_resource::<SurfaceState>()
+            .init_resource::<MarsTerrain>()
+            .init_resource::<Assets<Mesh>>()
+            .init_resource::<TileCache>()
+            .insert_resource(TerrainAssets {
+                material: Handle::default(),
+            })
+            .add_systems(
+                Update,
+                (
+                    |mut pilot: ResMut<Explorer>,
+                     state: Res<SurfaceState>,
+                     terrain: Res<MarsTerrain>,
+                     solar: Res<SolarSystem>,
+                     clock: Res<SimulationClock>| {
+                        state.sync(
+                            &mut pilot,
+                            &terrain,
+                            solar
+                                .body(BodyId::MARS)
+                                .rotation(clock.seconds_since_epoch()),
+                        );
+                    },
+                    stream,
+                    sync,
+                )
+                    .chain(),
+            );
+        app.world_mut().resource_mut::<Explorer>().mode = MovementMode::Surface;
+        app.world_mut().resource_mut::<Explorer>().anchor = Some(BodyId::MARS);
+        app.world_mut()
+            .resource_mut::<MarsTerrain>()
+            .set_site(DVec3::X);
+        let camera = app
+            .world_mut()
+            .spawn((SurfaceCamera, Camera::default(), Transform::default()))
+            .id();
+        let light = app
+            .world_mut()
+            .spawn((
+                SurfaceSun,
+                Transform::default(),
+                DirectionalLight::default(),
+            ))
+            .id();
+        let obstacle = app
+            .world_mut()
+            .spawn((
+                ObstacleVisual(0),
+                LocalVisual {
+                    origin: DVec3::ZERO,
+                },
+                Transform::default(),
+                Visibility::Hidden,
+            ))
+            .id();
+        app.update();
+        let first = app.world().resource::<TileCache>().tiles.clone();
+        let obstacle_pose = *app.world().get::<Transform>(obstacle).unwrap();
+        let camera_pose = *app.world().get::<Transform>(camera).unwrap();
+        let sun_start = *app.world().get::<Transform>(light).unwrap();
+        assert_eq!(
+            app.world()
+                .get::<DirectionalLight>(light)
+                .unwrap()
+                .illuminance,
+            0.0
+        );
+        let period = app
+            .world()
+            .resource::<SolarSystem>()
+            .body(BodyId::MARS)
+            .rotation_period_s;
+        let revision = app.world().resource::<MarsTerrain>().revision;
+        for fraction in [0.25, 0.5, 1.0] {
+            app.world_mut().resource_mut::<SimulationClock>().jd = J2000 + period * fraction / DAY;
+            app.update();
+            assert_eq!(app.world().resource::<TileCache>().tiles, first);
+            assert_eq!(app.world().resource::<Assets<Mesh>>().len(), 9);
+            assert_eq!(app.world().resource::<MarsTerrain>().revision, revision);
+            assert_eq!(
+                *app.world().get::<Transform>(obstacle).unwrap(),
+                obstacle_pose
+            );
+            assert_eq!(*app.world().get::<Transform>(camera).unwrap(), camera_pose);
+            for (entity, _) in first.values() {
+                let world = app.world();
+                let relative = world.get::<LocalVisual>(*entity).unwrap().origin
+                    - world
+                        .resource::<SurfaceState>()
+                        .eye(world.resource::<MarsTerrain>());
+                assert_eq!(
+                    world.get::<Transform>(*entity).unwrap().translation,
+                    local_to_render(relative).unwrap()
+                );
+            }
+            let world = app.world();
+            let solar = world.resource::<SolarSystem>();
+            let clock = world.resource::<SimulationClock>();
+            let frame = world.resource::<MarsTerrain>().inertial_frame(
+                solar
+                    .body(BodyId::MARS)
+                    .rotation(clock.seconds_since_epoch()),
+            );
+            let expected = frame.orientation.inverse()
+                * (-world.resource::<Explorer>().global(solar, clock.jd)).normalize();
+            let actual = world.get::<Transform>(light).unwrap().rotation * Vec3::Z;
+            assert!(actual.distance(expected.as_vec3()) < 1e-6);
+            if fraction == 0.5 {
+                assert_eq!(
+                    world.get::<DirectionalLight>(light).unwrap().illuminance,
+                    11000.0
+                );
+            } else if fraction == 1.0 {
+                assert_eq!(
+                    world.get::<DirectionalLight>(light).unwrap().illuminance,
+                    0.0
+                );
+            }
+            if fraction == 0.25 {
+                assert!(actual.distance(sun_start.rotation * Vec3::Z) > 0.5);
+            }
+        }
     }
 }

@@ -2,6 +2,8 @@
 
 - Développer le jeu en Rust stable, édition 2024. Bevy est épinglé **exactement à 0.19.1** ; aucune API 0.20 ni changement de version sans instruction explicite de l'utilisateur.
 - Lire le README et docs/ASTRONOMY.md avant de modifier les calculs physiques ou le rendu astronomique.
+- Au début d'un chat de développement, lire aussi docs/ROADMAP.md et docs/NEXT_CHAT.md. Suivre l'étape courante ; justifier toute réorganisation par un besoin utilisateur ou des résultats observés.
+- À la fin de chaque chat de développement, actualiser l'état et les critères de la roadmap, consigner les validations/limites, et réécrire docs/NEXT_CHAT.md avec un prompt autonome : état réel, objectif suivant, périmètre, contraintes et vérifications. Fournir son lien dans la réponse finale.
 - Maintenir Ubuntu Linux et Windows 11. Pas de dépendance propre à un OS dans la logique centrale. X11 est une option du backend Bevy, pas une API de gameplay.
 - Positions, distances, temps orbital et transformations globales en f64 (`DVec3`, `DQuat`). SI : mètres, secondes, kilogrammes. Préserver l'échelle physique 1:1.
 - Ne jamais alimenter directement un Transform f32 avec une position astronomique. Soustraire l'origine flottante en f64, puis convertir explicitement vers le proxy de rendu. Les proxies ne doivent jamais modifier les données physiques.

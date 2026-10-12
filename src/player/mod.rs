@@ -12,7 +12,8 @@ pub enum MovementMode {
 }
 #[derive(Resource)]
 pub struct Explorer {
-    /// Offset local f64 dans le repère de l'astre suivi, ou héliocentrique si None.
+    /// Offset f64 en axes inertiels depuis l'astre suivi, ou héliocentrique si None.
+    /// En surface, pose publiée depuis SurfaceState dans le site tournant.
     pub anchor: Option<BodyId>,
     pub local_m: DVec3,
     pub rotation: DQuat,

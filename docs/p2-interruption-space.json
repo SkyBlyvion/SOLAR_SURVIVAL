@@ -1,0 +1,8 @@
+{
+  "pid": 268606,
+  "signal_stop_utc": "2026-10-12T12:55:23.189933+00:00",
+  "signal_continue_utc": "2026-10-12T12:55:35.190105+00:00",
+  "pause_wall_seconds": 12.000195150001673,
+  "state_before": "espace Terre, ×1000 ; touche espace injectée en vol (entrée Mars non déclenchée : keysym m AZERTY différent de KeyM physique)",
+  "capture_after": "F12 via XTest immédiatement après SIGCONT"
+}

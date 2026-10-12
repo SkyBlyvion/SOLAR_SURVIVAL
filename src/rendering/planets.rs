@@ -178,16 +178,7 @@ pub fn sync(
         let (center, radius) = render_proxy(relative, body.radius_m);
         transform.translation = center;
         transform.scale = Vec3::splat(radius);
-        let angle = (clock.seconds_since_epoch() / body.rotation_period_s).rem_euclid(1.0)
-            * std::f64::consts::TAU;
-        let tilt = if body.rotation_period_s < 0.0 {
-            180.0 - body.axial_tilt_deg
-        } else {
-            body.axial_tilt_deg
-        };
-        transform.rotation = (bevy::math::DQuat::from_rotation_z(tilt.to_radians())
-            * bevy::math::DQuat::from_rotation_y(angle))
-        .as_quat();
+        transform.rotation = body.rotation(clock.seconds_since_epoch()).as_quat();
         if !visual.ring {
             let desired = if body.radius_m / relative.length().max(1.0) > 0.005 {
                 &lod.near

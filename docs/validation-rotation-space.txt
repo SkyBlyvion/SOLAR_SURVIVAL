@@ -1,0 +1,29 @@
+    Finished `release` profile [optimized] target(s) in 0.18s
+     Running `target/release/solar_survival`
+2026-10-12T11:52:48.953272Z  INFO bevy_render::renderer: AdapterInfo { name: "NVIDIA GeForce GTX 1060 3GB (NVK GP106)", vendor: 4318, device: 7170, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "NVK", driver_info: "Mesa 25.2.8-0ubuntu0.24.04.2", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: false }
+2026-10-12T11:52:49.053772Z  INFO bevy_pbr::cluster: GPU clustering is supported on this device.
+2026-10-12T11:52:49.053828Z  INFO bevy_render::batching::gpu_preprocessing: GPU preprocessing is fully supported on this device.
+2026-10-12T11:52:49.054220Z  INFO bevy_winit::system: Creating new window Solar Survival · 0.2 · Mars (63v0)
+2026-10-12T11:52:49.054782Z  INFO winit::platform_impl::linux::x11::window: Guessed window scale factor: 1
+2026-10-12T11:52:49.061023Z  INFO solar_survival::config::validation: Validation graphique : étape 1 / 11
+2026-10-12T11:52:53.075157Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/v02-space-00.png
+2026-10-12T11:52:55.070382Z  INFO solar_survival::config::validation: Validation graphique : étape 2 / 11
+2026-10-12T11:52:59.115055Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/v02-space-01.png
+2026-10-12T11:53:01.063469Z  INFO solar_survival::config::validation: Validation graphique : étape 3 / 11
+2026-10-12T11:53:05.089932Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/v02-space-02.png
+2026-10-12T11:53:07.086444Z  INFO solar_survival::config::validation: Validation graphique : étape 4 / 11
+2026-10-12T11:53:11.081056Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/v02-space-03.png
+2026-10-12T11:53:13.082962Z  INFO solar_survival::config::validation: Validation graphique : étape 5 / 11
+2026-10-12T11:53:17.073790Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/v02-space-04.png
+2026-10-12T11:53:19.065307Z  INFO solar_survival::config::validation: Validation graphique : étape 6 / 11
+2026-10-12T11:53:23.071751Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/v02-space-05.png
+2026-10-12T11:53:25.077417Z  INFO solar_survival::config::validation: Validation graphique : étape 7 / 11
+2026-10-12T11:53:29.065257Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/v02-space-06.png
+2026-10-12T11:53:31.064613Z  INFO solar_survival::config::validation: Validation graphique : étape 8 / 11
+2026-10-12T11:53:35.041304Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/v02-space-07.png
+2026-10-12T11:53:37.072080Z  INFO solar_survival::config::validation: Validation graphique : étape 9 / 11
+2026-10-12T11:53:41.064180Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/v02-space-08.png
+2026-10-12T11:53:43.069831Z  INFO solar_survival::config::validation: Validation graphique : étape 10 / 11
+2026-10-12T11:53:47.100170Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/v02-space-09.png
+2026-10-12T11:53:49.063921Z  INFO solar_survival::config::validation: Validation graphique : étape 11 / 11
+2026-10-12T11:53:53.083331Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/v02-space-10.png

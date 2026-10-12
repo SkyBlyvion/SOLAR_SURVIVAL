@@ -1,4 +1,153 @@
-# Validation Solar Survival 0.2 — 12 octobre 2026
+# Validation Solar Survival 0.2 — P2 et menu principal
+
+12 octobre 2026. Environnement exécuté : Ubuntu 24.04.5 LTS, X11 `DISPLAY=:1`, Rust stable 1.99.0, Bevy **exactement 0.19.1**, i7-6700K, GTX 1060 3 Go/NVK, Vulkan et Mesa 25.2.8. Lancements successifs avec `MESA_VK_WSI_PRESENT_MODE=immediate`, sans compilation ni autre lancement du jeu concurrent. Aucun changement de dépendance, de Cargo.toml ou Cargo.lock. Empreintes des sources et du binaire : [p2-environment.json](p2-environment.json). Windows 11 et la cible RTX 4050/Core i5 ne sont pas validés sur ce poste.
+
+| Vérification finale | Résultat |
+|---|---|
+| `cargo fmt --check` | Réussi |
+| `cargo check --locked` | Réussi |
+| `cargo test --locked` | **54 tests réussis** : 18 internes, 21 fondations, 15 surface |
+| `cargo clippy --all-targets --locked -- -D warnings` | Réussi |
+| `cargo build --release --locked` | Réussi, 1 min 59 s |
+| `SOLAR_P2_SECONDS=160`, release | Code 0, 35 captures, aucun ERROR/WARN/panic |
+| Menu avec entrées X11, options, crédits, reprise et deux suspensions de 12 s | 15 captures ; aucun ERROR/WARN/panic ; code final 143, cause non établie |
+| Lancement séparé, clic X11 sur Quitter | Code 0, aucun ERROR/WARN/panic |
+| Profilage de régression 30 s, variante msaa_off sans recorder GPU | Code 0, quatre phases, CSV valide, aucun ERROR/WARN/panic |
+| Windows 11 / RTX 4050 et Core i5 | Non exécuté |
+
+Journaux finaux : [fmt](validation-p2-fmt.txt), [check](validation-p2-check.txt), [tests](validation-p2-tests.txt), [Clippy](validation-p2-clippy.txt), [release](validation-p2-release.txt), [cycle P2](validation-p2-cycle.txt), [menu](validation-p2-menu.txt), [Quitter](validation-p2-menu-quit.txt). Les historiques sont conservés ci-dessous et leurs fichiers n’ont pas été écrasés.
+
+## Modifications et couverture
+
+P2 ajoute un scénario opt-in borné qui injecte les touches avant `camera::controls` : 96 s à ×1000, P, marche et saut en pause, P/T vers ×1/10/100/1000, puis deux séries de sorties M/G/O/U à différentes phases de rotation et retour final en surface. Le premier essai a révélé un défaut de lumière directe sur les parois nocturnes ; le Soleil sous l’horizon radial est désormais masqué dans le rendu local. Les 11 000 lux, l’ambiance et le brouillard restent des choix artistiques. Le masque n’est pas une occlusion détaillée du relief ni une photométrie scientifique : limitations dans [ASTRONOMY](ASTRONOMY.md). La simulation physique, les repères f64, les deux temps et les neuf tuiles restent inchangés.
+
+Le premier essai et ses 35 images sont conservés dans [p2-before-horizon](p2-before-horizon/). Il montrait aussi une erreur de séquence du scénario : la première commande M partait déjà de la surface et inversait certaines entrées/sorties. Le scénario final conserve ce premier site à l’étape 18 puis exécute ses huit sorties réellement depuis la surface. Cet essai initial constitue un diagnostic, pas la validation finale des transitions.
+
+Le menu est dans `ui/menu.rs` : Jouer/Reprendre, Options, Crédits, Quitter, sous-écrans réutilisés, cible UI sur la caméra active. Les options agissent sur les deux projections/MSAA, la sensibilité des deux modes de visée et le mode de fenêtre. Les marqueurs utilisent le FOV sélectionné. Défauts conservés : sensibilité ×1, FOV vertical 65°, MSAA ×4, fenêtré. Les réglages sont en mémoire pour la session ; aucune sauvegarde ni audio ajouté. Le menu bloque les commandes de navigation et libère le curseur ; calendrier et gravité continuent. Reprendre ne recrée ni site ni état physique. Les scénarios automatisés contournent le menu initial ; le profilage conserve la priorité sur les options graphiques. `SOLAR_CAPTURE_DIR` installe seulement sur demande la capture F12.
+
+Les 48 tests antérieurs restent réussis. Six nouveaux vérifient : blocage des contrôles/capture sans arrêt de l’horloge dans le menu ; parcours Échap/crédits/reprise ; application et reset des options aux deux caméras et à la fenêtre ; interruption manuelle ECS de 12 s avec avance de 12 000 s du calendrier et 0,25 s de physique locale ; frontières du cycle P2 ; exécution réelle des huit sorties via le scénario et les contrôles. Le test de rendu existant vérifie désormais aussi extinction et retour de la lumière directe, avec les mêmes meshes et poses locales pendant la rotation. Les tests ECS ne constituent pas des tests des périphériques OS.
+
+## Cycle complet et transitions inspectés
+
+Les douze captures [00](p2-stage-00.png) à [11](p2-stage-11.png) ont toutes été inspectées. Elles couvrent la journée, l’entrée dans la nuit, la nuit, l’aube et le retour au jour. Le JD atteint environ J2000 + 1,08841 jour à la capture 11, au-delà de la période sidérale de 1,02595676 jour. Le site conserve sa révision 1, ses pieds et obstacles pendant tout le cycle. La direction solaire locale passe d’une composante verticale positive à négative puis positive. Comparaison de la paroi éclairée sous horizon [avant correction](p2-before-horizon/p2-stage-04.png) et [après correction](p2-stage-04.png) : la face lumineuse nocturne a disparu. La nuit reste volontairement visible sous l’ambiance artistique. Il s’agit d’un échantillonnage sur un cycle entier, pas d’une vidéo de chaque frame.
+
+[Marche pendant P](p2-stage-12.png) et [saut pendant P](p2-stage-13.png) effectivement inspectés : même JD 2451546,11059492, marche 4,50 m/s, saut à environ 1,96 m au-dessus du support. Les étapes 14–17 du journal reprennent à ×1 puis ×10/100/1000. Les quatre sorties de la première série [M](p2-stage-19.png), [G](p2-stage-21.png), [O](p2-stage-23.png), [U](p2-stage-25.png), celles de la seconde série [M](p2-stage-27.png), [G](p2-stage-29.png), [O](p2-stage-31.png), [U](p2-stage-33.png), puis [le retour final au site](p2-stage-34.png), ont été inspectés. Les modes et repères attendus sont aussi consignés dans le journal ; la sphère réapparaît en espace et les obstacles en surface.
+
+Les captures du cycle donnent ponctuellement environ 22–25 FPS au repos de surface, 19 FPS pendant la marche en pause et 42–44 FPS dans les sorties spatiales inspectées. Ce sont des valeurs du HUD, **pas un nouveau benchmark**, ni une prévision de la cible RTX 4050. Aucun réglage de qualité par défaut n’a été réduit. Les marqueurs peuvent encore se superposer en vue globale ou être dessinés devant un obstacle : leur occultation reste approximative et préexistante.
+
+## Menu et interruption réelle
+
+L’essai interactif utilise XTest/libX11 depuis un script temporaire de validation, sans dépendance ajoutée au jeu ; les entrées passent par les périphériques X11 puis Winit/Bevy. Actions horodatées : [validation-p2-menu-actions.txt](validation-p2-menu-actions.txt). La sélection initiale de la décoration de fenêtre a été corrigée vers le client ; certains premiers clics ont été répétés pendant la mise au point du pilote. Les captures et journaux sont tous conservés. Ce pilote temporaire Ubuntu ne constitue pas une API de gameplay ni une validation Windows.
+
+Écrans effectivement inspectés : [menu initial](p2-menu/capture-00.png), [options](p2-menu/capture-04.png), [options modifiées et plein écran 1920×1080](p2-menu/capture-06.png), [reset et retour fenêtre 1440×900](p2-menu/capture-07.png), [crédits](p2-menu/capture-08.png), [menu Reprendre en surface](p2-menu/capture-13.png), [surface après reprise](p2-menu/capture-14.png). Textes lisibles et commandes fonctionnelles aux deux tailles inspectées. Les petites fenêtres, autres DPI et la navigation au clavier par flèches n’ont pas été validés ; Entrée et Échap fonctionnent, les options se sélectionnent à la souris.
+
+Une première injection du keysym `m` sur le clavier AZERTY n’a pas déclenché le `KeyM` physique et l’interruption a donc eu lieu en espace : [trace conservée](p2-interruption-space.json), capture 10. L’entrée de surface a ensuite été faite avec le code physique approprié. Ce décalage concerne le pilote de test, pas une modification du mapping WASD/ZQSD du jeu.
+
+La deuxième suspension SIGSTOP/SIGCONT dure **12,0002 s**, effectuée après un saut en surface à ×1000 : [horodatage](p2-interruption.json). [Avant](p2-menu/capture-11.png), le joueur est au sol sur Mars. [Immédiatement après la reprise](p2-menu/capture-12.png), effectivement inspecté, il est toujours en l’air à environ 2,12 m du support, vitesse relative au site 0,32 m/s ; le calendrier a avancé et le Soleil local a changé. Le mouvement reste cohérent avec la physique locale plafonnée plutôt qu’une chute rattrapée sur douze secondes. Les captures avant/après incluent aussi le temps d’interaction ; elles ne mesurent pas isolément 12 000 s d’avance orbitale. Cette valeur et la pose synchronisée après interruption sont vérifiées par le test ECS. Une mise en veille complète de l’OS n’a pas été exécutée.
+
+L’essai interactif long a renvoyé **143** après les dernières captures et le clic final, sans diagnostic d’erreur moteur ; sa cause n’est pas établie, et il n’est pas présenté comme une fermeture normale. Un nouvel essai court sur le même binaire, avec clic X11 sur **Quitter**, a terminé avec **code 0**, sans erreur. Les journaux des deux essais sont conservés.
+
+## Régression du profilage
+
+Un lancement release séparé de 30 s, `SOLAR_PROFILE_GPU=0`, variante `msaa_off`, a contourné le menu et effectué repos, contact, streaming et sortie spatiale. Code 0, aucun ERROR/WARN/panic, quatre phases et valeurs finies/non négatives dans le [CSV](p2-profile-smoke.csv) ; [journal](validation-p2-profile-smoke.txt). Le joueur a franchi x = 128 m. Cet essai vérifie le scénario/export après ajout du menu et la priorité de la variante graphique ; il n’est pas une nouvelle campagne P1 et n’établit pas un gain de performance.
+
+## Décision et limites
+
+P2 est terminé sur ce poste, avec cycle complet inspecté, défaut observé corrigé, P/T, sorties répétées, interruption réelle et tests ciblés. Le menu demandé est opérationnel. La prochaine étape limitée est P3.1 : contrat géométrique et raccords entre patches cube-sphere, avant tout franchissement jouable. Voir [ROADMAP](ROADMAP.md) et [NEXT_CHAT](NEXT_CHAT.md).
+
+Le site reste ±4 096 m et neuf tuiles, les forces d’inertie sont omises, l’orientation et les textures sont conventionnelles/artistiques. L’horizon nocturne idéal, l’absence d’ombres de relief, l’occultation astronomique compressée et les marqueurs gardent leurs limites. Les réglages ne sont pas persistés. Windows 11, RTX 4050/Core i5, autres DPI et suspension système complète restent à valider dans leurs environnements propres.
+
+---
+
+# Historique : validation Solar Survival 0.2 profilage et roadmap
+
+12 octobre 2026. Environnement exécuté : Ubuntu 24.04.5 LTS, X11 `DISPLAY=:1`, Rust stable 1.99.0, Bevy **exactement 0.19.1**, Intel i7-6700K à 4 GHz, NVIDIA GTX 1060 3 Go/NVK, Vulkan et Mesa 25.2.8. C'est le **poste de développement** ; la cible déclarée par l'utilisateur est RTX 4050 avec Intel Core i5. Ses performances et Windows 11 restent à valider nativement sur cette machine.
+
+| Vérification sur les sources finales | Résultat |
+|---|---|
+| `cargo fmt --check` | Réussi |
+| `cargo check --locked` | Réussi |
+| `cargo test --locked` | **48 tests réussis** : 12 internes, 21 fondations, 15 surface |
+| `cargo clippy --all-targets --locked -- -D warnings` | Réussi |
+| `cargo build --release --locked` | Réussi, 1 min 59 s |
+| `python3 scripts/profile_suite.py --help` | Réussi |
+| Huit essais release de profilage, successifs, 42 s chacun | Codes 0, quatre phases par essai, aucun ERROR/WARN/panic |
+| Scénario graphique normal sans profiler, rotation surface 50 s | Code 0, dix captures |
+| Windows 11 / RTX 4050 et Core i5 | Non exécuté, aucun hôte cible disponible |
+
+Journaux : [fmt](validation-profile-fmt.txt), [check](validation-profile-check.txt), [tests](validation-profile-tests.txt), [Clippy](validation-profile-clippy.txt), [release](validation-profile-release.txt).
+
+## Changements et couverture
+
+Le profilage est optionnel dans `config/profiling.rs` ; il n'installe aucun système ni recorder GPU sans `SOLAR_PROFILE_SECONDS`. Le scénario compare repos, contact, streaming et visite spatiale dans une scène fixe, avec délais d'échauffement et de stabilisation exclus. Les variantes conservent la simulation et modifient seulement les caméras, résolution, MSAA ou matériaux pendant la mesure. Le fonctionnement normal et les contraintes f64/GameSet/temps réel restent conservés. Aucune dépendance ajoutée, Cargo.toml et Cargo.lock inchangés.
+
+Les 46 tests précédents restent réussis. Deux tests couvrent les frontières temporelles du protocole et l'absence de ressources/systèmes de profilage dans une partie normale. La campagne réelle vérifie les variantes graphiques et l'export CSV ; les mesures et leurs limites figurent dans [PERFORMANCE](PERFORMANCE.md).
+
+La [ROADMAP](ROADMAP.md) est la référence de développement, avec critères de fin par étape et distinction poste/cible. AGENTS demande maintenant de la lire en début de chat et de préparer [NEXT_CHAT](NEXT_CHAT.md) en fin de chat. P1 est terminé comme diagnostic sur le poste de développement ; P2, consolidation du prototype tournant, est la prochaine étape. Les étapes de terrain, survie, construction et distribution restent prévues, pas implémentées.
+
+## Campagne et inspection graphique
+
+La campagne [`scripts/profile_suite.py --seconds 42 --mesa-immediate --gpu-probe`](../scripts/profile_suite.py) a exécuté huit essais, sans compilation ni autre essai GPU concurrent. Les [CSV bruts, journaux et métadonnées](profiles/dev-nvk-2026-10-12/) et la [synthèse](profiles/dev-nvk-2026-10-12/summary.csv) sont conservés. Les données orientent vers le budget de rendu et la composition MSAA de deux vues ; les limites de couverture CPU et des chemins GPU partagés sont détaillées dans PERFORMANCE. Ces différences ne constituent pas une mesure de la RTX 4050. Chaque variante a une seule répétition, sauf baseline sans recorder GPU qui est répété en fin de campagne.
+
+Après la campagne, un lancement release normal avec `SOLAR_ROTATION_SMOKE_SECONDS=50`, présentation Mesa immediate et **sans profiler**, a produit dix captures et terminé avec le code 0. Le [journal](validation-profile-normal.txt) ne contient aucun ERROR, WARN ou panic. Captures effectivement inspectées : [surface au repos](profile-normal-surface-00.png), [repos en pause après la course](profile-normal-surface-07.png), [retour spatial Mars](profile-normal-surface-08.png). Le terrain, les obstacles, l'UI et la réapparition de la sphère martienne restent visibles. Les captures historiques rotation-surface ont été restaurées, les nouvelles copies portent le préfixe profile-normal-surface. Cette inspection confirme le rendu normal après ajout du profiler ; les essais de comparaison mesurent le fonctionnement graphique mais ne valident pas la qualité visuelle des variantes qui retirent une partie de l'image.
+
+---
+
+# Historique : validation Solar Survival 0.2 repère tournant — 12 octobre 2026
+
+Environnement exécuté : **Ubuntu 24.04.5 LTS**, session X11 (`DISPLAY=:1`), Rust stable **1.99.0**, édition 2024, Bevy **exactement 0.19.1**. Le lancement release sélectionne **NVIDIA GeForce GTX 1060 3GB (NVK GP106)**, Vulkan, **Mesa 25.2.8-0ubuntu0.24.04.2**. Aucune dépendance ni version ajoutée/modifiée ; `Cargo.toml` et `Cargo.lock` sont inchangés.
+
+| Vérification exécutée sur les sources finales | Résultat |
+|---|---|
+| `cargo fmt --check` | Réussi |
+| `cargo check --locked` | Réussi |
+| `cargo test --locked` | **46 tests réussis** : 10 internes, 21 fondations, 15 surface |
+| `cargo clippy --all-targets --locked -- -D warnings` | Réussi, aucune alerte |
+| `cargo build --release --locked` | Réussi, 1 min 54 s |
+| `MESA_VK_WSI_PRESENT_MODE=immediate SOLAR_ROTATION_SMOKE_SECONDS=50 RUST_LOG=info cargo run --release --locked` | Sortie 0, dix captures |
+| `MESA_VK_WSI_PRESENT_MODE=immediate SOLAR_SMOKE_SECONDS=66 RUST_LOG=info cargo run --release --locked` | Sortie 0, onze captures spatiales |
+| Windows 11 natif | **Non exécuté** : aucun hôte Windows disponible |
+
+Journaux : [fmt](validation-rotation-fmt.txt) (vide car réussi), [check](validation-rotation-check.txt), [tests](validation-rotation-tests.txt), [Clippy](validation-rotation-clippy.txt), [release](validation-rotation-release.txt), [surface tournante](validation-rotation-surface.txt), [espace](validation-rotation-space.txt).
+
+## Architecture et couverture
+
+La rotation conventionnelle f64 est désormais dans `CelestialBody::rotation`, partagée par le rendu des planètes et le suivi de surface. Le site fixe appartient aux axes tournants de Mars ; ses coordonnées, obstacles et meshes ne sont pas régénérés pour la rotation. `SurfaceState` conserve l’état local autoritaire. La navigation publie la pose globale après la physique, même sans sous-pas, puis l’origine flottante. La caméra locale conserve les différences métriques f64 dans le site ; la lumière est convertie depuis la direction globale du Soleil. L’ordre des `GameSet`, les visites spatiales translatoires, l’horloge orbitale et le voisinage de neuf tuiles restent conservés. Formules et limites : [ASTRONOMY](ASTRONOMY.md), utilisation : [README](../README.md).
+
+Les 40 tests précédents restent réussis. Les six nouveaux couvrent :
+
+- Convention de rotation sur les dix corps : phase J2000, inclinaison, période signée, rotations rétrogrades, temps négatif et retour après une période.
+- Entrée côté éclairé à plusieurs époques, dont une date éloignée de J2000.
+- Pose au repos et en l’air entraînée avec les obstacles, distances et orientations relatives conservées, sans mutation de pieds/vitesse/site/révision, y compris après 1 000 rotations.
+- Mise à jour de la pose, de l’origine flottante et de la caméra spatiale sur une frame sans sous-pas physique.
+- Trajectoires locales identiques pendant marche et saut entre P et ×1000, reprise par P et changement de vitesse par T.
+- Systèmes réels de rendu local : caméra, tuiles et obstacle inchangés en coordonnées de rendu pendant une rotation ; direction lumineuse attendue, neuf meshes et mêmes handles conservés.
+
+Le test existant M/G/O/U vérifie désormais les sorties après suivi tournant sous ×1000, puis une visite terrestre. Les tests préexistants couvrent encore gravité, contacts, stabilité au repos, saut, limites du site, streaming et déplacements à différentes fréquences. Les essais ECS n’injectent pas les périphériques au niveau de l’OS.
+
+## Inspection graphique de surface
+
+Lancement release réalisé **sans compilation concurrente**, avec le contournement Mesa immediate déjà documenté. Les dix captures sont produites, sortie normale 0, aucun ERROR, WARN ou panic dans le journal. Captures effectivement inspectées : [repos sous ×1000](rotation-surface-00.png), [saut sous ×1000](rotation-surface-02.png), [marche pendant P](rotation-surface-03.png), [course après changement de tuile](rotation-surface-06.png), [repos pendant P](rotation-surface-07.png), [retour spatial Mars](rotation-surface-08.png), [Terre après sortie](rotation-surface-09.png).
+
+Le scénario alterne ×1000 aux étapes 0–2, pause à 3, ×1000 à 4, ×1 à 5, ×1000 à 6, pause à 7, puis ×1 aux sorties 8–9. Le journal montre le JD conservé à 2451545,17352902 pendant la marche en pause ; la capture 03 affiche 4,50 m/s. La course reste à 8 m/s sous ×1000, puis les pieds atteignent z = −151,090 m, au-delà de la limite de tuile −128 m. La capture 07 affiche une vitesse relative au site nulle après libération des commandes. Le JD atteint environ J2000 + 0,290 jour ; la direction solaire évolue et le sol apparaît moins éclairé en fin de parcours. L’ambiance et le brouillard restent artistiques : ces vues ne valident pas une photométrie scientifique ni un cycle jour/nuit complet.
+
+Les vues de surface inspectées affichent **22–24 FPS** ; les sorties spatiales Mars et Terre affichent respectivement 34 et 51 FPS. Ces relevés ponctuels du HUD sont proches de la validation précédente, **sans établir un benchmark ni une amélioration de performance**. Aucun timeout de présentation n’apparaît dans ce lancement. L’ancien diagnostic NVK/VSync et ses journaux sont conservés dans l’historique ci-dessous ; aucun ralentissement n’est attribué ici au code du repère.
+
+## Régression graphique spatiale
+
+Le second lancement release visite les dix corps puis la vue globale, sans compilation ni lancement GPU concurrent. Il termine avec le code 0, onze captures et aucun ERROR, WARN ou panic. Les nouvelles captures ont été conservées sous `rotation-space-00.png` à `rotation-space-10.png` après le lancement, qui écrit normalement les noms `v02-space-*` ; les captures historiques `v02-space-*` ont été restaurées sans modification.
+
+Vues effectivement inspectées : [Terre](rotation-space-00.png), [Saturne et anneaux](rotation-space-03.png), [Lune](rotation-space-06.png), [Soleil](rotation-space-09.png), [vue globale](rotation-space-10.png). Les sphères, leur éclairage, les anneaux, le halo et les marqueurs fonctionnent ; la superposition de marqueurs en vue globale reste une limite préexistante. Ces vues affichent 36–52 FPS, sans mesure de performance dédiée.
+
+## Comportement et limites
+
+P fige orbite et rotation, mais pas marche, gravité, saut ni visée. T accélère orbite et rotation à partir du même calendrier ; la physique locale reste en secondes réelles. Le joueur reste dans le site tournant même en l’air. Coriolis, centrifuge, Euler, accélération translatoire orbitale et marées sont omises, ainsi que les impulsions inertiales lors des changements P/T. Les vitesses sont relatives au site ; les téléportations M/G/O/U ne transfèrent aucune vitesse inertielle. Après une longue interruption, la pose suit le JD courant, tandis que le contrôleur n’accepte que 0,25 s de physique locale par frame.
+
+L’orientation réutilise la phase et le pôle conventionnels du prototype ; elle n’est pas IAU exacte. Le site reste borné à ±4 096 m, sans réseau mondial cube-sphere, grottes ou corps dynamiques. La profondeur astronomique compressée et ses occultations restent approximatives. Les tests graphiques n’équivalent pas à des essais manuels des touches/clics. **Windows 11 n’a été ni compilé ni lancé depuis cet environnement Linux.**
+
+---
+
+# Historique : validation Solar Survival 0.2 translatoire — 12 octobre 2026
 
 Environnement exécuté : **Ubuntu 24.04.5 LTS**, session X11 (`DISPLAY=:1`), Rust stable **1.99.0**, édition 2024, Bevy **exactement 0.19.1**. Le lancement release sélectionne **NVIDIA GeForce GTX 1060 3GB (NVK GP106)**, Vulkan, **Mesa 25.2.8-0ubuntu0.24.04.2**. Aucune dépendance ajoutée ; `Cargo.lock` ne change que la version de l'application (0.2.0).
 

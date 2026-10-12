@@ -1,0 +1,26 @@
+{
+  "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.39",
+  "processor": "x86_64",
+  "source_sha256": "fd7680611b38a5f53791eed525af3c778cef2125c5893e3f47f847587e4ecf9e",
+  "seconds": 42.0,
+  "repeats": 1,
+  "mesa_immediate": true,
+  "gpu_probe": true,
+  "variants": [
+    "baseline",
+    "no_space_camera",
+    "no_surface_camera",
+    "half_resolution",
+    "msaa_off",
+    "surface_unlit"
+  ],
+  "binary": "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/target/release/solar_survival",
+  "binary_sha256": "a06bd11d8edb0427b77c6ad287e56f6ab87c920cf1104b712e7e4edf7d4ea050",
+  "development_cpu": "Intel Core i7-6700K @ 4.00 GHz",
+  "development_gpu": "NVIDIA GeForce GTX 1060 3GB (NVK GP106)",
+  "driver": "Mesa 25.2.8-0ubuntu0.24.04.2",
+  "session": "X11 DISPLAY=:1",
+  "rust": "1.99.0",
+  "bevy": "0.19.1",
+  "target_declared_by_user": "RTX 4050 and Intel Core i5; exact CPU model and settings pending"
+}

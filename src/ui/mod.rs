@@ -14,6 +14,7 @@ use bevy::{
     prelude::*,
     window::PrimaryWindow,
 };
+pub mod menu;
 
 #[derive(Component)]
 struct HudRoot;
@@ -32,6 +33,7 @@ enum Action {
     Center,
     Overview,
     Surface,
+    Menu,
 }
 #[derive(Resource)]
 struct HudState {
@@ -43,6 +45,7 @@ pub struct HudPlugin;
 impl Plugin for HudPlugin {
     fn build(&self, app: &mut App) {
         app.insert_resource(HudState { visible: true })
+            .add_plugins(menu::MenuPlugin)
             .add_plugins(FrameTimeDiagnosticsPlugin::default())
             .add_systems(Startup, setup)
             .add_systems(
@@ -79,7 +82,7 @@ fn setup(mut commands: Commands, solar: Res<SolarSystem>, assets: Res<AssetServe
                 panel.spawn((Button, Action::Select(body.id), Node { padding: UiRect::axes(px(12),px(6)), border_radius: BorderRadius::all(px(4)), ..default() }, BackgroundColor(Color::srgb(0.05,0.08,0.12))))
                     .with_child((Text::new(format!("{}   {}",body.id.0,body.name)),font(16.0, &ui_font),TextColor(Color::srgb(0.75,0.83,0.89))));
             }
-            for (action,label) in [(Action::Center,"F   Centrer"),(Action::Visit,"G   Visiter"),(Action::Overview,"O   Vue du système"),(Action::Surface,"M   Surface Mars / retour")] {
+            for (action,label) in [(Action::Center,"F   Centrer"),(Action::Visit,"G   Visiter"),(Action::Overview,"O   Vue du système"),(Action::Surface,"M   Surface Mars / retour"),(Action::Menu,"Échap   Menu principal")] {
                 panel.spawn((Button,action,Node { padding: UiRect::axes(px(12),px(8)), border_radius: BorderRadius::all(px(4)), ..default() }, BackgroundColor(Color::srgb(0.07,0.18,0.24))))
                     .with_child((Text::new(label),font(14.0, &ui_font),TextColor(Color::srgb(0.6,0.9,1.0))));
             }
@@ -98,11 +101,12 @@ fn setup(mut commands: Commands, solar: Res<SolarSystem>, assets: Res<AssetServe
 }
 fn buttons(
     state: Res<HudState>,
+    mut menu: ResMut<menu::MenuState>,
     mut query: Query<(Ref<Interaction>, &Action, &mut BackgroundColor)>,
     mut pilot: ResMut<Explorer>,
     mut request: ResMut<NavigationRequest>,
 ) {
-    if !state.visible {
+    if !state.visible || menu.is_open() {
         return;
     }
     for (interaction, action, mut color) in &mut query {
@@ -120,23 +124,25 @@ fn buttons(
                 Action::Center => request.center = true,
                 Action::Overview => request.overview = true,
                 Action::Surface => request.surface = true,
+                Action::Menu => menu.open(),
             }
         }
     }
 }
 fn toggle(
     keys: Res<ButtonInput<KeyCode>>,
+    menu: Res<menu::MenuState>,
     mut state: ResMut<HudState>,
     mut root: Single<&mut Node, With<HudRoot>>,
 ) {
-    if keys.just_pressed(KeyCode::KeyH) {
+    if !menu.is_open() && keys.just_pressed(KeyCode::KeyH) {
         state.visible = !state.visible;
-        root.display = if state.visible {
-            Display::Flex
-        } else {
-            Display::None
-        };
     }
+    root.display = if state.visible && !menu.is_open() {
+        Display::Flex
+    } else {
+        Display::None
+    };
 }
 #[expect(
     clippy::type_complexity,
@@ -184,6 +190,11 @@ fn refresh(
     let anchor = pilot
         .anchor
         .map_or("Héliocentrique", |id| solar.body(id).name);
+    let anchor = if pilot.mode == MovementMode::Surface {
+        "Mars · site tournant"
+    } else {
+        anchor
+    };
     let mode = if pilot.mode == MovementMode::Surface {
         "surface Mars"
     } else {
@@ -191,7 +202,7 @@ fn refresh(
     };
     let movement = if pilot.mode == MovementMode::Surface {
         format!(
-            "{} · {}\nVitesse réelle : {:.2} m/s\nHauteur pieds/sol : {:.2} m",
+            "{} · {}\nVitesse / site : {:.2} m/s\nHauteur pieds/sol : {:.2} m",
             if pilot.boosted { "Course" } else { "Marche" },
             if surface.grounded {
                 "au sol"
@@ -242,6 +253,7 @@ fn refresh(
     );
 }
 fn markers(
+    settings: Res<menu::PlayerSettings>,
     pilot: Res<Explorer>,
     solar: Res<SolarSystem>,
     clock: Res<SimulationClock>,
@@ -251,7 +263,7 @@ fn markers(
     let position = pilot.global(&solar, clock.jd);
     let width = window.width();
     let height = window.height();
-    let focal = height * 0.5 / (65_f32.to_radians() * 0.5).tan();
+    let focal = height * 0.5 / (settings.fov_degrees().to_radians() * 0.5).tan();
     for (marker, mut node, mut color) in &mut markers {
         let relative = solar.position(marker.0, clock.jd) - position;
         let local = (pilot.rotation.inverse() * relative.normalize_or_zero()).as_vec3();

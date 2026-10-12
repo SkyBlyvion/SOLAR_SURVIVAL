@@ -1,0 +1,8 @@
+{
+  "pid": 268606,
+  "signal_stop_utc": "2026-10-12T12:56:19.052599+00:00",
+  "signal_continue_utc": "2026-10-12T12:56:31.052785+00:00",
+  "pause_wall_seconds": 12.00020312199922,
+  "state_before": "surface Mars, ×1000, saut lancé via XTest",
+  "capture_after": "F12 via XTest immédiatement après SIGCONT"
+}
