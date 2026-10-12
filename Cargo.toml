@@ -1,0 +1,27 @@
+[package]
+name = "solar_survival"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.95"
+description = "Exploration 3D du système solaire à l'échelle physique 1:1"
+license = "MIT"
+
+[dependencies]
+bevy = { version = "=0.19.1", default-features = false, features = [
+    "std", "async_executor", "bevy_asset", "bevy_log", "bevy_winit",
+    "bevy_pbr", "bevy_core_pipeline", "bevy_post_process", "bevy_ui_render",
+    "default_font", "multi_threaded", "x11", "keyboard", "mouse", "png",
+    "tonemapping_luts", "zstd_rust", "reflect_auto_register"
+] }
+
+[profile.dev]
+opt-level = 1
+debug = 0
+
+[profile.dev.package."*"]
+opt-level = 2
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+strip = "debuginfo"

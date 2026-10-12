@@ -1,0 +1,49 @@
+   Compiling solar_survival v0.1.0 (/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL)
+    Finished `test` profile [optimized] target(s) in 2.70s
+     Running unittests src/lib.rs (target/debug/deps/solar_survival-5fdc6c8d27113921)
+
+running 2 tests
+test camera::tests::actual_ecs_controls_select_visit_and_release_cursor ... ok
+test camera::tests::actual_ecs_camera_movement_is_frame_rate_independent ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running unittests src/main.rs (target/debug/deps/solar_survival-0458592784ba0e78)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/foundations.rs (target/debug/deps/foundations-081302e2a280d4ee)
+
+running 21 tests
+test astronomical_unit_is_exact_iau_definition ... ok
+test cube_sphere_patches_are_valid_reproducible_and_bounded ... ok
+test circular_orbit_quarter_turn_and_inclination ... ok
+test catalogue_contains_ten_unique_bodies_and_real_dimensions ... ok
+test earth_moon_barycentre_preserved ... ok
+test elliptical_orbit_has_correct_perihelion_and_aphelion ... ok
+test frame_composition_and_conversion ... ok
+test gravity_points_toward_mars_in_any_orientation ... ok
+test interplanetary_distance_retains_small_offsets ... ok
+test jpl_validity_boundaries_match_gregorian_dates ... ok
+test kepler_solver_residual_for_all_catalogue_eccentricities ... ok
+test orbit_changes_with_time_without_rendering ... ok
+test moon_returns_after_sidereal_period ... ok
+test periods_match_jpl_sidereal_years_approximately ... ok
+test positions_finite_through_valid_jpl_interval ... ok
+test reference_frame_roundtrip_near_neptune_preserves_submillimetres ... ok
+test render_proxies_preserve_angular_size_and_bound_coordinates ... ok
+test simulation_clock_is_independent_of_frame_rate_and_pauses ... ok
+test solar_gravity_predicts_earth_year ... ok
+test swept_collision_prevents_hypervelocity_tunnelling ... ok
+test visits_and_frame_detach_preserve_global_location ... ok
+
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests solar_survival
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

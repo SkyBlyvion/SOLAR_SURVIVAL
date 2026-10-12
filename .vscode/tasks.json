@@ -1,0 +1,8 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    { "label": "Solar Survival: lancer", "type": "shell", "command": "${env:HOME}/.cargo/bin/cargo", "windows": { "command": "cargo" }, "args": ["run"], "problemMatcher": ["$rustc"], "group": "build" },
+    { "label": "Solar Survival: vérifier", "type": "shell", "command": "${env:HOME}/.cargo/bin/cargo", "windows": { "command": "cargo" }, "args": ["check"], "problemMatcher": ["$rustc"] },
+    { "label": "Solar Survival: tester", "type": "shell", "command": "${env:HOME}/.cargo/bin/cargo", "windows": { "command": "cargo" }, "args": ["test"], "problemMatcher": ["$rustc"], "group": "test" }
+  ]
+}
