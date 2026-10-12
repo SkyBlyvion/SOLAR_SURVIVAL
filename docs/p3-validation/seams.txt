@@ -1,0 +1,36 @@
+2026-10-12T13:21:59.683284Z  INFO bevy_render::renderer: AdapterInfo { name: "NVIDIA GeForce GTX 1060 3GB (NVK GP106)", vendor: 4318, device: 7170, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "NVK", driver_info: "Mesa 25.2.8-0ubuntu0.24.04.2", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: false }
+2026-10-12T13:21:59.789233Z  INFO bevy_pbr::cluster: GPU clustering is supported on this device.
+2026-10-12T13:21:59.789284Z  INFO bevy_render::batching::gpu_preprocessing: GPU preprocessing is fully supported on this device.
+2026-10-12T13:21:59.789658Z  INFO bevy_winit::system: Creating new window Solar Survival - P3.1 cube-sphere seam (62v0)
+2026-10-12T13:21:59.790285Z  INFO winit::platform_impl::linux::x11::window: Guessed window scale factor: 1
+2026-10-12T13:21:59.794610Z  INFO cube_seam: P3.1 - Same face
+Orange: source / blue: neighbor / yellow: shared edge
+Level 15 - 32 segments - radius 3389500 m - seam 206.879 m
+33 shared vertices / 2145 unique vertices / 4096 triangles
+PositiveU -> NegativeU, reversed=false
+Geometry only - no player contacts - scene 1/4; source=PatchKey { face: PositiveX, level: 15, x: 16383, y: 16383 }; neighbor=PatchKey { face: PositiveX, level: 15, x: 16384, y: 16383 }; 2 patches, 3 reused mesh handles
+2026-10-12T13:22:04.859184Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p3-validation/seams/seam-00.png
+2026-10-12T13:22:07.807279Z  INFO cube_seam: P3.1 - +X / -Z face edge
+Orange: source / blue: neighbor / yellow: shared edge
+Level 15 - 32 segments - radius 3389500 m - seam 146.285 m
+33 shared vertices / 2145 unique vertices / 4096 triangles
+PositiveU -> NegativeU, reversed=false
+Geometry only - no player contacts - scene 2/4; source=PatchKey { face: PositiveX, level: 15, x: 32767, y: 16383 }; neighbor=PatchKey { face: NegativeZ, level: 15, x: 0, y: 16383 }; 2 patches, 3 reused mesh handles
+2026-10-12T13:22:07.807329Z  INFO cube_seam: Demo keeps 3 mesh handles; 7 total assets including Bevy internal meshes
+2026-10-12T13:22:12.853038Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p3-validation/seams/seam-01.png
+2026-10-12T13:22:15.807365Z  INFO cube_seam: P3.1 - +X / -Y reversed edge
+Orange: source / blue: neighbor / yellow: shared edge
+Level 15 - 32 segments - radius 3389500 m - seam 146.285 m
+33 shared vertices / 2145 unique vertices / 4096 triangles
+NegativeV -> PositiveU, reversed=true
+Geometry only - no player contacts - scene 3/4; source=PatchKey { face: PositiveX, level: 15, x: 16383, y: 0 }; neighbor=PatchKey { face: NegativeY, level: 15, x: 32767, y: 16384 }; 2 patches, 3 reused mesh handles
+2026-10-12T13:22:15.807419Z  INFO cube_seam: Demo keeps 3 mesh handles; 7 total assets including Bevy internal meshes
+2026-10-12T13:22:20.861509Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p3-validation/seams/seam-02.png
+2026-10-12T13:22:23.800001Z  INFO cube_seam: P3.1 - Cube corner: -Y / +X reversed edge
+Orange: source / blue: neighbor / yellow: shared edge
+Level 15 - 32 segments - radius 3389500 m - seam 97.526 m
+33 shared vertices / 2145 unique vertices / 4096 triangles
+PositiveU -> NegativeV, reversed=true
+Geometry only - no player contacts - scene 4/4; source=PatchKey { face: NegativeY, level: 15, x: 32767, y: 32767 }; neighbor=PatchKey { face: PositiveX, level: 15, x: 0, y: 0 }; 2 patches, 3 reused mesh handles
+2026-10-12T13:22:23.800040Z  INFO cube_seam: Demo keeps 3 mesh handles; 7 total assets including Bevy internal meshes
+2026-10-12T13:22:28.853722Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p3-validation/seams/seam-03.png

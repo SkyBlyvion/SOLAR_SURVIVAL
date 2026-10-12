@@ -1,4 +1,58 @@
-# Validation Solar Survival 0.2 — P2 et menu principal
+# Validation Solar Survival 0.2 — P3.1 cube-sphere
+
+12 octobre 2026. Environnement : Ubuntu 24.04.5 LTS, X11 `DISPLAY=:1`, Rust stable 1.99.0, édition 2024, Bevy **exactement 0.19.1**, i7-6700K et GTX 1060 3 Go/NVK, Vulkan, Mesa 25.2.8. Git était propre au départ, commit `cfc745e` (P2 déjà commité), contrairement au prompt de reprise ancien. Aucune dépendance ni modification de Cargo.toml/Cargo.lock. Historiques P1/P2 préservés. Empreintes des sources/binaries : [environment.json](p3-validation/environment.json).
+
+| Vérification finale | Résultat |
+|---|---|
+| `cargo fmt --check` | Réussi |
+| `cargo check --locked` et `--all-targets` | Réussis, y compris l'exemple |
+| `cargo test --locked` | **63 tests réussis** : 18 internes, 21 fondations, 15 surface, 9 cube-sphere |
+| `cargo clippy --all-targets --locked -- -D warnings` | Réussi |
+| `cargo build --release --locked` (jeu) | Réussi |
+| `cargo build --release --locked --example cube_seam` | Réussi, reconstruction finale 1 min 43 s |
+| Démonstration release `cube_seam`, 32 s | Code 0, quatre captures inspectées, aucun ERROR/WARN/panic |
+| Régression FPS `SOLAR_ROTATION_SMOKE_SECONDS=50`, release | Code 0, dix captures, aucun ERROR/WARN/panic |
+| Windows 11 / RTX 4050 et Core i5 | Non exécuté |
+
+Journaux : [fmt](p3-validation/fmt.txt), [check](p3-validation/check.txt), [all-targets](p3-validation/check-all-targets.txt), [tests](p3-validation/tests.txt), [Clippy](p3-validation/clippy.txt), [build du jeu](p3-validation/release-game.txt), [build de la démo](p3-validation/release.txt), [démo](p3-validation/seams.txt). Les lancements utilisent `MESA_VK_WSI_PRESENT_MODE=immediate`, successivement et sans compilation concurrente. Commandes, répertoires et codes : [graphics-results.json](p3-validation/graphics-results.json).
+
+## Contrat et vérification numérique
+
+Le [contrat documenté](CUBE_SPHERE.md) est implémenté dans `planets/cube_sphere.rs`, réexporté par `planets` ; le terrain jouable et le contrôleur restent inchangés. Conversions face/u/v ↔ direction en f64, fractions locales de patch, voisins de même niveau et orientations des arêtes, puis paire de patches avec sommets/indices communs. Sphère au rayon SI du catalogue sans relief. Identité cubique entière et ordre déterministe des grilles : aucune soudure par tolérance. Deux patches seulement ; génération plafonnée à 64 segments, 8 385 sommets uniques et 16 384 triangles.
+
+Neuf nouveaux tests d'intégration vérifient : conversions sur les six faces et leurs bords ; priorité des égalités de l'inverse et directions non normalisées extrêmes ; entrées invalides refusées avant allocation ; tous les voisins et arêtes orientées aux niveaux 0–3 ; niveau maximal 24 ; les huit coins avec trois positions exactement identiques chacun ; indices communs, rayon, triangles extérieurs et fermeture topologique du raccord ; maximum d'allocation et reproductibilité de la géométrie ; graines historiques avec trois valeurs de référence et distinction des clés valides. Les bords sont comparés par égalité exacte en f64, y compris avec 7 segments (non puissance de deux), et les incidences topologiques contrôlent les deux triangles de chaque segment partagé.
+
+Les 54 tests antérieurs demeurent réussis, notamment contacts/streaming de neuf tuiles, horloges, repère tournant, M/G/O/U et menu. Ces vérifications distinguent géométrie numérique et systèmes ECS ; aucun nouveau test de périphériques OS n'est revendiqué.
+
+## Inspection des quatre raccords
+
+Toutes les captures finales ont été inspectées à 1440×900 : [même face](p3-validation/seams/seam-00.png), [+X/−Z](p3-validation/seams/seam-01.png), [+X/−Y avec inversion](p3-validation/seams/seam-02.png), [près du coin −Y/+X avec inversion](p3-validation/seams/seam-03.png). Les surfaces orange/bleue et leurs grilles rejoignent le même bord sans fissure visible ; textes et cadrage sont lisibles. La dernière vue contient deux patches touchant un coin, pas les trois faces entières ; l'identité des trois représentations du coin est vérifiée numériquement.
+
+Chaque phase emploie 32 segments au niveau 15, soit 33 sommets partagés, 2 145 sommets uniques et 4 096 triangles. Longueurs polygonales des raccords consignées par le programme : **206,879 m**, **146,285 m**, **146,285 m**, **97,526 m**. Elles montrent la variation métrique de la projection, sans décider la résolution du terrain jouable.
+
+Le rendu soustrait l'origine de la paire en f64 et applique un DQuat avant conversion locale bornée f32, en mètres 1:1. Deux meshes de surface et un mesh de lignes ont des handles réutilisés aux trois transitions. Le moteur possède aussi ses propres meshes : le journal observe sept assets au total après les transitions, dont les trois appartenant à la démo. Aucune géométrie n'est régénérée par frame. Grille relevée de 5 cm et trait du raccord de 10 cm, couleurs unlit : présentation de diagnostic, sans éclairage scientifique. La sortie est normale avec code 0. Ce scénario ne mesure ni performances ni contacts du joueur.
+
+## Diagnostic initial conservé
+
+Le premier essai graphique a enregistré [une capture](p3-validation/seams-before-fix/seam-00.png), puis terminé avec code **101** au passage à la deuxième phase. Une assertion comptait tous les meshes du moteur et exigeait trois, alors que Bevy en possédait sept : [journal](p3-validation/seams-before-fix.txt). La vérification corrigée contrôle les trois handles propres à la démo. Ce panic concernait le diagnostic, pas la géométrie ou le FPS. Le cadrage initial coupait le bas d'un patch et le trait du raccord se superposait à la grille ; distance de caméra et décalage du trait ont aussi été corrigés avant le lancement final.
+
+Le [premier Clippy](p3-validation/clippy-before-fix.txt) a signalé deux usages de `chunks_exact(3)`, remplacés par `as_chunks::<3>()`. Le [premier build](p3-validation/release-before-demo-fix.txt) est réussi mais précède les corrections graphiques. Une reconstruction a été volontairement arrêtée par SIGTERM après lecture de la capture, pour intégrer le nouveau cadrage : [journal incomplet](p3-validation/release-interrupted-for-framing.txt), code 143. Cette interruption décidée ici ne renseigne pas la cause inconnue du code 143 historique P2.
+
+## Régression du FPS tournant
+
+Après la démo et sans compilation concurrente, le binaire normal exécute `SOLAR_ROTATION_SMOKE_SECONDS=50` depuis un nouveau répertoire, pour préserver les noms de captures historiques. [Journal](p3-validation/game.txt), [dix captures](p3-validation/game/docs/). Code 0, aucune occurrence ERROR/WARN/panic.
+
+Captures effectivement inspectées : [repos à ×1000](p3-validation/game/docs/rotation-surface-00.png), [saut à ×1000](p3-validation/game/docs/rotation-surface-02.png), [course après changement de tuile](p3-validation/game/docs/rotation-surface-06.png), [repos pendant P](p3-validation/game/docs/rotation-surface-07.png), [retour spatial Mars](p3-validation/game/docs/rotation-surface-08.png), [Terre](p3-validation/game/docs/rotation-surface-09.png). Terrain, obstacles, HUD et sphères spatiales restent présents. Le journal montre la marche en pause au même JD, course à 8 m/s, pieds jusqu'à z = −151,007 m (au-delà de −128 m), puis vitesse nulle au repos. L'injection de commandes est ECS, sans essai des périphériques OS.
+
+Ces vues affichent ponctuellement 21–24 FPS en surface, 40 FPS près de Mars et 51 FPS près de la Terre. Ce sont des relevés du HUD, pas un benchmark ou une mesure de la cible. La superposition des marqueurs et leur occultation approximative restent des limites historiques. Le cycle P2 complet et le menu n'ont pas été rejoués dans cette campagne ; leurs preuves précédentes et les tests ECS restent conservés.
+
+## Limites et suite
+
+P3.1 établit le contrat géométrique de même niveau/résolution. Aucun relief cube-sphere, contact jouable, migration du repère, passage jouable entre faces, LOD mixte ou planète entière n'est ajouté. Le FPS actuel garde ses neuf tuiles, la borne ±4 096 m, le repère tournant et les deux horloges. La démo est un exemple séparé, sans système installé en partie normale. Windows 11, la cible RTX 4050/Core i5 et la suspension système complète restent non validés. P3.2 préparera un premier franchissement optionnel de deux patches d'une même face et les contacts avec leurs triangles f64 dans un repère local unique.
+
+---
+
+# Historique : validation Solar Survival 0.2 — P2 et menu principal
 
 12 octobre 2026. Environnement exécuté : Ubuntu 24.04.5 LTS, X11 `DISPLAY=:1`, Rust stable 1.99.0, Bevy **exactement 0.19.1**, i7-6700K, GTX 1060 3 Go/NVK, Vulkan et Mesa 25.2.8. Lancements successifs avec `MESA_VK_WSI_PRESENT_MODE=immediate`, sans compilation ni autre lancement du jeu concurrent. Aucun changement de dépendance, de Cargo.toml ou Cargo.lock. Empreintes des sources et du binaire : [p2-environment.json](p2-environment.json). Windows 11 et la cible RTX 4050/Core i5 ne sont pas validés sur ce poste.
 

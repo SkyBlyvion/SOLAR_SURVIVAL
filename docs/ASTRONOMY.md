@@ -78,3 +78,7 @@ M/G/O/U restent des transitions de gameplay vers des poses spatiales de sécurit
 ### Menu et horloges
 
 Le menu principal et les options bloquent les entrées de navigation et libèrent le curseur ; ils ne modifient pas `SimulationClock`. `Time<Real>` continue d'entraîner orbites et rotation avec le réglage P/T choisi en jeu. La physique locale continue sans déplacement demandé, y compris la chute d'un joueur en l'air. Reprendre conserve le site et l'état physique. Les réglages de sensibilité et de champ de vision affectent les commandes de visée et la projection ; MSAA et plein écran affectent seulement la présentation. Aucune coordonnée physique ni unité n'est changée.
+
+## Géométrie cube-sphere P3.1
+
+Le [contrat cube-sphere](CUBE_SPHERE.md) rend opérationnelles les conventions historiques de faces et de graines : conversions f64, voisins orientés et deux patches de même niveau partageant leurs sommets. Les positions sont en mètres dans les axes du corps tournant, au rayon moyen du catalogue. La projection radiale du cube, le niveau 15 et les 32 segments de la démonstration sont des choix numériques/de diagnostic, sans nouvelle donnée astronomique. Aucune cartographie ni relief mesuré n'est introduit. La démonstration est indépendante du FPS ; le site jouable, son repère, ses contacts et ses limites restent ceux décrits ci-dessus.

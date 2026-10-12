@@ -1,0 +1,24 @@
+[
+  {
+    "scenario": "cube_seam",
+    "command": [
+      "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/target/release/examples/cube_seam",
+      "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p3-validation/seams"
+    ],
+    "cwd": "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL",
+    "exit_code": 0,
+    "duration_s": 32.26039481163025
+  },
+  {
+    "scenario": "rotation_surface",
+    "command": [
+      "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/target/release/solar_survival"
+    ],
+    "cwd": "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p3-validation/game",
+    "env": {
+      "SOLAR_ROTATION_SMOKE_SECONDS": "50"
+    },
+    "exit_code": 0,
+    "duration_s": 50.371816873550415
+  }
+]

@@ -1,0 +1,26 @@
+2026-10-12T13:17:18.970091Z  INFO bevy_render::renderer: AdapterInfo { name: "NVIDIA GeForce GTX 1060 3GB (NVK GP106)", vendor: 4318, device: 7170, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "NVK", driver_info: "Mesa 25.2.8-0ubuntu0.24.04.2", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: false }
+2026-10-12T13:17:19.061897Z  INFO bevy_pbr::cluster: GPU clustering is supported on this device.
+2026-10-12T13:17:19.061940Z  INFO bevy_render::batching::gpu_preprocessing: GPU preprocessing is fully supported on this device.
+2026-10-12T13:17:19.062386Z  INFO bevy_winit::system: Creating new window Solar Survival - P3.1 cube-sphere seam (62v0)
+2026-10-12T13:17:19.062807Z  INFO winit::platform_impl::linux::x11::window: Guessed window scale factor: 1
+2026-10-12T13:17:19.067526Z  INFO cube_seam: P3.1 - Same face
+Orange: source / blue: neighbor / yellow: shared edge
+Level 15 - 32 segments - radius 3389500 m - seam 206.879 m
+33 shared vertices / 2145 unique vertices / 4096 triangles
+PositiveU -> NegativeU, reversed=false
+Geometry only - no player contacts - scene 1/4; source=PatchKey { face: PositiveX, level: 15, x: 16383, y: 16383 }; neighbor=PatchKey { face: PositiveX, level: 15, x: 16384, y: 16383 }; 2 patches, 3 reused mesh handles
+2026-10-12T13:17:24.156171Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/p3-validation/seams/seam-00.png
+2026-10-12T13:17:27.111886Z  INFO cube_seam: P3.1 - +X / -Z face edge
+Orange: source / blue: neighbor / yellow: shared edge
+Level 15 - 32 segments - radius 3389500 m - seam 146.285 m
+33 shared vertices / 2145 unique vertices / 4096 triangles
+PositiveU -> NegativeU, reversed=false
+Geometry only - no player contacts - scene 2/4; source=PatchKey { face: PositiveX, level: 15, x: 32767, y: 16383 }; neighbor=PatchKey { face: NegativeZ, level: 15, x: 0, y: 16383 }; 2 patches, 3 reused mesh handles
+
+thread '<unnamed>' (290091) panicked at examples/cube_seam.rs:285:9:
+assertion `left == right` failed
+  left: 7
+ right: 3
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+Encountered a panic in system `<Enable the debug feature to see the name>`!
+Encountered a panic in system `<Enable the debug feature to see the name>`!

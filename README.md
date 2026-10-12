@@ -101,7 +101,7 @@ Les vitesses disponibles sont 5 m/s, 250 m/s, 20 km/s, 20 000 km/s, 2 millions k
 - Interface sélectionnable à la souris : FPS, temps, cible, altitude, rayon, repère, vitesse et astre le plus proche. Repères visuels pour les corps trop petits à l'écran.
 - FPS martien : site fixé au repère tournant de Mars, gravité radiale, marche/course/saut, contacts avec terrain et trois obstacles statiques dans le site.
 - Terrain artistique local courbé sur le rayon moyen de Mars ; neuf tuiles de 128 m, grille de 4 m, chargement et déchargement à chaque changement de tuile.
-- Contrat cube-sphere et graines reproductibles ; structures de survie encore inactives.
+- Contrat cube-sphere f64 : conversions, voisins orientés, graines reproductibles et raccord de deux patches de même niveau ; structures de survie encore inactives.
 
 ## Architecture
 
@@ -116,6 +116,8 @@ src/camera/           entrées et orchestration de navigation
 src/player/           état d'exploration, repère suivi et contrôleur FPS
 src/physics/          garde spatiale, gravité radiale et contacts cinématiques f64
 src/planets/          clés cube-sphere, graines et géométrie du terrain local
+src/planets/cube_sphere.rs conversions, voisins et paire de patches à sommets partagés
+examples/cube_seam.rs diagnostic graphique borné, indépendant du terrain jouable
 src/survival/         données vitales et inventaire futur
 src/ui/               panneau de navigation, télémétrie et marqueurs
 src/ui/menu.rs        menu principal, options de session et crédits
@@ -186,6 +188,8 @@ python3 scripts/profile_suite.py --seconds 42 --mesa-immediate --gpu-probe --out
 Le script utilise uniquement la bibliothèque standard Python et lance les essais successivement. `--mesa-immediate` est réservé au contournement Mesa de ce poste ; l'omettre sur la machine cible. Choisir un nouveau dossier de sortie pour chaque campagne. Un essai individuel sans Python est décrit dans PERFORMANCE.
 
 ## Limites actuelles et suite
+
+Le [contrat P3.1](docs/CUBE_SPHERE.md) et sa démonstration optionnelle vérifient les premiers raccords cube-sphere. Après `cargo build --release --locked --example cube_seam`, lancer `target/release/examples/cube_seam docs/mon-nouveau-raccord` (ajouter `MESA_VK_WSI_PRESENT_MODE=immediate` sur ce poste). Le programme affiche quatre cas en 32 secondes et écrit quatre captures dans un nouveau dossier. Il génère deux patches à la fois ; le franchissement par le joueur et les contacts cube-sphere restent à développer. Le FPS normal conserve les neuf tuiles et la borne ±4 096 m.
 
 Les données et conventions sont détaillées dans [docs/ASTRONOMY.md](docs/ASTRONOMY.md). Ce modèle képlérien n'est pas une éphéméride scientifique : pas de N-corps, perturbations lunaires, précession exacte, retards lumineux ou éclipses. La phase et l'orientation lunaires sont conventionnelles, explicitement non observées. La période lunaire et ses dimensions sont réelles.
 
