@@ -1,5 +1,6 @@
-//! Garde de navigation sphérique, sans moteur physique ni collision de terrain.
+//! Garde spatiale, gravité radiale et contrôleur cinématique de terrain local.
 use bevy::math::DVec3;
+pub mod surface;
 
 /// Intersection balayée: ne pas traverser une planète même à une vitesse fictive élevée.
 pub fn stop_before_sphere(start: DVec3, delta: DVec3, center: DVec3, radius: f64) -> Option<f64> {

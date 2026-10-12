@@ -246,7 +246,7 @@ fn visits_and_frame_detach_preserve_global_location() {
             body.radius_m * if body.id == BodyId(6) { 5.5 } else { 3.5 },
             0.001,
         );
-        let forward = (pilot.rotation * bevy::math::Vec3::NEG_Z).as_dvec3();
+        let forward = pilot.rotation * DVec3::NEG_Z;
         assert!(forward.dot((solar.position(body.id, J2000) - global).normalize()) > 0.99999);
         pilot.anchor = None;
         pilot.local_m = global;

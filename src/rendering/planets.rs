@@ -145,7 +145,12 @@ fn ring_mesh() -> Mesh {
     .with_inserted_attribute(Mesh::ATTRIBUTE_COLOR, colors)
     .with_inserted_indices(Indices::U32(indices))
 }
+#[expect(
+    clippy::type_complexity,
+    reason = "Composants de proxy et matériau optionnel injectés par Bevy ECS."
+)]
 pub fn sync(
+    pilot: Res<crate::player::Explorer>,
     clock: Res<SimulationClock>,
     origin: Res<RenderOrigin>,
     lod: Res<SphereLods>,
@@ -155,10 +160,17 @@ pub fn sync(
         &mut Transform,
         &mut Mesh3d,
         Option<&MeshMaterial3d<PlanetMaterial>>,
+        &mut Visibility,
     )>,
     mut materials: ResMut<Assets<PlanetMaterial>>,
 ) {
-    for (visual, mut transform, mut mesh, material) in &mut visuals {
+    for (visual, mut transform, mut mesh, material, mut visibility) in &mut visuals {
+        *visibility =
+            if pilot.mode == crate::player::MovementMode::Surface && visual.id == BodyId::MARS {
+                Visibility::Hidden
+            } else {
+                Visibility::Visible
+            };
         let Some((body, position)) = bodies.iter().find(|(body, _)| body.id == visual.id) else {
             continue;
         };
@@ -173,8 +185,9 @@ pub fn sync(
         } else {
             body.axial_tilt_deg
         };
-        transform.rotation =
-            Quat::from_rotation_z(tilt.to_radians() as f32) * Quat::from_rotation_y(angle as f32);
+        transform.rotation = (bevy::math::DQuat::from_rotation_z(tilt.to_radians())
+            * bevy::math::DQuat::from_rotation_y(angle))
+        .as_quat();
         if !visual.ring {
             let desired = if body.radius_m / relative.length().max(1.0) > 0.005 {
                 &lod.near

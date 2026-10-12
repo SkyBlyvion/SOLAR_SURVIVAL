@@ -1,0 +1,30 @@
+    Finished `release` profile [optimized] target(s) in 0.17s
+     Running `target/release/solar_survival`
+2026-10-12T10:17:12.558084Z  INFO bevy_render::renderer: AdapterInfo { name: "NVIDIA GeForce GTX 1060 3GB (NVK GP106)", vendor: 4318, device: 7170, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "NVK", driver_info: "Mesa 25.2.8-0ubuntu0.24.04.2", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: false }
+2026-10-12T10:17:12.655296Z  INFO bevy_pbr::cluster: GPU clustering is supported on this device.
+2026-10-12T10:17:12.655340Z  INFO bevy_render::batching::gpu_preprocessing: GPU preprocessing is fully supported on this device.
+2026-10-12T10:17:12.655714Z  INFO bevy_winit::system: Creating new window Solar Survival · 0.2 · Mars (63v0)
+2026-10-12T10:17:12.656729Z  INFO winit::platform_impl::linux::x11::window: Guessed window scale factor: 1
+2026-10-12T10:17:12.662744Z  INFO solar_survival::config::validation: Validation graphique : étape 1 / 11
+2026-10-12T10:17:13.797856Z ERROR bevy_render::view::window: Couldn't get swap chain texture: Timeout
+2026-10-12T10:17:17.197028Z  INFO solar_survival::config::validation: Validation graphique : étape 2 / 11
+2026-10-12T10:17:20.233795Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/v02-space-00.png
+2026-10-12T10:17:21.194986Z  INFO solar_survival::config::validation: Validation graphique : étape 3 / 11
+2026-10-12T10:17:24.208161Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/v02-space-01.png
+2026-10-12T10:17:25.194292Z  INFO solar_survival::config::validation: Validation graphique : étape 4 / 11
+2026-10-12T10:17:28.207667Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/v02-space-02.png
+2026-10-12T10:17:29.196362Z  INFO solar_survival::config::validation: Validation graphique : étape 5 / 11
+2026-10-12T10:17:31.209832Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/v02-space-03.png
+2026-10-12T10:17:33.193747Z  INFO solar_survival::config::validation: Validation graphique : étape 6 / 11
+2026-10-12T10:17:35.207415Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/v02-space-04.png
+2026-10-12T10:17:37.223277Z  INFO solar_survival::config::validation: Validation graphique : étape 7 / 11
+2026-10-12T10:17:39.207502Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/v02-space-05.png
+2026-10-12T10:17:41.194982Z  INFO solar_survival::config::validation: Validation graphique : étape 8 / 11
+2026-10-12T10:17:44.206706Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/v02-space-06.png
+2026-10-12T10:17:45.195315Z  INFO solar_survival::config::validation: Validation graphique : étape 9 / 11
+2026-10-12T10:17:47.207134Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/v02-space-07.png
+2026-10-12T10:17:49.194700Z  INFO solar_survival::config::validation: Validation graphique : étape 10 / 11
+2026-10-12T10:17:51.207550Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/v02-space-08.png
+2026-10-12T10:17:53.196156Z  INFO solar_survival::config::validation: Validation graphique : étape 11 / 11
+2026-10-12T10:17:56.208336Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/v02-space-09.png
+2026-10-12T10:17:59.194085Z ERROR bevy_render::view::window::screenshot: Failed to send screenshot: sending on a closed channel

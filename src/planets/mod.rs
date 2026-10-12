@@ -1,5 +1,6 @@
-//! Contrat minimal pour les futures zones cube-sphere, sans génération globale.
+//! Clés cube-sphere et terrain martien local, sans génération globale.
 use bevy::math::DVec3;
+pub mod terrain;
 #[derive(Clone, Copy, Debug)]
 pub struct GenerationSettings {
     pub seed: u64,

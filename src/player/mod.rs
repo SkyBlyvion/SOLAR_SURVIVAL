@@ -1,5 +1,9 @@
 use crate::universe::{catalog::SolarSystem, celestial_body::BodyId};
-use bevy::{math::DVec3, prelude::*};
+use bevy::{
+    math::{DMat3, DQuat, DVec3},
+    prelude::*,
+};
+pub mod surface;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum MovementMode {
@@ -11,7 +15,7 @@ pub struct Explorer {
     /// Offset local f64 dans le repère de l'astre suivi, ou héliocentrique si None.
     pub anchor: Option<BodyId>,
     pub local_m: DVec3,
-    pub rotation: Quat,
+    pub rotation: DQuat,
     pub selected: BodyId,
     pub speed_index: usize,
     pub boosted: bool,
@@ -23,7 +27,7 @@ impl Default for Explorer {
         Self {
             anchor: Some(BodyId::EARTH),
             local_m: DVec3::ZERO,
-            rotation: Quat::IDENTITY,
+            rotation: DQuat::IDENTITY,
             selected: BodyId::EARTH,
             speed_index: 3,
             boosted: false,
@@ -50,6 +54,13 @@ impl Explorer {
         "Hypervoyage",
     ];
     pub fn speed(&self) -> f64 {
+        if self.mode == MovementMode::Surface {
+            return if self.boosted {
+                crate::physics::surface::RUN_MPS
+            } else {
+                crate::physics::surface::WALK_MPS
+            };
+        }
         Self::SPEEDS[self.speed_index] * if self.boosted { 10.0 } else { 1.0 }
     }
     pub fn global(&self, solar: &SolarSystem, jd: f64) -> DVec3 {
@@ -60,16 +71,19 @@ impl Explorer {
     }
     pub fn look_toward(&mut self, direction: DVec3) {
         if direction.length_squared() > 1e-12 {
-            let direction = direction.normalize().as_vec3();
-            let up = if direction.dot(Vec3::Y).abs() > 0.99 {
-                Vec3::Z
+            let direction = direction.normalize();
+            let up = if direction.dot(DVec3::Y).abs() > 0.99 {
+                DVec3::Z
             } else {
-                Vec3::Y
+                DVec3::Y
             };
-            self.rotation = Transform::default().looking_to(direction, up).rotation;
+            let right = direction.cross(up).normalize();
+            self.rotation =
+                DQuat::from_mat3(&DMat3::from_cols(right, right.cross(direction), -direction));
         }
     }
     pub fn visit(&mut self, solar: &SolarSystem, jd: f64) {
+        self.mode = MovementMode::Space;
         let body = solar.body(self.selected);
         let position = solar.position(self.selected, jd);
         let outward = if self.selected == BodyId::SUN {

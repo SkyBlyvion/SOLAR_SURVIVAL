@@ -46,7 +46,7 @@ pub fn render_proxy(relative_m: DVec3, radius_m: f64) -> (Vec3, f32) {
     ((relative_m * scale).as_vec3(), (radius_m * scale) as f32)
 }
 
-/// Conversion pour les futures zones de terrain locales, bornée avant le cast.
+/// Conversion des zones de terrain locales, bornée avant le cast.
 pub fn local_to_render(local_m: DVec3) -> Option<Vec3> {
     (local_m.is_finite() && local_m.abs().max_element() <= 100_000.0).then(|| local_m.as_vec3())
 }

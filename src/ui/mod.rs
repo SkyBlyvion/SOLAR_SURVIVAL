@@ -1,7 +1,7 @@
 use crate::{
     GameSet,
     camera::{NavigationRequest, controls},
-    player::Explorer,
+    player::{Explorer, MovementMode, surface::SurfaceState},
     universe::{
         SimulationClock,
         catalog::SolarSystem,
@@ -22,6 +22,8 @@ struct StatusText;
 #[derive(Component)]
 struct TargetText;
 #[derive(Component)]
+struct HelpText;
+#[derive(Component)]
 struct Marker(BodyId);
 #[derive(Component, Clone, Copy)]
 enum Action {
@@ -29,6 +31,7 @@ enum Action {
     Visit,
     Center,
     Overview,
+    Surface,
 }
 #[derive(Resource)]
 struct HudState {
@@ -51,7 +54,7 @@ impl Plugin for HudPlugin {
             )
             .add_systems(
                 Update,
-                (toggle, refresh, markers)
+                (target_camera, toggle, help, refresh, markers)
                     .chain()
                     .in_set(GameSet::Interface),
             );
@@ -71,12 +74,12 @@ fn setup(mut commands: Commands, solar: Res<SolarSystem>, assets: Res<AssetServe
         root.spawn((Node { position_type: PositionType::Absolute, top: px(24), left: px(24), width: px(212), padding: UiRect::all(px(16)), flex_direction: FlexDirection::Column, row_gap: px(6), border_radius: BorderRadius::all(px(10)), ..default() }, BackgroundColor(Color::srgba(0.025,0.04,0.065,0.93))))
         .with_children(|panel| {
             panel.spawn((Text::new("SOLAR SURVIVAL"), font(19.0, &ui_font), TextColor(Color::srgb(0.8,0.92,1.0))));
-            panel.spawn((Text::new("0.1  /  EXPLORATION\nSystème solaire · échelle 1:1"), font(12.0, &ui_font), TextColor(Color::srgb(0.43,0.65,0.75))));
+            panel.spawn((Text::new("0.2  /  MARS\nSystème solaire · échelle 1:1"), font(12.0, &ui_font), TextColor(Color::srgb(0.43,0.65,0.75))));
             for body in &solar.bodies {
                 panel.spawn((Button, Action::Select(body.id), Node { padding: UiRect::axes(px(12),px(6)), border_radius: BorderRadius::all(px(4)), ..default() }, BackgroundColor(Color::srgb(0.05,0.08,0.12))))
                     .with_child((Text::new(format!("{}   {}",body.id.0,body.name)),font(16.0, &ui_font),TextColor(Color::srgb(0.75,0.83,0.89))));
             }
-            for (action,label) in [(Action::Center,"F   Centrer"),(Action::Visit,"G   Visiter"),(Action::Overview,"O   Vue du système")] {
+            for (action,label) in [(Action::Center,"F   Centrer"),(Action::Visit,"G   Visiter"),(Action::Overview,"O   Vue du système"),(Action::Surface,"M   Surface Mars / retour")] {
                 panel.spawn((Button,action,Node { padding: UiRect::axes(px(12),px(8)), border_radius: BorderRadius::all(px(4)), ..default() }, BackgroundColor(Color::srgb(0.07,0.18,0.24))))
                     .with_child((Text::new(label),font(14.0, &ui_font),TextColor(Color::srgb(0.6,0.9,1.0))));
             }
@@ -87,7 +90,7 @@ fn setup(mut commands: Commands, solar: Res<SolarSystem>, assets: Res<AssetServe
                 panel.spawn((TargetText,Text::new("Terre"),font(15.0, &ui_font),TextColor(Color::srgb(0.93,0.86,0.61))));
             });
         root.spawn((Node { position_type: PositionType::Absolute, bottom: px(24), left: px(24), right: px(24), padding: UiRect::all(px(14)), border_radius: BorderRadius::all(px(8)), ..default() }, BackgroundColor(Color::srgba(0.025,0.04,0.065,0.92))))
-            .with_child((Text::new("Clic droit : piloter  ·  Échap : curseur  ·  WASD / ZQSD : vol  ·  Espace / Ctrl : monter / descendre  ·  Shift : ×10\nMolette / Pg↑ Pg↓ : vitesse  ·  Tab / 0–9 : cible  ·  F : centrer  ·  G : visite instantanée  ·  U : repère solaire  ·  T : temps ×1/10/100/1000  ·  P : pause  ·  H : interface"),font(13.0, &ui_font),TextColor(Color::srgb(0.67,0.76,0.84))));
+            .with_child((HelpText,Text::new("Clic droit : piloter  ·  Échap : curseur  ·  WASD / ZQSD : vol  ·  Espace : saut / monter  ·  Ctrl : descendre en vol  ·  Shift : course / ×10\nMolette / Pg↑ Pg↓ : vitesse  ·  Tab / 0–9 : cible  ·  F : centrer  ·  G : visite spatiale  ·  M : surface Mars / retour  ·  U : repère solaire  ·  T : temps ×1/10/100/1000  ·  P : pause  ·  H : interface"),font(13.0, &ui_font),TextColor(Color::srgb(0.67,0.76,0.84))));
         for body in &solar.bodies {
             root.spawn((Marker(body.id), Node { position_type: PositionType::Absolute, display: Display::None, ..default() }, Text::new(format!("◇ {}",body.name)),font(12.0, &ui_font),TextColor(Color::srgb(0.48,0.70,0.79))));
         }
@@ -116,6 +119,7 @@ fn buttons(
                 Action::Visit => request.visit = true,
                 Action::Center => request.center = true,
                 Action::Overview => request.overview = true,
+                Action::Surface => request.surface = true,
             }
         }
     }
@@ -138,6 +142,10 @@ fn toggle(
     clippy::type_complexity,
     reason = "ParamSet garantit les emprunts exclusifs des deux textes ECS."
 )]
+#[expect(
+    clippy::too_many_arguments,
+    reason = "Paramètres de système injectés par Bevy ECS."
+)]
 fn refresh(
     time: Res<Time<Real>>,
     mut elapsed: Local<f64>,
@@ -145,6 +153,8 @@ fn refresh(
     clock: Res<SimulationClock>,
     solar: Res<SolarSystem>,
     diagnostics: Res<DiagnosticsStore>,
+    surface: Res<SurfaceState>,
+    terrain: Res<crate::planets::terrain::MarsTerrain>,
     mut texts: ParamSet<(
         Single<&mut Text, With<StatusText>>,
         Single<&mut Text, With<TargetText>>,
@@ -174,13 +184,33 @@ fn refresh(
     let anchor = pilot
         .anchor
         .map_or("Héliocentrique", |id| solar.body(id).name);
+    let mode = if pilot.mode == MovementMode::Surface {
+        "surface Mars"
+    } else {
+        "espace"
+    };
+    let movement = if pilot.mode == MovementMode::Surface {
+        format!(
+            "{} · {}\nVitesse réelle : {:.2} m/s\nHauteur pieds/sol : {:.2} m",
+            if pilot.boosted { "Course" } else { "Marche" },
+            if surface.grounded {
+                "au sol"
+            } else {
+                "en l’air"
+            },
+            surface.velocity.length(),
+            surface.feet.y - crate::physics::surface::support_height(&terrain, surface.feet)
+        )
+    } else {
+        Explorer::SPEED_NAMES[pilot.speed_index].to_owned()
+    };
     ***texts.p0() = format!(
-        "TÉLÉMÉTRIE\n\n{fps:.0} FPS  ·  Mode espace\nJour julien : {:.5}\nJ2000 + {:.3} jours\nTemps : ×{:.0} {}\n\n{}\n{} / s{}\nRepère : {anchor}\nOffset : {}\nPlus proche : {}\n\n{}",
+        "TÉLÉMÉTRIE\n\n{fps:.0} FPS  ·  Mode {mode}\nJour julien : {:.5}\nJ2000 + {:.3} jours\nTemps : ×{:.0} {}\n\n{}\n{} / s{}\nRepère : {anchor}\nOffset : {}\nPlus proche : {}\n\n{}",
         clock.jd,
         clock.jd - 2451545.0,
         SimulationClock::SPEEDS[clock.speed_index],
         if clock.paused { "(pause)" } else { "" },
-        Explorer::SPEED_NAMES[pilot.speed_index],
+        movement,
         format_distance(pilot.speed()),
         if pilot.boosted { " (Shift)" } else { "" },
         format_distance(pilot.local_m.length()),
@@ -206,7 +236,8 @@ fn refresh(
             | crate::universe::celestial_body::SurfaceKind::IceGiant =>
                 "Enveloppe géante · sans sol ordinaire",
             crate::universe::celestial_body::SurfaceKind::Plasma => "Étoile · plasma",
-            _ => "Surface solide · FPS prévu en 0.2",
+            _ if body.id == BodyId::MARS => "M : surface Mars / retour spatial",
+            _ => "Surface solide · visite spatiale",
         }
     );
 }
@@ -223,14 +254,15 @@ fn markers(
     let focal = height * 0.5 / (65_f32.to_radians() * 0.5).tan();
     for (marker, mut node, mut color) in &mut markers {
         let relative = solar.position(marker.0, clock.jd) - position;
-        let local = pilot.rotation.inverse() * relative.normalize_or_zero().as_vec3();
+        let local = (pilot.rotation.inverse() * relative.normalize_or_zero()).as_vec3();
         if local.z >= -0.001 || solar.body(marker.0).radius_m / relative.length().max(1.0) > 0.025 {
             node.display = Display::None;
             continue;
         }
         let x = width * 0.5 + local.x / (-local.z) * focal;
         let y = height * 0.5 - local.y / (-local.z) * focal;
-        node.display = if (0.0..width - 80.0).contains(&x) && (0.0..height - 40.0).contains(&y) {
+        node.display = if (250.0..width - 340.0).contains(&x) && (20.0..height - 105.0).contains(&y)
+        {
             Display::Flex
         } else {
             Display::None
@@ -243,4 +275,39 @@ fn markers(
             Color::srgb(0.48, 0.70, 0.79)
         };
     }
+}
+
+fn target_camera(
+    mut commands: Commands,
+    pilot: Res<Explorer>,
+    root: Single<Entity, With<HudRoot>>,
+    space: Single<Entity, With<crate::camera::SpaceCamera>>,
+    surface: Single<Entity, With<crate::rendering::terrain::SurfaceCamera>>,
+    mut previous: Local<Option<Entity>>,
+) {
+    let camera = if pilot.mode == MovementMode::Surface {
+        *surface
+    } else {
+        *space
+    };
+    if *previous != Some(camera) {
+        commands.entity(*root).insert(UiTargetCamera(camera));
+        *previous = Some(camera);
+    }
+}
+
+fn help(
+    pilot: Res<Explorer>,
+    mut text: Single<&mut Text, With<HelpText>>,
+    mut previous: Local<Option<MovementMode>>,
+) {
+    if *previous == Some(pilot.mode) {
+        return;
+    }
+    *previous = Some(pilot.mode);
+    ***text = if pilot.mode == MovementMode::Surface {
+        "Clic droit : jouer · Échap : curseur · WASD / ZQSD : marcher · Espace : sauter · Shift : courir · Souris : regarder\nM : retour spatial · G : visiter la cible · O : vue du système · T : temps orbital · P : pause orbitale · H : interface".into()
+    } else {
+        "Clic droit : piloter · Échap : curseur · WASD / ZQSD : vol · Espace / Ctrl : monter / descendre · Shift : ×10\nMolette / Pg↑ Pg↓ : vitesse · Tab / 0–9 : cible · F : centrer · G : visiter · M : surface Mars · O : système · U : repère solaire · T / P : temps · H : interface".into()
+    };
 }

@@ -1,0 +1,345 @@
+//! Rendu local en mètres, couche séparée de la profondeur astronomique compressée.
+use crate::{
+    GameSet,
+    physics::surface::obstacles,
+    planets::terrain::{CELLS, MarsTerrain, TILE_M},
+    player::{Explorer, MovementMode, surface::SurfaceState},
+    universe::{
+        SimulationClock, catalog::SolarSystem, celestial_body::BodyId, coordinates::local_to_render,
+    },
+};
+use bevy::{
+    asset::RenderAssetUsages,
+    camera::{Hdr, visibility::RenderLayers},
+    math::DVec3,
+    mesh::{Indices, PrimitiveTopology},
+    prelude::*,
+};
+use std::collections::BTreeMap;
+
+#[derive(Component)]
+pub struct SurfaceCamera;
+#[derive(Component)]
+struct LocalVisual {
+    origin: DVec3,
+}
+#[derive(Component)]
+struct ObstacleVisual(usize);
+#[derive(Component)]
+struct SurfaceSun;
+#[derive(Resource)]
+struct TerrainAssets {
+    material: Handle<StandardMaterial>,
+}
+#[derive(Resource, Default)]
+struct TileCache {
+    revision: u64,
+    tiles: BTreeMap<(i32, i32), (Entity, Handle<Mesh>)>,
+}
+
+pub struct SurfaceRenderingPlugin;
+impl Plugin for SurfaceRenderingPlugin {
+    fn build(&self, app: &mut App) {
+        app.init_resource::<TileCache>()
+            .add_systems(Startup, setup)
+            .add_systems(Update, (stream, sync).chain().in_set(GameSet::Rendering));
+    }
+}
+fn setup(
+    mut commands: Commands,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<StandardMaterial>>,
+) {
+    commands.spawn((
+        SurfaceCamera,
+        Camera3d::default(),
+        Camera {
+            order: 1,
+            is_active: false,
+            clear_color: ClearColorConfig::None,
+            ..default()
+        },
+        Projection::Perspective(PerspectiveProjection {
+            fov: 65_f32.to_radians(),
+            near: 0.05,
+            far: 1000.0,
+            ..default()
+        }),
+        RenderLayers::layer(1),
+        Transform::default(),
+        Hdr,
+        Msaa::Sample4,
+        AmbientLight {
+            color: Color::srgb(0.85, 0.64, 0.48),
+            brightness: 100.0,
+            ..default()
+        },
+        DistanceFog {
+            color: Color::srgb(0.28, 0.13, 0.075),
+            falloff: FogFalloff::Linear {
+                start: 70.0,
+                end: 125.0,
+            },
+            ..default()
+        },
+    ));
+    commands.spawn((
+        SurfaceSun,
+        DirectionalLight {
+            illuminance: 11000.0,
+            shadow_maps_enabled: false,
+            ..default()
+        },
+        RenderLayers::layer(1),
+        Transform::default(),
+    ));
+    let cube = meshes.add(Cuboid::new(1.0, 1.0, 1.0));
+    let rock = materials.add(StandardMaterial {
+        base_color: Color::srgb(0.19, 0.12, 0.08),
+        perceptual_roughness: 1.0,
+        ..default()
+    });
+    for i in 0..3 {
+        commands.spawn((
+            ObstacleVisual(i),
+            LocalVisual {
+                origin: DVec3::ZERO,
+            },
+            Mesh3d(cube.clone()),
+            MeshMaterial3d(rock.clone()),
+            RenderLayers::layer(1),
+            Transform::default(),
+            Visibility::Hidden,
+        ));
+    }
+    commands.insert_resource(TerrainAssets {
+        material: materials.add(StandardMaterial {
+            base_color: Color::srgb(0.55, 0.24, 0.115),
+            perceptual_roughness: 1.0,
+            ..default()
+        }),
+    });
+}
+fn tile_mesh(terrain: &MarsTerrain, key: (i32, i32)) -> Mesh {
+    let origin = DVec3::new(key.0 as f64 * TILE_M, 0.0, key.1 as f64 * TILE_M);
+    let mut positions = Vec::with_capacity((CELLS + 1).pow(2));
+    let mut normals = Vec::with_capacity(positions.capacity());
+    let mut colors = Vec::with_capacity(positions.capacity());
+    let mut indices = Vec::with_capacity(CELLS * CELLS * 6);
+    for z in 0..=CELLS {
+        for x in 0..=CELLS {
+            let ix = key.0 * CELLS as i32 + x as i32;
+            let iz = key.1 * CELLS as i32 + z as i32;
+            let point = terrain.vertex(ix, iz);
+            positions.push(
+                local_to_render(point - origin)
+                    .expect("Tuile locale bornée")
+                    .to_array(),
+            );
+            let dx = terrain.vertex(ix + 1, iz) - terrain.vertex(ix - 1, iz);
+            let dz = terrain.vertex(ix, iz + 1) - terrain.vertex(ix, iz - 1);
+            normals.push(dz.cross(dx).normalize().as_vec3().to_array());
+            let shade = 0.87 + 0.13 * (point.x * 0.45 + point.z * 0.63).sin();
+            colors.push([shade as f32, shade as f32, shade as f32, 1.0]);
+            if x < CELLS && z < CELLS {
+                let a = (z * (CELLS + 1) + x) as u32;
+                let b = a + 1;
+                let c = a + (CELLS + 1) as u32;
+                let d = c + 1;
+                indices.extend_from_slice(&[a, c, b, b, c, d]);
+            }
+        }
+    }
+    Mesh::new(
+        PrimitiveTopology::TriangleList,
+        RenderAssetUsages::RENDER_WORLD,
+    )
+    .with_inserted_attribute(Mesh::ATTRIBUTE_POSITION, positions)
+    .with_inserted_attribute(Mesh::ATTRIBUTE_NORMAL, normals)
+    .with_inserted_attribute(Mesh::ATTRIBUTE_COLOR, colors)
+    .with_inserted_indices(Indices::U32(indices))
+}
+fn stream(
+    mut commands: Commands,
+    pilot: Res<Explorer>,
+    surface: Res<SurfaceState>,
+    terrain: Res<MarsTerrain>,
+    assets: Res<TerrainAssets>,
+    mut cache: ResMut<TileCache>,
+    mut meshes: ResMut<Assets<Mesh>>,
+) {
+    let center = MarsTerrain::tile_at(surface.feet);
+    let active = pilot.mode == MovementMode::Surface;
+    let revision_changed = cache.revision != terrain.revision;
+    cache.tiles.retain(|&(x, z), (entity, mesh)| {
+        let keep =
+            active && !revision_changed && (x - center.0).abs() <= 1 && (z - center.1).abs() <= 1;
+        if !keep {
+            commands.entity(*entity).despawn();
+            meshes.remove(mesh.id());
+        }
+        keep
+    });
+    cache.revision = terrain.revision;
+    if !active {
+        return;
+    }
+    for z in center.1 - 1..=center.1 + 1 {
+        for x in center.0 - 1..=center.0 + 1 {
+            cache.tiles.entry((x, z)).or_insert_with(|| {
+                let mesh = meshes.add(tile_mesh(&terrain, (x, z)));
+                let entity = commands
+                    .spawn((
+                        LocalVisual {
+                            origin: DVec3::new(x as f64 * TILE_M, 0.0, z as f64 * TILE_M),
+                        },
+                        Mesh3d(mesh.clone()),
+                        MeshMaterial3d(assets.material.clone()),
+                        RenderLayers::layer(1),
+                        Transform::default(),
+                    ))
+                    .id();
+                (entity, mesh)
+            });
+        }
+    }
+}
+#[expect(
+    clippy::type_complexity,
+    reason = "Filtres disjoints garantissant les emprunts des Transform ECS."
+)]
+fn sync(
+    pilot: Res<Explorer>,
+    terrain: Res<MarsTerrain>,
+    solar: Res<SolarSystem>,
+    clock: Res<SimulationClock>,
+    mut camera: Single<
+        (&mut Camera, &mut Transform),
+        (
+            With<SurfaceCamera>,
+            Without<LocalVisual>,
+            Without<SurfaceSun>,
+        ),
+    >,
+    mut visuals: Query<
+        (
+            &LocalVisual,
+            Option<&ObstacleVisual>,
+            &mut Transform,
+            &mut Visibility,
+        ),
+        (Without<SurfaceCamera>, Without<SurfaceSun>),
+    >,
+    mut light: Single<
+        &mut Transform,
+        (
+            With<SurfaceSun>,
+            Without<SurfaceCamera>,
+            Without<LocalVisual>,
+        ),
+    >,
+) {
+    let active = pilot.mode == MovementMode::Surface;
+    let (camera, transform) = &mut *camera;
+    camera.is_active = active;
+    if !active {
+        for (_, _, _, mut visibility) in &mut visuals {
+            *visibility = Visibility::Hidden;
+        }
+        return;
+    }
+    transform.translation = Vec3::ZERO;
+    transform.rotation = (terrain.orientation.inverse() * pilot.rotation).as_quat();
+    let eye = terrain.chart(pilot.local_m);
+    let solids = obstacles(&terrain);
+    for (visual, obstacle, mut transform, mut visibility) in &mut visuals {
+        let origin = if let Some(obstacle) = obstacle {
+            let solid = solids[obstacle.0];
+            transform.scale = (solid.max - solid.min).as_vec3();
+            (solid.min + solid.max) * 0.5
+        } else {
+            visual.origin
+        };
+        if let Some(relative) = local_to_render(origin - eye) {
+            transform.translation = relative;
+            *visibility = Visibility::Visible;
+        } else {
+            *visibility = Visibility::Hidden;
+        }
+    }
+    let to_sun =
+        terrain.orientation.inverse() * (-solar.position(BodyId::MARS, clock.jd)).normalize();
+    **light = Transform::default().looking_to(-to_sun.as_vec3(), Vec3::Y);
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn tile_mesh_positions_match_physical_vertices_and_shared_edges() {
+        let terrain = MarsTerrain {
+            radius_m: 3389500.0,
+            seed: 42,
+            orientation: bevy::math::DQuat::IDENTITY,
+            revision: 1,
+        };
+        let left = tile_mesh(&terrain, (-1, 0));
+        let right = tile_mesh(&terrain, (0, 0));
+        let bevy::mesh::VertexAttributeValues::Float32x3(left) =
+            left.attribute(Mesh::ATTRIBUTE_POSITION).unwrap()
+        else {
+            panic!()
+        };
+        let bevy::mesh::VertexAttributeValues::Float32x3(right) =
+            right.attribute(Mesh::ATTRIBUTE_POSITION).unwrap()
+        else {
+            panic!()
+        };
+        for z in 0..=CELLS {
+            let a = Vec3::from_array(left[z * (CELLS + 1) + CELLS]) + Vec3::new(-128.0, 0.0, 0.0);
+            let b = Vec3::from_array(right[z * (CELLS + 1)]);
+            assert_eq!(a, b);
+            assert!((b.y as f64 - terrain.vertex(0, z as i32).y).abs() < 1e-6);
+        }
+    }
+    #[test]
+    fn streaming_is_bounded_reuses_assets_and_releases_old_meshes() {
+        let mut app = App::new();
+        app.add_plugins(MinimalPlugins)
+            .init_resource::<Explorer>()
+            .init_resource::<SurfaceState>()
+            .insert_resource(MarsTerrain {
+                radius_m: 3389500.0,
+                seed: 42,
+                orientation: bevy::math::DQuat::IDENTITY,
+                revision: 1,
+            })
+            .init_resource::<Assets<Mesh>>()
+            .init_resource::<Assets<StandardMaterial>>()
+            .init_resource::<TileCache>()
+            .insert_resource(TerrainAssets {
+                material: Handle::default(),
+            })
+            .add_systems(Update, stream);
+        app.world_mut().resource_mut::<Explorer>().mode = MovementMode::Surface;
+        app.update();
+        let first = app.world().resource::<TileCache>().tiles.clone();
+        assert_eq!(first.len(), 9);
+        for _ in 0..5 {
+            app.update();
+        }
+        assert_eq!(app.world().resource::<TileCache>().tiles, first);
+        app.world_mut().resource_mut::<SurfaceState>().feet.x = 129.0;
+        app.update();
+        let cache = app.world().resource::<TileCache>();
+        assert_eq!(cache.tiles.len(), 9);
+        for key in [(0, -1), (0, 0), (0, 1), (1, -1), (1, 0), (1, 1)] {
+            assert_eq!(cache.tiles[&key], first[&key]);
+        }
+        assert_eq!(app.world().resource::<Assets<Mesh>>().len(), 9);
+        app.world_mut().resource_mut::<Explorer>().mode = MovementMode::Space;
+        app.update();
+        assert!(app.world().resource::<TileCache>().tiles.is_empty());
+        assert!(app.world().resource::<Assets<Mesh>>().is_empty());
+    }
+}
