@@ -1,0 +1,40 @@
+    Checking solar_survival v0.2.0 (/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL)
+error: this `if` statement can be collapsed
+   --> src/config/cube_validation.rs:158:13
+    |
+158 | /             if let Some(previous) = progress.previous_x {
+159 | |                 if previous * state.feet.x < 0.0 {
+160 | |                     progress.crossings += 1;
+161 | |                 }
+162 | |             }
+    | |_____________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#collapsible_if
+    = note: `-D clippy::collapsible-if` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::collapsible_if)]`
+help: collapse nested if block
+    |
+158 ~             if let Some(previous) = progress.previous_x
+159 ~                 && previous * state.feet.x < 0.0 {
+160 |                     progress.crossings += 1;
+161 ~                 }
+    |
+
+error: could not compile `solar_survival` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: the loop variable `patch` is used to index `first`
+   --> src/rendering/terrain.rs:379:22
+    |
+379 |         for patch in 0..2 {
+    |                      ^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#needless_range_loop
+    = note: `-D clippy::needless-range-loop` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::needless_range_loop)]`
+help: consider using an iterator and enumerate()
+    |
+379 -         for patch in 0..2 {
+379 +         for (patch, <item>) in first.iter().enumerate().take(2) {
+    |
+
+error: could not compile `solar_survival` (lib test) due to 2 previous errors

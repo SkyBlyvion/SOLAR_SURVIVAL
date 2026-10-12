@@ -1,6 +1,6 @@
-# Contrat géométrique cube-sphere P3.1
+# Cube-sphere : contrat P3.1 et contacts bornés P3.2
 
-La géométrie opérationnelle est dans `src/planets/cube_sphere.rs`, réexportée par `planets` pour conserver les chemins `CubeFace` et `PatchKey`. Elle ne dépend d'aucun système ECS, mesh GPU ou contrôleur. Le terrain jouable de `planets/terrain.rs` reste le site tournant de neuf tuiles borné à ±4 096 m. Ce contrat prépare son extension sans la réaliser.
+La géométrie opérationnelle est dans `src/planets/cube_sphere.rs`, réexportée par `planets` pour conserver les chemins `CubeFace` et `PatchKey`. Elle ne dépend d'aucun système ECS, mesh GPU ou contrôleur. Le terrain par défaut de `planets/terrain.rs` reste le site tournant de neuf tuiles borné à ±4 096 m. P3.2 ajoute un fournisseur optionnel de contacts pour une paire ; voir ci-dessous.
 
 ## Repère et projection
 
@@ -72,3 +72,35 @@ MESA_VK_WSI_PRESENT_MODE=immediate RUST_LOG=info target/release/examples/cube_se
 ```
 
 L'argument facultatif désigne un **nouveau dossier** de captures dans un parent existant ; un dossier existant est refusé. Sans argument, aucune capture n'est écrite. La variable Mesa concerne uniquement le contournement local Ubuntu/NVK. Ce diagnostic utilise une caméra fixe et termine automatiquement ; il ne remplace pas une validation du joueur franchissant le raccord.
+
+
+## Paire jouable P3.2 (opt-in)
+
+`SOLAR_CUBE_SURFACE=1` choisit le fournisseur `planets/cube_terrain.rs` lors de l'entrée M. Le menu et les commandes restent disponibles. Sans cette variable, les neuf tuiles, le relief artistique et ±4 096 m restent le défaut. Le profilage désactive cette option afin de garder sa scène canonique ; le diagnostic P3.1 demeure indépendant.
+
+La face est la composante dominante de la direction éclairée dans le corps tournant, avec la priorité historique X/Y/Z. On choisit les patches centraux `(x=16383,y=16384)` et `(x=16384,y=16384)` au **niveau 15, 64 segments**. Le site est au milieu du raccord `u=0,v=1/32768`, son axe X est U projeté tangent, Y est radial, Z=X×Y. Ce site conventionnel peut différer du point éclairé du FPS historique ; ce choix permet un rectangle intérieur simple et commun aux six faces. Il n'est pas une localisation cartographique.
+
+Au rayon martien 3 389 500 m : chaque patch mesure environ **206,879 m**, chaque cellule **3,232 m**. La paire couvre environ 413,757 × 206,879 m. La flèche sphérique maximale d'une diagonale de cellule est d'environ **0,8 µm** (`diagonale²/(8R)`, estimation locale), très inférieure aux 2 mm de marge du contrôleur. Les cellules sont un peu plus petites que les 4 m du terrain historique. L'empreinte de 0,6 × 0,6 m interroge les triangles qu'elle recouvre, même si son centre est dans un seul patch : la résolution ne doit pas être confondue avec un échantillonnage central du joueur. Cette résolution fixe vise ce premier parcours sphérique ; elle ne définit pas un LOD général pour du relief.
+
+Il n'y a **aucun relief cube-sphere**. Les positions SI de `PatchPair` sont l'autorité. À l'entrée seulement, le fournisseur soustrait l'origine dans les axes du corps en f64, applique l'inverse du DQuat du site, et conserve les positions locales. Contacts et deux meshes réutilisent ces positions et les mêmes indices partagés au raccord. Les couleurs orange/bleue servent à identifier les deux patches ; elles peuvent changer au raccord, sans changer la géométrie. Les trois obstacles de gameplay restent fixés au support triangulaire.
+
+Le contrôleur cinématique, la gravité radiale, les deux horloges et la publication de pose ne sont pas refondus. Le fournisseur sélectionne les triangles par leur boîte XZ dans un index de cases de **4 m**, construit une fois avec la paire. Il découpe chaque triangle par les quatre côtés de l'empreinte, puis prend le maximum des sommets du polygone obtenu. Une requête ponctuelle utilise l'interpolation barycentrique pour éviter la dégénérescence du découpage. L'index peut référencer un triangle dans plusieurs cases ; les doublons n'affectent pas le maximum. Aucune recherche de planète entière ni génération par frame.
+
+Un rectangle conservateur est inscrit dans les coins externes de cette paire centrale, puis réduit de **1 m**. Le contrôleur y borne le centre des pieds avec **0,3 m** de réserve supplémentaire pour l'empreinte, y compris en l'air. Le fournisseur refuse une empreinte hors de ce rectangle au lieu d'extrapoler un sol. Ce sont des limites de gameplay du parcours opt-in ; aucun chargement au-delà, raccord entre faces, LOD mixte ou migration d'origine n'est ajouté. Elles ne constituent pas des murs visibles. Lorsqu'un axe est bloqué par le bornage, sa composante de vitesse publiée est annulée, y compris pour la borne du site historique.
+
+Budgets fixes : deux patches, **8 385 sommets physiques uniques**, **16 384 triangles**, 65 sommets communs. Les deux meshes conservent chacun le tableau local de 8 385 positions et leurs indices respectifs (16 770 sommets de proxy au total ; environ 0,83 Mio de données positions/normales/couleurs/indices, sans surcoût du moteur). Deux handles sont créés au premier accès, cachés en espace, puis réutilisés et mis à jour uniquement lors du choix d'un site. L'index est testé sous 5 700 cases, 85 000 références et 32 triangles par case ; une empreinte de 0,6 m visite au plus quatre cases. Ces plafonds de structures ne sont pas une mesure RAM/GPU complète ou un benchmark.
+
+### Reproduction du parcours
+
+Après compilation, créer seulement le parent du dossier ; le diagnostic crée et exige un **nouveau** dossier de captures :
+
+```bash
+cargo build --release --locked
+MESA_VK_WSI_PRESENT_MODE=immediate SOLAR_CUBE_SURFACE=1 SOLAR_CUBE_VALIDATE_DIR=docs/mon-nouveau-franchissement RUST_LOG=info target/release/solar_survival
+```
+
+Sans `SOLAR_CUBE_VALIDATE_DIR`, l'option est jouable normalement depuis le menu, avec M, marche/course/saut et sorties M/G/O/U. Sur Windows, définir les deux variables via PowerShell et lancer le même binaire natif ; omettre la variable Mesa. Ce protocole Windows n'est pas une validation réalisée.
+
+La phase initiale laisse le curseur libre pour attendre la visibilité de la fenêtre ; la capture commence à la marche. Le scénario dure **88 s**, 22 phases de 4 s : repos, marche aller/retour, course aller/retour, repos sur le raccord, saut franchissant le raccord et réception, retour, repos, reprise à ×1000 avec course aller/retour, deux limites extérieures, puis sorties M/G/O/U avec quatre retours, enfin Terre. L'entrée, les repos au raccord et les approches des limites emploient des poses de préparation explicites ; les franchissements et le saut utilisent les touches ECS avant les contrôles réels. Le scénario vérifie le support à chaque frame, compte les changements de signe X pendant les phases de mouvement, exige au moins six franchissements et un apex supérieur à 1,9 m, et enregistre 22 captures. Il ne simule pas les périphériques OS. Il a priorité sur P2 et les anciens smoke ; le profilage reste prioritaire.
+
+Les résultats et limites de la campagne sont dans [VALIDATION](VALIDATION.md).

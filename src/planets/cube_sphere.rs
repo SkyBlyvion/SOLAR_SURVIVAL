@@ -25,7 +25,7 @@ impl CubeFace {
     ];
 
     /// (normale, axe u, axe v) ; u × v = normale extérieure.
-    fn basis(self) -> (DVec3, DVec3, DVec3) {
+    pub(crate) fn basis(self) -> (DVec3, DVec3, DVec3) {
         match self {
             Self::PositiveX => (DVec3::X, DVec3::NEG_Z, DVec3::Y),
             Self::NegativeX => (DVec3::NEG_X, DVec3::Z, DVec3::Y),

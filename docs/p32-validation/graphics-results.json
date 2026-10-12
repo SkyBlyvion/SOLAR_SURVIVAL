@@ -1,0 +1,31 @@
+[
+  {
+    "command": [
+      "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/target/release/solar_survival"
+    ],
+    "cwd": "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL",
+    "environment": {
+      "RUST_LOG": "info",
+      "MESA_VK_WSI_PRESENT_MODE": "immediate",
+      "SOLAR_CUBE_SURFACE": "1",
+      "SOLAR_CUBE_VALIDATE_DIR": "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p32-validation/crossing"
+    },
+    "exit_code": 0,
+    "elapsed_wall_seconds": 88.35218395399716,
+    "captures": 22
+  },
+  {
+    "command": [
+      "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/target/release/solar_survival"
+    ],
+    "cwd": "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p32-validation/game",
+    "environment": {
+      "RUST_LOG": "info",
+      "MESA_VK_WSI_PRESENT_MODE": "immediate",
+      "SOLAR_ROTATION_SMOKE_SECONDS": "50"
+    },
+    "exit_code": 0,
+    "elapsed_wall_seconds": 50.40021242400326,
+    "captures": 10
+  }
+]

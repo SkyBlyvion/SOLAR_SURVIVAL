@@ -117,6 +117,8 @@ src/player/           état d'exploration, repère suivi et contrôleur FPS
 src/physics/          garde spatiale, gravité radiale et contacts cinématiques f64
 src/planets/          clés cube-sphere, graines et géométrie du terrain local
 src/planets/cube_sphere.rs conversions, voisins et paire de patches à sommets partagés
+src/planets/cube_terrain.rs fournisseur optionnel de support de la paire f64
+src/config/cube_validation.rs parcours graphique borné de franchissement
 examples/cube_seam.rs diagnostic graphique borné, indépendant du terrain jouable
 src/survival/         données vitales et inventaire futur
 src/ui/               panneau de navigation, télémétrie et marqueurs
@@ -189,7 +191,7 @@ Le script utilise uniquement la bibliothèque standard Python et lance les essai
 
 ## Limites actuelles et suite
 
-Le [contrat P3.1](docs/CUBE_SPHERE.md) et sa démonstration optionnelle vérifient les premiers raccords cube-sphere. Après `cargo build --release --locked --example cube_seam`, lancer `target/release/examples/cube_seam docs/mon-nouveau-raccord` (ajouter `MESA_VK_WSI_PRESENT_MODE=immediate` sur ce poste). Le programme affiche quatre cas en 32 secondes et écrit quatre captures dans un nouveau dossier. Il génère deux patches à la fois ; le franchissement par le joueur et les contacts cube-sphere restent à développer. Le FPS normal conserve les neuf tuiles et la borne ±4 096 m.
+Le [contrat P3.1](docs/CUBE_SPHERE.md) et sa démonstration optionnelle vérifient les premiers raccords cube-sphere. Après `cargo build --release --locked --example cube_seam`, lancer `target/release/examples/cube_seam docs/mon-nouveau-raccord` (ajouter `MESA_VK_WSI_PRESENT_MODE=immediate` sur ce poste). Le programme affiche quatre cas en 32 secondes et écrit quatre captures dans un nouveau dossier. Il génère deux patches à la fois ; le franchissement du joueur et les contacts cube-sphere sont désormais disponibles dans un parcours opt-in borné, décrit ci-dessous. Le FPS normal conserve les neuf tuiles et la borne ±4 096 m.
 
 Les données et conventions sont détaillées dans [docs/ASTRONOMY.md](docs/ASTRONOMY.md). Ce modèle képlérien n'est pas une éphéméride scientifique : pas de N-corps, perturbations lunaires, précession exacte, retards lumineux ou éclipses. La phase et l'orientation lunaires sont conventionnelles, explicitement non observées. La période lunaire et ses dimensions sont réelles.
 
@@ -212,3 +214,10 @@ Le pas physique est de 1/120 s, alimenté par `Time<Real>` dans `GameSet::Naviga
 Même en l’air, le joueur reste exprimé dans le site tournant. Aucune force de Coriolis, centrifuge, d’Euler ni due à l’accélération translatoire orbitale n’est appliquée ; aucune vitesse inertielle n’est transférée lors des téléportations M/G/O/U. Ce contrôleur est un compromis de gameplay, particulièrement visible sous T, pas une intégration inertielle d’un astronaute. Voir les formules et conventions dans [ASTRONOMY](docs/ASTRONOMY.md).
 
 **Suite :** zones cube-sphere au-delà du site borné, profilage du rendu et contrôleur pour géométries plus complexes. Puis oxygène, ressources, inventaire et construction ; les structures de survie ne consomment encore rien.
+
+
+## Premier parcours cube-sphere P3.2
+
+`SOLAR_CUBE_SURFACE=1 cargo run --release --locked` active deux patches centraux d'une même face lors de M, dans un seul repère tournant. Environ 207 m par patch, cellules de 3,23 m, contacts avec toute l'empreinte du joueur ; marche/course/saut et retours spatiaux conservés. Les deux couleurs repèrent le raccord. Cette paire sphérique sans relief est bornée ; elle ne charge aucune zone suivante. Sans l'option, le FPS actuel reste le défaut, avec neuf tuiles et ±4 096 m.
+
+Après compilation, le scénario de 88 s avec 22 captures se lance avec `SOLAR_CUBE_SURFACE=1 SOLAR_CUBE_VALIDATE_DIR=docs/mon-nouveau-parcours target/release/solar_survival` ; le parent doit exister et le dossier final doit être nouveau. Ajouter `MESA_VK_WSI_PRESENT_MODE=immediate` sur ce poste NVK. Conventions, budgets et vérifications dans [CUBE_SPHERE](docs/CUBE_SPHERE.md), résultats dans [VALIDATION](docs/VALIDATION.md). Pas de migration du repère, passage entre faces, LOD mixte ou relief martien mesuré.

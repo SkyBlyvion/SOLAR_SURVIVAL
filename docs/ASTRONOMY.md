@@ -81,4 +81,16 @@ Le menu principal et les options bloquent les entrées de navigation et libèren
 
 ## Géométrie cube-sphere P3.1
 
-Le [contrat cube-sphere](CUBE_SPHERE.md) rend opérationnelles les conventions historiques de faces et de graines : conversions f64, voisins orientés et deux patches de même niveau partageant leurs sommets. Les positions sont en mètres dans les axes du corps tournant, au rayon moyen du catalogue. La projection radiale du cube, le niveau 15 et les 32 segments de la démonstration sont des choix numériques/de diagnostic, sans nouvelle donnée astronomique. Aucune cartographie ni relief mesuré n'est introduit. La démonstration est indépendante du FPS ; le site jouable, son repère, ses contacts et ses limites restent ceux décrits ci-dessus.
+Le [contrat cube-sphere](CUBE_SPHERE.md) rend opérationnelles les conventions historiques de faces et de graines : conversions f64, voisins orientés et deux patches de même niveau partageant leurs sommets. Les positions sont en mètres dans les axes du corps tournant, au rayon moyen du catalogue. La projection radiale du cube, le niveau 15 et les 32 segments de la démonstration sont des choix numériques/de diagnostic, sans nouvelle donnée astronomique. Aucune cartographie ni relief mesuré n'est introduit. La démonstration P3.1 est indépendante du FPS. Le terrain par défaut conserve les conventions ci-dessus ; le parcours optionnel P3.2 est décrit ci-dessous.
+
+
+## Contacts cube-sphere P3.2 optionnels
+
+Aucun paramètre astronomique ni dépendance ajouté. `SOLAR_CUBE_SURFACE=1` utilise une paire de patches centraux d'une même face, au rayon moyen martien du catalogue, sans relief. La face dominante éclairée est sélectionnée dans les axes du corps à l'entrée ; le site au milieu du raccord est ensuite fixe dans le corps tournant. Niveau 15, 64 segments, rectangle intérieur avec réserve de 1 m, couleurs distinctes et position initiale à x=−8 m sont des conventions numériques/de gameplay, détaillées dans [CUBE_SPHERE](CUBE_SPHERE.md). La taille n'est pas extrapolable à tous les patches de la projection.
+
+Un seul `Q_site` sert aux deux patches, aux obstacles et au joueur en l'air ou au sol. La composition `Q_Mars(t) × Q_site`, les visites translatoires, la publication après physique, la verticale radiale et les forces d'inertie omises ne changent pas. Les triangles f64 communs au rendu fournissent exactement le maximum sous l'empreinte rectangulaire alignée au site. Le rendu conserve les mètres 1:1 et soustrait les yeux dans ce même repère en f64 avant conversion f32 ; aucune position astronomique ne remplit directement un Transform. Les proxies ont une erreur numérique testée inférieure à 20 µm sur cette paire.
+
+La paire et le joueur sont bornés au rectangle résident, sans migration du site, passage jouable entre faces ou chargement suivant. Le FPS historique garde par défaut ses neuf tuiles, son relief artistique et ±4 096 m. Les marches/sauts et gravité de la paire restent en secondes réelles, indépendantes de P/T et limitées à 0,25 s par frame ; rotation et calendrier suivent toujours `Time<Real>`. La paire sphérique ne revendique ni cartographie, ni hauteur mesurée, ni orientation IAU exacte.
+
+
+Le bornage annule désormais la composante horizontale de vitesse sur chaque axe bloqué, pour la paire comme pour la borne historique. La position restait déjà contrainte ; la vitesse publiée correspond maintenant à cet arrêt. Les paramètres de marche/saut, la gravité et les horloges demeurent ceux du contrôleur existant.

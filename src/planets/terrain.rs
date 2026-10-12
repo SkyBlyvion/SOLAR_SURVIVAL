@@ -17,6 +17,9 @@ pub struct MarsTerrain {
     /// La rotation quotidienne ne modifie ni ce champ ni la révision des meshes.
     pub orientation: DQuat,
     pub revision: u64,
+    /// Opt-in de session ; une seule paire résidente, jamais une planète entière.
+    pub cube_enabled: bool,
+    pub cube: Option<super::cube_terrain::CubeTerrain>,
 }
 impl FromWorld for MarsTerrain {
     fn from_world(world: &mut World) -> Self {
@@ -26,12 +29,23 @@ impl FromWorld for MarsTerrain {
             seed: mars.generation.seed,
             orientation: DQuat::IDENTITY,
             revision: 0,
+            cube_enabled: world
+                .get_resource::<crate::config::GameConfig>()
+                .is_some_and(|c| c.cube_surface),
+            cube: None,
         }
     }
 }
 impl MarsTerrain {
     pub fn set_site(&mut self, outward: DVec3) {
-        self.orientation = DQuat::from_rotation_arc(DVec3::Y, outward.normalize());
+        if self.cube_enabled {
+            let (orientation, cube) = super::cube_terrain::CubeTerrain::new(outward, self.radius_m);
+            self.orientation = orientation;
+            self.cube = Some(cube);
+        } else {
+            self.orientation = DQuat::from_rotation_arc(DVec3::Y, outward.normalize());
+            self.cube = None;
+        }
         self.revision = self.revision.wrapping_add(1);
     }
     /// Coordonnées centrées sur Mars dans les axes du site (avant rotation).
@@ -75,6 +89,11 @@ impl MarsTerrain {
         [[a, c, b], [b, c, d]]
     }
     pub fn height(&self, x: f64, z: f64) -> f64 {
+        if let Some(cube) = &self.cube {
+            return cube
+                .support_height(DVec3::new(x, 0.0, z), 0.0)
+                .expect("Point dans la paire bornée");
+        }
         let ix = (x / CELL_M).floor() as i32;
         let iz = (z / CELL_M).floor() as i32;
         let u = x / CELL_M - ix as f64;
@@ -89,6 +108,11 @@ impl MarsTerrain {
     }
     /// Hauteur maximale exacte des triangles sous une empreinte rectangulaire.
     pub fn support_height(&self, feet: DVec3, half_width: f64) -> f64 {
+        if let Some(cube) = &self.cube {
+            return cube
+                .support_height(feet, half_width)
+                .expect("Empreinte dans la paire bornée");
+        }
         let min_x = feet.x - half_width;
         let max_x = feet.x + half_width;
         let min_z = feet.z - half_width;
@@ -97,36 +121,22 @@ impl MarsTerrain {
         for x in (min_x / CELL_M).floor() as i32..=(max_x / CELL_M).floor() as i32 {
             for z in (min_z / CELL_M).floor() as i32..=(max_z / CELL_M).floor() as i32 {
                 for triangle in self.triangles(x, z) {
-                    let mut polygon = triangle.to_vec();
-                    for (axis, bound, sign) in [
-                        (0, min_x, 1.0),
-                        (0, max_x, -1.0),
-                        (2, min_z, 1.0),
-                        (2, max_z, -1.0),
-                    ] {
-                        let mut clipped = Vec::with_capacity(6);
-                        if let Some(mut previous) = polygon.last().copied() {
-                            for &current in &polygon {
-                                let a = (previous[axis] - bound) * sign;
-                                let b = (current[axis] - bound) * sign;
-                                if (a >= 0.0) != (b >= 0.0) {
-                                    clipped.push(previous + (current - previous) * (a / (a - b)));
-                                }
-                                if b >= 0.0 {
-                                    clipped.push(current);
-                                }
-                                previous = current;
-                            }
-                        }
-                        polygon = clipped;
-                    }
-                    for point in polygon {
-                        height = height.max(point.y);
+                    if let Some(value) = triangle_support(triangle, min_x, max_x, min_z, max_z) {
+                        height = height.max(value);
                     }
                 }
             }
         }
         height
+    }
+    /// Borne conservatrice : toute l'empreinte reste sur les triangles chargés.
+    pub fn clamp_feet(&self, feet: &mut DVec3, half_width: f64) {
+        let (min, max) = self.cube.as_ref().map_or(
+            (DVec3::splat(-SITE_LIMIT_M), DVec3::splat(SITE_LIMIT_M)),
+            |cube| (cube.min, cube.max),
+        );
+        feet.x = feet.x.clamp(min.x + half_width, max.x - half_width);
+        feet.z = feet.z.clamp(min.z + half_width, max.z - half_width);
     }
     pub fn tile_at(feet: DVec3) -> (i32, i32) {
         (
@@ -134,4 +144,51 @@ impl MarsTerrain {
             (feet.z / TILE_M).floor() as i32,
         )
     }
+}
+
+/// Maximum d'un triangle plan découpé par l'empreinte XZ (pas un échantillon central).
+/// Utilisé par les deux fournisseurs, y compris pour les triangles du raccord.
+pub(crate) fn triangle_support(
+    triangle: [DVec3; 3],
+    min_x: f64,
+    max_x: f64,
+    min_z: f64,
+    max_z: f64,
+) -> Option<f64> {
+    // Une empreinte ponctuelle ne survit pas toujours au découpage dégénéré
+    // (les intersections arrondies peuvent tomber de part et d'autre du point).
+    if min_x == max_x && min_z == max_z {
+        let [a, b, c] = triangle;
+        let cross = |p: DVec3, q: DVec3| p.x * q.z - p.z * q.x;
+        let point = DVec3::new(min_x, 0.0, min_z) - a;
+        let area = cross(b - a, c - a);
+        let u = cross(point, c - a) / area;
+        let v = cross(b - a, point) / area;
+        return (u >= -1e-12 && v >= -1e-12 && u + v <= 1.0 + 1e-12)
+            .then_some(a.y + u * (b.y - a.y) + v * (c.y - a.y));
+    }
+    let mut polygon = triangle.to_vec();
+    for (axis, bound, sign) in [
+        (0, min_x, 1.0),
+        (0, max_x, -1.0),
+        (2, min_z, 1.0),
+        (2, max_z, -1.0),
+    ] {
+        let mut clipped = Vec::with_capacity(6);
+        if let Some(mut previous) = polygon.last().copied() {
+            for &current in &polygon {
+                let a = (previous[axis] - bound) * sign;
+                let b = (current[axis] - bound) * sign;
+                if (a >= 0.0) != (b >= 0.0) {
+                    clipped.push(previous + (current - previous) * (a / (a - b)));
+                }
+                if b >= 0.0 {
+                    clipped.push(current);
+                }
+                previous = current;
+            }
+        }
+        polygon = clipped;
+    }
+    polygon.into_iter().map(|p| p.y).reduce(f64::max)
 }

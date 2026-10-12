@@ -19,6 +19,8 @@ fn terrain() -> MarsTerrain {
         seed: 42,
         orientation: DQuat::IDENTITY,
         revision: 1,
+        cube_enabled: false,
+        cube: None,
     }
 }
 fn mu() -> f64 {

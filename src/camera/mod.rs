@@ -634,6 +634,69 @@ mod tests {
     }
 
     #[test]
+    fn cube_pair_keeps_real_controls_clocks_pose_and_all_four_space_exits() {
+        let mut app = app(60);
+        app.world_mut().resource_mut::<MarsTerrain>().cube_enabled = true;
+        press(&mut app, KeyCode::KeyM);
+        app.world_mut().resource_mut::<Explorer>().captured = true;
+        app.world_mut().resource_mut::<SurfaceState>().yaw = 0.0;
+        app.world_mut().resource_mut::<SimulationClock>().paused = true;
+        let jd = app.world().resource::<SimulationClock>().jd;
+        app.world_mut()
+            .resource_mut::<ButtonInput<KeyCode>>()
+            .press(KeyCode::KeyD);
+        app.world_mut()
+            .resource_mut::<ButtonInput<KeyCode>>()
+            .press(KeyCode::Space);
+        for _ in 0..240 {
+            app.update();
+            app.world_mut()
+                .resource_mut::<ButtonInput<KeyCode>>()
+                .clear();
+        }
+        assert!(app.world().resource::<SurfaceState>().feet.x > 9.9);
+        assert!(app.world().resource::<SurfaceState>().grounded);
+        assert_eq!(app.world().resource::<SimulationClock>().jd, jd);
+        press(&mut app, KeyCode::KeyP);
+        press(&mut app, KeyCode::KeyT);
+        let feet = app.world().resource::<SurfaceState>().feet;
+        app.world_mut()
+            .resource_mut::<ButtonInput<KeyCode>>()
+            .reset_all();
+        app.world_mut().resource_mut::<SurfaceState>().accumulator = 0.0;
+        app.insert_resource(TimeUpdateStrategy::ManualDuration(Duration::from_millis(1)));
+        app.update();
+        assert_eq!(app.world().resource::<SurfaceState>().feet, feet);
+        let world = app.world();
+        let terrain = world.resource::<MarsTerrain>();
+        let solar = world.resource::<SolarSystem>();
+        let clock = world.resource::<SimulationClock>();
+        let state = world.resource::<SurfaceState>();
+        let frame = terrain.inertial_frame(
+            solar
+                .body(BodyId::MARS)
+                .rotation(clock.seconds_since_epoch()),
+        );
+        assert!(
+            world
+                .resource::<Explorer>()
+                .local_m
+                .distance(frame.to_global(state.eye(terrain)))
+                < 1e-9
+        );
+        for key in [KeyCode::KeyM, KeyCode::KeyG, KeyCode::KeyO, KeyCode::KeyU] {
+            press(&mut app, key);
+            assert_eq!(app.world().resource::<Explorer>().mode, MovementMode::Space);
+            press(&mut app, KeyCode::KeyM);
+            assert_eq!(
+                app.world().resource::<Explorer>().mode,
+                MovementMode::Surface
+            );
+            assert!(app.world().resource::<MarsTerrain>().cube.is_some());
+        }
+    }
+
+    #[test]
     fn p2_scenario_exits_surface_twice_with_each_navigation_command() {
         let mut app = app(60);
         app.world_mut().resource_mut::<GameConfig>().p2_seconds = Some(160.0);

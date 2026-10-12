@@ -37,8 +37,14 @@ impl SurfaceState {
         let rotation = solar.body(BodyId::MARS).rotation((jd - J2000) * DAY);
         // Choisir le côté éclairé dans les axes globaux, puis fixer ce site
         // dans les axes du corps, y compris à une époque différente de J2000.
-        terrain.set_site(rotation.inverse() * outward);
+        // La paire centrale choisit la face la plus éclairée, sans le décalage
+        // de cadrage du site historique. Son centre reste alors côté jour.
+        terrain.set_site(rotation.inverse() * if terrain.cube_enabled { sun } else { outward });
         *self = Self::default();
+        if terrain.cube.is_some() {
+            self.feet.x = -8.0;
+            self.yaw = -std::f64::consts::FRAC_PI_2;
+        }
         self.feet.y = terrain.support_height(self.feet, HALF_WIDTH_M) + 0.002;
         self.grounded = true;
         pilot.anchor = Some(BodyId::MARS);

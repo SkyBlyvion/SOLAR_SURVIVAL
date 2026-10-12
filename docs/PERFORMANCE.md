@@ -94,3 +94,10 @@ P1 est terminé comme étape de diagnostic : protocole transférable, données c
 P2 est terminé sur le poste de développement ; [VALIDATION](VALIDATION.md) décrit le cycle complet, le masque solaire nocturne et les essais du menu. Les options de session permettent maintenant de choisir MSAA off/×2/×4 et le champ de vision, mais les défauts restent ×4 et 65°. Ce choix joueur n’est pas une optimisation automatique issue de P1. Les variantes de profilage gardent la priorité sur ces réglages ; le menu initial est contourné pendant les campagnes.
 
 Un essai de régression de 30 s, msaa_off sans recorder GPU, a terminé avec code 0 : [journal](validation-p2-profile-smoke.txt), [CSV](p2-profile-smoke.csv), quatre phases et franchissement de tuile. Il vérifie le fonctionnement du scénario/export sur les nouvelles sources, sans remplacer les huit essais historiques ni justifier une comparaison de performance entre versions. Refaire la campagne complète sur la cible avant toute décision de qualité finale.
+
+
+## P3.2 : budgets du premier parcours
+
+Le parcours cube-sphere opt-in garde un index de contacts et deux meshes résidents, construits à l'entrée seulement. La [validation P3.2](VALIDATION.md) observe 8 385 sommets physiques, 16 384 triangles, 5 408 cases d'index, 53 240–53 260 références et 18 triangles maximum par case ; les plafonds et données de proxy sont dans [CUBE_SPHERE](CUBE_SPHERE.md). Les tests vérifient la réutilisation des deux handles. Ces comptes justifient un coût borné pour cette paire centrale ; ils ne mesurent pas les durées CPU/GPU, la VRAM totale ou le streaming futur.
+
+Le parcours de 88 s réalise des captures et change de pose/calendrier ; ses relevés ponctuels de 22–25 FPS ne forment pas un benchmark comparable aux huit essais P1. Le profilage canonique conserve le terrain historique et prend priorité sur `SOLAR_CUBE_SURFACE`. Refaire une campagne dédiée lors de l'extension des zones et sur la RTX 4050/Core i5 avant toute décision de qualité.

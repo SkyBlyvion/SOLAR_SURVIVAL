@@ -196,7 +196,11 @@ fn refresh(
         anchor
     };
     let mode = if pilot.mode == MovementMode::Surface {
-        "surface Mars"
+        if terrain.cube.is_some() {
+            "Mars · paire cube-sphere"
+        } else {
+            "surface Mars"
+        }
     } else {
         "espace"
     };

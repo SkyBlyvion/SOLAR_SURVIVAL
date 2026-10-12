@@ -401,6 +401,8 @@ mod tests {
                 rotation_smoke_seconds: None,
                 p2_seconds: None,
                 profile: None,
+                cube_surface: false,
+                cube_validation_dir: None,
             })
             .add_plugins(ProfilingPlugin);
         app.update();

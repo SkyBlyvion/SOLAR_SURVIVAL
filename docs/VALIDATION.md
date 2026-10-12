@@ -1,4 +1,42 @@
-# Validation Solar Survival 0.2 — P3.1 cube-sphere
+# Validation Solar Survival 0.2 — P3.2 contacts et franchissement borné
+
+12 octobre 2026. Départ Git propre au commit `da2b25c` : P3.1 était commité. Environnement : Ubuntu 24.04.5 LTS, X11 `DISPLAY=:1`, Rust stable 1.99.0, édition 2024, Bevy **exactement 0.19.1**, i7-6700K, GTX 1060 3 Go/NVK et Mesa 25.2.8. Aucune dépendance ni modification de Cargo.toml/Cargo.lock. Historiques P1/P2/P3.1 conservés ; changements de ce chat laissés non commités.
+
+## Sources et vérifications
+
+`planets/cube_terrain.rs` est le fournisseur opt-in de support pour une paire centrale d'une même face, sphérique sans relief. Positions/indices de `PatchPair` partagés avec le rendu, un seul repère tournant, empreinte entière découpée sur les triangles, index spatial fixe, rectangle intérieur conservateur. Le terrain historique demeure le défaut. [CUBE_SPHERE](CUBE_SPHERE.md) décrit résolution, unités, bornes, ressources et reproduction ; [ASTRONOMY](ASTRONOMY.md) décrit les conventions physiques.
+
+**71 tests réussis** : 22 internes, 21 fondations, 15 surface historique, 9 cube-sphere géométrie et 4 nouveaux tests de contacts. Les huit tests ajoutés à P3.1 vérifient : couverture des six paires centrales et budgets métriques ; index contre une recherche sur tous les triangles, empreinte entière et continuité du raccord ; marche/course répétées dans les deux sens, repos et saut/réception ; quatre limites chargées, support en l'air et vitesse bloquée ; 30/60/144 FPS et publication sans sous-pas ; entrée éclairée à plusieurs époques ; systèmes de contrôle/horloge/publication et M/G/O/U ; positions/indices du mesh, précision du proxy et réutilisation de deux handles aux déplacements et retours. Ce sont des vérifications numériques et ECS, pas des essais de périphériques OS.
+
+Fmt/check/check-all-targets/tests/Clippy et `cargo build --release --locked` réussis sur les sources finales (build 2 min 07 s). L’exemple P3.1, inchangé, est vérifié par `--all-targets`. Journaux dans [p32-validation](p32-validation/), commandes/codes dans [build-results.json](p32-validation/build-results.json).
+
+## Parcours final de la paire
+
+[Journal final](p32-validation/crossing.txt), [22 captures](p32-validation/crossing/), [empreintes des sources/binaire](p32-validation/environment.json), [commandes/codes](p32-validation/graphics-results.json). Lancement release **88 s**, code **0**, aucun ERROR/WARN/panic, sans compilation ni autre lancement GPU concurrent, présentation Mesa immediate. L'injection utilise les vrais contrôles ECS ; aucun périphérique OS n'est simulé.
+
+Le compteur observe **six franchissements** pendant les phases de déplacement ; l'apex réel atteint **2,130988 m**. Les phases 1/2 montrent marche aller/retour à 4,5 m/s, 3/4 course aller/retour à 8 m/s, 5/8 repos sur X=0 avec vitesse nulle, 6 saut franchissant le raccord et 7 réception/retour. Le JD reste J2000 pendant la pause ; après P, les phases 9/10 courent à ×1000. Aux deux bornes X (phases 11/12), les pieds restent à ±205,578661 m, au sol et à vitesse nulle. Les sorties M/G/O/U, leurs quatre retours et la Terre sont visibles aux phases 13–21. Les limites Z et le repos long sont vérifiés numériquement ; le scénario graphique ne marche pas sur les quatre limites.
+
+Toutes les **22 captures finales sont inspectées** via [six planches](p32-validation/inspection/), avec inspection supplémentaire à taille originale du [repos au raccord](p32-validation/crossing/crossing-05.png), du [saut](p32-validation/crossing/crossing-06.png) et de la [borne X](p32-validation/crossing/crossing-11.png). Les deux couleurs rejoignent le même bord sans trou visible ; obstacles/HUD, poses au sol/en l'air et transitions spatiales sont présents. Les extrémités du terrain limité sont visibles contre le fond astronomique, volontairement sans extension ou mur visuel. Les marqueurs astronomiques peuvent toujours se superposer au terrain, limite historique.
+
+Ressources : 8 385 sommets physiques, 16 384 triangles, deux meshes propres à la paire. Les deux handles et leurs mises à jour aux réentrées sont vérifiés dans le test ECS de streaming ; on ne confond pas ces deux assets avec le total interne de Bevy. L'index observé utilise **5 408 cases**, **53 240–53 260 références** selon la face, maximum **18 triangles par case**. Les plafonds testés portent sur les six paires centrales, pas sur toute la planète. Les images affichent ponctuellement 22–25 FPS en surface ; ce sont des relevés du HUD, sans benchmark, attribution de gain CPU/GPU ni prédiction sur RTX 4050.
+
+## Régression du terrain par défaut et limites
+
+Après le parcours, `SOLAR_ROTATION_SMOKE_SECONDS=50` est lancé **sans** `SOLAR_CUBE_SURFACE`, depuis [game/](p32-validation/game/) pour préserver les captures historiques. [Journal](p32-validation/game.txt) : code **0**, dix captures et aucun ERROR/WARN/panic. Toutes les captures sont inspectées via trois planches, puis [repos](p32-validation/game/docs/rotation-surface-00.png), [course après changement de tuile](p32-validation/game/docs/rotation-surface-06.png) et [Mars spatiale](p32-validation/game/docs/rotation-surface-08.png) à taille originale. Terrain artistique, obstacles, HUD et vues Mars/Terre restent présents. Le journal conserve marche en pause au même JD, saut, course à 8 m/s, franchissement jusqu'à z=−151,006826 m et vitesse nulle au repos. Les tests de streaming vérifient encore neuf meshes, le voisinage 3×3 et la libération des tuiles.
+
+**P3.2 terminé sur le poste Ubuntu de développement.** Cette campagne valide le parcours fonctionnel borné et les contacts, sans benchmark, essai OS des nouvelles touches ou replay complet du menu/cycle P2. Windows 11, RTX 4050/Core i5 et suspension complète de l'OS restent non validés. Pas de relief cube-sphere, migration du repère, passage jouable entre faces, chargement au-delà de la paire, LOD mixte ou planète entière. Les forces d'inertie, l'orientation IAU complète et les occultations détaillées restent omises. Suite limitée : [P3.3](ROADMAP.md), première migration bornée sur la même face ; prompt autonome dans [NEXT_CHAT](NEXT_CHAT.md).
+
+## Essais intermédiaires conservés
+
+Le [premier test](p32-validation/tests-initial.txt) échoue sur une requête ponctuelle : l'empreinte nulle rend le découpage polygonal dégénéré et perd un point par arrondi. La requête ponctuelle emploie maintenant une interpolation barycentrique ; les véritables empreintes continuent de découper les triangles. Un import inutilisé est retiré. Le [second test](p32-validation/tests-second.txt) passe. Le [premier Clippy](p32-validation/clippy-before-clippy-fix.txt) signale une condition imbriquée et une boucle de test indexée ; corrigés sans nouvelle dépendance. Les validations et le build précédant la précision d'entrée éclairée sont conservés sous `*-before-lit-entry` : ils ne représentent pas les sources finales.
+
+Le premier parcours release complet, [journal](p32-validation/crossing-before-cursor-boundary.txt) et [22 captures](p32-validation/crossing-before-cursor-boundary/), termine avec code **0**, sept franchissements et apex **2,131371 m**. Il contient un ERROR et un WARN X11 au démarrage : le diagnostic demandait la capture du curseur alors que la fenêtre n'était pas encore visible. La phase initiale laisse maintenant le curseur libre ; la capture commence à la marche. Il montrait aussi des pieds correctement bornés aux deux limites X, avec une vitesse encore ±8 m/s : le bornage annule désormais la composante de vitesse bloquée, pour la paire et le site historique. Ces observations justifient ces petites corrections avant le lancement final. Sources/binaire de cet essai : [environment-before-cursor-boundary.json](p32-validation/environment-before-cursor-boundary.json) ; code et commande dans [graphics-results-before-cursor-boundary.json](p32-validation/graphics-results-before-cursor-boundary.json).
+
+Captures intermédiaires effectivement inspectées : 00, 05 et 06 (entrée, repos sur raccord et saut). Les autres captures intermédiaires restent conservées ; aucune inspection exhaustive de cet essai n'est revendiquée.
+
+---
+
+# Historique : validation Solar Survival 0.2 — P3.1 cube-sphere
 
 12 octobre 2026. Environnement : Ubuntu 24.04.5 LTS, X11 `DISPLAY=:1`, Rust stable 1.99.0, édition 2024, Bevy **exactement 0.19.1**, i7-6700K et GTX 1060 3 Go/NVK, Vulkan, Mesa 25.2.8. Git était propre au départ, commit `cfc745e` (P2 déjà commité), contrairement au prompt de reprise ancien. Aucune dépendance ni modification de Cargo.toml/Cargo.lock. Historiques P1/P2 préservés. Empreintes des sources/binaries : [environment.json](p3-validation/environment.json).
 

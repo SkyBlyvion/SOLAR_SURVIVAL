@@ -14,6 +14,7 @@ use bevy::{
 pub struct ValidationPlugin;
 impl Plugin for ValidationPlugin {
     fn build(&self, app: &mut App) {
+        super::cube_validation::install(app);
         if let Some(directory) = std::env::var_os("SOLAR_CAPTURE_DIR") {
             let directory = std::path::PathBuf::from(directory);
             app.add_systems(
@@ -65,7 +66,10 @@ fn surface_smoke(
     mut commands: Commands,
     mut exit: MessageWriter<AppExit>,
 ) {
-    if config.profile.is_some() || config.p2_seconds.is_some() {
+    if config.profile.is_some()
+        || config.p2_seconds.is_some()
+        || (config.cube_surface && config.cube_validation_dir.is_some())
+    {
         return;
     }
     let Some(seconds) = config
@@ -158,7 +162,8 @@ fn smoke_test(
     mut commands: Commands,
     mut exit: MessageWriter<AppExit>,
 ) {
-    if config.profile.is_some()
+    if (config.cube_surface && config.cube_validation_dir.is_some())
+        || config.profile.is_some()
         || config.p2_seconds.is_some()
         || config.surface_smoke_seconds.is_some()
         || config.rotation_smoke_seconds.is_some()
@@ -229,6 +234,9 @@ pub(crate) fn p2_input(
     mut clock: ResMut<SimulationClock>,
     mut exit: MessageWriter<AppExit>,
 ) {
+    if config.cube_surface && config.cube_validation_dir.is_some() {
+        return;
+    }
     let Some(seconds) = config.p2_seconds.filter(|_| config.profile.is_none()) else {
         return;
     };
@@ -299,7 +307,10 @@ fn p2_capture(
     clock: Res<SimulationClock>,
     mut commands: Commands,
 ) {
-    if config.p2_seconds.is_none() || config.profile.is_some() {
+    if config.p2_seconds.is_none()
+        || config.profile.is_some()
+        || (config.cube_surface && config.cube_validation_dir.is_some())
+    {
         return;
     }
     let (stage, phase, duration) = p2_stage(time.elapsed_secs_f64());

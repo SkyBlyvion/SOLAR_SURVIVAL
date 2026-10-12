@@ -1,6 +1,6 @@
 //! Contrôleur cinématique borné : boîte joueur contre relief doux et boîtes statiques.
 use super::radial_gravity;
-use crate::planets::terrain::{MarsTerrain, SITE_LIMIT_M};
+use crate::planets::terrain::MarsTerrain;
 use bevy::math::DVec3;
 
 pub const HALF_WIDTH_M: f64 = 0.3;
@@ -137,9 +137,16 @@ pub fn step(
     );
     *feet = next;
     *velocity = new_velocity;
-    let limit = SITE_LIMIT_M - HALF_WIDTH_M;
-    feet.x = feet.x.clamp(-limit, limit);
-    feet.z = feet.z.clamp(-limit, limit);
+    let unbounded = *feet;
+    terrain.clamp_feet(feet, HALF_WIDTH_M);
+    // Le bornage fait partie de la résolution : une direction bloquée ne
+    // doit pas rester dans la vitesse publiée (paire et site historique).
+    if feet.x != unbounded.x {
+        velocity.x = 0.0;
+    }
+    if feet.z != unbounded.z {
+        velocity.z = 0.0;
+    }
     let floor = support_height(terrain, *feet) + SKIN_M;
     let snap =
         was_grounded && !jump && old.y - floor >= -0.1 && old.y - floor <= 0.1 && velocity.y <= 0.1;

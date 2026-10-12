@@ -34,6 +34,7 @@ struct TerrainAssets {
 #[derive(Resource, Default)]
 struct TileCache {
     revision: u64,
+    pair: Vec<(Entity, Handle<Mesh>)>,
     tiles: BTreeMap<(i32, i32), (Entity, Handle<Mesh>)>,
 }
 
@@ -159,6 +160,35 @@ fn tile_mesh(terrain: &MarsTerrain, key: (i32, i32)) -> Mesh {
     .with_inserted_attribute(Mesh::ATTRIBUTE_COLOR, colors)
     .with_inserted_indices(Indices::U32(indices))
 }
+/// Deux proxies utilisant exactement les indices physiques et le même tableau local.
+fn cube_mesh(terrain: &MarsTerrain, patch: usize) -> Mesh {
+    let cube = terrain.cube.as_ref().expect("Paire présente");
+    let positions: Vec<_> = cube
+        .local_positions
+        .iter()
+        .map(|&p| local_to_render(p).expect("Paire locale bornée").to_array())
+        .collect();
+    let normals: Vec<_> = cube
+        .local_positions
+        .iter()
+        .map(|&p| terrain.site_relative(p).normalize().as_vec3().to_array())
+        .collect();
+    // Couleurs de diagnostic : rendent le raccord visible sans déplacer les sommets.
+    let color = if patch == 0 {
+        [1.0, 0.8, 0.64, 1.0]
+    } else {
+        [0.68, 0.8, 1.0, 1.0]
+    };
+    let colors = vec![color; positions.len()];
+    Mesh::new(
+        PrimitiveTopology::TriangleList,
+        RenderAssetUsages::default(),
+    )
+    .with_inserted_attribute(Mesh::ATTRIBUTE_POSITION, positions)
+    .with_inserted_attribute(Mesh::ATTRIBUTE_NORMAL, normals)
+    .with_inserted_attribute(Mesh::ATTRIBUTE_COLOR, colors)
+    .with_inserted_indices(Indices::U32(cube.pair.indices[patch].clone()))
+}
 fn stream(
     mut commands: Commands,
     pilot: Res<Explorer>,
@@ -172,16 +202,43 @@ fn stream(
     let active = pilot.mode == MovementMode::Surface;
     let revision_changed = cache.revision != terrain.revision;
     cache.tiles.retain(|&(x, z), (entity, mesh)| {
-        let keep =
-            active && !revision_changed && (x - center.0).abs() <= 1 && (z - center.1).abs() <= 1;
+        let keep = active
+            && terrain.cube.is_none()
+            && !revision_changed
+            && (x - center.0).abs() <= 1
+            && (z - center.1).abs() <= 1;
         if !keep {
             commands.entity(*entity).despawn();
             meshes.remove(mesh.id());
         }
         keep
     });
+    if active && terrain.cube.is_some() {
+        for patch in 0..2 {
+            if cache.pair.len() <= patch {
+                let mesh = meshes.add(cube_mesh(&terrain, patch));
+                let entity = commands
+                    .spawn((
+                        LocalVisual {
+                            origin: DVec3::ZERO,
+                        },
+                        Mesh3d(mesh.clone()),
+                        MeshMaterial3d(assets.material.clone()),
+                        RenderLayers::layer(1),
+                        Transform::default(),
+                        Visibility::Hidden,
+                    ))
+                    .id();
+                cache.pair.push((entity, mesh));
+            } else if revision_changed {
+                *meshes
+                    .get_mut(&cache.pair[patch].1)
+                    .expect("Handle de paire résident") = cube_mesh(&terrain, patch);
+            }
+        }
+    }
     cache.revision = terrain.revision;
-    if !active {
+    if !active || terrain.cube.is_some() {
         return;
     }
     for z in center.1 - 1..=center.1 + 1 {
@@ -296,12 +353,80 @@ fn sync(
 mod tests {
     use super::*;
     #[test]
+    fn cube_mesh_matches_contacts_and_two_handles_survive_moves_rotation_and_reentry() {
+        let mut app = App::new();
+        app.add_plugins(MinimalPlugins)
+            .init_resource::<Explorer>()
+            .init_resource::<SurfaceState>()
+            .init_resource::<SolarSystem>()
+            .init_resource::<MarsTerrain>()
+            .init_resource::<Assets<Mesh>>()
+            .init_resource::<TileCache>()
+            .insert_resource(TerrainAssets {
+                material: Handle::default(),
+            })
+            .add_systems(Update, stream);
+        {
+            let mut terrain = app.world_mut().resource_mut::<MarsTerrain>();
+            terrain.cube_enabled = true;
+            terrain.set_site(DVec3::Y);
+        }
+        app.world_mut().resource_mut::<Explorer>().mode = MovementMode::Surface;
+        app.update();
+        let first = app.world().resource::<TileCache>().pair.clone();
+        assert_eq!(first.len(), 2);
+        assert!(app.world().resource::<TileCache>().tiles.is_empty());
+        for (patch, (_, handle)) in first.iter().enumerate() {
+            let world = app.world();
+            let mesh = world.resource::<Assets<Mesh>>().get(handle).unwrap();
+            let terrain = world.resource::<MarsTerrain>();
+            let cube = terrain.cube.as_ref().unwrap();
+            assert_eq!(
+                mesh.indices().unwrap().iter().collect::<Vec<_>>(),
+                cube.pair.indices[patch]
+                    .iter()
+                    .map(|&i| i as usize)
+                    .collect::<Vec<_>>()
+            );
+            let bevy::mesh::VertexAttributeValues::Float32x3(positions) =
+                mesh.attribute(Mesh::ATTRIBUTE_POSITION).unwrap()
+            else {
+                panic!()
+            };
+            for (&actual, &expected) in positions.iter().zip(&cube.local_positions) {
+                assert_eq!(actual, local_to_render(expected).unwrap().to_array());
+                assert!(Vec3::from_array(actual).as_dvec3().distance(expected) < 0.00002);
+            }
+        }
+        for x in [-90.0, -0.1, 0.0, 0.1, 90.0] {
+            app.world_mut().resource_mut::<SurfaceState>().feet.x = x;
+            app.update();
+            assert_eq!(app.world().resource::<TileCache>().pair, first);
+        }
+        for direction in [DVec3::X, DVec3::NEG_Y, DVec3::Z] {
+            app.world_mut().resource_mut::<Explorer>().mode = MovementMode::Space;
+            app.update();
+            assert_eq!(app.world().resource::<Assets<Mesh>>().len(), 2);
+            app.world_mut()
+                .resource_mut::<MarsTerrain>()
+                .set_site(direction);
+            app.world_mut().resource_mut::<Explorer>().mode = MovementMode::Surface;
+            app.update();
+            assert_eq!(app.world().resource::<TileCache>().pair, first);
+            assert_eq!(app.world().resource::<Assets<Mesh>>().len(), 2);
+            assert!(app.world().resource::<TileCache>().tiles.is_empty());
+        }
+    }
+
+    #[test]
     fn tile_mesh_positions_match_physical_vertices_and_shared_edges() {
         let terrain = MarsTerrain {
             radius_m: 3389500.0,
             seed: 42,
             orientation: bevy::math::DQuat::IDENTITY,
             revision: 1,
+            cube_enabled: false,
+            cube: None,
         };
         let left = tile_mesh(&terrain, (-1, 0));
         let right = tile_mesh(&terrain, (0, 0));
@@ -333,6 +458,8 @@ mod tests {
                 seed: 42,
                 orientation: bevy::math::DQuat::IDENTITY,
                 revision: 1,
+                cube_enabled: false,
+                cube: None,
             })
             .init_resource::<Assets<Mesh>>()
             .init_resource::<Assets<StandardMaterial>>()
