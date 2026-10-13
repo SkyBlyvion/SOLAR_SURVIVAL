@@ -1,0 +1,20 @@
+[
+  {
+    "run": "run-fixed-1",
+    "seconds": 59.48682060199826,
+    "exit_code": 0,
+    "diagnostics": []
+  },
+  {
+    "run": "run-fixed-2",
+    "seconds": 59.47864594999919,
+    "exit_code": 0,
+    "diagnostics": []
+  },
+  {
+    "run": "run-fixed-gpu",
+    "seconds": 59.53458858100021,
+    "exit_code": 0,
+    "diagnostics": []
+  }
+]

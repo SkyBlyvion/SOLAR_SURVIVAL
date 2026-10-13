@@ -1,0 +1,12 @@
+[
+  {
+    "name": "p5",
+    "focused_window": "0x6001dd",
+    "exit_code": 101,
+    "seconds": 8.643781617000059,
+    "diagnostics": [
+      "thread 'Compute Task Pool (0)' (143733) panicked at src/config/construction_validation.rs:140:17:"
+    ],
+    "captures": 3
+  }
+]

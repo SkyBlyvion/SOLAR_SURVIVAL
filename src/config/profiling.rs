@@ -141,10 +141,48 @@ impl ProfileSamples {
     }
 }
 
+#[derive(Resource)]
+struct ConstructionTiming {
+    output: PathBuf,
+}
+
 pub struct ProfilingPlugin;
 impl Plugin for ProfilingPlugin {
     fn build(&self, app: &mut App) {
-        if app.world().resource::<GameConfig>().profile.is_none() {
+        let p5_output = std::env::var_os("SOLAR_P5_TIMING_OUTPUT")
+            .filter(|_| {
+                app.world()
+                    .resource::<GameConfig>()
+                    .construction_validation_dir
+                    .is_some()
+            })
+            .map(PathBuf::from);
+        if app.world().resource::<GameConfig>().profile.is_none() && p5_output.is_none() {
+            return;
+        }
+        if let Some(output) = p5_output {
+            if std::env::var("SOLAR_P5_TIMING_GPU").as_deref() == Ok("1") {
+                app.add_plugins(RenderDiagnosticsPlugin);
+            }
+            app.insert_resource(ConstructionTiming { output })
+                .init_resource::<ProfileSamples>()
+                .add_systems(
+                    Update,
+                    (
+                        begin.after(GameSet::Input).before(GameSet::Simulation),
+                        navigation
+                            .after(GameSet::Simulation)
+                            .before(GameSet::Navigation),
+                        rendering
+                            .after(GameSet::Navigation)
+                            .before(GameSet::Rendering),
+                        interface
+                            .after(GameSet::Rendering)
+                            .before(GameSet::Interface),
+                        finish.after(GameSet::Interface),
+                    ),
+                )
+                .add_systems(Last, collect_construction);
             return;
         }
         if app
@@ -312,6 +350,94 @@ fn isolate(
     }
 }
 
+// Même instrumentation que le profiler, sans désactiver la survie/construction.
+// Le scénario P5 conserve ses commandes de production et retire seulement ses captures.
+fn collect_construction(
+    time: Res<Time<Real>>,
+    config: Res<ConstructionTiming>,
+    diagnostics: Res<DiagnosticsStore>,
+    mut samples: ResMut<ProfileSamples>,
+) {
+    let elapsed = time.elapsed_secs_f64();
+    let bounds = super::construction_validation::BOUNDS;
+    let index = bounds.iter().rposition(|&v| elapsed >= v).unwrap_or(0);
+    const PHASES: [&str; 29] = [
+        "entry",
+        "preview_empty",
+        "reject",
+        "collect_walk",
+        "collect_1",
+        "collect_walk_2",
+        "collect_2",
+        "preview",
+        "placement",
+        "placement_rest",
+        "cancel",
+        "placement_2",
+        "placement_rest_2",
+        "confirm",
+        "built_rest",
+        "door_walk",
+        "door_rest",
+        "recharge",
+        "wall",
+        "wall_rest",
+        "streaming",
+        "stream_rest",
+        "space",
+        "return",
+        "preview_return",
+        "menu",
+        "resume",
+        "door_return",
+        "recharge_return",
+    ];
+    samples.phase = PHASES[index];
+    record_frame(
+        &time,
+        &diagnostics,
+        &mut samples,
+        elapsed - bounds[index] >= 0.25,
+    );
+    if elapsed >= 59.0 {
+        samples
+            .write_csv(&config.output)
+            .expect("CSV de performance P5");
+    }
+}
+fn record_frame(
+    time: &Time<Real>,
+    diagnostics: &DiagnosticsStore,
+    samples: &mut ProfileSamples,
+    measuring: bool,
+) {
+    for diagnostic in diagnostics.iter() {
+        let path = diagnostic.path().to_string();
+        if !path.starts_with("render/")
+            || !(path.ends_with("elapsed_cpu") || path.ends_with("elapsed_gpu"))
+        {
+            continue;
+        }
+        if let Some(measurement) = diagnostic.measurement()
+            && samples
+                .seen
+                .get(&path)
+                .is_none_or(|old| *old < measurement.time)
+        {
+            samples.seen.insert(path.clone(), measurement.time);
+            if measuring {
+                samples.add(path, measurement.value);
+            }
+        }
+    }
+    if measuring {
+        samples.add("frame".into(), time.delta_secs_f64() * 1000.0);
+        for (metric, value) in samples.cpu_frame.clone() {
+            samples.add(metric.into(), value);
+        }
+    }
+}
+
 fn collect(
     time: Res<Time<Real>>,
     config: Res<GameConfig>,
@@ -341,31 +467,7 @@ fn collect(
     // Dédoublonner les diagnostics asynchrones même pendant l'échauffement :
     // aucune ancienne mesure ne doit être réattribuée à la phase suivante.
     let measuring = phase != "warmup" && phase_seconds >= SETTLE_SECONDS;
-    for diagnostic in diagnostics.iter() {
-        let path = diagnostic.path().to_string();
-        if !path.starts_with("render/")
-            || !(path.ends_with("elapsed_cpu") || path.ends_with("elapsed_gpu"))
-        {
-            continue;
-        }
-        if let Some(measurement) = diagnostic.measurement()
-            && samples
-                .seen
-                .get(&path)
-                .is_none_or(|old| *old < measurement.time)
-        {
-            samples.seen.insert(path.clone(), measurement.time);
-            if measuring {
-                samples.add(path, measurement.value);
-            }
-        }
-    }
-    if measuring {
-        samples.add("frame".into(), time.delta_secs_f64() * 1000.0);
-        for (metric, value) in samples.cpu_frame.clone() {
-            samples.add(metric.into(), value);
-        }
-    }
+    record_frame(&time, &diagnostics, &mut samples, measuring);
 }
 
 #[cfg(test)]

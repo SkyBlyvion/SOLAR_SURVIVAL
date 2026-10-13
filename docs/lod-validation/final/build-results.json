@@ -1,0 +1,46 @@
+[
+  {
+    "name": "fmt",
+    "command": [
+      "cargo",
+      "fmt",
+      "--check"
+    ],
+    "exit_code": 0,
+    "seconds": 0.2222335770002246
+  },
+  {
+    "name": "check",
+    "command": [
+      "cargo",
+      "check",
+      "--locked"
+    ],
+    "exit_code": 0,
+    "seconds": 0.2610366499993688
+  },
+  {
+    "name": "release",
+    "command": [
+      "cargo",
+      "build",
+      "--release",
+      "--locked"
+    ],
+    "exit_code": 0,
+    "seconds": 124.24408009299987
+  },
+  {
+    "name": "example",
+    "command": [
+      "cargo",
+      "build",
+      "--release",
+      "--locked",
+      "--example",
+      "lod_seams"
+    ],
+    "exit_code": 0,
+    "seconds": 98.56706497200139
+  }
+]

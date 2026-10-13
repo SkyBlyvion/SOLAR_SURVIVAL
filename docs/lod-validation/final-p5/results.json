@@ -1,0 +1,23 @@
+[
+  {
+    "run": "run-adaptive-1",
+    "seconds": 59.54882134699801,
+    "exit_code": 0,
+    "focused_window": "0x4400004",
+    "diagnostics": []
+  },
+  {
+    "run": "run-adaptive-2",
+    "seconds": 59.50314767600139,
+    "exit_code": 0,
+    "focused_window": "0x4600004",
+    "diagnostics": []
+  },
+  {
+    "run": "run-adaptive-gpu",
+    "seconds": 59.570725520999986,
+    "exit_code": 0,
+    "focused_window": "0x4400004",
+    "diagnostics": []
+  }
+]

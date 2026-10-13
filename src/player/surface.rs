@@ -271,10 +271,14 @@ impl SurfaceState {
         terrain.globe = Some(next);
         terrain.revision = terrain.revision.wrapping_add(1);
         debug!(
-            "GLOBAL rebasage CPU {:.3} ms, patches {}, constructions {}",
+            "GLOBAL rebasage CPU {:.3} ms, patches {}, constructions {}, LOD {:?}, changements {}, géométrie {:.3} ms, index {:.3} ms",
             started.elapsed().as_secs_f64() * 1000.0,
             terrain.globe.as_ref().unwrap().patches.len(),
-            terrain.globe.as_ref().unwrap().constructions
+            terrain.globe.as_ref().unwrap().constructions,
+            terrain.globe.as_ref().unwrap().detail_counts(),
+            terrain.globe.as_ref().unwrap().lod_changes,
+            terrain.globe.as_ref().unwrap().geometry_ms,
+            terrain.globe.as_ref().unwrap().index_ms
         );
         true
     }

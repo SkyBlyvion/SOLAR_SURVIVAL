@@ -1,4 +1,48 @@
-# Mars traversable : terrain mondial local
+# Mars traversable : LOD adaptatif et streaming local
+
+13 octobre 2026. Le parcours normal et le profiler mondial utilisent maintenant trois **résolutions réellement choisies selon la distance** : 32, 16 et 8 cellules par côté. Les clés spatiales restent au niveau 15, avec un voisinage de distance de graphe ≤2, au plus treize patches. Cette optimisation conserve Mars sphérique sans relief, les mètres 1:1 et les poses/contacts f64. Elle ne génère ni une planète entière ni un mesh par frame.
+
+## Sélection et contacts fins
+
+À l’entrée et au rebasage de 64 m, la direction des pieds détermine l’ancre du streaming. La distance employée est une **borne inférieure** de distance corporelle au patch entier : distance à son centre sphérique moins sa demi-diagonale conservative. La normalisation du cube est Lipschitz sur le rectangle de face ; on divise sa demi-diagonale cubique `sqrt(2) × R / count` par la norme minimale du rectangle. Les seuils sont des choix numériques, sans nouvelle donnée astronomique.
+
+Fin à distance ≤80 m ; une résolution fine déjà résidente reste fine jusqu’à 110 m. Moyen à ≤160 m ; une résolution moyenne déjà résidente reste moyenne jusqu’à 200 m. Au-delà : 8 cellules. Une approche peut passer directement de 8 à 32. Les distances se rapportent à l’ancre choisie à la dernière sélection, donc au plus 64 m horizontalement du joueur entre deux rebasages. Aucun choix ni reconstruction au repos, pendant la rotation, la visée ou le menu. L’hystérésis conserve les niveaux dans leurs bandes.
+
+Les requêtes restent dans le disque de 66 m, demi-largeur joueur ≤1 m et construction ≤5 m. Leur distance corporelle reste sous 80 m : tous les triangles interrogés gardent **exactement la triangulation 32** précédente. Le support, les extrema et le certificat d’aire sous l’empreinte entière restent les mêmes, à tolérance arithmétique 10⁻⁹ m². Pas de sol lisse distinct du mesh ni contact grossier sous le joueur.
+
+L’index XZ 8 m ne conserve que les triangles rencontrant le carré ±72 m, avec cases coupées à ce carré (66+5 m et réserve 1 m). Il n’indexe plus les patches lointains inutiles aux requêtes. Les géométries corporelles demeurent `Arc` ; seuls les triangles locaux utiles et leurs références de cases sont préparés au rebasage.
+
+## Raccords de résolutions mixtes
+
+Chaque patch conserve les quatre bords à **32 segments** produits par `PatchKey::vertex`. Les intérieurs grossiers utilisent une sous-grille de cette même identité cubique. Dans les cellules adjacentes au bord, un éventail orienté vers l’extérieur relie tous les sommets fins du contour au centre sphérique de la cellule. Les cellules intérieures ont deux triangles. Tous les sommets sont réellement utilisés ; le mesh grossier ne conserve pas un tableau complet de sommets fins.
+
+Les deux représentations d’une arête, y compris inversée entre faces, utilisent la même polyligne f64. Les trois faces d’un coin partagent le même sommet. Aucune jupe, soudure approximative ni T-junction. La couture n’exige pas de reconstruire un voisin lorsque sa résolution change. Le niveau spatial est fixe ; cette implémentation fournit un **LOD de résolution**, pas un quadtree à tailles de patches variables.
+
+Sur cette sphère sans relief, la flèche du plan de tout triangle grossier testée reste <0,1 mm, bien sous la peau de contact de 2 mm ; les changements lointains sont donc directs. La zone proche ne change pas de triangulation. Ce choix ne vaut pas pour un futur relief : ses transitions et ses erreurs devront être évaluées avant intégration.
+
+## Assets, budgets et instrumentation
+
+| Résolution intérieure | Sommets par patch | Triangles par patch | Bord |
+|---|---:|---:|---|
+| 32 | 1 089 | 2 048 | 32 segments |
+| 16 | 413 | 696 | 32 segments |
+| 8 | 205 | 280 | 32 segments |
+
+Maximum résident conservateur : treize meshes, 14 157 sommets et 26 624 triangles (tous fins). Ancien et nouveau fournisseur : ≤26 occurrences, ≤28 314 sommets/53 248 triangles ; les géométries communes à clé et résolution identiques sont partagées. Réservations de vecteurs corporels dimensionnées à leurs comptes exacts. L’index local a au plus 361 cases ; les maxima de triangles/références observés sur 150 directions et les mesures release sont dans VALIDATION/PERFORMANCE. Ces comptes ne mesurent pas la RAM/VRAM exhaustive ni les buffers temporaires internes de Bevy.
+
+Le cache GPU conserve l’entité et le handle d’une clé commune, même quand sa résolution change. Il remplace alors seulement le contenu du mesh. Les slots sortants servent aux entrants ; les assets sont libérés en espace. Les meshes sont exprimés dans leur repère propre : soustraction d’origine corporelle f64, rotation DQuat puis conversion f32 bornée. Aucun proxy ne modifie les données physiques.
+
+Télémétrie : nombres de patches 32/16/8, triangles résidents et changements de résolution. `RUST_LOG=info,solar_survival::player::surface=debug,solar_survival::rendering::terrain=debug` conserve durées CPU géométrie/index/transaction/synchronisation des meshes et nombre de meshes soumis au remplacement. Ces dernières durées excluent extraction, uploads effectifs GPU et présentation. Les spans GPU asynchrones du profiler restent distincts, non additionnables et sans attribution exhaustive par caméra ou upload.
+
+Abris, dépôts et inventaire restent dans leurs propriétaires corporels P4/P5 ; aucun objet n’est réinstallé par le LOD. Transport minimal du repère, OBB exactes, horloges et visites translatoires restent les contrats précédents. `SOLAR_TERRAIN_LOD=fixed` permet une comparaison avec les treize patches 32 et l’ancien index intégral, sans changer le gameplay. `SOLAR_LOD_DEBUG=1` ajoute seulement des couleurs de diagnostic.
+
+## Vérifier
+
+Les scripts et résultats sont décrits dans [PERFORMANCE](PERFORMANCE.md) et [VALIDATION](VALIDATION.md). Le diagnostic `examples/lod_seams.rs` montre trois patches 32/16/8, raccords internes, arêtes orientées/inversées, trois faces de coin et changements de résolution, avec six captures et quatre handles réutilisés. Il impose ses niveaux pour isoler la topologie ; la sélection selon distance est vérifiée dans le jeu, ses compteurs et les tests. La marche/course/saut sur faces/arêtes/coins et la construction utilisent les scénarios de production. Windows/RTX 4050/Core i5 restent à valider nativement.
+
+---
+
+# Historique P3–P5 : terrain mondial à résolution fixe
 
 13 octobre 2026. À la demande de l'utilisateur, l'objectif de P3 est désormais une Mars jouable sur **ses six faces**, avec chargement dynamique, plutôt qu'une nouvelle chaîne fixe. Les limitations à deux ou trois cartes sont levées pour ce parcours ; les anciens modes P3.2–P3.4 restent disponibles comme régressions.
 

@@ -1,0 +1,57 @@
+[
+  {
+    "sheet": "p5-captures-00.jpg",
+    "captures": [
+      {
+        "path": "p5-captures/stage-00.png",
+        "sha256": "0e63458e24bbe4f3943d6afdc373ed5f1b9497f54fe994887537d0332ca3f8f3"
+      },
+      {
+        "path": "p5-captures/stage-01.png",
+        "sha256": "5c0bbfbd6d4a625461cda2d8242094e19c1979eb89cd8fd62f2285eee7f95fec"
+      },
+      {
+        "path": "p5-captures/stage-02.png",
+        "sha256": "a8d336f28b4ecaad33ab2cfc003e60886cbf1383e2522b317c83953a33d19c32"
+      },
+      {
+        "path": "p5-captures/stage-03.png",
+        "sha256": "c88816ddcabd2d81fe376aba61289fe4dd5d2c7ea8984bbe18a3f6e81f45f49a"
+      }
+    ]
+  },
+  {
+    "sheet": "seams-captures-00.jpg",
+    "captures": [
+      {
+        "path": "seams-captures/seam-00.png",
+        "sha256": "9bdd2258890e526b92982e170b8bd4d504fb214a0efdd7e4f88520208a0aae43"
+      },
+      {
+        "path": "seams-captures/seam-01.png",
+        "sha256": "2dad4005f21bab6f99004be6a3d26d7670886119eaccc2884f21fd8d780e6898"
+      },
+      {
+        "path": "seams-captures/seam-02.png",
+        "sha256": "0d15f0f52db4aac0794150d8187279638e99038ac0d8211c697497fa5881fd7d"
+      },
+      {
+        "path": "seams-captures/seam-03.png",
+        "sha256": "0722327e0347b09cd77e15206c36d90391e786ddf1dfa0ea2d44db63648d1d1e"
+      }
+    ]
+  },
+  {
+    "sheet": "seams-captures-01.jpg",
+    "captures": [
+      {
+        "path": "seams-captures/seam-04.png",
+        "sha256": "8541b953af2d2364e51948dda3dfba1e8b00953f3c5095ca5d2d7ce4d0865b0f"
+      },
+      {
+        "path": "seams-captures/seam-05.png",
+        "sha256": "0782fbc35780a430a2c15e99eddbfcffa353e9f37afa289fdf3717f189b1f388"
+      }
+    ]
+  }
+]

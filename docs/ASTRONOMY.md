@@ -128,3 +128,7 @@ La première arrivée choisit le site éclairé selon la convention existante ; 
 ## P5 : ressources et constructions
 
 Aucun paramètre astronomique nouveau. Les caisses sont des objets artistiques de récupération, le stock en unités d’alliage une convention de gameplay sans masse physique implicite. Les abris construits gardent des poses DVec3/DQuat fixes dans le corps martien, rendues après soustraction corporelle f64 et conversion locale explicite f32. L’admission utilise les triangles existants et les volumes f64 ; ni rayon, GM, rotation/horloges, repères de visite ni forces omises ne changent. [CONSTRUCTION](CONSTRUCTION.md) expose les unités, seuils, ressources de session et limites. Le terrain conserve sa résolution fixe, sans LOD adaptatif.
+
+## LOD adaptatif du terrain mondial
+
+Aucun paramètre astronomique nouveau : le même rayon moyen et les mêmes sommets corporels f64 décrivent la sphère. 32/16/8 cellules intérieures, seuils de distance/hystérésis, bord commun 32 et index local ±72 m sont des choix numériques. La zone proche conserve les triangles fins et les mêmes contacts. Poses/origine flottante, horloges, transport minimal, forces omises et visites translatoires restent inchangés. Il n’y a ni relief mesuré ni orientation IAU supplémentaire. [GLOBAL_TERRAIN](GLOBAL_TERRAIN.md).

@@ -1,0 +1,1 @@
+t=3.005458 mode=Surface alloy=0 active=true preview=Some(Placement { position_m: DVec3(-2347848.383419163, 1176763.5423777753, -2142789.2532330714), orientation: DQuat(-0.3851364318324442, 0.0, 0.4219947180814691, 0.8207255246345848), verdict: Err("Alliage insuffisant : 12 requis") }) buildings=1 O2=176.994542 shelter=None rebases=0 feet=DVec3(0.0, 0.0019999374278592144, 0.0)

@@ -243,7 +243,11 @@ fn rebase_preserves_f64_pose_velocity_view_gravity_and_reuses_geometry() {
         let next = terrain.globe.as_ref().unwrap();
         for (key, patch) in saved {
             if let Some(new) = next.patches.get(&key) {
-                assert!(std::sync::Arc::ptr_eq(&patch, new));
+                if patch.segments == new.segments {
+                    assert!(std::sync::Arc::ptr_eq(&patch, new));
+                } else {
+                    assert!(!std::sync::Arc::ptr_eq(&patch, new));
+                }
             }
         }
     }

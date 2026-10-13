@@ -1,0 +1,14 @@
+   Compiling solar_survival v0.2.0 (/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL)
+    Finished `test` profile [optimized] target(s) in 15.93s
+     Running tests/adaptive_lod.rs (target/debug/deps/adaptive_lod-2888501756ff4980)
+
+running 4 tests
+test coarse_sphere_transition_error_is_below_a_tenth_of_a_millimeter ... ok
+LOD streaming constructions 82, detail changes 39
+test moving_stream_keeps_bounded_geometry_and_changes_actual_resolution ... ok
+test every_mixed_resolution_edge_is_the_same_complete_polyline_on_faces_and_corners ... ok
+LOD index maxima (361, 10613, 5375)
+test selection_reduces_residency_and_keeps_all_valid_contacts_and_construction_fine ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 6.33s
+

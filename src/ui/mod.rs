@@ -212,6 +212,17 @@ fn refresh(
     } else {
         "espace"
     };
+    let lod = terrain
+        .globe
+        .as_ref()
+        .filter(|_| pilot.mode == MovementMode::Surface)
+        .map_or(String::new(), |g| {
+            let (details, _, triangles) = g.detail_counts();
+            format!(
+                "\nLOD 32/16/8 : {}/{}/{} · {} triangles · {} changements",
+                details[0], details[1], details[2], triangles, g.lod_changes
+            )
+        });
     let movement = if pilot.mode == MovementMode::Surface {
         format!(
             "{} · {}\nVitesse / site : {:.2} m/s\nHauteur pieds/sol : {:.2} m",
@@ -227,6 +238,7 @@ fn refresh(
     } else {
         Explorer::SPEED_NAMES[pilot.speed_index].to_owned()
     };
+    let movement = movement + &lod;
     ***texts.p0() = format!(
         "TÉLÉMÉTRIE\n\n{fps:.0} FPS  ·  Mode {mode}\nJour julien : {:.5}\nJ2000 + {:.3} jours\nTemps : ×{:.0} {}\n\n{}\n{} / s{}\nRepère : {anchor}\nOffset : {}\nPlus proche : {}\n\n{}",
         clock.jd,

@@ -1,4 +1,60 @@
-# Validation Solar Survival 0.2 — P5 : récupération et construction
+# Validation Solar Survival 0.2 — moteur planétaire adaptatif
+
+13 octobre 2026. Départ Git réel **ebddd90**, P5 commité, seul NEXT_CHAT modifié par l’utilisateur ; copie exacte dans [NEXT_CHAT-before](lod-validation/NEXT_CHAT-before.md). Historiques et essais intermédiaires conservés. Rust stable 1.99.0, édition 2024, Bevy **exactement =0.19.1**, Cargo.toml/Cargo.lock inchangés, aucune dépendance ajoutée. Ubuntu 24.04.5 LTS/X11, i7-6700K/GTX 1060 3 Go/NVK/Mesa 25.2.8. [Contexte](lod-validation/host.json), [sources et binaires finaux](lod-validation/final/environment.json), [journal et limites](lod-validation/NOTES.md).
+
+Le terrain mondial adapte réellement sa résolution intérieure **32/16/8 selon distance**, avec hystérésis, bords communs fins et index de contact local. Il conserve les contacts proches et les objets corporels P4/P5. Le niveau spatial des clés reste 15 : LOD de résolution, sans quadtree ni relief. [Stratégie préalable](lod-validation/STRATEGY.md), [contrat actuel](GLOBAL_TERRAIN.md).
+
+## Contrôles des sources finales
+
+| Vérification | Résultat |
+|---|---|
+| cargo fmt --check, cargo check --locked | Réussis |
+| cargo check --all-targets --locked | Réussi, exemples inclus |
+| cargo test --locked | **115 tests réussis**, dont 35 internes et 4 tests adaptatifs dédiés ; les 110 tests P5 conservés |
+| cargo clippy --all-targets --locked -- -D warnings | Réussi sans alerte |
+| cargo build --release --locked | Réussi, **124,244 s** |
+| cargo build --release --locked --example lod_seams | Réussi, **98,567 s** |
+| Raccords mixtes release | Code 0, 36,323 s, six captures |
+| P5 sur LOD adaptatif | Code 0, 59,650 s, seize captures |
+| Monde sur LOD adaptatif | Code 0, 120,641 s, 36 captures, douze franchissements en l’air/douze rebasages, apex 2,131380 m |
+| Profils release | **16 essais réussis**, dont neuf sur le binaire final, répétitions monde/P5, recorder GPU et comparaison de caméra ; aucun ERROR/WARN/panic |
+| Inspection | **58 captures finales inspectées** ; deux planches de raccords, quatre P5 et neuf mondiales, original du coin également inspecté |
+| Concordance | Sources Rust/tests/exemples/Cargo et binaires inchangés depuis les builds et pendant les parcours réussis |
+| Windows 11 / RTX 4050 et Core i5 | **Non exécutés** |
+
+[Journaux des six contrôles](lod-validation/final/), [temps des builds](lod-validation/final/build-results.json), [diagnostic de raccords](lod-validation/graphics/results.json), [parcours P5/mondial](lod-validation/graphics-focused/results.json), [concordance](lod-validation/graphics-focused/concordance.json), [inspection des raccords](lod-validation/graphics/inspection/verified.json), [inspection P5/monde](lod-validation/graphics-focused/inspection/verified.json). Le fichier graphics/results contient aussi un essai P5 échoué ; seule son entrée seams est une réussite finale. Les contrôles all-targets/tests/Clippy consignés dans final sont ceux déjà réussis sur les mêmes sources, conservés sans répétition inutile.
+
+## Numérique, contacts et ressources
+
+Cinq tests supplémentaires :
+
+- Bandes d’hystérésis 80/110 et 160/200 m, mille répétitions sans ping-pong dans chacune, raffinement direct 8→32.
+- Toutes les faces, raccords internes et quatre coins de face, quatre directions d’arête et neuf combinaisons 32/16/8 : **topologie en disque**, incidences d’arêtes 1/2, triangles extérieurs, 128 segments de frontière. Chacune des 32 paires de sommets du raccord est exactement commune en f64, même inversée entre faces.
+- 150 directions sur six faces/arêtes/coins et repères tournés : extrema sous les empreintes 0/0,3/1/4,5/5 m identiques au fournisseur fin à 10⁻⁹ m près dans le disque opérationnel. Maxima observés de l’index : **361 cases, 10 613 références et 5 375 triangles**, au lieu d’indexer tout le voisinage.
+- Plans de triangles des trois résolutions, centres et coins des six faces : flèche conservative <0,1 mm sur la sphère sans relief. Pas de changement des triangles proches ni de support abstrait distinct du mesh.
+- Vingt changements d’ancre : budgets résidents/transitoires et Arc communs vérifiés, **39 changements effectifs de résolution**. Le test ECS de rendu antérieur vérifie désormais aussi longueurs/indices du mesh après changement de détail, mêmes handles, stabilité puis libération en espace.
+
+Les régressions antérieures couvrent toujours marche/course/saut, 288 traversées dirigées aller-retour à 30/60/144 FPS et 24 trajets de coins, transport des pieds/yeux/vitesse/visée f64, repos sans allocation, P/T, M/G/O/U, oxygène/menu/R, collecte/admission/paiement et service du même abri construit. Données de bâtiment et de dépôt indépendantes des patches et du LOD.
+
+## Inspection et essais intermédiaires
+
+Les six vues du diagnostic isolé montrent les trois densités et les éventails au bord, raccords orientés/inversés et le coin de trois faces. Les scènes 2 et 6 remplacent les résolutions avec les mêmes quatre handles (trois surfaces et grille). Ce diagnostic impose ses niveaux pour examiner la topologie ; les tests et les compteurs du jeu prouvent séparément leur choix selon distance.
+
+P5 confirme la preview rouge/verte et les motifs lisibles, deux récoltes réelles, stock 12 puis 0 à la confirmation, abri utilisable/recharge, mur, rebasage, Mars spatiale et menu. La capture initiale affiche **6/5/2 patches** et **16 328 triangles**, contre 26 624 en mode fixe. Dans le diagnostic mondial, 8/4/1 devient 6/6/1 avec deux changements de détail au remplacement. La course et la réception restent continues ; aucun trou/fissure visible observé. Les vues nocturnes limitent l’inspection fine lointaine, complétée par la grille éclairée isolée et les tests exacts. Bordure lointaine du voisinage et marqueurs astronomiques restent des limites de présentation préexistantes.
+
+Deux premiers parcours P5 échouent avant la collecte, pieds immobiles : [graphics](lod-validation/graphics/results.json) et [graphics-final](lod-validation/graphics-final/results.json), code 101, conservés. La tentative de focus direct ciblait la décoration Mutter portant le même titre. La relance réussie active la fenêtre via le gestionnaire X11 après deux secondes ; le client du jeu reçoit le focus. **Aucun Rust/LOD/contact/collecte modifié entre ces essais.** Le helper de profilage cible désormais explicitement le client ; il ne simule aucune touche/souris OS. Ces opérations de diagnostic restent hors de la logique Rust et sont facultatives via --focus-x11. [Détail](lod-validation/NOTES.md).
+
+## Mesures et limites
+
+Les baselines monde/P5 ont précédé les changements du terrain. Deux comparaisons release finales fixe/adaptatif, mêmes 1440×900/MSAA ×4/deux caméras, incluent un vrai remplacement au milieu de la course. Sur ces deux remplacements mesurés : transaction CPU fixe **5,676/6,533 ms**, adaptative **1,140/0,979 ms** ; navigation maximale **5,791/6,669 ms** contre **1,282/1,098 ms**. L’index est le principal coût supprimé. Les frames de course restent **51,417–51,493 ms** en fixe et **51,386–51,561 ms** en adaptatif : pas de gain FPS notable établi. [PERFORMANCE](PERFORMANCE.md) détaille répétitions, GPU, comparaison des caméras et P5 ; [synthèse](lod-validation/summary.json) et concordances [fixe](lod-validation/final-fixed/concordance.json), [adaptatif](lod-validation/final-adaptive/concordance.json), [P5](lod-validation/final-p5/concordance.json).
+
+Les budgets demeurent ≤13 meshes, ≤14 157 sommets/26 624 triangles résidents conservateurs ; ≤26 occurrences CPU pendant remplacement, Arc partagés, pas de second voisinage de handles GPU. Les résolutions moyennes/grossières ont réellement 413/205 sommets et 696/280 triangles. Ni planète entière ni mesh par frame. Les compteurs de structures ne mesurent pas la RAM/VRAM exhaustive ; les durées de remise aux assets excluent les uploads effectifs GPU. Les spans GPU asynchrones et partagés entre vues ne donnent pas une attribution exhaustive par caméra/upload et ne s’additionnent pas en un total.
+
+Pas de nouvelle suspension réelle, autre DPI, essai OS des périphériques, cycle P2 complet ou validation Windows/cible. Le LOD est synchrone et borné, spécifique à la sphère sans relief ; pas de quadtree ou sauvegarde disque. Les préparations de pose/réserve des diagnostics restent explicites, sans injection d’alliage ni installation directe P5. Les paramètres astronomiques, unités et horloges sont conservés. Aucun 60 FPS cible revendiqué.
+
+---
+
+# Historique : validation Solar Survival 0.2 — P5 : récupération et construction
 
 13 octobre 2026. Départ réel HEAD **94036f8**, P4 commité, seul NEXT_CHAT modifié par l’utilisateur ; copie exacte dans [NEXT_CHAT-before](p5-validation/NEXT_CHAT-before.md). Changements P5 et preuves **non commités**. Historiques conservés. Rust stable 1.99.0, édition 2024, Bevy **exactement =0.19.1**, Cargo.toml/Cargo.lock et dépendances inchangés. Ubuntu 24.04.5 LTS/X11 DISPLAY=:1, i7-6700K/GTX 1060 3 Go, Vulkan/NVK/Mesa 25.2.8. [Environnement et empreintes finaux](p5-validation/final/environment.json), [contexte graphique](p5-validation/graphics-final/environment.json), [notes des essais](p5-validation/NOTES.md).
 

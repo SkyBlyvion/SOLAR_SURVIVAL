@@ -45,14 +45,22 @@ pub(super) fn install(app: &mut App) {
         "P5 exige un scénario mondial isolé"
     );
     std::fs::create_dir(dir).expect("Nouveau dossier P5, parent existant");
-    app.init_resource::<Progress>()
+    let progress = Progress {
+        capture: if std::env::var_os("SOLAR_P5_TIMING_OUTPUT").is_some() {
+            SHOTS.len()
+        } else {
+            0
+        },
+        ..default()
+    };
+    app.insert_resource(progress)
         .add_systems(
             Update,
             input.before(camera::controls).in_set(GameSet::Input),
         )
         .add_systems(Update, capture.after(GameSet::Interface));
 }
-const BOUNDS: [f64; 29] = [
+pub(super) const BOUNDS: [f64; 29] = [
     0.0, 2.0, 4.0, 6.0, 7.5, 8.2, 9.2, 10.0, 12.0, 15.0, 16.0, 18.0, 21.0, 22.0, 23.0, 24.0, 25.0,
     26.0, 30.0, 32.0, 33.0, 41.0, 43.0, 45.0, 48.0, 50.0, 52.0, 54.0, 56.0,
 ];

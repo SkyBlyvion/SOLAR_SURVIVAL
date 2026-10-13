@@ -1,0 +1,16 @@
+[
+  {
+    "run": "run-fixed-1",
+    "seconds": 54.43252508200021,
+    "exit_code": 0,
+    "focused_window": "0x4400004",
+    "diagnostics": []
+  },
+  {
+    "run": "run-fixed-2",
+    "seconds": 54.42980400600209,
+    "exit_code": 0,
+    "focused_window": "0x4400004",
+    "diagnostics": []
+  }
+]

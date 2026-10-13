@@ -1,4 +1,76 @@
-# Performance Solar Survival
+# Performance actuelle : LOD et streaming — 13 octobre 2026
+
+Phase demandée après P5, avant P6. Binaire et sources finaux inchangés pendant les mesures, Ubuntu/i7-6700K/GTX 1060 3 Go/NVK/Mesa immediate, **1440×900, MSAA ×4 et deux caméras**. Aucune compilation ni autre lancement GPU concurrent. Les réglages de qualité normaux ne changent pas. [Protocole et empreintes](lod-validation/), [synthèse des CSV et transactions](lod-validation/summary.json), [limites et essais intermédiaires](lod-validation/NOTES.md).
+
+## Baselines avant changement
+
+Quatre essais monde de 54 s sur le binaire P5 original (deux répétitions, recorder GPU, sans caméra spatiale), puis trois essais P5 sur un binaire contenant seulement l’instrumentation supplémentaire (deux répétitions et recorder GPU). Aucun LOD ni changement d’index encore appliqué. [Baseline monde](lod-validation/baseline-global/), [baseline P5](lod-validation/baseline-p5/). La première série mondiale dérive fortement : repos 64,566/62,353 ms sans recorder, puis 50,688 ms avec ; cela interdit d’en déduire un surcoût négatif du recorder ou un gain ultérieur de terrain.
+
+Le profil mondial garde le parcours historique de mesure : 10 s d’échauffement, quatre phases de 11 s, première seconde exclue. La course inclut un vrai remplacement après environ huit secondes, à la différence d’un simple rebasage préparatoire. Le profiler garde le terrain artistique historique comme défaut ; **SOLAR_PROFILE_TERRAIN=global** sélectionne explicitement le monde.
+
+Le nouveau profil P5 conserve la production (collecte, preview/rotation, confirmation, porte/recharge, mur, course/rebasage, espace, menu) et ses préparations de poses/réserves, sans captures. Les premières 0,25 s de chaque phase sont exclues ; certaines fenêtres sont courtes. Les valeurs de confirmation/construction ne chronomètrent donc pas séparément l’installation déclenchée à la première frame. Elles caractérisent la scène et ses intervalles ECS ; le streaming au milieu de la course conserve la transaction mesurée. Pas d’injection d’alliage ni d’installation directe.
+
+## Comparaison contrôlée fixe/adaptatif finale
+
+**Même binaire final**, deux lancements fixes puis deux adaptatifs de 54 s, successifs. Le mode fixe garde les treize patches 32 et l’index complet ; le mode adaptatif choisit 32/16/8 et indexe seulement le carré local utile. [Fixe](lod-validation/final-fixed/), [adaptatif](lod-validation/final-adaptive/). Résolution, matériaux, caméras, calendrier, trajectoires et exclusions sont identiques.
+
+| Mesure | Fixe 1 / 2 | Adaptatif 1 / 2 |
+|---|---|---|
+| Frame moyenne repos | 51,619 / 51,600 ms | 51,746 / 51,724 ms |
+| Frame moyenne course/streaming | 51,493 / 51,417 ms | 51,386 / 51,561 ms |
+| p95 frame course | 54,606 / 54,079 ms | 53,836 / 54,303 ms |
+| Maximum frame course | 56,231 / 56,781 ms | 56,367 / 59,398 ms |
+| Transaction CPU du remplacement **dans la fenêtre mesurée** | 5,676 / 6,533 ms | 1,140 / 0,979 ms |
+| Géométrie du même remplacement | 0,134 / 0,144 ms | 0,308 / 0,276 ms |
+| Index du même remplacement | 5,263 / 6,079 ms | 0,770 / 0,659 ms |
+| Maximum navigation dans la fenêtre | 5,791 / 6,669 ms | 1,282 / 1,098 ms |
+| Maximum synchronisation du rendu dans la fenêtre | 0,209 / 0,485 ms | 0,148 / 0,150 ms |
+
+Les médianes de ces **deux remplacements** sont 6,105 ms fixe et 1,060 ms adaptatif (environ 83 % de réduction CPU sur ces cas). L’index local explique l’essentiel ; générer les raccords grossiers coûte un peu plus en géométrie. Le temps de frame en course demeure proche de **51,5 ms, ~19,4 FPS** : **aucun gain FPS notable établi**. Le maximum adaptatif 59,398 ms reste conservé et n’est pas masqué par le plafonnement physique.
+
+Les compteurs passent de 26 624 triangles fixes à 16 328 à l’entrée adaptative (6/5/2), puis 18 512 après préparation et 16 744 après remplacement (6/6/1). Ce profil renouvelle cinq clés ; il ne change pas la résolution d’une clé déjà commune dans cette fenêtre. La campagne graphique mondiale release complète ce cas par **deux changements de résolution résidente par rebasage**, douze fois, avec mesures CPU géométrie/index/mesh conservées et handles réutilisés. Les captures de ce parcours restent distinctes du benchmark sans captures.
+
+## GPU et composition des caméras
+
+Un essai adaptatif final de 54 s avec recorder donne 52,194 ms au repos et 52,012 ms en course. Moyennes GPU disponibles au repos : main_opaque_pass_3d **3,414 ms**, msaa_writeback **9,634 ms**, tonemapping **2,050 ms**. La baseline mondiale originale donnait 3,371/9,585/2,052 ms. Une seule mesure instrumentée par version, une dérive temporelle et les chemins partagés entre vues ne permettent pas d’attribuer un gain GPU fiable au nombre de triangles.
+
+L’essai final sans caméra spatiale donne **32,220 ms au repos (~31,0 FPS)** et 32,174 ms en course, contre ~51,7/51,5 ms à deux caméras. Cela confirme l’intérêt d’examiner la composition des vues/MSAA et le pilote. Il retire du contenu et **n’est pas livré comme réglage de production automatique**. Les spans sont asynchrones et parfois imbriqués : ne pas les additionner pour fabriquer un temps GPU total, ni les attribuer à une caméra ou à un upload particulier.
+
+Les temps `GLOBAL meshes sync CPU` mesurent la préparation du mesh et sa remise aux assets Bevy, **pas l’upload effectif GPU**. Géométrie et index ont leurs propres durées. Les attentes/extraction/pilote hors des GameSet demeurent hors de l’instrumentation murale du gameplay. Les coûts de frame restent dominés par le chemin de rendu dans ces conditions ; leur attribution exhaustive demande un profilage du moteur/pilote sur la cible.
+
+## P5 avec la scène construite
+
+Trois essais adaptatifs finaux de 59 s, deux sans recorder et un avec, terminent code 0 sans ERROR/WARN/panic, collecte/placement/abri/recharge/rebasage/retours/menu conservés. [Mesures P5 finales](lod-validation/final-p5/), empreintes inchangées. Les baselines P5 précèdent l’optimisation et la reprise de session ; les écarts ci-dessous ne sont pas une comparaison A/B immédiatement alternée sur un même binaire.
+
+| Frame moyenne, sans recorder | P5 fixe initial 1 / 2 | P5 adaptatif final 1 / 2 |
+|---|---|---|
+| Placement actif | 55,925 / 55,570 ms | 56,808 / 56,614 ms |
+| Repos après construction | 50,711 / 50,098 ms | 51,475 / 51,134 ms |
+| Contact mur | 50,917 / 50,884 ms | 51,710 / 51,747 ms |
+| Course/streaming | 45,080 / 44,983 ms | 45,945 / 46,162 ms |
+
+Un écart ~1 ms apparaît sur ces scènes, mais la dérive observée du poste, la séparation temporelle et l’activation explicite du client X11 ne permettent pas de l’attribuer au terrain. La comparaison contrôlée mondiale du même binaire n’établit pas de régression de frame. Les réserves et les touches utilisent les mêmes règles ; les fenêtres courtes et les préparations P5 limitent les conclusions sur la transaction de construction elle-même. Le remplacement P5 final coûte 1,066/1,255 ms CPU sans recorder, contre 5,498/6,057 ms dans les deux baselines ; données complètes et phases dans les CSV.
+
+L’essai P5 avec recorder donne 57,176 ms pendant le placement et 46,521 ms en course. Spans GPU asynchrones conservés dans le CSV ; ce n’est ni une mesure GPU totale ni une garantie sur la cible. Aucun gain de performance n’est tiré des FPS des captures.
+
+## Budgets et reproduction
+
+Trois résolutions effectives : **1 089/413/205 sommets** et **2 048/696/280 triangles** par patch. Bords 32 communs ; ≤13 meshes résidents, même handle à changement de détail, slots recyclés et assets libérés en espace. Plafonds conservateurs tous fins : 14 157 sommets/26 624 triangles, ≤26 occurrences CPU pendant transaction avec Arc partagés. L’index local observé sur 150 directions descend à **361 cases, 10 613 références, 5 375 triangles**. Comptes de structures et budgets de travail, sans RAM/VRAM exhaustive ni comptage des buffers internes de Bevy. [Architecture](GLOBAL_TERRAIN.md).
+
+```bash
+cargo build --release --locked
+python3 scripts/profile_planetary.py --scene global --lod fixed --repeats 2 --mesa-immediate --output docs/mon-fixe
+python3 scripts/profile_planetary.py --scene global --lod adaptive --repeats 2 --gpu-probe --camera-probe --mesa-immediate --output docs/mon-adaptatif
+python3 scripts/profile_planetary.py --scene p5 --lod adaptive --repeats 2 --gpu-probe --mesa-immediate --output docs/mon-p5
+```
+
+Choisir des dossiers nouveaux dans un parent existant. `--focus-x11` peut activer la fenêtre cliente après deux secondes sur le poste X11, sans simuler les périphériques ; ne pas interagir avec la fenêtre pendant le parcours. Omettre cette option et Mesa sur Windows/autres pilotes. La logique centrale n’utilise aucune API X11 ; le helper de diagnostic utilise seulement ctypes/libX11 si demandé. Sans Python, le profil P5 utilise SOLAR_CONSTRUCTION_VALIDATE_DIR, SOLAR_P5_TIMING_OUTPUT et SOLAR_P5_TIMING_GPU=1 pour les timestamps ; les captures sont alors retirées, les règles P5 conservées.
+
+Le LOD fournit des résolutions adaptatives à emprises fixes et transitions lointaines sous 0,1 mm pour une sphère sans relief. Pas de quadtree, relief, horizon complet, sauvegarde ou streaming asynchrone. Windows natif et RTX 4050/Core i5 restent à mesurer ; aucun 60 FPS cible revendiqué. Les options de qualité existantes restent au choix du joueur.
+
+---
+
+# Historique : performance Solar Survival
 
 Le profilage compare des coûts dans une scène répétable. Le poste de développement Ubuntu, i7-6700K et GTX 1060 3 Go/NVK, sert à identifier ces coûts ; la cible annoncée est RTX 4050 et Intel Core i5. Les FPS du poste actuel ne prédisent pas ceux de cette cible. Le modèle exact du i5, la RAM, les réglages et la résolution seront relevés lors de sa validation. L'objectif de 60 FPS sur la cible ne bloque pas les fonctionnalités sur le poste de développement.
 

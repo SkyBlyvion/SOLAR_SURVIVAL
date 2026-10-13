@@ -1,0 +1,30 @@
+[
+  {
+    "run": "run-adaptive-1",
+    "seconds": 54.353742213999794,
+    "exit_code": 0,
+    "focused_window": "0x4400004",
+    "diagnostics": []
+  },
+  {
+    "run": "run-adaptive-2",
+    "seconds": 54.451701029000105,
+    "exit_code": 0,
+    "focused_window": "0x4400004",
+    "diagnostics": []
+  },
+  {
+    "run": "run-adaptive-gpu",
+    "seconds": 54.396784870001284,
+    "exit_code": 0,
+    "focused_window": "0x4400004",
+    "diagnostics": []
+  },
+  {
+    "run": "run-adaptive-no-space",
+    "seconds": 54.403981561001274,
+    "exit_code": 0,
+    "focused_window": "0x4400004",
+    "diagnostics": []
+  }
+]

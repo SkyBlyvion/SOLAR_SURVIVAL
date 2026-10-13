@@ -44,6 +44,7 @@ struct TileCache {
     pair: Vec<(Entity, Handle<Mesh>)>,
     tiles: BTreeMap<(i32, i32), (Entity, Handle<Mesh>)>,
     globe: HashMap<PatchKey, (Entity, Handle<Mesh>)>,
+    globe_segments: HashMap<PatchKey, u32>,
 }
 
 pub struct SurfaceRenderingPlugin;
@@ -214,13 +215,21 @@ fn globe_mesh(patch: &SurfacePatch) -> (Mesh, GlobeVisual) {
         .iter()
         .map(|p| (inverse * p.normalize()).as_vec3().to_array())
         .collect();
-    let mesh = Mesh::new(
+    let mut mesh = Mesh::new(
         PrimitiveTopology::TriangleList,
         RenderAssetUsages::default(),
     )
     .with_inserted_attribute(Mesh::ATTRIBUTE_POSITION, positions)
     .with_inserted_attribute(Mesh::ATTRIBUTE_NORMAL, normals)
     .with_inserted_indices(Indices::U32(patch.indices.clone()));
+    if std::env::var("SOLAR_LOD_DEBUG").as_deref() == Ok("1") {
+        let color = match patch.segments {
+            32 => [0.6, 1.0, 0.6, 1.0],
+            16 => [0.65, 0.7, 1.0, 1.0],
+            _ => [1.0, 0.55, 0.4, 1.0],
+        };
+        mesh.insert_attribute(Mesh::ATTRIBUTE_COLOR, vec![color; patch.positions_m.len()]);
+    }
     (
         mesh,
         GlobeVisual {
@@ -254,6 +263,8 @@ fn stream(
         }
         keep
     });
+    let stream_started = revision_changed.then(std::time::Instant::now);
+    let mut uploads = 0;
     let mut recycled = Vec::new();
     cache.globe.retain(|key, slot| {
         let keep = active
@@ -268,6 +279,18 @@ fn stream(
     });
     if active && let Some(globe) = &terrain.globe {
         for (key, patch) in &globe.patches {
+            if let Some((entity, handle)) = cache.globe.get(key)
+                && cache.globe_segments.get(key) != Some(&patch.segments)
+            {
+                uploads += 1;
+                let (mesh, visual) = globe_mesh(patch);
+                *meshes.get_mut(handle).unwrap() = mesh;
+                commands.entity(*entity).insert(visual);
+            }
+            if !cache.globe.contains_key(key) {
+                uploads += 1;
+            }
+            cache.globe_segments.insert(*key, patch.segments);
             cache.globe.entry(*key).or_insert_with(|| {
                 let (mesh, visual) = globe_mesh(patch);
                 if let Some((entity, handle)) = recycled.pop() {
@@ -294,6 +317,24 @@ fn stream(
             });
         }
     }
+    if let Some(started) = stream_started
+        && let Some(globe) = &terrain.globe
+        && active
+    {
+        debug!(
+            "GLOBAL meshes sync CPU {:.3} ms, uploads {}, LOD {:?}",
+            started.elapsed().as_secs_f64() * 1000.0,
+            uploads,
+            globe.detail_counts()
+        );
+    }
+    cache.globe_segments.retain(|key, _| {
+        active
+            && terrain
+                .globe
+                .as_ref()
+                .is_some_and(|g| g.patches.contains_key(key))
+    });
     for (entity, handle) in recycled {
         commands.entity(entity).despawn();
         meshes.remove(handle.id());
@@ -503,6 +544,15 @@ mod tests {
             else {
                 panic!()
             };
+            assert_eq!(positions.len(), patch.positions_m.len());
+            assert_eq!(
+                mesh.indices().unwrap().iter().collect::<Vec<_>>(),
+                patch
+                    .indices
+                    .iter()
+                    .map(|&i| i as usize)
+                    .collect::<Vec<_>>()
+            );
             for (p, body) in positions.iter().zip(&patch.positions_m) {
                 assert!(
                     (visual.origin + visual.orientation * Vec3::from_array(*p).as_dvec3())
@@ -512,6 +562,15 @@ mod tests {
             }
         }
         assert!(shared >= 8);
+        assert!(
+            app.world()
+                .resource::<MarsTerrain>()
+                .globe
+                .as_ref()
+                .unwrap()
+                .lod_changes
+                > 0
+        );
         let stable = cache.globe.clone();
         app.update();
         assert_eq!(app.world().resource::<TileCache>().globe, stable);

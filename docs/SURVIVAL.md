@@ -54,3 +54,7 @@ Parcours de 56 s : consommation dehors, marche par la porte, recharge, sortie, m
 ## P5 : abris construits par le joueur
 
 [CONSTRUCTION](CONSTRUCTION.md) rend le même type constructible pour 12 alliage. La pose admise devient fixe dans Buildings via install_shelter/publish_colliders ; le service shelter_at, la définition des pièces, les contacts et les proxies P4 restent communs. La preview ne recharge pas et ne possède pas de collision. Oxygen reste indépendant du placement ; la réserve continue pendant la manipulation, et un échec annule la preview. R conserve inventaire, caisses épuisées et bâtiments de la session. Pas de sauvegarde disque.
+
+## Terrain adaptatif
+
+Le parcours mondial utilise désormais des résolutions 32/16/8 avec bords communs fins. La zone de déplacement/admission garde les triangles 32 et leurs extrema exacts ; le nouvel index local couvre toutes les requêtes admises. Bâtiments, colliders, services, dépôts et inventaire restent fixes dans leurs propriétaires corporels ; aucun changement de résolution ne les réinstalle ni ne les recentre. Les régressions numériques et le parcours graphique P5 sont vérifiés sur ce fournisseur. [Architecture et limites](GLOBAL_TERRAIN.md), [résultats](VALIDATION.md).

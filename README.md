@@ -2,7 +2,7 @@
 
 Prototype d'exploration 3D de notre système solaire, fondation d'un jeu de survie spatial en première personne. **Les positions, rayons et distances physiques restent en mètres à l'échelle 1:1, en `f64`.** Bevy ne reçoit que des représentations relatives à la caméra.
 
-**Depuis le 13 octobre 2026, M ouvre un terrain martien mondial : six faces traversables, arêtes et coins continus, chargement local dynamique.** Les anciens parcours bornés restent des modes de régression. [Architecture et commandes](docs/GLOBAL_TERRAIN.md).
+**M ouvre un terrain martien mondial : six faces traversables, arêtes et coins continus, LOD adaptatif à trois résolutions et chargement local borné.** Les anciens parcours bornés restent des modes de régression. [Architecture et commandes](docs/GLOBAL_TERRAIN.md).
 
 **Construction P5 :** récupérer les caisses dorées avec **E**, placer le même abri avec **B**, déplacer avec les **flèches**, orienter avec **J/L**, confirmer avec **Entrée** ou annuler avec **X/Échap**. Coût : 12 alliage ; prévisualisation verte/rouge, inventaire et bâtiments conservés en session. [Règles et architecture](docs/CONSTRUCTION.md).
 
@@ -111,11 +111,11 @@ Les vitesses disponibles sont 5 m/s, 250 m/s, 20 km/s, 20 000 km/s, 2 millions k
 - Deux meshes de sphère partagés pour le LOD ; étoiles regroupées dans un mesh ; pas de création de mesh par frame.
 - Interface sélectionnable à la souris : FPS, temps, cible, altitude, rayon, repère, vitesse et astre le plus proche. Repères visuels pour les corps trop petits à l'écran.
 - FPS martien : site fixé au repère tournant de Mars, gravité radiale, marche/course/saut, contacts avec terrain et trois obstacles statiques dans le site.
-- Terrain mondial sphérique : six faces, voisinage local de treize patches maximum, marche/course/saut sans borne de site ; coordonnées et contacts f64, meshes réutilisés. Le terrain artistique historique de neuf tuiles reste disponible avec `SOLAR_MARS_GLOBAL=0`.
+- Terrain mondial sphérique : six faces, voisinage local de treize patches maximum, marche/course/saut sans borne de site ; coordonnées et contacts f64, meshes réutilisés. Résolutions intérieures 32/16/8 choisies selon la distance, bords communs fins et contacts proches précis. Le terrain artistique historique de neuf tuiles reste disponible avec `SOLAR_MARS_GLOBAL=0`.
 - Contrat cube-sphere f64 : conversions, voisins orientés, graines reproductibles et raccord de deux patches de même niveau.
 - Première boucle de survie : réserve/consommation/recharge/HUD, expédition terminée et reprise ; abris instanciables avec identités et poses fixes sur Mars pour leur réutilisation en P5.
 - Ressources et construction : huit caisses épuisables, inventaire réel, recette du même abri, preview orientable avec admission terrain/volumes et paiement après confirmation ; persistance de session.
-- Chargement dynamique du terrain à résolution fixe : treize patches maximum, **sans LOD adaptatif**. Des niveaux de détail selon la distance du joueur restent à développer.
+- LOD adaptatif et streaming local : trois résolutions, hystérésis, raccords mixtes sur faces/arêtes/coins, index de contact limité à la zone utile. Le compteur de télémétrie affiche les détails résidents et leurs changements ; [stratégie, budgets et limites](docs/GLOBAL_TERRAIN.md).
 
 ## Architecture
 
@@ -210,6 +210,21 @@ python3 scripts/profile_suite.py --seconds 42 --mesa-immediate --gpu-probe --out
 ```
 
 Le script utilise uniquement la bibliothèque standard Python et lance les essais successivement. `--mesa-immediate` est réservé au contournement Mesa de ce poste ; l'omettre sur la machine cible. Choisir un nouveau dossier de sortie pour chaque campagne. Un essai individuel sans Python est décrit dans PERFORMANCE.
+
+## LOD et mesures du moteur planétaire
+
+Le parcours normal choisit réellement 32, 16 ou 8 cellules par côté suivant la distance. L’emprise spatiale des patches reste au niveau 15 ; leurs quatre bords gardent 32 segments communs. La zone de marche et de construction reste fine. La sélection se fait à l’entrée et lors du rebasage de 64 m, avec hystérésis ; aucun mesh n’est construit au repos. C’est un LOD de résolution, sans quadtree ni relief mondial. `SOLAR_TERRAIN_LOD=fixed` conserve le fournisseur précédent pour comparaison.
+
+Après compilation release, sans autre lancement GPU :
+
+```bash
+python3 scripts/profile_planetary.py --scene global --lod adaptive --repeats 2 --gpu-probe --camera-probe --mesa-immediate --output docs/mon-profil-lod
+python3 scripts/profile_planetary.py --scene p5 --lod adaptive --repeats 2 --gpu-probe --mesa-immediate --output docs/mon-profil-p5
+cargo build --release --locked --example lod_seams
+target/release/examples/lod_seams docs/mon-diagnostic-raccords
+```
+
+Choisir des dossiers nouveaux ; omettre Mesa sur les autres pilotes. Le profil P5 conserve collecte, placement, construction et recharge, et désactive uniquement les captures. `SOLAR_LOD_DEBUG=1` colore les patches fins en vert, moyens en bleu, grossiers en rouge ; ce diagnostic est facultatif. Résultats et limitations : [PERFORMANCE](docs/PERFORMANCE.md), [VALIDATION](docs/VALIDATION.md).
 
 ## Limites et parcours historiques
 

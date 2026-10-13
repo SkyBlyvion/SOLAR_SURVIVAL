@@ -52,7 +52,7 @@ cube = N × d + U × a + V × b
 p_m = normalize(cube) × radius_m
 ```
 
-Le triplet cubique entier est l'identité du sommet dans la paire. Il reste exactement représentable en f64 jusqu'au niveau 24 et 64 segments. Les deux patches utilisent **les mêmes indices** au raccord : aucune moyenne de positions, tolérance de soudure ou jupe de dissimulation. Une construction séparée avec les mêmes paramètres fournit également des positions de bord exactement identiques. Cette garantie porte sur un même niveau/résolution ; aucun raccord de LOD différent n'est implémenté.
+Le triplet cubique entier est l'identité du sommet dans la paire. Il reste exactement représentable en f64 jusqu'au niveau 24 et 64 segments. Les deux patches utilisent **les mêmes indices** au raccord : aucune moyenne de positions, tolérance de soudure ou jupe de dissimulation. Une construction séparée avec les mêmes paramètres fournit également des positions de bord exactement identiques. Cette garantie décrit la paire historique de même niveau/résolution. Le fournisseur mondial adapte désormais sa résolution intérieure tout en conservant les bords à 32 segments ; voir [GLOBAL_TERRAIN](GLOBAL_TERRAIN.md).
 
 La paire contient `2(segments+1)² − (segments+1)` sommets uniques et `4 segments²` triangles. Maximum : **8 385 sommets, 16 384 triangles**, plus deux groupes d'indices et les indices de l'arête partagée. Le HashMap sert seulement à dédupliquer ; les indices suivent l'ordre déterministe des grilles et ne dépendent pas de son ordre d'itération.
 
@@ -181,3 +181,7 @@ Résultats : [VALIDATION](VALIDATION.md). P3.4 n'ajoute aucune chaîne de cartes
 Le fournisseur `globe_terrain.rs` utilise le même `PatchKey::vertex` et les voisins orientés sur toutes les faces. Identités cubiques et sommets de bord/coin restent exacts en f64. Treize patches maximum à distance de graphe ≤2, niveau 15/32 segments, pas de planète entière ni LOD mixte. Les triangles sont réindexés localement pour les contacts, avec soustraction d’origine f64, puis un contrôle de l’aire couverte sous toute l’empreinte : un centre valide ne suffit pas à autoriser un support partiel.
 
 Le repère transporté évite le changement d’axes U/V lors des arêtes ; génération seulement pour les nouvelles clés, géométries et meshes communs réutilisés. Les anciens couloirs/hystérésis/cartes fixes servent uniquement aux régressions P3.2–P3.4. Ressources, physique orientée et commandes dans [GLOBAL_TERRAIN](GLOBAL_TERRAIN.md) ; résultats dans [VALIDATION](VALIDATION.md).
+
+## LOD mondial de résolution
+
+Le fournisseur mondial conserve le niveau spatial 15 et choisit 32/16/8 cellules intérieures selon la distance avec hystérésis. Les bords utilisent toujours la même identité cubique à 32 segments ; éventails des cellules de bord, sans jupe ni T-junction. Les coins des trois faces et tous les raccords dirigés/inversés sont testés aux neuf combinaisons de résolutions. Ce mécanisme est distinct des anciennes paires et d’un quadtree à niveaux spatiaux variables. [Contrat, seuils et budgets](GLOBAL_TERRAIN.md).

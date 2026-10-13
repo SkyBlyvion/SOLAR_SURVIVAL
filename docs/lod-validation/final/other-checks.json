@@ -1,0 +1,37 @@
+[
+  {
+    "command": [
+      "cargo",
+      "check",
+      "--all-targets",
+      "--locked"
+    ],
+    "exit_code": 0,
+    "log": "all-targets.txt",
+    "provenance": "check-progress.txt, m\u00eames sources"
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "--locked"
+    ],
+    "exit_code": 0,
+    "log": "tests.txt",
+    "provenance": "tests-progress.txt, m\u00eames sources"
+  },
+  {
+    "command": [
+      "cargo",
+      "clippy",
+      "--all-targets",
+      "--locked",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit_code": 0,
+    "log": "clippy.txt",
+    "provenance": "clippy-progress.txt, m\u00eames sources"
+  }
+]

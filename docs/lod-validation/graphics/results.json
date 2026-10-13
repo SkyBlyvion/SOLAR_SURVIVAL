@@ -1,0 +1,18 @@
+[
+  {
+    "name": "seams",
+    "exit_code": 0,
+    "seconds": 36.32301983399884,
+    "diagnostics": [],
+    "captures": 6
+  },
+  {
+    "name": "p5",
+    "exit_code": 101,
+    "seconds": 8.6144344430013,
+    "diagnostics": [
+      "thread 'Compute Task Pool (0)' (126261) panicked at src/config/construction_validation.rs:140:17:"
+    ],
+    "captures": 4
+  }
+]

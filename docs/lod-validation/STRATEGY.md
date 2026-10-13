@@ -1,0 +1,13 @@
+# Stratégie avant implémentation — 13 octobre 2026
+
+Baseline : binaire P5 ebddd90, deux répétitions mondiales de 54 s, recorder GPU et comparaison sans caméra spatiale. Ajouter ensuite une instrumentation opt-in au parcours P5 avant de changer le terrain, pour mesurer sans captures la collecte/preview/construction/contact/streaming avec CPU et GPU.
+
+Le LOD retenu change la **résolution** des patches de niveau spatial 15, pas leurs emprises : 32, 16 et 8 cellules de côté. Le choix découle d'une borne inférieure de distance corporelle au patch, recalculée à l'entrée et au rebasage (64 m), avec hystérésis. Une couronne fine protège les requêtes de contact et de construction, jusque 71 m de l'ancre ; aucune donnée de bâtiment ou de dépôt n'appartient au cache.
+
+Raccord : chaque patch garde ses quatre bords à 32 segments, identités cubiques f64 inchangées sur toutes les faces. Les cellules grossières adjacentes au bord sont triangulées en éventails vers un centre sphérique, avec tous les sommets du bord fin. Les cellules intérieures gardent deux triangles. Ainsi aucun T-junction ni jupe ; les coins communs appartiennent aux trois faces. Les niveaux de résolution différents ne demandent pas de régénérer un voisin pour recoudre son bord.
+
+Sur la sphère sans relief, le changement lointain est inférieur à la peau de 2 mm ; vérifier sa borne numérique et garder les zones interrogées à 32. Le repos ne déclenche aucun choix ni mesh. Entités/handles gardés même lors d'un changement de résolution, avec remplacement du mesh uniquement à révision. Le mode fixe sera conservé pour comparaisons A/B ; aucune dépendance ajoutée.
+
+Optimisation CPU : indexer uniquement les triangles dont la projection rencontre le carré local ±72 m, qui enveloppe les requêtes admises (66 m + demi-largeur 5 m). Géométrie corporelle partagée Arc ; tables locales bornées. Budget : ≤13 patches/meshes, aucun patch au-delà du voisinage local, ≤1 089 sommets/2 048 triangles par patch, ≤26 occurrences pendant transaction, pas de second voisinage de handles GPU. Ces bornes sont structurelles, pas une mesure RAM/VRAM du moteur entier. Instrumenter géométrie, index, changements et uploads CPU ; les spans GPU Bevy restent asynchrones et non attribuables individuellement aux uploads.
+
+Critères avant livraison : topologie des trois résolutions et tous les raccords orientés ; disque fin sur faces/arêtes/coins ; trajectoires et constructions historiques ; choix/hystérésis, ressources/transitions mesurés ; diagnostic coloré/grille de LOD et gameplay inspectés. Ne déduire aucun gain FPS d'une réduction de triangles seule. Windows et matériel cible restent non validés depuis Linux.

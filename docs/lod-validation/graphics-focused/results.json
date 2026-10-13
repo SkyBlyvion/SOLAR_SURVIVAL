@@ -1,0 +1,18 @@
+[
+  {
+    "name": "p5",
+    "focused_window": "0x600200",
+    "exit_code": 0,
+    "seconds": 59.65012537899747,
+    "diagnostics": [],
+    "captures": 16
+  },
+  {
+    "name": "global",
+    "focused_window": "0x60020a",
+    "exit_code": 0,
+    "seconds": 120.64147972099818,
+    "diagnostics": [],
+    "captures": 36
+  }
+]
