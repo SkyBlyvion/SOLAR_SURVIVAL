@@ -1,4 +1,55 @@
-# Validation Solar Survival 0.2 — P3.2 contacts et franchissement borné
+# Validation Solar Survival 0.2 — P3.3 migration bornée validée sur Ubuntu
+
+12 octobre 2026. Départ Git **propre au commit `b317d28`** : P3.2 avait été commité après la passation ancienne. Ubuntu 24.04.5 LTS/X11 (`DISPLAY=:1`), Rust stable 1.99.0 édition 2024, Bevy exactement 0.19.1, i7-6700K/GTX 1060 3 Go/NVK, Mesa 25.2.8 ; Cargo.toml/Cargo.lock et dépendances inchangés. Les preuves précédentes sont préservées. Les changements P3.3 restent non commités.
+
+`SOLAR_CUBE_MIGRATION=1` active une transaction réversible entre centrale et voisine +U ; `SOLAR_CUBE_SURFACE=1` seul garde P3.2, le terrain historique reste le défaut. Fournisseur non central avec rectangle certifié par toutes les arêtes extérieures ; visée transportée, pieds/yeux/vitesse/gravité en f64, obstacles possédés par le site d'entrée. [CUBE_SPHERE](CUBE_SPHERE.md) décrit couverture, seuils, compromis de contact, budgets et reproduction ; [ASTRONOMY](ASTRONOMY.md) précise les conventions physiques.
+
+**76 tests réussis** : 24 internes, 21 fondations, 15 surface historique, 9 géométrie cube-sphere, 4 contacts P3.2, 3 migrations. Les nouveaux tests et les tests étendus couvrent les rectangles de cinq positions sur chacune des six faces (centre, décentrées, coins), absence d'extrapolation, limites d'allocation, index/brute force et empreinte entière. La transaction est testée sur six faces et trois altitudes (sol, 2 m, 20 m) : pieds/yeux/centres d'obstacles conservés à <3 nm dans le corps, axes de visée à <10⁻¹³ sans unité, vitesse à <10⁻¹³ m/s et gravité à <10⁻¹³ m/s², support radial à <1 µm et écart vertical à <10 µm. La boîte de contact demeure alignée sur la carte : on ne prétend pas conserver un volume orienté exact entre deux cartes.
+
+Marche/course aller-retour et saut pendant migration passent à 30/60/144 FPS avec repos et publication sans sous-pas. Un test des vrais contrôles ECS vérifie aller-retour en pause, P/T et les quatre sorties/retours M/G/O/U. Le test de rendu vérifie les mêmes deux handles et entités, les positions/indices f32 issus des nouvelles positions f64, et la couleur conservée du patch partagé. L'enveloppe de contact des trois obstacles est testée à moins de 0,31 mm d'expansion sur chaque dimension ; leur centre, taille et rotation visuelle restent fixes dans le corps.
+
+Les essais intermédiaires et leurs corrections sont détaillés dans [NOTES](p33-validation/NOTES.md), y compris les assertions mal adaptées des nouveaux tests, la comparaison de borne et le premier compteur de diagnostic. Ils ne remplacent pas les validations finales. Les phases de préparation sont explicites et ne comptent pas comme des migrations à pied.
+
+## Vérifications et lancement final
+
+| Vérification | Résultat final |
+|---|---|
+| `cargo fmt --check` | Réussi |
+| `cargo check --locked`, `cargo check --all-targets --locked` | Réussis, exemple P3.1 inchangé compris |
+| `cargo test --locked` | **76 tests réussis** |
+| `cargo clippy --all-targets --locked -- -D warnings` | Réussi sans alerte |
+| `cargo build --release --locked` | Réussi, **2 min 08 s** |
+| P3.3, `SOLAR_CUBE_MIGRATION=1` + diagnostic | **Code 0**, 88 s, huit migrations dont une en l'air, apex **2,131306 m**, 22 captures inspectées |
+| Régression P3.2 seule | **Code 0**, 88 s, six franchissements/apex **2,130718 m**, 22 captures inspectées |
+| Régression historique seule, rotation 50 s | **Code 0**, dix captures inspectées |
+| Windows natif / RTX 4050 et Core i5 | **Non exécutés** |
+
+Commandes/codes/temps : [build-results.json](p33-validation/build-results.json), [graphics-results.json](p33-validation/graphics-results.json). Empreintes sources/binaire et environnement : [environment.json](p33-validation/environment.json), synthèse : [summary.json](p33-validation/summary.json). Journaux [fmt](p33-validation/fmt.txt), [check](p33-validation/check.txt), [all-targets](p33-validation/all-targets.txt), [tests](p33-validation/tests.txt), [Clippy](p33-validation/clippy.txt), [release](p33-validation/release.txt), [P3.3](p33-validation/migration.txt), [P3.2](p33-validation/p32-regression.txt), [historique](p33-validation/historical.txt). Aucun ERROR/WARN/panic dans ces **trois journaux graphiques finaux**. Sources et binaire correspondent aux empreintes finales ; aucun changement Cargo. Lancements successifs Mesa immediate, après compilation et sans autre essai GPU concurrent.
+
+Le lanceur regroupant les essais finaux a terminé avec code **143** pendant la fin de son premier essai historique : dix captures, mais aucun code de sortie du jeu enregistré ; cause indéterminée. Les deux premiers essais avaient déjà leurs codes 0. Journal/captures de l'essai interrompu : [historical-launcher-143.txt](p33-validation/historical-launcher-143.txt), [dossier](p33-validation/historical-launcher-143/), [résumé](p33-validation/launcher-interruption.json). Ils restent distincts de la **relance historique seule**, qui a terminé code 0 avec le même binaire. Aucun succès final n'est déduit du code 143.
+
+## Inspection et portée des preuves
+
+Les **54 captures finales à 1440×900** ont toutes été inspectées via **15 planches** (6 P3.3, 6 P3.2, 3 historiques), répertoriées dans [inspection/manifest.json](p33-validation/inspection/manifest.json). P3.3 : [22 captures](p33-validation/migration/), avec [saut après migration](p33-validation/migration/crossing-06.png), [repos](p33-validation/migration/crossing-08.png) et [limite positive](p33-validation/migration/crossing-11.png) également inspectés à taille originale. Régression P3.2 : [22 captures](p33-validation/p32-regression/), [repos au raccord](p33-validation/p32-regression/crossing-05.png) également original. Historique : [dix captures](p33-validation/historical/docs/), [course](p33-validation/historical/docs/rotation-surface-06.png) et [Mars spatiale](p33-validation/historical/docs/rotation-surface-08.png) également originales.
+
+P3.3 montre marche/course aller-retour, saut/réception, repos, P puis ×1000, deux limites X à vitesse nulle, quatre sorties/retours M/G/O/U et Terre. La migration en l'air a été comptée par changement de révision, avec `grounded=false`, pendant les vraies commandes ECS ; la réception reste au support. Les préparations x=96/z=30 et les deux migrations explicites de préparation des limites sont exclues du compteur des huit migrations. Le compteur P3.2 de signe X est désactivé pour P3.3. Les captures montrent un sol continu et une visée cohérente ; la conservation instantanée de pose/visée repose sur les tests f64, pas sur une preuve vidéo. Les bords extérieurs visibles aux limites sont attendus : seules deux surfaces sont chargées, pas une planète entière.
+
+Le parcours P3.2 conserve son raccord fermé sans migration. La régression historique montre terrain/obstacles, saut, marche en pause, course/franchissement de tuile jusqu'à z=−150,815159 m, repos, Mars puis Terre. Aucun menu ou cycle P2 complet rejoué ; preuves anciennes et tests ECS préservés. Les touches sont injectées dans l'ECS : aucun nouvel essai des périphériques OS, de suspension complète de l'OS ou de Windows n'est revendiqué.
+
+## Ressources, coût observé et limites
+
+Après chaque remplacement : 8 385 sommets physiques/16 384 triangles, deux patches et deux handles de terrain réutilisés. Le test ECS de rendu contrôle leurs entités/handles et leur mise à jour, sans compter les meshes internes de Bevy. Coexistence synchrone CPU de l'ancienne paire et de la candidate uniquement : deux CubeTerrain, 16 770 sommets physiques/32 768 triangles, plus leurs tableaux locaux/index et temporaires bornés. Aucun troisième proxy GPU ni génération ordinaire par frame ; cette borne découle des deux constructions de taille testée et de la transaction, sans instrumentation complète des allocations/du renderer.
+
+Index observés dans le parcours : **5 408 cases**, **53 240 références** pour la centrale −X et **53 255** pour la voisine, maximum **18 triangles/case**. Le relevé numérique des **30 paires non centrales** ([journal](p33-validation/noncentral-index.txt)) observe 1 112–5 408 cases, 34 283–53 255 références, maximum **44 triangles/case**, sous les plafonds testés 5 700/85 000/64. Près des coins, le rectangle conservateur a des demi-largeurs ~80,52×27,46 m contre ~205,88×102,44 m au centre : les seuils centraux ne sont pas transportables à ces paires.
+
+Dix mesures murales de construction/transaction CPU (huit migrations de parcours et deux préparations), en release et avec captures actives : **8,004–11,657 ms**, médiane **8,567 ms**. Elles excluent la mise à jour des meshes/rendu GPU et ne sont ni un benchmark complet ni une comparaison P1. Les captures cube affichent ponctuellement **23–25 FPS** sur ce poste, sans prédiction de cible. Aucune mesure nouvelle de VRAM totale, buffers GPU transitoires du moteur ou cible RTX 4050/Core i5. [PERFORMANCE](PERFORMANCE.md) précise cette portée.
+
+P3.3 est terminé **dans ce périmètre** : centrale↔voisine +U, même face, sphère sans relief, couloir/altitude d'admission bornés, boîte joueur alignée sur la carte et enveloppe AABB conservatrice des obstacles. Hors couloir et aux limites terminales, les bornes restent actives. Le joueur au sol/en l'air reste entraîné cinématiquement par Mars ; les forces d'inertie demeurent omises. Pas de passage jouable entre faces, LOD mixte, relief scientifique, planète entière, survie ou nouvelle bibliothèque physique. La suite doit d'abord définir les seuils/recouvrement et réévaluer les contacts pour une paire franchement décentrée sur la **même face**.
+
+
+---
+
+# Historique : validation Solar Survival 0.2 — P3.2 contacts et franchissement borné
 
 12 octobre 2026. Départ Git propre au commit `da2b25c` : P3.1 était commité. Environnement : Ubuntu 24.04.5 LTS, X11 `DISPLAY=:1`, Rust stable 1.99.0, édition 2024, Bevy **exactement 0.19.1**, i7-6700K, GTX 1060 3 Go/NVK et Mesa 25.2.8. Aucune dépendance ni modification de Cargo.toml/Cargo.lock. Historiques P1/P2/P3.1 conservés ; changements de ce chat laissés non commités.
 

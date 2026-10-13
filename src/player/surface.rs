@@ -21,6 +21,8 @@ pub struct SurfaceState {
     pub grounded: bool,
     pub yaw: f64,
     pub pitch: f64,
+    /// Transport de la visée/commande lors des changements de carte.
+    pub heading: DQuat,
     pub accumulator: f64,
     pub jump_pending: bool,
 }
@@ -59,7 +61,7 @@ impl SurfaceState {
     pub fn advance(
         &mut self,
         pilot: &Explorer,
-        terrain: &MarsTerrain,
+        terrain: &mut MarsTerrain,
         keys: &ButtonInput<KeyCode>,
         seconds: f64,
         mu: f64,
@@ -74,10 +76,14 @@ impl SurfaceState {
         } else {
             self.jump_pending = false;
         }
-        let desired = DQuat::from_rotation_y(self.yaw) * input.normalize_or_zero() * pilot.speed();
+
         // Maximum 30 sous-pas par frame ; les longues interruptions ne sont pas rattrapées.
         self.accumulator += seconds.min(0.25);
         while self.accumulator + 1e-12 >= STEP_SECONDS {
+            let desired = self.heading
+                * DQuat::from_rotation_y(self.yaw)
+                * input.normalize_or_zero()
+                * pilot.speed();
             surface::step(
                 terrain,
                 &mut self.feet,
@@ -87,9 +93,63 @@ impl SurfaceState {
                 self.jump_pending,
                 mu,
             );
+            self.migrate(terrain);
             self.jump_pending = false;
             self.accumulator = (self.accumulator - STEP_SECONDS).max(0.0);
         }
+    }
+    /// Remplacement borné/reversible : centrale <-> voisine +U uniquement.
+    /// Toute la transaction précède la publication et n'avance aucune horloge.
+    pub fn migrate(&mut self, terrain: &mut MarsTerrain) -> bool {
+        if !terrain.migration_enabled || self.feet.z.abs() > 50.0 || self.feet.y.abs() > 100.0 {
+            return false;
+        }
+        let Some(cube) = &terrain.cube else {
+            return false;
+        };
+        let mut key = cube.pair.keys[0];
+        let middle = 1 << (crate::planets::cube_terrain::LEVEL - 1);
+        if key.level != crate::planets::cube_terrain::LEVEL || key.y != middle {
+            return false;
+        }
+        if key.x == middle - 1 && self.feet.x > 100.0 {
+            key.x += 1;
+        } else if key.x == middle && self.feet.x < -110.0 {
+            key.x -= 1;
+        } else {
+            return false;
+        }
+        let started = std::time::Instant::now();
+        let old_orientation = terrain.orientation;
+        let body_feet = terrain.body_relative(self.feet);
+        let old_up = terrain.site_relative(self.feet).normalize();
+        let (orientation, next) =
+            crate::planets::cube_terrain::CubeTerrain::from_key(key, terrain.radius_m)
+                .expect("Voisine sur la même face");
+        let feet =
+            orientation.inverse() * (body_feet - orientation * (DVec3::Y * terrain.radius_m));
+        if next.support_height(feet, HALF_WIDTH_M).is_none() {
+            return false;
+        }
+        let delta = orientation.inverse() * old_orientation;
+        let new_up = (feet + DVec3::Y * terrain.radius_m).normalize();
+        self.heading = (DQuat::from_rotation_arc(DVec3::Y, new_up).inverse()
+            * delta
+            * DQuat::from_rotation_arc(DVec3::Y, old_up)
+            * self.heading)
+            .normalize();
+        self.feet = feet;
+        self.velocity = delta * self.velocity;
+        terrain.orientation = orientation;
+        terrain.cube = Some(next);
+        terrain.revision = terrain.revision.wrapping_add(1);
+        info!(
+            "P3.3 remplacement {:?}, construction/transaction CPU {:.3} ms, index {:?}",
+            terrain.cube.as_ref().unwrap().pair.keys,
+            started.elapsed().as_secs_f64() * 1000.0,
+            terrain.cube.as_ref().unwrap().index_counts()
+        );
+        true
     }
     pub fn eye(&self, terrain: &MarsTerrain) -> DVec3 {
         self.feet + terrain.site_relative(self.feet).normalize() * EYE_HEIGHT_M
@@ -97,6 +157,7 @@ impl SurfaceState {
     /// Visée dans le site : indépendante de l'orbite et des proxies f32.
     pub fn local_rotation(&self, terrain: &MarsTerrain) -> DQuat {
         DQuat::from_rotation_arc(DVec3::Y, terrain.site_relative(self.feet).normalize())
+            * self.heading
             * DQuat::from_rotation_y(self.yaw)
             * DQuat::from_rotation_x(self.pitch)
     }

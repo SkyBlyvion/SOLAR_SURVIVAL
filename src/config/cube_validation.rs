@@ -37,6 +37,9 @@ struct Progress {
     previous_x: Option<f64>,
     crossings: usize,
     max_air_m: f64,
+    previous_revision: Option<u64>,
+    migrations: usize,
+    air_migrations: usize,
 }
 const PHASE_S: f64 = 4.0;
 const STAGES: usize = 22;
@@ -51,22 +54,36 @@ fn input(
     mut keys: ResMut<ButtonInput<KeyCode>>,
     mut pilot: ResMut<Explorer>,
     mut state: ResMut<SurfaceState>,
-    terrain: Res<MarsTerrain>,
+    mut terrain: ResMut<MarsTerrain>,
     mut clock: ResMut<SimulationClock>,
     mut exit: MessageWriter<AppExit>,
 ) {
     let elapsed = time.elapsed_secs_f64();
     if elapsed >= PHASE_S * STAGES as f64 {
+        if terrain.migration_enabled {
+            assert!(
+                progress.migrations >= 8 && progress.air_migrations >= 1,
+                "Migrations {} / en l'air {}",
+                progress.migrations,
+                progress.air_migrations
+            );
+            info!(
+                "P3.3 terminé : {} migrations, {} en l'air, apex {:.6} m",
+                progress.migrations, progress.air_migrations, progress.max_air_m
+            );
+        }
         assert!(
-            progress.crossings >= 6,
+            progress.crossings >= 6 || terrain.migration_enabled,
             "Franchissements réellement observés : {}",
             progress.crossings
         );
         assert!(progress.max_air_m > 1.9, "Saut réellement observé");
-        info!(
-            "P3.2 terminé : {} franchissements, apex {:.6} m",
-            progress.crossings, progress.max_air_m
-        );
+        if !terrain.migration_enabled {
+            info!(
+                "P3.2 terminé : {} franchissements, apex {:.6} m",
+                progress.crossings, progress.max_air_m
+            );
+        }
         keys.reset_all();
         exit.write(AppExit::Success);
         return;
@@ -78,6 +95,13 @@ fn input(
     pilot.captured = (1..=12).contains(&stage);
     if progress.stage != Some(stage) {
         progress.previous_x = None;
+        if terrain.migration_enabled && matches!(stage, 1 | 3 | 6 | 9) {
+            state.feet.x = 96.0;
+            state.feet.z = 30.0;
+            state.feet.y = terrain.support_height(state.feet, HALF_WIDTH_M) + 0.002;
+            state.velocity = bevy::math::DVec3::ZERO;
+            state.grounded = true;
+        }
         match stage {
             0 => {
                 clock.jd = crate::universe::units::J2000;
@@ -86,13 +110,15 @@ fn input(
                 keys.press(KeyCode::KeyM);
             }
             5 | 8 => {
-                state.feet.x = 0.0;
+                state.feet.x = if terrain.migration_enabled { 96.0 } else { 0.0 };
                 state.feet.y = terrain.support_height(state.feet, HALF_WIDTH_M) + 0.002;
                 state.velocity = bevy::math::DVec3::ZERO;
                 state.grounded = true;
             }
             6 => {
-                state.feet.x = -4.0;
+                if !terrain.migration_enabled {
+                    state.feet.x = -4.0;
+                }
                 keys.press(KeyCode::Space);
             }
             9 => {
@@ -100,6 +126,13 @@ fn input(
                 clock.speed_index = 3;
             }
             11 | 12 => {
+                if terrain.migration_enabled {
+                    state.feet.x = if stage == 11 { 101.0 } else { -111.0 };
+                    assert!(
+                        state.migrate(&mut terrain),
+                        "Préparation explicite de limite"
+                    );
+                }
                 let cube = terrain.cube.as_ref().unwrap();
                 state.feet.x = if stage == 11 {
                     cube.max.x - 2.0
@@ -153,10 +186,24 @@ fn capture(
     if pilot.mode == MovementMode::Surface {
         let floor = terrain.support_height(state.feet, HALF_WIDTH_M);
         assert!(state.feet.is_finite() && state.feet.y >= floor - 1e-8);
+        if matches!(stage, 1..=4 | 6 | 7 | 9 | 10)
+            && terrain.migration_enabled
+            && let Some(revision) = progress.previous_revision
+            && revision != terrain.revision
+        {
+            assert_eq!(terrain.revision, revision + 1);
+            progress.migrations += 1;
+            progress.air_migrations += (!state.grounded) as usize;
+            info!(
+                "P3.3 migration {} : pieds {:?}, sol {}",
+                progress.migrations, state.feet, state.grounded
+            );
+        }
+        progress.previous_revision = Some(terrain.revision);
         if stage == 6 {
             progress.max_air_m = progress.max_air_m.max(state.feet.y - floor);
         }
-        if matches!(stage, 1..=4 | 6 | 7 | 9 | 10) {
+        if matches!(stage, 1..=4 | 6 | 7 | 9 | 10) && !terrain.migration_enabled {
             if let Some(previous) = progress.previous_x
                 && previous * state.feet.x < 0.0
             {
@@ -171,14 +218,20 @@ fn capture(
     }
     progress.captured = Some(stage);
     info!(
-        "P3.2 étape {stage:02} : {:?}, pieds {:?}, vitesse {:?}, sol {}, JD {:.8}, pause {}, crossings {}",
+        "{} étape {stage:02} : {:?}, pieds {:?}, vitesse {:?}, sol {}, JD {:.8}, pause {}, crossings {}, migrations {}",
+        if terrain.migration_enabled {
+            "P3.3"
+        } else {
+            "P3.2"
+        },
         pilot.mode,
         state.feet,
         state.velocity,
         state.grounded,
         clock.jd,
         clock.paused,
-        progress.crossings
+        progress.crossings,
+        progress.migrations
     );
     if let Some(cube) = &terrain.cube {
         info!(

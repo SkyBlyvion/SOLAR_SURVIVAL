@@ -1,0 +1,68 @@
+[
+  {
+    "command": [
+      "cargo",
+      "fmt",
+      "--check"
+    ],
+    "code": 0,
+    "seconds": 0.17340150400195853,
+    "log": "fmt.txt"
+  },
+  {
+    "command": [
+      "cargo",
+      "check",
+      "--locked"
+    ],
+    "code": 0,
+    "seconds": 0.2544019980014127,
+    "log": "check.txt"
+  },
+  {
+    "command": [
+      "cargo",
+      "check",
+      "--all-targets",
+      "--locked"
+    ],
+    "code": 0,
+    "seconds": 0.280214860002161,
+    "log": "all-targets.txt"
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "--locked"
+    ],
+    "code": 0,
+    "seconds": 9.041106811000645,
+    "log": "tests.txt"
+  },
+  {
+    "command": [
+      "cargo",
+      "clippy",
+      "--all-targets",
+      "--locked",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "code": 0,
+    "seconds": 0.9854905510001117,
+    "log": "clippy.txt"
+  },
+  {
+    "command": [
+      "cargo",
+      "build",
+      "--release",
+      "--locked"
+    ],
+    "code": 0,
+    "seconds": 128.89119486399795,
+    "log": "release.txt"
+  }
+]

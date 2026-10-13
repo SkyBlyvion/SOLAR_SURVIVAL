@@ -94,3 +94,11 @@ La paire et le joueur sont bornés au rectangle résident, sans migration du sit
 
 
 Le bornage annule désormais la composante horizontale de vitesse sur chaque axe bloqué, pour la paire comme pour la borne historique. La position restait déjà contrainte ; la vitesse publiée correspond maintenant à cet arrêt. Les paramètres de marche/saut, la gravité et les horloges demeurent ceux du contrôleur existant.
+
+## Changement de carte locale P3.3 opt-in
+
+`SOLAR_CUBE_MIGRATION=1` permet le remplacement réversible de la paire centrale par sa voisine +U, sur la même face. Aucun paramètre astronomique nouveau : même rayon moyen, GM, `Q_Mars(JD)` et forces d'inertie omises. Les conventions et seuils bornés sont détaillés dans [CUBE_SPHERE](CUBE_SPHERE.md).
+
+`Q_site` peut désormais changer après un sous-pas, par une transaction f64 conservant les positions des pieds/yeux, la visée et la vitesse **dans le corps tournant**. Le transfert utilise les origines relatives au centre de Mars ; il ne soustrait jamais deux positions héliocentriques pour calculer une différence métrique. Le transport d'une base de visée conserve l'orientation complète, y compris la petite composante que yaw/pitch seuls perdraient. La pose est toujours publiée après physique, même sans sous-pas ; aucune migration ne modifie les horloges ou le compromis d'entraînement en l'air.
+
+Le support et la gravité sont recalculés dans la carte active ; la boîte du joueur reste alignée sur celle-ci. Les obstacles demeurent fixes dans le corps, avec une enveloppe conservatrice de contact et leur rotation exacte en rendu. Les meshes communs et leurs normales radiales sont reconstruits seulement lors d'un remplacement, jamais à chaque rotation. Le terrain historique par défaut et l'option P3.2 seule gardent leurs parcours sans migration. Les visites spatiales et sorties M/G/O/U restent translatoires et sans transfert de vitesse inertielle. Pas de cartographie, orientation IAU exacte, relief mesuré, passage entre faces ou forces d'inertie nouvelles.

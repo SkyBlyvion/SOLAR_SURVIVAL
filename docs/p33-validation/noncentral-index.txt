@@ -1,0 +1,36 @@
+
+running 1 test
+PatchKey { face: PositiveX, level: 15, x: 16384, y: 16384 } bounds DVec3(205.87865883390637, -0.0, 102.43933004687672) index (5408, 53225, 18)
+PatchKey { face: PositiveX, level: 15, x: 2000, y: 1000 } bounds DVec3(89.93819360041392, -0.0, 31.480984331569157) index (1320, 35692, 32)
+PatchKey { face: PositiveX, level: 15, x: 31000, y: 29000 } bounds DVec3(92.0588135201834, -0.0, 36.32006528866719) index (1576, 37527, 32)
+PatchKey { face: PositiveX, level: 15, x: 0, y: 0 } bounds DVec3(80.51867833625377, -0.0, 27.458143085860097) index (1112, 34283, 44)
+PatchKey { face: PositiveX, level: 15, x: 32766, y: 32767 } bounds DVec3(80.51867833625376, -0.0, 27.458143085860094) index (1112, 34283, 44)
+PatchKey { face: NegativeX, level: 15, x: 16384, y: 16384 } bounds DVec3(205.8786588339064, -0.0, 102.43933004687672) index (5408, 53255, 18)
+PatchKey { face: NegativeX, level: 15, x: 2000, y: 1000 } bounds DVec3(89.938193600414, -0.0, 31.480984331569164) index (1320, 35692, 32)
+PatchKey { face: NegativeX, level: 15, x: 31000, y: 29000 } bounds DVec3(92.05881352018338, -0.0, 36.320065288667166) index (1576, 37527, 32)
+PatchKey { face: NegativeX, level: 15, x: 0, y: 0 } bounds DVec3(80.51867833625376, -0.0, 27.458143085860097) index (1112, 34283, 44)
+PatchKey { face: NegativeX, level: 15, x: 32766, y: 32767 } bounds DVec3(80.51867833625374, -0.0, 27.458143085860083) index (1112, 34283, 44)
+PatchKey { face: PositiveY, level: 15, x: 16384, y: 16384 } bounds DVec3(205.87865883390637, -0.0, 102.43933004687672) index (5408, 53228, 18)
+PatchKey { face: PositiveY, level: 15, x: 2000, y: 1000 } bounds DVec3(89.93819360041388, -0.0, 31.48098433156914) index (1320, 35692, 32)
+PatchKey { face: PositiveY, level: 15, x: 31000, y: 29000 } bounds DVec3(92.05881352018343, -0.0, 36.320065288667195) index (1576, 37527, 32)
+PatchKey { face: PositiveY, level: 15, x: 0, y: 0 } bounds DVec3(80.51867833625379, -0.0, 27.458143085860083) index (1112, 34283, 44)
+PatchKey { face: PositiveY, level: 15, x: 32766, y: 32767 } bounds DVec3(80.51867833625379, -0.0, 27.458143085860083) index (1112, 34283, 44)
+PatchKey { face: NegativeY, level: 15, x: 16384, y: 16384 } bounds DVec3(205.87865883390637, -0.0, 102.43933004687672) index (5408, 53232, 18)
+PatchKey { face: NegativeY, level: 15, x: 2000, y: 1000 } bounds DVec3(89.93819360041415, -0.0, 31.480984331569218) index (1320, 35692, 32)
+PatchKey { face: NegativeY, level: 15, x: 31000, y: 29000 } bounds DVec3(92.05881352018368, -0.0, 36.32006528866729) index (1576, 37527, 32)
+PatchKey { face: NegativeY, level: 15, x: 0, y: 0 } bounds DVec3(80.51867833625376, -0.0, 27.458143085860083) index (1112, 34283, 44)
+PatchKey { face: NegativeY, level: 15, x: 32766, y: 32767 } bounds DVec3(80.51867833625376, -0.0, 27.458143085860083) index (1112, 34283, 44)
+PatchKey { face: PositiveZ, level: 15, x: 16384, y: 16384 } bounds DVec3(205.87865883390631, -0.0, 102.43933004687668) index (5408, 53174, 18)
+PatchKey { face: PositiveZ, level: 15, x: 2000, y: 1000 } bounds DVec3(89.93819360041387, -0.0, 31.480984331569136) index (1320, 35692, 32)
+PatchKey { face: PositiveZ, level: 15, x: 31000, y: 29000 } bounds DVec3(92.0588135201834, -0.0, 36.320065288667166) index (1576, 37527, 32)
+PatchKey { face: PositiveZ, level: 15, x: 0, y: 0 } bounds DVec3(80.5186783362538, -0.0, 27.458143085860094) index (1112, 34283, 44)
+PatchKey { face: PositiveZ, level: 15, x: 32766, y: 32767 } bounds DVec3(80.51867833625379, -0.0, 27.45814308586009) index (1112, 34283, 44)
+PatchKey { face: NegativeZ, level: 15, x: 16384, y: 16384 } bounds DVec3(205.87865883390631, -0.0, 102.43933004687669) index (5408, 53194, 18)
+PatchKey { face: NegativeZ, level: 15, x: 2000, y: 1000 } bounds DVec3(89.93819360041412, -0.0, 31.48098433156923) index (1320, 35692, 32)
+PatchKey { face: NegativeZ, level: 15, x: 31000, y: 29000 } bounds DVec3(92.0588135201834, -0.0, 36.320065288667166) index (1576, 37527, 32)
+PatchKey { face: NegativeZ, level: 15, x: 0, y: 0 } bounds DVec3(80.51867833625381, -0.0, 27.458143085860097) index (1112, 34283, 44)
+PatchKey { face: NegativeZ, level: 15, x: 32766, y: 32767 } bounds DVec3(80.5186783362538, -0.0, 27.458143085860094) index (1112, 34283, 44)
+test planets::cube_terrain::tests::noncentral_rectangles_cover_whole_footprints_on_all_faces ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 23 filtered out; finished in 0.44s
+

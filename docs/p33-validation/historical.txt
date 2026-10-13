@@ -1,0 +1,25 @@
+2026-10-12T14:50:46.403410Z  INFO bevy_render::renderer: AdapterInfo { name: "NVIDIA GeForce GTX 1060 3GB (NVK GP106)", vendor: 4318, device: 7170, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "NVK", driver_info: "Mesa 25.2.8-0ubuntu0.24.04.2", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: false }
+2026-10-12T14:50:46.531295Z  INFO bevy_pbr::cluster: GPU clustering is supported on this device.
+2026-10-12T14:50:46.531352Z  INFO bevy_render::batching::gpu_preprocessing: GPU preprocessing is fully supported on this device.
+2026-10-12T14:50:46.531949Z  INFO bevy_winit::system: Creating new window Solar Survival · 0.2 · Mars (63v0)
+2026-10-12T14:50:46.532369Z  INFO winit::platform_impl::linux::x11::window: Guessed window scale factor: 1
+2026-10-12T14:50:46.539227Z  INFO solar_survival::config::validation: Validation surface étape 1 / 10 : pieds DVec3(0.0, 0.0, 0.0), vitesse DVec3(0.0, 0.0, 0.0), au sol false, JD 2451545.00000000, temps ×1000 pause false
+2026-10-12T14:50:50.262348Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/rotation-surface-00.png
+2026-10-12T14:50:51.539128Z  INFO solar_survival::config::validation: Validation surface étape 2 / 10 : pieds DVec3(0.0, 0.01694195750567887, 0.0), vitesse DVec3(0.0, 0.0, 0.0), au sol true, JD 2451545.05732496, temps ×1000 pause false
+2026-10-12T14:50:55.221357Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/rotation-surface-01.png
+2026-10-12T14:50:56.564568Z  INFO solar_survival::config::validation: Validation surface étape 3 / 10 : pieds DVec3(0.0, 0.26532186442176203, -10.698000047699573), vitesse DVec3(0.0, 0.0, 0.0), au sol true, JD 2451545.11551821, temps ×1000 pause false
+2026-10-12T14:50:57.438712Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/rotation-surface-02.png
+2026-10-12T14:51:01.555550Z  INFO solar_survival::config::validation: Validation surface étape 4 / 10 : pieds DVec3(0.0, 0.7039027349731585, -30.94849254202871), vitesse DVec3(0.0, 0.0, -4.499999999625746), au sol true, JD 2451545.17332797, temps ×1000 pause true
+2026-10-12T14:51:05.180887Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/rotation-surface-03.png
+2026-10-12T14:51:06.574143Z  INFO solar_survival::config::validation: Validation surface étape 5 / 10 : pieds DVec3(22.57499999966701, 1.1729377453416971, -30.94849254134342), vitesse DVec3(4.499999999801046, 0.0, 2.7320344835451133e-10), au sol true, JD 2451545.17332797, temps ×1000 pause false
+2026-10-12T14:51:10.248354Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/rotation-surface-04.png
+2026-10-12T14:51:11.554747Z  INFO solar_survival::config::validation: Validation surface étape 6 / 10 : pieds DVec3(22.5749999956837, 2.438839742850536, -70.81515919857833), vitesse DVec3(-1.1121491526191715e-9, 0.0, -7.999999996514601), au sol true, JD 2451545.23098158, temps ×1 pause false
+2026-10-12T14:51:15.232549Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/rotation-surface-05.png
+2026-10-12T14:51:16.577478Z  INFO solar_survival::config::validation: Validation surface étape 7 / 10 : pieds DVec3(22.574999988519313, 2.4183727078291843, -110.94849250261115), vitesse DVec3(-1.7430354399560146e-9, 0.0, -7.999999991438718), au sol true, JD 2451545.23103971, temps ×1000 pause false
+2026-10-12T14:51:20.224733Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/rotation-surface-06.png
+2026-10-12T14:51:21.560234Z  INFO solar_survival::config::validation: Validation surface étape 8 / 10 : pieds DVec3(22.574999978269062, 1.6604469029332876, -150.81515910940584), vitesse DVec3(-2.3697308365269385e-9, 0.0, -7.99999998417571), au sol true, JD 2451545.28869352, temps ×1000 pause true
+2026-10-12T14:51:25.232579Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/rotation-surface-07.png
+2026-10-12T14:51:26.552464Z  INFO solar_survival::config::validation: Validation surface étape 9 / 10 : pieds DVec3(22.574999978269062, 1.6604469029332876, -150.81515910940584), vitesse DVec3(0.0, 0.0, 0.0), au sol true, JD 2451545.28869352, temps ×1 pause false
+2026-10-12T14:51:30.152306Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/rotation-surface-08.png
+2026-10-12T14:51:31.547266Z  INFO solar_survival::config::validation: Validation surface étape 10 / 10 : pieds DVec3(22.574999978269062, 1.6604469029332876, -150.81515910940584), vitesse DVec3(0.0, 0.0, 0.0), au sol true, JD 2451545.28875154, temps ×1 pause false
+2026-10-12T14:51:35.154436Z  INFO bevy_render::view::window::screenshot: Screenshot saved to docs/rotation-surface-09.png

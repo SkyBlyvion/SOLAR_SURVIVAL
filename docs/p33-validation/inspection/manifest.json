@@ -1,0 +1,131 @@
+[
+  {
+    "sheet": "inspection/migration-00.jpg",
+    "captures": [
+      "migration/crossing-00.png",
+      "migration/crossing-01.png",
+      "migration/crossing-02.png",
+      "migration/crossing-03.png"
+    ]
+  },
+  {
+    "sheet": "inspection/migration-01.jpg",
+    "captures": [
+      "migration/crossing-04.png",
+      "migration/crossing-05.png",
+      "migration/crossing-06.png",
+      "migration/crossing-07.png"
+    ]
+  },
+  {
+    "sheet": "inspection/migration-02.jpg",
+    "captures": [
+      "migration/crossing-08.png",
+      "migration/crossing-09.png",
+      "migration/crossing-10.png",
+      "migration/crossing-11.png"
+    ]
+  },
+  {
+    "sheet": "inspection/migration-03.jpg",
+    "captures": [
+      "migration/crossing-12.png",
+      "migration/crossing-13.png",
+      "migration/crossing-14.png",
+      "migration/crossing-15.png"
+    ]
+  },
+  {
+    "sheet": "inspection/migration-04.jpg",
+    "captures": [
+      "migration/crossing-16.png",
+      "migration/crossing-17.png",
+      "migration/crossing-18.png",
+      "migration/crossing-19.png"
+    ]
+  },
+  {
+    "sheet": "inspection/migration-05.jpg",
+    "captures": [
+      "migration/crossing-20.png",
+      "migration/crossing-21.png"
+    ]
+  },
+  {
+    "sheet": "inspection/p32-00.jpg",
+    "captures": [
+      "p32-regression/crossing-00.png",
+      "p32-regression/crossing-01.png",
+      "p32-regression/crossing-02.png",
+      "p32-regression/crossing-03.png"
+    ]
+  },
+  {
+    "sheet": "inspection/p32-01.jpg",
+    "captures": [
+      "p32-regression/crossing-04.png",
+      "p32-regression/crossing-05.png",
+      "p32-regression/crossing-06.png",
+      "p32-regression/crossing-07.png"
+    ]
+  },
+  {
+    "sheet": "inspection/p32-02.jpg",
+    "captures": [
+      "p32-regression/crossing-08.png",
+      "p32-regression/crossing-09.png",
+      "p32-regression/crossing-10.png",
+      "p32-regression/crossing-11.png"
+    ]
+  },
+  {
+    "sheet": "inspection/p32-03.jpg",
+    "captures": [
+      "p32-regression/crossing-12.png",
+      "p32-regression/crossing-13.png",
+      "p32-regression/crossing-14.png",
+      "p32-regression/crossing-15.png"
+    ]
+  },
+  {
+    "sheet": "inspection/p32-04.jpg",
+    "captures": [
+      "p32-regression/crossing-16.png",
+      "p32-regression/crossing-17.png",
+      "p32-regression/crossing-18.png",
+      "p32-regression/crossing-19.png"
+    ]
+  },
+  {
+    "sheet": "inspection/p32-05.jpg",
+    "captures": [
+      "p32-regression/crossing-20.png",
+      "p32-regression/crossing-21.png"
+    ]
+  },
+  {
+    "sheet": "inspection/historical-00.jpg",
+    "captures": [
+      "historical/docs/rotation-surface-00.png",
+      "historical/docs/rotation-surface-01.png",
+      "historical/docs/rotation-surface-02.png",
+      "historical/docs/rotation-surface-03.png"
+    ]
+  },
+  {
+    "sheet": "inspection/historical-01.jpg",
+    "captures": [
+      "historical/docs/rotation-surface-04.png",
+      "historical/docs/rotation-surface-05.png",
+      "historical/docs/rotation-surface-06.png",
+      "historical/docs/rotation-surface-07.png"
+    ]
+  },
+  {
+    "sheet": "inspection/historical-02.jpg",
+    "captures": [
+      "historical/docs/rotation-surface-08.png",
+      "historical/docs/rotation-surface-09.png"
+    ]
+  }
+]

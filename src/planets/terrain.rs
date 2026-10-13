@@ -19,6 +19,9 @@ pub struct MarsTerrain {
     pub revision: u64,
     /// Opt-in de session ; une seule paire résidente, jamais une planète entière.
     pub cube_enabled: bool,
+    pub migration_enabled: bool,
+    /// Trois obstacles possédés par le site d'entrée, fixes dans le corps.
+    pub site_obstacles: Option<(DQuat, [crate::physics::surface::SolidBox; 3])>,
     pub cube: Option<super::cube_terrain::CubeTerrain>,
 }
 impl FromWorld for MarsTerrain {
@@ -32,6 +35,10 @@ impl FromWorld for MarsTerrain {
             cube_enabled: world
                 .get_resource::<crate::config::GameConfig>()
                 .is_some_and(|c| c.cube_surface),
+            migration_enabled: world
+                .get_resource::<crate::config::GameConfig>()
+                .is_some_and(|c| c.cube_migration),
+            site_obstacles: None,
             cube: None,
         }
     }
@@ -45,6 +52,11 @@ impl MarsTerrain {
         } else {
             self.orientation = DQuat::from_rotation_arc(DVec3::Y, outward.normalize());
             self.cube = None;
+        }
+        self.site_obstacles = None;
+        if self.migration_enabled && self.cube.is_some() {
+            self.site_obstacles =
+                Some((self.orientation, crate::physics::surface::obstacles(self)));
         }
         self.revision = self.revision.wrapping_add(1);
     }

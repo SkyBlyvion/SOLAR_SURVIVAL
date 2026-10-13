@@ -1,0 +1,49 @@
+[
+  {
+    "command": [
+      "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/target/release/solar_survival"
+    ],
+    "cwd": "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL",
+    "environment": {
+      "RUST_LOG": "info",
+      "MESA_VK_WSI_PRESENT_MODE": "immediate",
+      "SOLAR_CUBE_MIGRATION": "1",
+      "SOLAR_CUBE_VALIDATE_DIR": "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p33-validation/migration"
+    },
+    "exit_code": 0,
+    "elapsed_wall_seconds": 88.356630975999,
+    "captures": 22,
+    "log": "migration.txt"
+  },
+  {
+    "command": [
+      "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/target/release/solar_survival"
+    ],
+    "cwd": "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL",
+    "environment": {
+      "RUST_LOG": "info",
+      "MESA_VK_WSI_PRESENT_MODE": "immediate",
+      "SOLAR_CUBE_SURFACE": "1",
+      "SOLAR_CUBE_VALIDATE_DIR": "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p33-validation/p32-regression"
+    },
+    "exit_code": 0,
+    "elapsed_wall_seconds": 88.40173668200077,
+    "captures": 22,
+    "log": "p32-regression.txt"
+  },
+  {
+    "command": [
+      "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/target/release/solar_survival"
+    ],
+    "cwd": "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p33-validation/historical",
+    "environment": {
+      "RUST_LOG": "info",
+      "MESA_VK_WSI_PRESENT_MODE": "immediate",
+      "SOLAR_ROTATION_SMOKE_SECONDS": "50"
+    },
+    "exit_code": 0,
+    "elapsed_wall_seconds": 50.369892692000576,
+    "captures": 10,
+    "log": "historical.txt"
+  }
+]

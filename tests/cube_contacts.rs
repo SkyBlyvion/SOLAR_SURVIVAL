@@ -16,6 +16,8 @@ fn terrain() -> MarsTerrain {
         orientation: DQuat::IDENTITY,
         revision: 0,
         cube_enabled: true,
+        migration_enabled: false,
+        site_obstacles: None,
         cube: None,
     };
     terrain.set_site(DVec3::Y);
@@ -135,14 +137,14 @@ fn cube_walk_jump_frame_rates_and_rotating_publication_without_substep() {
         keys.press(KeyCode::KeyD);
         keys.press(KeyCode::Space);
         for _ in 0..fps * 4 {
-            state.advance(&pilot, &terrain, &keys, 1.0 / fps as f64, mu());
+            state.advance(&pilot, &mut terrain, &keys, 1.0 / fps as f64, mu());
             keys.clear();
         }
         assert!(state.grounded && state.feet.x > 9.9);
         results.push(state.feet);
         let feet = state.feet;
         state.accumulator = 0.0;
-        state.advance(&pilot, &terrain, &keys, 0.001, mu());
+        state.advance(&pilot, &mut terrain, &keys, 0.001, mu());
         let rotation = solar.body(BodyId::MARS).rotation(12000.0);
         state.sync(&mut pilot, &terrain, rotation);
         assert_eq!(state.feet, feet);

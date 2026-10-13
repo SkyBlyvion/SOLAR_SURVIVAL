@@ -20,6 +20,8 @@ fn terrain() -> MarsTerrain {
         orientation: DQuat::IDENTITY,
         revision: 1,
         cube_enabled: false,
+        migration_enabled: false,
+        site_obstacles: None,
         cube: None,
     }
 }
@@ -134,7 +136,7 @@ fn walk(fps: usize, boost: bool) -> DVec3 {
     let mut keys = ButtonInput::<KeyCode>::default();
     keys.press(KeyCode::KeyD);
     for _ in 0..2 * fps {
-        state.advance(&pilot, &terrain, &keys, 1.0 / fps as f64, mu());
+        state.advance(&pilot, &mut terrain, &keys, 1.0 / fps as f64, mu());
         keys.clear();
     }
     assert!(state.grounded);
@@ -189,11 +191,11 @@ fn release_stops_input_but_gravity_continues_and_long_stalls_are_bounded() {
     let mut keys = ButtonInput::<KeyCode>::default();
     keys.press(KeyCode::KeyW);
     keys.press(KeyCode::Space);
-    state.advance(&pilot, &terrain, &keys, 100.0, mu());
+    state.advance(&pilot, &mut terrain, &keys, 100.0, mu());
     assert!(state.feet.y > 9.0);
     assert!(state.velocity.y < 0.0);
     for _ in 0..600 {
-        state.advance(&pilot, &terrain, &keys, STEP_SECONDS, mu());
+        state.advance(&pilot, &mut terrain, &keys, STEP_SECONDS, mu());
     }
     assert!(state.grounded);
     assert!(state.feet.z.abs() < 0.001);
@@ -231,7 +233,7 @@ fn walking_into_an_obstacle_reports_zero_resolved_forward_velocity() {
     let mut keys = ButtonInput::<KeyCode>::default();
     keys.press(KeyCode::KeyW);
     for _ in 0..600 {
-        state.advance(&pilot, &terrain, &keys, STEP_SECONDS, mu());
+        state.advance(&pilot, &mut terrain, &keys, STEP_SECONDS, mu());
         keys.clear();
     }
     assert!(
@@ -286,13 +288,13 @@ fn jump_pressed_between_two_physics_ticks_is_not_lost_or_repeated() {
     pilot.captured = true;
     let mut keys = ButtonInput::<KeyCode>::default();
     keys.press(KeyCode::Space);
-    state.advance(&pilot, &terrain, &keys, STEP_SECONDS * 0.5, mu());
+    state.advance(&pilot, &mut terrain, &keys, STEP_SECONDS * 0.5, mu());
     assert!(state.jump_pending && state.grounded);
     keys.clear();
-    state.advance(&pilot, &terrain, &keys, STEP_SECONDS * 0.5, mu());
+    state.advance(&pilot, &mut terrain, &keys, STEP_SECONDS * 0.5, mu());
     assert!(!state.grounded && !state.jump_pending && state.velocity.y > 3.9);
     for _ in 0..480 {
-        state.advance(&pilot, &terrain, &keys, STEP_SECONDS, mu());
+        state.advance(&pilot, &mut terrain, &keys, STEP_SECONDS, mu());
     }
     assert!(state.grounded && state.velocity.length() < 1e-6);
 }

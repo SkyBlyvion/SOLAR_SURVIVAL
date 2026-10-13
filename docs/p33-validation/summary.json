@@ -1,0 +1,67 @@
+{
+  "source_binary_match": true,
+  "logs": {
+    "migration": {
+      "error_warn_panic_lines": []
+    },
+    "p32-regression": {
+      "error_warn_panic_lines": []
+    },
+    "historical": {
+      "error_warn_panic_lines": []
+    }
+  },
+  "captures": {
+    "count": 54,
+    "size": [
+      1440,
+      900
+    ],
+    "all_inspected_in_15_sheets": true,
+    "originals": [
+      "migration/crossing-06.png",
+      "migration/crossing-08.png",
+      "migration/crossing-11.png",
+      "p32-regression/crossing-05.png",
+      "historical/docs/rotation-surface-06.png",
+      "historical/docs/rotation-surface-08.png"
+    ]
+  },
+  "migrations": {
+    "walk_run": 8,
+    "airborne": 1,
+    "apex_m": 2.131306,
+    "explicit_preparations_not_counted": 2
+  },
+  "construction_cpu_wall_ms": {
+    "count": 10,
+    "min": 8.004,
+    "median": 8.567,
+    "max": 11.657,
+    "all_values": [
+      11.657,
+      11.063,
+      9.116,
+      8.032,
+      8.526,
+      8.252,
+      9.096,
+      8.004,
+      8.608,
+      8.052
+    ],
+    "not_full_cpu_gpu_benchmark": true
+  },
+  "noncentral_sample_index": {
+    "pairs": 30,
+    "bin_range": [
+      1112,
+      5408
+    ],
+    "reference_range": [
+      34283,
+      53255
+    ],
+    "maximum_triangles_per_bin": 44
+  }
+}

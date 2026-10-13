@@ -231,7 +231,7 @@ pub(crate) fn navigate(
     if pilot.mode == MovementMode::Surface {
         surface.advance(
             &pilot,
-            &terrain,
+            &mut terrain,
             &keys,
             time.delta_secs_f64(),
             solar.body(BodyId::MARS).gravitational_parameter,
@@ -693,6 +693,61 @@ mod tests {
                 MovementMode::Surface
             );
             assert!(app.world().resource::<MarsTerrain>().cube.is_some());
+        }
+    }
+
+    #[test]
+    fn migration_uses_actual_ecs_controls_pause_rotation_and_all_space_exits() {
+        let mut app = app(60);
+        {
+            let mut terrain = app.world_mut().resource_mut::<MarsTerrain>();
+            terrain.cube_enabled = true;
+            terrain.migration_enabled = true;
+        }
+        press(&mut app, KeyCode::KeyM);
+        app.world_mut().resource_mut::<Explorer>().captured = true;
+        {
+            let mut state = app.world_mut().resource_mut::<SurfaceState>();
+            state.feet = DVec3::new(96.0, 0.0005, 30.0);
+            state.yaw = 0.0;
+        }
+        app.world_mut().resource_mut::<SimulationClock>().paused = true;
+        let jd = app.world().resource::<SimulationClock>().jd;
+        for direction in [KeyCode::KeyD, KeyCode::KeyA] {
+            app.world_mut()
+                .resource_mut::<ButtonInput<KeyCode>>()
+                .reset_all();
+            app.world_mut()
+                .resource_mut::<ButtonInput<KeyCode>>()
+                .press(direction);
+            for _ in 0..240 {
+                app.update();
+                app.world_mut()
+                    .resource_mut::<ButtonInput<KeyCode>>()
+                    .clear();
+            }
+        }
+        assert_eq!(app.world().resource::<SimulationClock>().jd, jd);
+        assert_eq!(app.world().resource::<MarsTerrain>().revision, 3);
+        assert!(app.world().resource::<SurfaceState>().grounded);
+        press(&mut app, KeyCode::KeyP);
+        for _ in 0..3 {
+            press(&mut app, KeyCode::KeyT);
+        }
+        for key in [KeyCode::KeyM, KeyCode::KeyG, KeyCode::KeyO, KeyCode::KeyU] {
+            press(&mut app, key);
+            assert_eq!(app.world().resource::<Explorer>().mode, MovementMode::Space);
+            press(&mut app, KeyCode::KeyM);
+            assert_eq!(
+                app.world().resource::<Explorer>().mode,
+                MovementMode::Surface
+            );
+            assert!(
+                app.world()
+                    .resource::<MarsTerrain>()
+                    .site_obstacles
+                    .is_some()
+            );
         }
     }
 

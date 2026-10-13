@@ -1,7 +1,7 @@
 //! Contrôleur cinématique borné : boîte joueur contre relief doux et boîtes statiques.
 use super::radial_gravity;
 use crate::planets::terrain::MarsTerrain;
-use bevy::math::DVec3;
+use bevy::math::{DQuat, DVec3};
 
 pub const HALF_WIDTH_M: f64 = 0.3;
 pub const PLAYER_HEIGHT_M: f64 = 1.8;
@@ -17,7 +17,40 @@ pub struct SolidBox {
     pub min: DVec3,
     pub max: DVec3,
 }
+/// Pose exacte du proxy ; boîte de contact conservatrice dans la carte active.
+pub fn obstacle_pose(terrain: &MarsTerrain, index: usize) -> (DVec3, DVec3, DQuat) {
+    if let Some((frame, solids)) = &terrain.site_obstacles {
+        let solid = solids[index];
+        let center = (*frame * ((solid.min + solid.max) * 0.5 + DVec3::Y * terrain.radius_m))
+            - terrain.orientation * (DVec3::Y * terrain.radius_m);
+        return (
+            terrain.orientation.inverse() * center,
+            solid.max - solid.min,
+            terrain.orientation.inverse() * *frame,
+        );
+    }
+    let solid = obstacles(terrain)[index];
+    (
+        (solid.min + solid.max) * 0.5,
+        solid.max - solid.min,
+        DQuat::IDENTITY,
+    )
+}
 pub fn obstacles(terrain: &MarsTerrain) -> [SolidBox; 3] {
+    if terrain.site_obstacles.is_some() {
+        return std::array::from_fn(|index| {
+            let (center, size, rotation) = obstacle_pose(terrain, index);
+            // Enveloppe des huit coins, sans déplacer/dupliquer l'obstacle.
+            // Inclinaison <= 0,000062 rad dans ce parcours uniquement.
+            let half = (rotation * DVec3::X).abs() * size.x * 0.5
+                + (rotation * DVec3::Y).abs() * size.y * 0.5
+                + (rotation * DVec3::Z).abs() * size.z * 0.5;
+            SolidBox {
+                min: center - half,
+                max: center + half,
+            }
+        });
+    }
     // Repères de taille humaine, conventions de gameplay, pas de roches mesurées.
     [
         (0.0, -12.0, 4.0, 2.0, 2.0),

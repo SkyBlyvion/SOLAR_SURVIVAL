@@ -402,6 +402,7 @@ mod tests {
                 p2_seconds: None,
                 profile: None,
                 cube_surface: false,
+                cube_migration: false,
                 cube_validation_dir: None,
             })
             .add_plugins(ProfilingPlugin);

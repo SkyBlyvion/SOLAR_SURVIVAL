@@ -1,7 +1,7 @@
 //! Rendu local en mètres, couche séparée de la profondeur astronomique compressée.
 use crate::{
     GameSet,
-    physics::surface::obstacles,
+    physics::surface::obstacle_pose,
     planets::terrain::{CELLS, MarsTerrain, TILE_M},
     player::{Explorer, MovementMode, surface::SurfaceState},
     universe::{
@@ -174,7 +174,8 @@ fn cube_mesh(terrain: &MarsTerrain, patch: usize) -> Mesh {
         .map(|&p| terrain.site_relative(p).normalize().as_vec3().to_array())
         .collect();
     // Couleurs de diagnostic : rendent le raccord visible sans déplacer les sommets.
-    let color = if patch == 0 {
+    // Identité de patch : le patch partagé conserve sa couleur au remplacement.
+    let color = if cube.pair.keys[patch].x % 2 == 1 {
         [1.0, 0.8, 0.64, 1.0]
     } else {
         [0.68, 0.8, 1.0, 1.0]
@@ -314,12 +315,12 @@ fn sync(
     transform.rotation = surface.local_rotation(&terrain).as_quat();
     // Soustraction dans le site en f64, sans aller-retour héliocentrique.
     let eye = surface.eye(&terrain);
-    let solids = obstacles(&terrain);
     for (visual, obstacle, mut transform, mut visibility) in &mut visuals {
         let origin = if let Some(obstacle) = obstacle {
-            let solid = solids[obstacle.0];
-            transform.scale = (solid.max - solid.min).as_vec3();
-            (solid.min + solid.max) * 0.5
+            let (center, size, rotation) = obstacle_pose(&terrain, obstacle.0);
+            transform.scale = size.as_vec3();
+            transform.rotation = rotation.as_quat();
+            center
         } else {
             visual.origin
         };
@@ -403,6 +404,54 @@ mod tests {
             app.update();
             assert_eq!(app.world().resource::<TileCache>().pair, first);
         }
+        let old_colors = app
+            .world()
+            .resource::<Assets<Mesh>>()
+            .get(&first[1].1)
+            .unwrap()
+            .attribute(Mesh::ATTRIBUTE_COLOR)
+            .unwrap()
+            .clone();
+        app.world_mut()
+            .resource_mut::<MarsTerrain>()
+            .migration_enabled = true;
+        app.world_mut().resource_mut::<SurfaceState>().feet = DVec3::new(101.0, 2.0, 30.0);
+        app.world_mut()
+            .resource_scope(|world, mut terrain: Mut<MarsTerrain>| {
+                assert!(world.resource_mut::<SurfaceState>().migrate(&mut terrain));
+            });
+        app.update();
+        assert_eq!(app.world().resource::<TileCache>().pair, first);
+        assert_eq!(app.world().resource::<Assets<Mesh>>().len(), 2);
+        assert_eq!(
+            app.world()
+                .resource::<Assets<Mesh>>()
+                .get(&first[0].1)
+                .unwrap()
+                .attribute(Mesh::ATTRIBUTE_COLOR)
+                .unwrap(),
+            &old_colors
+        );
+        for (patch, (_, handle)) in first.iter().enumerate() {
+            let world = app.world();
+            let mesh = world.resource::<Assets<Mesh>>().get(handle).unwrap();
+            let cube = world.resource::<MarsTerrain>().cube.as_ref().unwrap();
+            let bevy::mesh::VertexAttributeValues::Float32x3(positions) =
+                mesh.attribute(Mesh::ATTRIBUTE_POSITION).unwrap()
+            else {
+                panic!()
+            };
+            for (&actual, &p) in positions.iter().zip(&cube.local_positions) {
+                assert_eq!(actual, local_to_render(p).unwrap().to_array());
+            }
+            assert_eq!(
+                mesh.indices().unwrap().iter().collect::<Vec<_>>(),
+                cube.pair.indices[patch]
+                    .iter()
+                    .map(|&i| i as usize)
+                    .collect::<Vec<_>>()
+            );
+        }
         for direction in [DVec3::X, DVec3::NEG_Y, DVec3::Z] {
             app.world_mut().resource_mut::<Explorer>().mode = MovementMode::Space;
             app.update();
@@ -426,6 +475,8 @@ mod tests {
             orientation: bevy::math::DQuat::IDENTITY,
             revision: 1,
             cube_enabled: false,
+            migration_enabled: false,
+            site_obstacles: None,
             cube: None,
         };
         let left = tile_mesh(&terrain, (-1, 0));
@@ -459,6 +510,8 @@ mod tests {
                 orientation: bevy::math::DQuat::IDENTITY,
                 revision: 1,
                 cube_enabled: false,
+                migration_enabled: false,
+                site_obstacles: None,
                 cube: None,
             })
             .init_resource::<Assets<Mesh>>()

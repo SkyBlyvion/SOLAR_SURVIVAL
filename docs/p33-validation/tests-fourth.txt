@@ -1,0 +1,47 @@
+   Compiling solar_survival v0.2.0 (/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL)
+    Finished `test` profile [optimized] target(s) in 6.57s
+     Running unittests src/lib.rs (target/debug/deps/solar_survival-e59e61f27a7caa37)
+
+running 24 tests
+test camera::tests::actual_ecs_controls_select_visit_and_release_cursor ... ok
+test camera::tests::long_interruption_updates_orbit_and_pose_but_caps_airborne_local_physics ... ok
+test camera::tests::surface_mouse_delta_is_integrated_once_without_delta_time ... ok
+test camera::tests::surface_pose_and_render_origin_follow_rotation_without_a_physics_tick ... ok
+test config::profiling::tests::normal_game_does_not_install_profiling_systems_or_resources ... ok
+test config::profiling::tests::profile_boundaries_keep_warmup_and_four_equal_phases ... ok
+test config::validation::tests::p2_cycle_exceeds_rotation_before_pause_and_repeats_all_exits ... ok
+test camera::tests::actual_ecs_camera_movement_is_frame_rate_independent ... ok
+test camera::tests::surface_entry_and_all_space_exits_preserve_navigation ... ok
+test camera::tests::orbital_pause_and_acceleration_do_not_change_surface_physics ... ok
+test camera::tests::migration_uses_actual_ecs_controls_pause_rotation_and_all_space_exits ... FAILED
+test planets::cube_terrain::tests::all_six_central_pairs_have_supported_interior_and_metric_budget ... ok
+test rendering::terrain::tests::rotating_site_keeps_local_proxies_and_meshes_but_changes_sun_direction ... ok
+test rendering::terrain::tests::tile_mesh_positions_match_physical_vertices_and_shared_edges ... ok
+test planets::cube_terrain::tests::spatial_index_matches_all_triangles_and_entire_footprint_across_seam ... ok
+test camera::tests::cube_pair_keeps_real_controls_clocks_pose_and_all_four_space_exits ... ok
+test rendering::terrain::tests::streaming_is_bounded_reuses_assets_and_releases_old_meshes ... ok
+test ui::menu::tests::escape_releases_cursor_then_opens_menu_and_returns_through_credits ... ok
+test ui::menu::tests::menu_blocks_navigation_and_capture_but_not_real_orbital_clock ... ok
+test ui::menu::tests::options_apply_to_both_cameras_and_window_then_reset ... ok
+test camera::tests::p2_scenario_exits_surface_twice_with_each_navigation_command ... ok
+test rendering::terrain::tests::cube_mesh_matches_contacts_and_two_handles_survive_moves_rotation_and_reentry ... ok
+test camera::tests::pause_freezes_site_rotation_but_walk_and_jump_match_accelerated_time ... ok
+test planets::cube_terrain::tests::noncentral_rectangles_cover_whole_footprints_on_all_faces ... ok
+
+failures:
+
+---- camera::tests::migration_uses_actual_ecs_controls_pause_rotation_and_all_space_exits stdout ----
+
+thread 'camera::tests::migration_uses_actual_ecs_controls_pause_rotation_and_all_space_exits' (337065) panicked at src/camera/mod.rs:731:9:
+assertion `left == right` failed
+  left: 2
+ right: 3
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    camera::tests::migration_uses_actual_ecs_controls_pause_rotation_and_all_space_exits
+
+test result: FAILED. 23 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.74s
+
+error: test failed, to rerun pass `--lib`

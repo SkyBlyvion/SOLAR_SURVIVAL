@@ -2,11 +2,11 @@
 
 Le projet avance par étapes vérifiables vers une boucle de survie sur Mars, en préservant l'exploration spatiale et l'échelle physique 1:1. Cette roadmap est la référence pour choisir le travail du prochain chat. Les dates de livraison dépendront des résultats ; les étapes futures ne sont pas des fonctionnalités déjà réalisées.
 
-Dernière mise à jour : 12 octobre 2026. Étape courante : **P3.3, première migration bornée du repère sur une même face**. P3.1 et P3.2 sont terminés sur Ubuntu de développement. La passation détaillée est dans [NEXT_CHAT](NEXT_CHAT.md), les résultats dans [VALIDATION](VALIDATION.md).
+Dernière mise à jour : 12 octobre 2026. Étape courante : **P3.4, cadrer puis étendre la migration bornée sur une même face**. P3.1, P3.2 et P3.3 sont terminés sur Ubuntu de développement. La passation détaillée est dans [NEXT_CHAT](NEXT_CHAT.md), les résultats dans [VALIDATION](VALIDATION.md).
 
 ## Fondations réalisées
 
-Version 0.2 : exploration spatiale et catalogue embarqué, repères/origine flottante en f64, FPS martien avec marche/course/saut, gravité radiale, collisions, neuf tuiles locales et repère tournant conventionnel. Les 71 tests actuels et les lancements Ubuntu sont consignés dans VALIDATION. Le menu principal, les options de session et les crédits sont disponibles ; P2 a consolidé le cycle complet, P/T et la reprise après interruption. P3.1 ajoute le contrat géométrique cube-sphere et sa démonstration isolée. P3.2 implémente une paire centrale opt-in avec contacts communs au rendu ; sa validation est consignée ci-dessous. La survie est inactive. Windows 11 reste à valider nativement.
+Version 0.2 : exploration spatiale et catalogue embarqué, repères/origine flottante en f64, FPS martien avec marche/course/saut, gravité radiale, collisions, neuf tuiles locales et repère tournant conventionnel. Les 76 tests actuels et les lancements Ubuntu sont consignés dans VALIDATION. Le menu principal, les options de session et les crédits sont disponibles ; P2 a consolidé le cycle complet, P/T et la reprise après interruption. P3.1 ajoute le contrat géométrique cube-sphere et sa démonstration isolée. P3.2 implémente une paire centrale opt-in avec contacts communs au rendu ; sa validation est consignée ci-dessous. P3.3 ajoute une transaction réversible centrale↔voisine +U, avec transport f64 et obstacles fixes dans le corps. La survie est inactive. Windows 11 reste à valider nativement.
 
 ## Étapes prévues
 
@@ -14,7 +14,7 @@ Version 0.2 : exploration spatiale et catalogue embarqué, repères/origine flot
 |---|---|---|---|
 | P1 Performances | Terminé sur le poste de développement | Protocole release fixe, temps de frame et distribution, mesures CPU/GPU, comparaison des caméras, résolution et matériaux | Mesures reproductibles conservées, limites du pilote identifiées, coût principal établi ou incertitude explicitée, prochaine action fondée sur les résultats |
 | P2 Consolidation Mars et menu | Terminé sur Ubuntu de développement | Cycle jour/nuit complet inspecté, masque solaire sous horizon radial, P/T, suspension réelle de 12 s, deux séries M/G/O/U ; menu/options/crédits demandés par l’utilisateur | 54 tests réussis, 35 captures P2, essais X11 du menu et reprise ; limitations explicites dans VALIDATION |
-| P3 Terrain au-delà du site | En cours : P3.1/P3.2 terminés, P3.3 suivant | Contrat et franchissement local opt-in validés ; extension des repères/zones suivante | Traverser des zones sans rupture de contacts ou de précision, voisinage chargé borné, budgets CPU/GPU vérifiés ; aucune génération de planète entière |
+| P3 Terrain au-delà du site | En cours : P3.1/P3.2/P3.3 terminés, P3.4 suivant | Contrat, franchissement local et première migration opt-in validés ; extension bornée hors du centre suivante | Traverser des zones sans rupture de contacts ou de précision, voisinage chargé borné, budgets CPU/GPU vérifiés ; aucune génération de planète entière |
 | P4 Première survie | Prévue | Oxygène, réserve, consommation en temps réel, recharge dans un abri et HUD | Boucle jouable consommer/recharger/échouer, indépendante de T, paramètres de gameplay documentés |
 | P5 Ressources et construction | Prévue | Une ressource récoltable, inventaire minimal, placement d'un équipement utile | Récolte, stockage et placement persistants ; collisions et coût local validés |
 | P6 Version distribuable | Prévue | Sauvegarde/chargement, persistance et réglages graphiques complémentaires, validation Windows 11 et packaging Ubuntu/Windows | Sauvegarde testée, instructions de lancement, builds et essais natifs sur les deux plateformes |
@@ -96,10 +96,32 @@ Les tests numériques/ECS couvrent les six faces centrales, comparaison de l'ind
 
 Limites P3.2 : paire centrale, même face/niveau/résolution, sphère sans relief, repère unique. Pas de migration ou chargement au-delà, passage jouable entre faces, LOD mixte, corps dynamiques, nouvelle dépendance ou validation Windows. La correction de vitesse lors du bornage s'applique aussi à la limite historique ; le site par défaut conserve ses neuf tuiles et ±4 096 m. Les essais intermédiaires avec diagnostic de curseur et vitesse aux limites sont archivés, sans leur attribuer une validation finale sans erreur.
 
-## Périmètre suivant P3.3 : une migration sur la même face
+## Périmètre P3.3 réalisé : une migration sur la même face
 
 Généraliser d'abord le fournisseur à une paire non centrale d'une même face, avec couverture conservatrice de l'empreinte malgré le quadrilatère projeté. Puis réaliser un **unique changement de repère tournant local**, opt-in et borné, vers une paire adjacente de même niveau/résolution. Préserver la pose relative au corps, la visée et la vitesse par transformations f64 ; les coordonnées des pieds, des yeux, de la gravité et du support doivent rester cohérentes. Vérifier au sol et en l'air, sans saut de caméra ou rupture de support. À la transition, deux patches résidents après remplacement ; si un chevauchement temporaire est nécessaire, en justifier et tester le plafond avant ajout.
 
 Critères : conservation numérique de pose/visée/vitesse, aller/retour par la vraie marche/course, saut pendant une migration, continuité du support, assets réutilisés, sorties M/G/O/U, publication après physique et deux horloges conservées. Définir la propriété des obstacles pour éviter une duplication ou un déplacement lors du remplacement. Le passage entre faces reste une étape ultérieure ; pas de LOD mixte, planète entière, survie, Avian ou refonte du contrôleur. Les choix de niveau/résolution actuels restent à réévaluer avec un futur relief et sur la cible, sans supposer leur validité universelle.
 
 - 12 octobre 2026 : P3.2 validé sur Ubuntu : première paire jouable centrale, contacts communs au rendu, erreurs observées de diagnostic/bornage corrigées, preuves conservées. Préparer P3.3 sur une même face avant les arêtes entre faces.
+
+
+## Bilan P3.3 et périmètre suivant P3.4
+
+P3.3 est **terminé sur Ubuntu de développement**, dans le parcours centrale↔voisine +U seulement. 76 tests, fmt/check/all-targets/Clippy/build release réussis, huit migrations de marche/course dont une en l'air, P/×1000 et M/G/O/U, 54 captures finales inspectées dans les trois campagnes code 0. Le lanceur initial interrompu code 143 pendant la fin de la régression historique est conservé séparément ; relance historique seule code 0. Résultats/limites dans [VALIDATION](VALIDATION.md), conventions dans [CUBE_SPHERE](CUBE_SPHERE.md).
+
+| Critère P3.3 | Résultat et limite |
+|---|---|
+| Fournisseur non central et couverture entière | Rectangle certifié par tous les segments de frontière ; trente positions de paire testées sur six faces, sphère sans relief |
+| Conservation de pose, visée, vitesse et gravité | Transfert f64 testé au sol/2 m/20 m ; base de visée transportée, publication après physique |
+| Marche/course aller-retour et saut pendant migration | 30/60/144 FPS ; huit migrations graphiques dont une en l'air, réception et repos inspectés |
+| Obstacles | Trois objets possédés par le site d'entrée, poses fixes dans le corps ; enveloppe AABB conservatrice <0,31 mm, limitée à cette petite inclinaison |
+| Patches/assets et horloges | Deux patches après remplacement, deux handles réutilisés ; candidate et ancienne paire uniquement en CPU pendant transaction ; P/T et sorties conservés |
+| Régressions et coût | P3.2 22 captures, historique 10 captures, codes 0 ; comptes bornés et dix mesures CPU ponctuelles, sans validation GPU/VRAM complète ou cible |
+
+**P3.4 : cadrer puis étendre sur une même face.** Le fournisseur accepte déjà les paires décentrées, mais les seuils de migration et le couloir sont spécifiques au centre. Les tests près des coins observent un rectangle intérieur ~161×55 m contre ~412×205 m au centre : les seuils 100/−110 m ne peuvent pas y être copiés. Ce résultat justifie une étape bornée sur une même face avant les arêtes entre faces.
+
+Choisir une paire franchement décentrée et une voisine de même niveau/résolution ; définir l'admission et l'hystérésis à partir de la couverture/du recouvrement certifiés. Préserver pose/visée/vitesse au sol et en l'air ; réévaluer le changement d'alignement de la boîte joueur et l'enveloppe des obstacles avant une inclinaison accrue. Garder le choix de candidate borné, sans construction répétée en cas de refus. Deux patches après remplacement et handles réutilisés ; justifier/tester tout plafond transitoire supplémentaire. Critères de fin : aller-retour et saut par contrôles ECS, conservation numérique, absence de rupture de support/caméra, couvertures/limites vérifiées et captures inspectées ; centrales/P3.2/historique en régression. Si ces critères ne passent pas, préparer la continuation de P3.4.
+
+Aucun passage jouable entre faces automatique, refonte simultanée du contrôleur, planète entière, LOD mixte, relief scientifique, survie, corps dynamiques, Avian ou changement Bevy. Les budgets CPU/GPU plus complets et la validation cible restent transversaux ; P3 global n'est pas déclaré terminé. Windows reste à valider nativement.
+
+- 12 octobre 2026 : P3.3 validé dans son parcours borné. Suite P3.4 sur même face, motivée par les couvertures non centrales observées et les seuils encore spécifiques au centre ; passages jouables entre faces différés.

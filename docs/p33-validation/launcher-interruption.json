@@ -1,0 +1,9 @@
+{
+  "launcher_exit_code": 143,
+  "historical_game_exit_code": null,
+  "cause": "indeterminate",
+  "captures": 10,
+  "log": "historical-launcher-143.txt",
+  "folder": "historical-launcher-143/docs",
+  "no_application_process_remaining": true
+}

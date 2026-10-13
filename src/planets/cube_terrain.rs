@@ -9,7 +9,7 @@ const BIN_M: f64 = 4.0;
 
 pub struct CubeTerrain {
     pub pair: PatchPair,
-    /// Soustraction d'origine et rotation f64 effectuées une fois à l'entrée.
+    /// Soustraction d'origine et rotation f64 une fois par entrée/remplacement.
     pub local_positions: Vec<DVec3>,
     /// Rectangle intérieur conservateur, avec 1 m de réserve géométrique.
     pub min: DVec3,
@@ -20,7 +20,7 @@ pub struct CubeTerrain {
 
 impl CubeTerrain {
     /// Face dominante éclairée, deux patches centraux de part et d'autre de u=0.
-    /// Cette restriction évite tout changement de face/repère pendant le parcours.
+    /// Entrée du parcours ; le changement de carte est un opt-in distinct.
     pub fn new(outward: DVec3, radius_m: f64) -> (DQuat, Self) {
         let face = FaceCoordinates::from_direction(outward)
             .expect("Direction valide")
@@ -32,9 +32,28 @@ impl CubeTerrain {
             x: middle - 1,
             y: middle,
         };
-        let pair = PatchPair::new(key, PatchEdge::PositiveU, SEGMENTS, radius_m).unwrap();
-        let up = face.direction(0.0, 1.0 / (1u32 << LEVEL) as f64).unwrap();
-        let (_, u, _) = face.basis();
+        Self::from_key(key, radius_m).expect("Paire centrale valide")
+    }
+
+    /// Deux patches +U sur la même face, y compris hors du centre.
+    /// Le rectangle est certifié par TOUS les segments de frontière projetés.
+    pub fn from_key(key: PatchKey, radius_m: f64) -> Option<(DQuat, Self)> {
+        // Ce fournisseur reste borné à la résolution P3.2 et à une largeur
+        // nominale de patch de 128–256 m ; ce n'est pas un LOD général.
+        let width = 2.0 * radius_m / (1u32 << LEVEL) as f64;
+        if key.level != LEVEL || !width.is_finite() || !(128.0..=256.0).contains(&width) {
+            return None;
+        }
+        let pair = PatchPair::new(key, PatchEdge::PositiveU, SEGMENTS, radius_m)?;
+        if pair.keys[1].face != key.face {
+            return None;
+        }
+        let count = (1u32 << key.level) as f64;
+        let up = key.face.direction(
+            2.0 * (key.x + 1) as f64 / count - 1.0,
+            2.0 * (key.y as f64 + 0.5) / count - 1.0,
+        )?;
+        let (_, u, _) = key.face.basis();
         let x = (u - up * u.dot(up)).normalize();
         let orientation = DQuat::from_mat3(&DMat3::from_cols(x, up, x.cross(up)));
         let origin = up * radius_m;
@@ -43,29 +62,42 @@ impl CubeTerrain {
             .iter()
             .map(|&p| orientation.inverse() * (p - origin))
             .collect();
-        // Patches centraux presque rectangulaires ; les extrema des quatre
-        // coins externes donnent un rectangle inscrit, réduit encore de 1 m.
-        let left = key;
-        let right = pair.keys[1];
-        let corners = [
-            (left, 0, 0),
-            (left, 0, SEGMENTS),
-            (right, SEGMENTS, 0),
-            (right, SEGMENTS, SEGMENTS),
-        ]
-        .map(|(key, i, j)| {
-            orientation.inverse() * (key.vertex(i, j, SEGMENTS, radius_m).unwrap() - origin)
-        });
-        let min = DVec3::new(
-            corners[0].x.max(corners[1].x) + 1.0,
-            0.0,
-            corners[1].z.max(corners[3].z) + 1.0,
-        );
-        let max = DVec3::new(
-            corners[2].x.min(corners[3].x) - 1.0,
-            0.0,
-            corners[0].z.min(corners[2].z) - 1.0,
-        );
+        // Les arêtes de triangles présentes une seule fois forment la frontière.
+        // Intersection des demi-plans intérieurs = noyau conservateur du polygone,
+        // même quand la projection des bords sphériques n'est pas un rectangle.
+        let mut edges = BTreeMap::<(u32, u32), usize>::new();
+        for group in &pair.indices {
+            for &[a, b, c] in group.as_chunks::<3>().0 {
+                for (a, b) in [(a, b), (b, c), (c, a)] {
+                    *edges.entry((a.min(b), a.max(b))).or_default() += 1;
+                }
+            }
+        }
+        let lo = local_positions.iter().copied().reduce(DVec3::min)?;
+        let hi = local_positions.iter().copied().reduce(DVec3::max)?;
+        let mut hx = (-lo.x).min(hi.x) - 1.0;
+        let mut hz = (-lo.z).min(hi.z) - 1.0;
+        let mut scale: f64 = 1.0;
+        for ((a, b), occurrences) in edges {
+            if occurrences != 1 {
+                continue;
+            }
+            let a = local_positions[a as usize];
+            let b = local_positions[b as usize];
+            let mut normal = DVec3::new(-(b.z - a.z), 0.0, b.x - a.x).normalize();
+            if normal.dot(-a) < 0.0 {
+                normal = -normal;
+            }
+            let distance = normal.dot(-a);
+            scale = scale.min((distance - 1.0) / (normal.x.abs() * hx + normal.z.abs() * hz));
+        }
+        if scale <= 0.0 {
+            return None;
+        }
+        hx *= scale;
+        hz *= scale;
+        let min = DVec3::new(-hx, 0.0, -hz);
+        let max = -min;
         let triangles: Vec<_> = pair
             .indices
             .iter()
@@ -82,7 +114,7 @@ impl CubeTerrain {
                 }
             }
         }
-        (
+        Some((
             orientation,
             Self {
                 pair,
@@ -92,7 +124,7 @@ impl CubeTerrain {
                 triangles,
                 bins,
             },
-        )
+        ))
     }
 
     /// Aucun support extrapolé au-delà du rectangle résident. L'index spatial
@@ -105,7 +137,11 @@ impl CubeTerrain {
         let x1 = feet.x + half_width;
         let z0 = feet.z - half_width;
         let z1 = feet.z + half_width;
-        if x0 < self.min.x || x1 > self.max.x || z0 < self.min.z || z1 > self.max.z {
+        if x0 < self.min.x - 1e-9
+            || x1 > self.max.x + 1e-9
+            || z0 < self.min.z - 1e-9
+            || z1 > self.max.z + 1e-9
+        {
             return None;
         }
         let mut height: Option<f64> = None;
@@ -174,6 +210,92 @@ mod tests {
                     .is_none()
             );
             assert!(cube.support_height(DVec3::splat(f64::NAN), 0.3).is_none());
+        }
+    }
+
+    #[test]
+    fn noncentral_rectangles_cover_whole_footprints_on_all_faces() {
+        let mut invalid = PatchKey {
+            face: CubeFace::PositiveX,
+            level: 24,
+            x: 0,
+            y: 0,
+        };
+        assert!(CubeTerrain::from_key(invalid, R).is_none());
+        invalid.level = LEVEL;
+        for radius in [0.0, f64::NAN, 1e12] {
+            assert!(CubeTerrain::from_key(invalid, radius).is_none());
+        }
+        for face in CubeFace::ALL {
+            for (x, y) in [
+                (16384, 16384),
+                (2000, 1000),
+                (31000, 29000),
+                (0, 0),
+                (32766, 32767),
+            ] {
+                let key = PatchKey {
+                    face,
+                    level: LEVEL,
+                    x,
+                    y,
+                };
+                let (orientation, cube) = CubeTerrain::from_key(key, R).unwrap();
+                let counts = cube.index_counts();
+                println!("{key:?} bounds {:?} index {counts:?}", cube.max);
+                assert!(counts.0 <= 5700 && counts.1 <= 85000 && counts.2 <= 64);
+                for i in 0..=12 {
+                    for j in 0..=12 {
+                        let p = DVec3::new(
+                            cube.min.x + 0.3 + (cube.max.x - cube.min.x - 0.6) * i as f64 / 12.0,
+                            0.0,
+                            cube.min.z + 0.3 + (cube.max.z - cube.min.z - 0.6) * j as f64 / 12.0,
+                        );
+                        let h = cube.support_height(p, 0.3).unwrap();
+                        for dx in [-0.3, 0.0, 0.3] {
+                            for dz in [-0.3, 0.0, 0.3] {
+                                assert!(
+                                    h + 1e-10
+                                        >= cube
+                                            .support_height(p + DVec3::new(dx, 0.0, dz), 0.0)
+                                            .unwrap()
+                                );
+                            }
+                        }
+                    }
+                }
+                let brute = cube
+                    .triangles
+                    .iter()
+                    .filter_map(|ids| {
+                        triangle_support(
+                            ids.map(|i| cube.local_positions[i as usize]),
+                            -0.3,
+                            0.3,
+                            -0.3,
+                            0.3,
+                        )
+                    })
+                    .reduce(f64::max)
+                    .unwrap();
+                assert_eq!(cube.support_height(DVec3::ZERO, 0.3).unwrap(), brute);
+                for &p in &cube.local_positions {
+                    assert!(((orientation * (p + DVec3::Y * R)).length() - R).abs() < 3e-9);
+                }
+                assert!(cube.support_height(cube.max, 0.3).is_none());
+            }
+            assert!(
+                CubeTerrain::from_key(
+                    PatchKey {
+                        face,
+                        level: LEVEL,
+                        x: 32767,
+                        y: 0
+                    },
+                    R
+                )
+                .is_none()
+            );
         }
     }
 
