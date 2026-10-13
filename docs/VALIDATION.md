@@ -1,4 +1,60 @@
-# Validation Solar Survival 0.2 — P4 : survie et abri réutilisable
+# Validation Solar Survival 0.2 — P5 : récupération et construction
+
+13 octobre 2026. Départ réel HEAD **94036f8**, P4 commité, seul NEXT_CHAT modifié par l’utilisateur ; copie exacte dans [NEXT_CHAT-before](p5-validation/NEXT_CHAT-before.md). Changements P5 et preuves **non commités**. Historiques conservés. Rust stable 1.99.0, édition 2024, Bevy **exactement =0.19.1**, Cargo.toml/Cargo.lock et dépendances inchangés. Ubuntu 24.04.5 LTS/X11 DISPLAY=:1, i7-6700K/GTX 1060 3 Go, Vulkan/NVK/Mesa 25.2.8. [Environnement et empreintes finaux](p5-validation/final/environment.json), [contexte graphique](p5-validation/graphics-final/environment.json), [notes des essais](p5-validation/NOTES.md).
+
+La boucle normale est récupération→inventaire→prévisualisation→confirmation→abri utilisable. Huit caisses finies, E à 2,5 m, six alliage par caisse, recette à 12. B/flèches/J-L/Entrée, vert/rouge avec motif, X/B/Échap pour annuler sans coût. Le même OxygenShelter P4 est installé avec ses contacts et son service. Stock/dépôts/bâtiments conservés en session ; aucune sauvegarde disque. [Règles et architecture](CONSTRUCTION.md).
+
+## Vérifications finales P5
+
+| Vérification | Résultat |
+|---|---|
+| cargo fmt --check | Réussi |
+| cargo check --locked, check --all-targets --locked | Réussis |
+| cargo test --locked | **110 tests** : 34 internes, 9 construction, 21 fondations, 15 surface, 9 cube-sphere, 4 contacts, 3 migrations, 4 hors centre, 4 mondiaux, 7 survie |
+| cargo clippy --all-targets --locked -- -D warnings | Réussi |
+| cargo build --release --locked | Réussi, **154,685 s** murales sur les sources finales ; premier build 158,094 s conservé |
+| Diagnostic final P5 release | **Code 0**, **59,466 s** murales, **16 captures**, aucun ERROR/WARN/panic |
+| Inspection visuelle | Toutes les seize captures via quatre planches ; originaux 06, 14 et 15 également inspectés |
+| Concordance | Empreintes sources/binaire inchangées pendant et après la campagne finale ; sources conformes au build final |
+| Windows natif / RTX 4050 et Core i5 | Non exécutés |
+
+[Six commandes et résultats finaux](p5-validation/final/build-results.json), [journaux tests](p5-validation/final/tests.txt), [campagne finale](p5-validation/graphics-final/results.json), [journal](p5-validation/graphics-final/game.txt), [captures/télémétrie](p5-validation/graphics-final/captures/), [manifest d’inspection](p5-validation/graphics-final/inspection/manifest.json). Aucun changement de source Rust après ce build/cette campagne ; seules documentation et preuves d’inspection complétées ensuite.
+
+## Couverture numérique et ECS
+
+Les 99 tests antérieurs passent. Onze tests supplémentaires :
+
+- Portée E, caisse épuisée une seule fois, stock réel, conservation des huit dépôts/épuisement et inventaire après M/G/O/U ; segment de visibilité bloqué par une pièce solide.
+- Preview interdite faute d’alliage, confirmation sans installation/paiement, annulation X/Échap à stock intact, confirmation admise payée une seule fois, publication de six nouveaux colliders. Oxygen consomme pendant la manipulation.
+- Refus joueur/abri/obstacle/caisse ; couverture locale insuffisante ; terrain historique trop irrégulier et extrema des triangles comparés aux hauteurs sous le carré entier. Les tests mondiaux antérieurs vérifient toujours aire/empreintes partielles, faces/arêtes/coins et contacts.
+- Flèches et rotation à 30/60/144 FPS, position et orientation corporelles de la preview ; tolérance 10⁻⁶ sur les durées manuelles arrondies aux nanosecondes.
+- Marche par la porte de l’abri **construit** puis recharge pleine, mur bloquant. Rebasage et recharge du premier abri et de l’abri construit dans la **carte déjà rebasée**, sans enter_home, poses fixes et nombre de colliders conservés.
+- Deux abris construits par les mêmes touches/recette, identités et orientations distinctes, recharge de chacun, conservation à chaque sortie M/G/O/U. Pas de logique particulière pour la seconde installation.
+- Revalidation d’un stock devenu insuffisant malgré l’ancienne preview admise, annulation à échec oxygène et conservation d’inventaire lors de R.
+- Menu ECS/Échap : annulation avant ouverture, stock/instances conservés et absence de construction par Entrée à la reprise du menu.
+- Proxies de caisses/preview : un seul cube partagé, huit caisses et six pièces, mêmes entités au rebasage, reconstruction des centres corporels à moins de 5 µm, matériau rouge après refus, suppression après récolte et en espace, recréation des sept dépôts restants au retour.
+
+Ces tests injectent les touches ECS et préparent certaines poses. Ils ne simulent pas les périphériques OS. Les régressions physiques et numériques P2/P3/P4 sont conservées ; pas de replay graphique systématique de toutes les campagnes historiques.
+
+## Parcours graphique et correction visuelle
+
+Le premier parcours [graphics](p5-validation/graphics/results.json) termine avec code 0, 59,478 s, quinze captures, aucune erreur/alerte/panic et empreintes inchangées. Ses assertions de récolte, placement, confirmation, recharge, mur, rebasage, espace et menu passent. L’original 06 inspecté révèle que l’aide générale recouvre le HUD P5. Les preuves restent conservées ; cette capture ne valide pas la lisibilité finale.
+
+Le HUD P5 est remonté à 100 px du bas. Le diagnostic final déplace aussi le fantôme plus loin, masque la télémétrie avec H après les premières vues, neutralise les deltas souris OS parasites et ajoute une capture du menu. Il collecte réellement deux caisses après marche ECS, teste manque d’alliage/confirmation refusée, stock 6 puis 12, volume occupé rouge, déplacement/orientation verte, annulation à stock intact, nouvelle preview/confirmation, stock 0 et deuxième abri visible. Il prépare le départ devant sa porte, marche dedans et recharge, pousse contre le mur, prépare le départ de course puis parcourt ~64 m en course avec **un rebasage**, effectue M aller/retour, annule la preview dans le menu avec réserve/stock constants, puis prépare l’approche et marche/recharge à nouveau dans l’abri construit. Aucun alliage ni bâtiment injecté : E, B, flèches, L et Entrée utilisent la production. Les réserves de 60 s et départs devant porte/course sont des préparations diagnostiques explicites ; il ne s’agit pas d’un parcours manuel continu ou d’une simulation des périphériques OS.
+
+L’inspection des quatre planches et originaux 06/14/15 confirme : commandes/motifs lisibles au-dessus de l’aide générale, couleurs et ouverture de l’abri dans la preview, fantôme déplacé/tourné entièrement dans le cadre, stock inchangé à annulation puis 0 à confirmation, portes/murs/toit, HUD de recharge sur abri 2, site après rebasage, Mars spatiale, menu sans HUD/preview et retour fonctionnel. Avec H, oxygène et inventaire restent visibles. Assemblage simple de cubes artistiques sans sas/décoration ; caisses sans collider de déplacement ; marqueurs astronomiques et limite lointaine du terrain restent ceux du prototype.
+
+## Budgets et limites
+
+Cube partagé par abri/caisses/preview, trois matériaux P5 supplémentaires ; ≤8 proxies de caisse, six de preview, six par abri local à 120 m. Admission ≤32 abris, plafond conservateur 206 proxies hors terrain/obstacles ; ressources normales finies permettent seulement cinq abris totaux et ≤44 proxies conservateurs. Données physiques corporelles f64 et collections linéaires bornées ; aucune génération de mesh par frame. Le terrain conserve ≤13 patches, niveau 15/32 segments, **sans LOD adaptatif**. Ces plafonds structurels ne mesurent pas toute la RAM/VRAM ou les buffers du renderer.
+
+Le rebasage final isolé journalise **6,567 ms CPU**, captures actives, hors synchronisation des meshes et GPU. Aucun benchmark P5, attribution de régression/gain ou garantie 60 FPS. Les premières captures avec télémétrie affichent environ 14–15 FPS, relevés ponctuels non comparables aux baselines historiques. La prochaine phase dédiée doit mesurer le rendu, les deux caméras, le streaming et les transitions LOD sur des fenêtres comparables ; [PERFORMANCE](PERFORMANCE.md), [ROADMAP](ROADMAP.md).
+
+Pas de nouvelle suspension réelle, autre DPI, cycle P2 complet, test OS des périphériques, validation native Windows/RTX 4050/Core i5 ou mesure mémoire exhaustive. Ressource initiale finie, pas de réseau mondial/renouvellement ; aucune sauvegarde disque, relief mondial scientifique ou LOD livré par P5. **P5 réalisé sur Ubuntu** dans ces conventions ; la phase complète d’optimisation/LOD/streaming vient maintenant avant sauvegarde/distribution P6.
+
+---
+
+# Historique : validation Solar Survival 0.2 — P4 : survie et abri réutilisable
 
 13 octobre 2026. Départ réel Git **07e7af8**, terrain mondial déjà commité, avec seulement NEXT_CHAT modifié par l’utilisateur ; le prompt précédent citait un HEAD plus ancien. La copie exacte de cette passation est conservée dans [NEXT_CHAT-before](p4-validation/NEXT_CHAT-before.md). Les nouveaux changements P4 sont **non commités**. Aucune preuve historique supprimée/écrasée. Rust stable 1.99.0, édition 2024, Bevy **exactement 0.19.1**, Cargo.toml/Cargo.lock et dépendances inchangés. Ubuntu 24.04.5 LTS/X11 DISPLAY=:1, i7-6700K/GTX 1060 3 Go, Vulkan/NVK/Mesa 25.2.8. [Environnement final](p4-validation/final/environment.json), [contexte graphique et empreintes](p4-validation/graphics/environment.json), [notes](p4-validation/NOTES.md).
 

@@ -147,7 +147,22 @@ impl GlobeTerrain {
         {
             return None;
         }
+        self.query_range(feet, half, false).map(|v| v.1)
+    }
+    /// Admission construction : carré conservateur entièrement couvert, extrema exacts.
+    pub fn height_range(&self, feet: DVec3, half: f64) -> Option<(f64, f64)> {
+        self.query_range(feet, half, true)
+    }
+    fn query_range(&self, feet: DVec3, half: f64, include_min: bool) -> Option<(f64, f64)> {
+        if !feet.is_finite()
+            || !half.is_finite()
+            || !(0.0..=5.0).contains(&half)
+            || feet.x.hypot(feet.z) > REBASE_M + 2.0
+        {
+            return None;
+        }
         let mut height: Option<f64> = None;
+        let mut minimum = f64::INFINITY;
         let mut covered_area = 0.0;
         let first_bin = (bin(feet.x - half), bin(feet.z - half));
         // Un triangle est traité dans sa première case intersectée seulement :
@@ -169,6 +184,19 @@ impl GlobeTerrain {
                             feet.z + half,
                         ) {
                             height = Some(height.map_or(h, |v| v.max(h)));
+                            if include_min {
+                                let inverted = triangle.map(|p| DVec3::new(p.x, -p.y, p.z));
+                                minimum = minimum.min(
+                                    -triangle_support_area(
+                                        inverted,
+                                        feet.x - half,
+                                        feet.x + half,
+                                        feet.z - half,
+                                        feet.z + half,
+                                    )?
+                                    .0,
+                                );
+                            }
                             covered_area += area;
                         }
                     }
@@ -185,7 +213,7 @@ impl GlobeTerrain {
         if covered_area < 4.0 * half * half - 1e-9 {
             return None;
         }
-        height
+        height.map(|maximum| (minimum, maximum))
     }
     pub fn index_counts(&self) -> (usize, usize, usize) {
         (

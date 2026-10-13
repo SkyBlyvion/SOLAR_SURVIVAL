@@ -1,5 +1,6 @@
 use crate::universe::{MAX_JD, MIN_JD};
 use bevy::prelude::*;
+mod construction_validation;
 mod cube_validation;
 mod globe_validation;
 pub mod profiling;
@@ -8,6 +9,7 @@ pub mod validation;
 #[derive(Resource, Debug)]
 pub struct GameConfig {
     pub start_jd: f64,
+    pub construction_validation_dir: Option<std::path::PathBuf>,
     pub survival_validation_dir: Option<std::path::PathBuf>,
     pub smoke_seconds: Option<f64>,
     pub surface_smoke_seconds: Option<f64>,
@@ -40,6 +42,8 @@ impl Default for GameConfig {
             |p| p.global_terrain,
         );
         Self {
+            construction_validation_dir: std::env::var_os("SOLAR_CONSTRUCTION_VALIDATE_DIR")
+                .map(std::path::PathBuf::from),
             survival_validation_dir: std::env::var_os("SOLAR_SURVIVAL_VALIDATE_DIR")
                 .map(std::path::PathBuf::from),
             mars_global,
@@ -85,6 +89,7 @@ impl Default for GameConfig {
 impl GameConfig {
     pub fn automated(&self) -> bool {
         self.profile.is_some()
+            || self.construction_validation_dir.is_some()
             || self.survival_validation_dir.is_some()
             || (self.mars_global && self.globe_validation_dir.is_some())
             || (self.cube_surface && self.cube_validation_dir.is_some())

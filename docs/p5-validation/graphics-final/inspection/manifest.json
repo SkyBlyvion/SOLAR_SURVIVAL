@@ -1,0 +1,102 @@
+[
+  {
+    "sheet": "sheet-00.jpg",
+    "captures": [
+      {
+        "capture": "stage-00.png",
+        "label": "Arrivée, caisses",
+        "sha256": "f34923c1e669b354feeca07bd27fa5d101bd54b33ba61bd8b2f62401ce5a9a21"
+      },
+      {
+        "capture": "stage-01.png",
+        "label": "Refus : alliage insuffisant",
+        "sha256": "b9ba917d3f31fa8170834aee562ba40612694bfa75bae27ae91b79f1d90d3434"
+      },
+      {
+        "capture": "stage-02.png",
+        "label": "Confirmation refusée",
+        "sha256": "a3b0f133a7cc0948ac552021cb61771bbe8afd7c569a64664cfecf3b1e23c963"
+      },
+      {
+        "capture": "stage-03.png",
+        "label": "Stock : 6 alliage",
+        "sha256": "f97f18451a24ed5be7ded867d1958aaaa981570dee3ecf1d4ee47b0e3098beff"
+      }
+    ]
+  },
+  {
+    "sheet": "sheet-01.jpg",
+    "captures": [
+      {
+        "capture": "stage-04.png",
+        "label": "Stock : 12 alliage",
+        "sha256": "ba413054f73c00a2adb1a23b9cb7e82da30ebd6140dc7830f9b96f469c326371"
+      },
+      {
+        "capture": "stage-05.png",
+        "label": "Refus : volume occupé",
+        "sha256": "d06b270dd45d49b8f33faca66ad8a06b98865330c9e04fbd08170f0b5ef6e152"
+      },
+      {
+        "capture": "stage-06.png",
+        "label": "Fantôme vert tourné/déplacé",
+        "sha256": "3c4f5593e6c25d0b01411fe71a3615db3e2540b4d2c94d2dd9668157da533e5c"
+      },
+      {
+        "capture": "stage-07.png",
+        "label": "Annulation : stock inchangé",
+        "sha256": "782d32626b7fccfa4deb50a98512702f15dca6898a07b2d84b215afaddf3d519"
+      }
+    ]
+  },
+  {
+    "sheet": "sheet-02.jpg",
+    "captures": [
+      {
+        "capture": "stage-08.png",
+        "label": "Nouvelle preview admise",
+        "sha256": "6aa92950fb1325eaf8f7c91a5d6aa60102930ba61b045e0fc1bdb421037110c9"
+      },
+      {
+        "capture": "stage-09.png",
+        "label": "Construit : stock 0",
+        "sha256": "96d73a27cd710e64d735273a4e3d433e167991091e1dbe29362e5c29f6adbaf5"
+      },
+      {
+        "capture": "stage-10.png",
+        "label": "Intérieur et recharge",
+        "sha256": "7828d05b929128e194052456c2a17aa59b8819a57d56a7e1659e67af72516a55"
+      },
+      {
+        "capture": "stage-11.png",
+        "label": "Contact mur",
+        "sha256": "3dba3b7a3cc37d083073b05e5120f940fd0253acb2e871350c5dfc625403ecb0"
+      }
+    ]
+  },
+  {
+    "sheet": "sheet-03.jpg",
+    "captures": [
+      {
+        "capture": "stage-12.png",
+        "label": "Après rebasage",
+        "sha256": "489cf07cc040c30b4f59f4d44c37d3f65a3e16e7ccf1c3035c282ab69da57b6c"
+      },
+      {
+        "capture": "stage-13.png",
+        "label": "Mars spatiale",
+        "sha256": "4139393835ca913fbafb8eaee7ac6539955fe85cd26c2d76b1560e18b9015ef3"
+      },
+      {
+        "capture": "stage-14.png",
+        "label": "Menu : preview annulée",
+        "sha256": "17a7659fe2c477b645819278209915ba4ae34e3d4f5cd200cb4bf4d1b34e35ab"
+      },
+      {
+        "capture": "stage-15.png",
+        "label": "Retour : recharge abri 2",
+        "sha256": "b1803d79a22b7ff8a0ecae7ba027bea67e590b6e7bd084f8e57a6b104127c2f3"
+      }
+    ]
+  }
+]

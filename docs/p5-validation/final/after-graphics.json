@@ -1,0 +1,17 @@
+{
+  "source_hashes_match_final_build": true,
+  "binary_hash_matches_final_build": true,
+  "all_six_checks_pass": true,
+  "graphics_exit_code": 0,
+  "graphics_hashes_unchanged": true,
+  "inspected_captures": 16,
+  "full_size_inspected": [
+    "06",
+    "14",
+    "15"
+  ],
+  "missing_document_links": [],
+  "cargo_unchanged": true,
+  "git_diff_check_exit_code": 0,
+  "windows_validated": false
+}

@@ -69,7 +69,9 @@ impl Plugin for SurvivalPlugin {
         let config = app.world().resource::<GameConfig>();
         // Les campagnes historiques gardent leurs scènes exactes ; le diagnostic P4 est actif.
         let enabled = !config.automated() && !config.cube_surface
-            || config.survival_validation_dir.is_some() && config.profile.is_none();
+            || (config.survival_validation_dir.is_some()
+                || config.construction_validation_dir.is_some())
+                && config.profile.is_none();
         app.insert_resource(Oxygen {
             enabled,
             ..default()
@@ -83,7 +85,7 @@ impl Plugin for SurvivalPlugin {
         );
     }
 }
-fn update(
+pub(crate) fn update(
     time: Res<Time<Real>>,
     menu: Option<Res<MenuState>>,
     pilot: Res<Explorer>,

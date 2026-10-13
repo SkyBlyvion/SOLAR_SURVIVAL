@@ -57,3 +57,8 @@ Ce parcours est une sphère martienne complète jouable, avec chargement local. 
 Le chargement dynamique de treize patches est un voisinage à niveau/résolution fixes, **pas un système de LOD adaptatif**. L’extension demandée devra choisir plusieurs niveaux de détail selon la distance du joueur, produire des raccords entre niveaux sans fissures, gérer les transitions sans oscillation et conserver des contacts précis autour du joueur. Budgets de préparation/chargement CPU et meshes GPU à mesurer ; pas de génération de planète entière. Cette fonctionnalité reste future et possède ses propres critères dans [ROADMAP](ROADMAP.md).
 
 P4 ajoute un abri de recharge fixe dans le corps. Le retour normal M conserve désormais le site de session ; R après échec revient dans l’abri. Poses, contacts orientés, proxies et règles d’oxygène dans [SURVIVAL](SURVIVAL.md). Les campagnes historiques demeurent sans survie.
+
+
+## P5 : admission locale des constructions
+
+Le fournisseur expose aussi les extrema exacts sous un carré de construction (demi-largeur ≤5 m), avec le même index et certificat d’aire ; les contacts du joueur restent bornés à ≤1 m. La preview utilise un carré conservateur de 4,5 m entièrement dans le disque local de 66 m, sans charger de candidate ni modifier le terrain. Près de la bordure, avancer jusqu’au rebasage peut rendre le placement admissible. Bâtiments et dépôts sont fixes dans le corps et survivent aux rebasages/retours spatiaux. [CONSTRUCTION](CONSTRUCTION.md) décrit sol, volumes, coûts et budgets. Le chargement reste à résolution fixe, sans LOD adaptatif.

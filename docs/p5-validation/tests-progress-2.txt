@@ -1,0 +1,15 @@
+   Compiling solar_survival v0.2.0 (/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL)
+    Finished `test` profile [optimized] target(s) in 17.23s
+     Running tests/construction.rs (target/debug/deps/construction-bf3395f5fe89964e)
+
+running 7 tests
+test admission_covers_full_triangles_and_rejects_historical_rough_ground ... ok
+test stale_preview_is_revalidated_before_payment_and_failure_cancels ... ok
+test placement_blocks_player_obstacle_building_deposit_and_uncovered_terrain ... ok
+test rejected_cancelled_and_confirmed_placement_pay_only_once ... ok
+test harvest_range_depletion_inventory_and_session_returns ... ok
+test preview_controls_use_delta_time_and_follow_rotation ... ok
+test constructed_shelter_door_wall_service_and_rebased_instances ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.23s
+

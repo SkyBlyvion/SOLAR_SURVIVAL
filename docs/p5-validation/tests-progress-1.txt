@@ -1,0 +1,34 @@
+   Compiling solar_survival v0.2.0 (/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL)
+    Finished `test` profile [optimized] target(s) in 1.48s
+     Running tests/construction.rs (target/debug/deps/construction-bf3395f5fe89964e)
+
+running 7 tests
+test admission_covers_full_triangles_and_rejects_historical_rough_ground ... FAILED
+test placement_blocks_player_obstacle_building_deposit_and_uncovered_terrain ... FAILED
+test stale_preview_is_revalidated_before_payment_and_failure_cancels ... ok
+test rejected_cancelled_and_confirmed_placement_pay_only_once ... ok
+test harvest_range_depletion_inventory_and_session_returns ... ok
+test preview_controls_use_delta_time_and_follow_rotation ... ok
+test constructed_shelter_door_wall_service_and_rebased_instances ... ok
+
+failures:
+
+---- admission_covers_full_triangles_and_rejects_historical_rough_ground stdout ----
+
+thread 'admission_covers_full_triangles_and_rejects_historical_rough_ground' (98426) panicked at tests/construction.rs:199:14:
+called `Result::unwrap_err()` on an `Ok` value: ()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- placement_blocks_player_obstacle_building_deposit_and_uncovered_terrain stdout ----
+
+thread 'placement_blocks_player_obstacle_building_deposit_and_uncovered_terrain' (98429) panicked at tests/construction.rs:163:9:
+6 8 candidate Placement { position_m: DVec3(-2347841.6820924017, 1176770.9822004293, -2142792.510075919), orientation: DQuat(-0.3851369289898482, 0.0, 0.42199426402904766, 0.8207255247979381), verdict: Ok(()) } deposits [Salvage { position_m: DVec3(-2347853.933873719, 1176763.6923778458, -2142783.0892298184), orientation: DQuat(-0.3851369289898482, 0.0, 0.42199426402904766, 0.8207255247979381), remaining: 0 }, Salvage { position_m: DVec3(-2347851.9835634436, 1176759.8992756554, -2142787.3092612876), orientation: DQuat(-0.3851369289898482, 0.0, 0.42199426402904766, 0.8207255247979381), remaining: 0 }, Salvage { position_m: DVec3(-2347850.0332453726, 1176756.1061695577, -2142791.529285642), orientation: DQuat(-0.3851369289898482, 0.0, 0.42199426402904766, 0.8207255247979381), remaining: 6 }, Salvage { position_m: DVec3(-2347848.0829199567, 1176752.313059779, -2142795.749303294), orientation: DQuat(-0.3851369289898482, 0.0, 0.42199426402904766, 0.8207255247979381), remaining: 6 }, Salvage { position_m: DVec3(-2347843.6324071195, 1176774.7753048462, -2142788.2900485042), orientation: DQuat(-0.3851369289898482, 0.0, 0.42199426402904766, 0.8207255247979381), remaining: 6 }, Salvage { position_m: DVec3(-2347841.682096257, 1176770.9822023616, -2142792.5100794374), orientation: DQuat(-0.3851369289898482, 0.0, 0.42199426402904766, 0.8207255247979381), remaining: 6 }, Salvage { position_m: DVec3(-2347839.731778395, 1176767.1890963686, -2142796.7301039835), orientation: DQuat(-0.3851369289898482, 0.0, 0.42199426402904766, 0.8207255247979381), remaining: 6 }, Salvage { position_m: DVec3(-2347837.781453197, 1176763.395986699, -2142800.950121833), orientation: DQuat(-0.3851369289898482, 0.0, 0.42199426402904766, 0.8207255247979381), remaining: 6 }]
+
+
+failures:
+    admission_covers_full_triangles_and_rejects_historical_rough_ground
+    placement_blocks_player_obstacle_building_deposit_and_uncovered_terrain
+
+test result: FAILED. 5 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s
+
+error: test failed, to rerun pass `--test construction`

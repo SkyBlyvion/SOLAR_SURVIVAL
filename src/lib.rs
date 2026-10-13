@@ -2,6 +2,7 @@
 pub mod buildings;
 pub mod camera;
 pub mod config;
+pub mod construction;
 pub mod physics;
 pub mod planets;
 pub mod player;
@@ -39,6 +40,7 @@ impl Plugin for SolarSurvivalPlugin {
             universe::UniversePlugin,
             camera::ExplorationPlugin,
             survival::SurvivalPlugin,
+            construction::ConstructionPlugin,
             rendering::SpaceRenderingPlugin,
             ui::HudPlugin,
         ));

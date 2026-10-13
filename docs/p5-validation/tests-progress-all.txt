@@ -1,0 +1,73 @@
+   Compiling solar_survival v0.2.0 (/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL)
+    Finished `test` profile [optimized] target(s) in 12.81s
+     Running unittests src/lib.rs (target/debug/deps/solar_survival-e59e61f27a7caa37)
+
+running 33 tests
+test camera::tests::actual_ecs_controls_select_visit_and_release_cursor ... ok
+test camera::tests::long_interruption_updates_orbit_and_pose_but_caps_airborne_local_physics ... ok
+test camera::tests::actual_ecs_camera_movement_is_frame_rate_independent ... ok
+test camera::tests::orbital_pause_and_acceleration_do_not_change_surface_physics ... ok
+test camera::tests::surface_entry_and_all_space_exits_preserve_navigation ... ok
+test camera::tests::surface_pose_and_render_origin_follow_rotation_without_a_physics_tick ... ok
+test config::profiling::tests::normal_game_does_not_install_profiling_systems_or_resources ... ok
+test config::profiling::tests::profile_boundaries_keep_warmup_and_four_equal_phases ... ok
+test config::validation::tests::p2_cycle_exceeds_rotation_before_pause_and_repeats_all_exits ... ok
+test physics::surface::oriented_tests::continuous_obb_sweep_matches_axis_aligned_boxes_and_rejects_aabb_false_contact ... ok
+test camera::tests::surface_mouse_delta_is_integrated_once_without_delta_time ... ok
+test camera::tests::pause_freezes_site_rotation_but_walk_and_jump_match_accelerated_time ... ok
+test camera::tests::cube_pair_keeps_real_controls_clocks_pose_and_all_four_space_exits ... ok
+test planets::globe_terrain::tests::partial_footprints_are_rejected_even_with_a_valid_center_height ... ok
+test rendering::buildings::tests::shelter_proxies_share_assets_survive_rebase_and_unload_in_space ... ok
+test planets::cube_terrain::tests::all_six_central_pairs_have_supported_interior_and_metric_budget ... ok
+test camera::tests::migration_uses_actual_ecs_controls_pause_rotation_and_all_space_exits ... ok
+test planets::cube_terrain::tests::spatial_index_matches_all_triangles_and_entire_footprint_across_seam ... ok
+test rendering::construction::tests::preview_and_salvage_share_cube_keep_entities_on_rebase_and_unload ... ok
+test camera::tests::p2_scenario_exits_surface_twice_with_each_navigation_command ... ok
+test rendering::terrain::tests::rotating_site_keeps_local_proxies_and_meshes_but_changes_sun_direction ... ok
+test rendering::terrain::tests::tile_mesh_positions_match_physical_vertices_and_shared_edges ... ok
+test rendering::terrain::tests::streaming_is_bounded_reuses_assets_and_releases_old_meshes ... ok
+test ui::menu::tests::escape_releases_cursor_then_opens_menu_and_returns_through_credits ... ok
+test ui::menu::tests::menu_blocks_navigation_and_capture_but_not_real_orbital_clock ... ok
+test camera::tests::offcenter_migration_uses_actual_ecs_controls_pause_rotation_and_all_space_exits ... ok
+test rendering::terrain::tests::cube_mesh_matches_contacts_and_two_handles_survive_moves_rotation_and_reentry ... ok
+test ui::menu::tests::options_apply_to_both_cameras_and_window_then_reset ... ok
+test rendering::terrain::tests::global_streaming_keeps_shared_handles_and_releases_all_assets_on_exit ... ok
+test ui::menu::tests::menu_suspends_oxygen_and_restart_but_keeps_orbit_and_gravity ... ok
+test camera::tests::global_surface_ecs_walk_streams_and_keeps_rotation_pause_and_space_exits ... ok
+test rendering::terrain::tests::offcenter_mesh_and_shared_colors_keep_two_handles_and_entities_after_migration_and_reentry ... ok
+test planets::cube_terrain::tests::noncentral_rectangles_cover_whole_footprints_on_all_faces ... ok
+
+test result: ok. 33 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.76s
+
+     Running unittests src/main.rs (target/debug/deps/solar_survival-62f3ff6086a09f67)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/construction.rs (target/debug/deps/construction-bf3395f5fe89964e)
+
+running 7 tests
+test admission_covers_full_triangles_and_rejects_historical_rough_ground ... FAILED
+test placement_blocks_player_obstacle_building_deposit_and_uncovered_terrain ... ok
+test rejected_cancelled_and_confirmed_placement_pay_only_once ... ok
+test stale_preview_is_revalidated_before_payment_and_failure_cancels ... ok
+test harvest_range_depletion_inventory_and_session_returns ... ok
+test preview_controls_use_delta_time_and_follow_rotation ... ok
+test constructed_shelter_door_wall_service_and_rebased_instances ... ok
+
+failures:
+
+---- admission_covers_full_triangles_and_rejects_historical_rough_ground stdout ----
+
+thread 'admission_covers_full_triangles_and_rejects_historical_rough_ground' (99746) panicked at tests/construction.rs:199:14:
+called `Result::unwrap_err()` on an `Ok` value: ()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    admission_covers_full_triangles_and_rejects_historical_rough_ground
+
+test result: FAILED. 6 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s
+
+error: test failed, to rerun pass `--test construction`

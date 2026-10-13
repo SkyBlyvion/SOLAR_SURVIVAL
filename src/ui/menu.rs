@@ -188,6 +188,7 @@ fn setup(mut commands: Commands, assets: Res<AssetServer>) {
 fn input(
     keys: Res<ButtonInput<KeyCode>>,
     pilot: Res<Explorer>,
+    construction: Option<Res<crate::construction::Construction>>,
     mut state: ResMut<MenuState>,
     mut settings: ResMut<PlayerSettings>,
     mut interactions: Query<
@@ -196,7 +197,7 @@ fn input(
     >,
     mut exit: MessageWriter<AppExit>,
 ) {
-    if keys.just_pressed(KeyCode::Escape) {
+    if keys.just_pressed(KeyCode::Escape) && !construction.is_some_and(|c| c.active) {
         if state.is_open() {
             state.back();
         } else if !pilot.captured {
@@ -566,6 +567,55 @@ mod tests {
                 .unwrap()
                 .mode,
             WindowMode::Windowed
+        );
+    }
+    #[test]
+    fn placement_escape_cancels_before_menu_and_menu_preserves_inventory() {
+        let mut app = app();
+        app.add_plugins((
+            crate::survival::SurvivalPlugin,
+            crate::construction::ConstructionPlugin,
+        ));
+        click(&mut app, MenuAction::Play);
+        press(&mut app, KeyCode::KeyM);
+        press(&mut app, KeyCode::KeyB);
+        assert!(
+            app.world()
+                .resource::<crate::construction::Construction>()
+                .active
+        );
+        press(&mut app, KeyCode::Escape);
+        assert!(
+            !app.world()
+                .resource::<crate::construction::Construction>()
+                .active
+        );
+        assert!(!app.world().resource::<MenuState>().is_open());
+        app.world_mut()
+            .resource_mut::<crate::construction::Construction>()
+            .alloy = 12;
+        press(&mut app, KeyCode::KeyB);
+        click(&mut app, MenuAction::Play); // Bouton inactif en jeu.
+        app.world_mut().resource_mut::<MenuState>().open();
+        app.update();
+        press(&mut app, KeyCode::Enter);
+        assert!(
+            !app.world()
+                .resource::<crate::construction::Construction>()
+                .active
+        );
+        assert_eq!(
+            app.world()
+                .resource::<crate::construction::Construction>()
+                .alloy,
+            12
+        );
+        assert_eq!(
+            app.world()
+                .resource::<crate::buildings::Buildings>()
+                .shelters
+                .len(),
+            1
         );
     }
 }

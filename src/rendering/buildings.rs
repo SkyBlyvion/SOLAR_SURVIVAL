@@ -15,8 +15,8 @@ struct ShelterPart {
     index: usize,
 }
 #[derive(Resource)]
-struct BuildingAssets {
-    cube: Handle<Mesh>,
+pub(super) struct BuildingAssets {
+    pub(super) cube: Handle<Mesh>,
     wall: Handle<StandardMaterial>,
     roof: Handle<StandardMaterial>,
 }
@@ -33,7 +33,7 @@ impl Plugin for BuildingRenderingPlugin {
             .add_systems(Update, (stream, sync).chain().in_set(GameSet::Rendering));
     }
 }
-fn setup(
+pub(super) fn setup(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,

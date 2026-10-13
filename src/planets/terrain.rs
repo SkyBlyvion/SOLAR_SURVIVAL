@@ -202,6 +202,43 @@ impl MarsTerrain {
         }
         height
     }
+    /// Extrema exacts sous un carré de construction dans la carte active.
+    pub fn construction_height_range(&self, center: DVec3, half: f64) -> Option<(f64, f64)> {
+        if !center.is_finite() || !half.is_finite() || !(0.0..=5.0).contains(&half) {
+            return None;
+        }
+        if let Some(globe) = &self.globe {
+            return globe.height_range(center, half);
+        }
+        if self.cube.is_some() || center.x.abs().max(center.z.abs()) + half > SITE_LIMIT_M {
+            return None;
+        }
+        let (lo_x, hi_x, lo_z, hi_z) = (
+            center.x - half,
+            center.x + half,
+            center.z - half,
+            center.z + half,
+        );
+        let mut low = f64::INFINITY;
+        let mut high = f64::NEG_INFINITY;
+        for x in (lo_x / CELL_M).floor() as i32..=(hi_x / CELL_M).floor() as i32 {
+            for z in (lo_z / CELL_M).floor() as i32..=(hi_z / CELL_M).floor() as i32 {
+                for triangle in self.triangles(x, z) {
+                    if let Some(h) = triangle_support(triangle, lo_x, hi_x, lo_z, hi_z) {
+                        high = high.max(h);
+                        low = low.min(-triangle_support(
+                            triangle.map(|p| DVec3::new(p.x, -p.y, p.z)),
+                            lo_x,
+                            hi_x,
+                            lo_z,
+                            hi_z,
+                        )?);
+                    }
+                }
+            }
+        }
+        high.is_finite().then_some((low, high))
+    }
     /// Borne conservatrice : toute l'empreinte reste sur les triangles chargés.
     pub fn clamp_feet(&self, feet: &mut DVec3, half_width: f64) {
         if self.globe.is_some() {

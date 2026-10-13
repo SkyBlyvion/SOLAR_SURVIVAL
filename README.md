@@ -4,6 +4,8 @@ Prototype d'exploration 3D de notre système solaire, fondation d'un jeu de surv
 
 **Depuis le 13 octobre 2026, M ouvre un terrain martien mondial : six faces traversables, arêtes et coins continus, chargement local dynamique.** Les anciens parcours bornés restent des modes de régression. [Architecture et commandes](docs/GLOBAL_TERRAIN.md).
 
+**Construction P5 :** récupérer les caisses dorées avec **E**, placer le même abri avec **B**, déplacer avec les **flèches**, orienter avec **J/L**, confirmer avec **Entrée** ou annuler avec **X/Échap**. Coût : 12 alliage ; prévisualisation verte/rouge, inventaire et bâtiments conservés en session. [Règles et architecture](docs/CONSTRUCTION.md).
+
 **Survie P4 :** une combinaison de 180 s d’oxygène et un abri de recharge accessible à six mètres devant l’arrivée. Entrez par la porte pour recharger ; à zéro, **R** relance une expédition à l’abri. [Règles et architecture](docs/SURVIVAL.md).
 
 La suite du développement suit [la roadmap](docs/ROADMAP.md). Le [prompt du prochain chat](docs/NEXT_CHAT.md) est actualisé à chaque fin de chat de développement avec l'état réel et l'objectif suivant.
@@ -89,6 +91,10 @@ Les touches de déplacement désignent des positions physiques : WASD sur QWERTY
 | T | Temps orbital ×1 / ×10 / ×100 / ×1000 |
 | P | Pause des orbites et des rotations |
 | H | Masquer / afficher la télémétrie ; le HUD vital reste visible |
+| E | En surface : récupérer une caisse dorée à moins de 2,5 m |
+| B | Ouvrir / annuler le placement d’un abri (12 alliage) |
+| Flèches, J/L | Pendant le placement : déplacer / tourner la prévisualisation |
+| Entrée, X / Échap | Pendant le placement : confirmer / annuler sans dépense |
 | R | Après épuisement de l’oxygène : repartir au premier abri, réserve pleine |
 
 Les vitesses disponibles sont 5 m/s, 250 m/s, 20 km/s, 20 000 km/s, 2 millions km/s et 100 millions km/s. Ce sont des choix de gameplay. En espace, l'interface affiche la **vitesse de déplacement configurée** ; à l'arrêt elle demeure affichée. En surface, elle indique aussi la vitesse résolue après contacts, l'état au sol/en l'air et la hauteur des pieds au-dessus du support. La marche utilise 4,5 m/s, la course 8 m/s et le saut une impulsion de vitesse de 4 m/s : conventions de gameplay. P et T commandent l’orbite et la rotation de Mars ; la marche, la course, le saut et la gravité restent en secondes réelles. La vitesse résolue affichée en surface est relative au site, sans vitesse d’entraînement orbitale ou rotatoire.
@@ -108,6 +114,7 @@ Les vitesses disponibles sont 5 m/s, 250 m/s, 20 km/s, 20 000 km/s, 2 millions k
 - Terrain mondial sphérique : six faces, voisinage local de treize patches maximum, marche/course/saut sans borne de site ; coordonnées et contacts f64, meshes réutilisés. Le terrain artistique historique de neuf tuiles reste disponible avec `SOLAR_MARS_GLOBAL=0`.
 - Contrat cube-sphere f64 : conversions, voisins orientés, graines reproductibles et raccord de deux patches de même niveau.
 - Première boucle de survie : réserve/consommation/recharge/HUD, expédition terminée et reprise ; abris instanciables avec identités et poses fixes sur Mars pour leur réutilisation en P5.
+- Ressources et construction : huit caisses épuisables, inventaire réel, recette du même abri, preview orientable avec admission terrain/volumes et paiement après confirmation ; persistance de session.
 - Chargement dynamique du terrain à résolution fixe : treize patches maximum, **sans LOD adaptatif**. Des niveaux de détail selon la distance du joueur restent à développer.
 
 ## Architecture
@@ -129,6 +136,10 @@ src/planets/globe_terrain.rs voisinage mondial dynamique et contacts f64
 src/config/cube_validation.rs parcours graphique borné de franchissement
 examples/cube_seam.rs diagnostic graphique borné, indépendant du terrain jouable
 src/buildings/        abris instanciables, identités et poses corporelles f64
+src/construction.rs   récupération, inventaire, admission et transaction de placement
+src/rendering/construction.rs fantôme et caisses locaux, cube partagé
+src/ui/construction.rs stock, commandes et motifs de refus
+src/config/construction_validation.rs parcours graphique ciblé P5
 src/survival/         réserve d’oxygène et issue de l’expédition
 src/rendering/buildings.rs proxies locaux des abris et assets partagés
 src/ui/survival.rs    HUD vital et instruction de reprise
@@ -226,7 +237,7 @@ Le pas physique est de 1/120 s, alimenté par `Time<Real>` dans `GameSet::Naviga
 
 Même en l’air, le joueur reste exprimé dans le site tournant. Aucune force de Coriolis, centrifuge, d’Euler ni due à l’accélération translatoire orbitale n’est appliquée ; aucune vitesse inertielle n’est transférée lors des téléportations M/G/O/U. Ce contrôleur est un compromis de gameplay, particulièrement visible sous T, pas une intégration inertielle d’un astronaute. Voir les formules et conventions dans [ASTRONOMY](docs/ASTRONOMY.md).
 
-**Suite :** P5, ressource récoltable, inventaire minimal et construction du même abri. LOD adaptatif selon la distance, relief et géométries plus complexes restent des extensions distinctes ; le chargement mondial actuel ne fournit pas de LOD mixte. [Roadmap](docs/ROADMAP.md).
+**Suite :** phase dédiée au profilage/LOD adaptatif et au streaming, puis sauvegarde/distribution P6. P5 fournit maintenant récupération, inventaire et construction du même abri. LOD adaptatif selon la distance, relief et géométries plus complexes restent des extensions distinctes ; le chargement mondial actuel ne fournit pas de LOD mixte. [Roadmap](docs/ROADMAP.md).
 
 
 Les sections P3.2–P3.4 ci-dessous décrivent les anciens modes de régression ; le lancement normal utilise le terrain mondial et la survie.
@@ -257,3 +268,12 @@ Après Jouer et M : marcher vers l’abri turquoise à six mètres, entrer par l
 P/T ne modifient pas la consommation. Le menu suspend la survie ; les visites spatiales conservent la réserve sans consommation/recharge. Le retour M retrouve le site fixé à la première arrivée de la session, éventuellement de nuit. Les bâtiments gardent leur identité et leur pose corporelle f64, indépendantes des patches/rebasages et des proxies. Aucun inventaire, recette, placement joueur ou sauvegarde disque en P4.
 
 Diagnostic ciblé, après compilation release : `python3 scripts/validate_survival.py --output docs/mon-nouveau-p4 --mesa-immediate`. Le dossier doit être neuf ; l’option Mesa concerne seulement ce poste NVK. Le parcours de 56 s vérifie consommation/recharge/échec/R, menu, rebasage et seconde instance, avec treize captures. Il prépare des réserves raccourcies sans modifier les taux. Les anciens scénarios et le profilage gardent la survie désactivée. [Détail technique et reproduction](docs/SURVIVAL.md), [preuves et limitations](docs/VALIDATION.md).
+
+
+## Ressources et construction P5
+
+Huit caisses dorées autour du départ fournissent six alliage chacune. Approcher puis E, récolter deux caisses, B pour placer un abri à 12 unités. La visée et la marche déplacent le fantôme ; flèches pour ajuster, J/L pour tourner. Vert signifie autorisé ; rouge affiche le refus. Entrée confirme après revalidation du sol et des volumes occupés, X/B/Échap annulent sans dépense. Entrer dans l’abri construit recharge avec le même service P4.
+
+Stock, caisses épuisées et bâtiments sont conservés pendant la session, y compris M/G/O/U, menu et R ; aucune sauvegarde disque. Ressource finie (48 unités), quatre abris constructibles en plus du premier. L’oxygène continue pendant le placement. Le terrain mondial reste à résolution fixe, sans LOD adaptatif.
+
+Diagnostic après compilation : `python3 scripts/validate_construction.py --output docs/mon-nouveau-p5 --mesa-immediate`, dossier neuf, seize captures à inspecter. [Conventions, architecture et limites](docs/CONSTRUCTION.md), [validation](docs/VALIDATION.md).

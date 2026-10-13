@@ -1,4 +1,5 @@
 mod buildings;
+mod construction;
 mod planets;
 mod stars;
 pub mod terrain;
@@ -12,6 +13,7 @@ impl Plugin for SpaceRenderingPlugin {
             .add_plugins((
                 terrain::SurfaceRenderingPlugin,
                 buildings::BuildingRenderingPlugin,
+                construction::ConstructionRenderingPlugin,
             ))
             .insert_resource(ClearColor(Color::BLACK))
             .add_systems(Startup, (planets::spawn, stars::spawn))

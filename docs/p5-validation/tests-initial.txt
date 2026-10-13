@@ -1,0 +1,52 @@
+   Compiling solar_survival v0.2.0 (/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL)
+warning: unused imports: `MovementMode`, `SimulationClock`, and `celestial_body::BodyId`
+  --> tests/construction.rs:14:24
+   |
+14 |     player::{Explorer, MovementMode, surface::SurfaceState},
+   |                        ^^^^^^^^^^^^
+15 |     survival::{CAPACITY_SECONDS, Oxygen, SurvivalPlugin},
+16 |     universe::{SimulationClock, UniversePlugin, catalog::SolarSystem, celestial_body::BodyId},
+   |                ^^^^^^^^^^^^^^^                                        ^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: `solar_survival` (test "construction") generated 1 warning (run `cargo fix --test "construction" -p solar_survival` to apply 1 suggestion)
+    Finished `test` profile [optimized] target(s) in 17.67s
+     Running tests/construction.rs (target/debug/deps/construction-bf3395f5fe89964e)
+
+running 7 tests
+test admission_covers_full_triangles_and_rejects_historical_rough_ground ... FAILED
+test placement_blocks_player_obstacle_building_deposit_and_uncovered_terrain ... FAILED
+test stale_preview_is_revalidated_before_payment_and_failure_cancels ... ok
+test preview_controls_use_delta_time_and_follow_rotation ... FAILED
+test rejected_cancelled_and_confirmed_placement_pay_only_once ... ok
+test harvest_range_depletion_inventory_and_session_returns ... ok
+test constructed_shelter_door_wall_service_and_rebased_instances ... ok
+
+failures:
+
+---- admission_covers_full_triangles_and_rejects_historical_rough_ground stdout ----
+
+thread 'admission_covers_full_triangles_and_rejects_historical_rough_ground' (97909) panicked at tests/construction.rs:194:14:
+called `Result::unwrap_err()` on an `Ok` value: ()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- placement_blocks_player_obstacle_building_deposit_and_uncovered_terrain stdout ----
+
+thread 'placement_blocks_player_obstacle_building_deposit_and_uncovered_terrain' (97912) panicked at tests/construction.rs:163:9:
+6 8
+
+---- preview_controls_use_delta_time_and_follow_rotation stdout ----
+
+thread 'preview_controls_use_delta_time_and_follow_rotation' (97913) panicked at tests/construction.rs:289:9:
+assertion failed: (c.lateral_m - 4.0).abs() < 1e-9
+
+
+failures:
+    admission_covers_full_triangles_and_rejects_historical_rough_ground
+    placement_blocks_player_obstacle_building_deposit_and_uncovered_terrain
+    preview_controls_use_delta_time_and_follow_rotation
+
+test result: FAILED. 4 passed; 3 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.29s
+
+error: test failed, to rerun pass `--test construction`

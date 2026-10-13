@@ -25,6 +25,52 @@ pub struct BodyBox {
     pub orientation: DQuat,
 }
 impl BodyBox {
+    /// Intersection SAT de deux OBB corporelles, avec réserve de placement en mètres.
+    pub fn intersects(&self, other: &Self, margin: f64) -> bool {
+        let a = [DVec3::X, DVec3::Y, DVec3::Z].map(|v| self.orientation * v);
+        let b = [DVec3::X, DVec3::Y, DVec3::Z].map(|v| other.orientation * v);
+        let mut axes = [DVec3::ZERO; 15];
+        axes[..3].copy_from_slice(&a);
+        axes[3..6].copy_from_slice(&b);
+        for i in 0..3 {
+            for j in 0..3 {
+                axes[6 + i * 3 + j] = a[i].cross(b[j]);
+            }
+        }
+        axes.into_iter()
+            .filter(|v| v.length_squared() > 1e-20)
+            .all(|axis| {
+                let axis = axis.normalize();
+                let radius = (0..3)
+                    .map(|i| {
+                        axis.dot(a[i]).abs() * self.size[i] * 0.5
+                            + axis.dot(b[i]).abs() * other.size[i] * 0.5
+                    })
+                    .sum::<f64>();
+                axis.dot(self.center - other.center).abs() <= radius + margin
+            })
+    }
+    /// Segment bloqué par une pièce solide, utilisé pour la récupération à portée.
+    pub fn blocks_segment(&self, start: DVec3, end: DVec3) -> bool {
+        let start = self.orientation.inverse() * (start - self.center);
+        let delta = self.orientation.inverse() * (end - self.center) - start;
+        let mut enter: f64 = 0.0;
+        let mut exit: f64 = 1.0;
+        for axis in 0..3 {
+            let half = self.size[axis] * 0.5;
+            if delta[axis].abs() < 1e-12 {
+                if start[axis].abs() > half {
+                    return false;
+                }
+            } else {
+                let a = (-half - start[axis]) / delta[axis];
+                let b = (half - start[axis]) / delta[axis];
+                enter = enter.max(a.min(b));
+                exit = exit.min(a.max(b));
+            }
+        }
+        enter <= exit
+    }
     pub fn chart_pose(&self, terrain: &MarsTerrain) -> (DVec3, DVec3, DQuat) {
         (
             terrain.chart(self.center),

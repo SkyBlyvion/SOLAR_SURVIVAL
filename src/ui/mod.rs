@@ -14,6 +14,7 @@ use bevy::{
     prelude::*,
     window::PrimaryWindow,
 };
+mod construction;
 pub mod menu;
 mod survival;
 
@@ -46,7 +47,11 @@ pub struct HudPlugin;
 impl Plugin for HudPlugin {
     fn build(&self, app: &mut App) {
         app.insert_resource(HudState { visible: true })
-            .add_plugins((menu::MenuPlugin, survival::SurvivalHudPlugin))
+            .add_plugins((
+                menu::MenuPlugin,
+                survival::SurvivalHudPlugin,
+                construction::ConstructionHudPlugin,
+            ))
             .add_plugins(FrameTimeDiagnosticsPlugin::default())
             .add_systems(Startup, setup)
             .add_systems(
