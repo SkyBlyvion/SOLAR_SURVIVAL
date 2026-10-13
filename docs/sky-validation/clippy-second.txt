@@ -1,0 +1,31 @@
+    Checking solar_survival v0.2.0 (/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL)
+error: type `ui::menu::MenuAction` is more private than the item `ui::menu::input`
+   --> src/ui/menu.rs:187:1
+    |
+187 | / pub(crate) fn input(
+188 | |     keys: Res<ButtonInput<KeyCode>>,
+189 | |     pilot: Res<Explorer>,
+190 | |     construction: Option<Res<crate::construction::Construction>>,
+...   |
+197 | |     mut exit: MessageWriter<AppExit>,
+198 | | ) {
+    | |_^ function `ui::menu::input` is reachable at visibility `pub(crate)`
+    |
+note: but type `ui::menu::MenuAction` is only usable at visibility `pub(self)`
+   --> src/ui/menu.rs:81:1
+    |
+ 81 | enum MenuAction {
+    | ^^^^^^^^^^^^^^^
+    = note: `-D private-interfaces` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(private_interfaces)]`
+
+error: type `ui::menu::MenuAction` is private
+  --> src/config/sky_validation.rs:32:9
+   |
+32 | /         input
+33 | |             .before(crate::ui::menu::input)
+   | |___________________________________________^ private type
+
+error: could not compile `solar_survival` (lib) due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `solar_survival` (lib test) due to 2 previous errors

@@ -1,0 +1,18 @@
+2026-10-13T13:22:13.515476Z  INFO bevy_render::renderer: AdapterInfo { name: "NVIDIA GeForce GTX 1060 3GB (NVK GP106)", vendor: 4318, device: 7170, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "NVK", driver_info: "Mesa 25.2.8-0ubuntu0.24.04.2", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: false }
+2026-10-13T13:22:13.635583Z  INFO bevy_pbr::cluster: GPU clustering is supported on this device.
+2026-10-13T13:22:13.635623Z  INFO bevy_render::batching::gpu_preprocessing: GPU preprocessing is fully supported on this device.
+2026-10-13T13:22:13.635932Z  INFO solar_survival::config::profiling: Profilage GPU : timestamps true, encoders true, passes true
+2026-10-13T13:22:13.636026Z  INFO bevy_winit::system: Creating new window Solar Survival · 0.2 · Mars (63v0)
+2026-10-13T13:22:13.636459Z  INFO winit::platform_impl::linux::x11::window: Guessed window scale factor: 1
+2026-10-13T13:22:13.665474Z  INFO solar_survival::config::profiling: Profilage no_sky phase warmup, pieds DVec3(0.0, 0.0, 0.0)
+2026-10-13T13:22:13.668482Z DEBUG solar_survival::rendering::terrain: GLOBAL meshes sync CPU 0.620 ms, uploads 13, LOD ([6, 5, 2], 9009, 16328)
+2026-10-13T13:22:23.679241Z  INFO solar_survival::config::profiling: Profilage no_sky phase rest, pieds DVec3(0.0, 0.0019999374278592144, 0.0)
+2026-10-13T13:22:34.686971Z  INFO solar_survival::config::profiling: Profilage no_sky phase contact, pieds DVec3(0.0, 0.0019999374278592144, 0.0)
+2026-10-13T13:22:45.671622Z DEBUG solar_survival::player::surface: GLOBAL rebasage CPU 0.849 ms, patches 13, constructions 18, LOD ([7, 6, 0], 10101, 18512), changements 0, géométrie 0.208 ms, index 0.599 ms
+2026-10-13T13:22:45.671661Z  INFO solar_survival::config::profiling: Profilage no_sky phase streaming, pieds DVec3(2.2122861436648864e-10, 0.0019993063235884167, -9.097291306771685e-11)
+2026-10-13T13:22:45.671824Z DEBUG solar_survival::rendering::terrain: GLOBAL meshes sync CPU 0.094 ms, uploads 5, LOD ([7, 6, 0], 10101, 18512)
+2026-10-13T13:22:53.666665Z DEBUG solar_survival::player::surface: GLOBAL rebasage CPU 1.031 ms, patches 13, constructions 23, LOD ([6, 6, 1], 9217, 16744), changements 0, géométrie 0.285 ms, index 0.703 ms
+2026-10-13T13:22:53.666810Z DEBUG solar_survival::rendering::terrain: GLOBAL meshes sync CPU 0.080 ms, uploads 5, LOD ([6, 6, 1], 9217, 16744)
+2026-10-13T13:22:56.679677Z  INFO solar_survival::config::profiling: Profilage no_sky phase space, pieds DVec3(23.99999999934556, 0.0019164742245564297, -3.878569052188815e-10)
+2026-10-13T13:23:07.671576Z  INFO solar_survival::config::profiling: Profilage no_sky phase finished, pieds DVec3(23.99999999934556, 0.0019164742245564297, -3.878569052188815e-10)
+2026-10-13T13:23:07.674590Z  INFO solar_survival::config::profiling: Profilage terminé : 20 métriques, CSV /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/sky-validation/after/run-adaptive-no-sky.csv

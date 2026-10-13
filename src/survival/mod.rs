@@ -70,7 +70,8 @@ impl Plugin for SurvivalPlugin {
         // Les campagnes historiques gardent leurs scènes exactes ; le diagnostic P4 est actif.
         let enabled = !config.automated() && !config.cube_surface
             || (config.survival_validation_dir.is_some()
-                || config.construction_validation_dir.is_some())
+                || config.construction_validation_dir.is_some()
+                || config.sky_validation_dir.is_some())
                 && config.profile.is_none();
         app.insert_resource(Oxygen {
             enabled,

@@ -1,0 +1,39 @@
+2026-10-13T12:41:56.515102Z  INFO bevy_render::renderer: AdapterInfo { name: "NVIDIA GeForce GTX 1060 3GB (NVK GP106)", vendor: 4318, device: 7170, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "NVK", driver_info: "Mesa 25.2.8-0ubuntu0.24.04.2", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: false }
+2026-10-13T12:41:56.619708Z  INFO bevy_pbr::cluster: GPU clustering is supported on this device.
+2026-10-13T12:41:56.619751Z  INFO bevy_render::batching::gpu_preprocessing: GPU preprocessing is fully supported on this device.
+2026-10-13T12:41:56.620197Z  INFO bevy_winit::system: Creating new window Solar Survival · 0.2 · Mars (63v0)
+2026-10-13T12:41:56.620532Z  INFO winit::platform_impl::linux::x11::window: Guessed window scale factor: 1
+2026-10-13T12:41:56.735471Z  INFO solar_survival::config::sky_validation: SKY renderer : une caméra extraite, aucune vue de ciel séparée
+2026-10-13T12:41:58.146427Z  INFO solar_survival::config::sky_validation: SKY pose 0 : Surface, JD 2451545.00000000, pieds DVec3(0.0, 0.0019999374278592144, 0.0), caméra 256v0
+2026-10-13T12:41:58.314316Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/sky-validation/sky-initial/captures/sky-00.png
+2026-10-13T12:42:01.151169Z  INFO solar_survival::config::sky_validation: SKY pose 1 : Surface, JD 2451545.00000000, pieds DVec3(0.0, 0.0019999374278592144, 0.0), caméra 256v0
+2026-10-13T12:42:01.302164Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/sky-validation/sky-initial/captures/sky-01.png
+2026-10-13T12:42:04.160918Z  INFO solar_survival::config::sky_validation: SKY pose 2 : Surface, JD 2451545.00000000, pieds DVec3(0.0, 0.0019999374278592144, 0.0), caméra 256v0
+2026-10-13T12:42:04.305945Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/sky-validation/sky-initial/captures/sky-02.png
+2026-10-13T12:42:07.134216Z  INFO solar_survival::config::sky_validation: SKY pose 3 : Surface, JD 2451545.51297838, pieds DVec3(0.0, 0.0019999374278592144, 0.0), caméra 256v0
+2026-10-13T12:42:07.272809Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/sky-validation/sky-initial/captures/sky-03.png
+2026-10-13T12:42:10.140966Z  INFO solar_survival::config::sky_validation: SKY pose 4 : Surface, JD 2451545.51297838, pieds DVec3(0.0, 0.0019999374278592144, 0.0), caméra 256v0
+2026-10-13T12:42:10.255779Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/sky-validation/sky-initial/captures/sky-04.png
+2026-10-13T12:42:13.158265Z  INFO solar_survival::config::sky_validation: SKY pose 5 : Surface, JD 2451545.00000000, pieds DVec3(0.0, 0.001994521002621863, -5.999999999883585), caméra 256v0
+2026-10-13T12:42:13.303692Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/sky-validation/sky-initial/captures/sky-05.png
+2026-10-13T12:42:16.135545Z  INFO solar_survival::config::sky_validation: SKY pose 6 : Surface, JD 2451545.00000000, pieds DVec3(0.0, 0.001994521002621863, -5.999999999883585), caméra 256v0
+2026-10-13T12:42:16.278327Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/sky-validation/sky-initial/captures/sky-06.png
+2026-10-13T12:42:19.135372Z  INFO solar_survival::config::sky_validation: SKY pose 7 : Surface, JD 2451545.86488155, pieds DVec3(0.0, 0.0019999374278592144, 0.0), caméra 256v0
+2026-10-13T12:42:19.244721Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/sky-validation/sky-initial/captures/sky-07.png
+2026-10-13T12:42:20.745846Z DEBUG solar_survival::player::surface: GLOBAL rebasage CPU 1.035 ms, patches 13, constructions 18, LOD ([7, 5, 1], 9893, 18096), changements 0, géométrie 0.216 ms, index 0.757 ms
+2026-10-13T12:42:22.157161Z  INFO solar_survival::config::sky_validation: SKY pose 8 : Surface, JD 2451545.00000000, pieds DVec3(11.733333333174027, 0.0019801413116783306, 7.533334073331681e-11), caméra 256v0
+2026-10-13T12:42:22.302740Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/sky-validation/sky-initial/captures/sky-08.png
+2026-10-13T12:42:25.155210Z  INFO solar_survival::config::sky_validation: SKY pose 9 : Surface, JD 2451545.00017759, pieds DVec3(23.46666666618049, 0.0019203064408585676, 7.53359460553297e-11), caméra 256v0
+2026-10-13T12:42:25.269090Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/sky-validation/sky-initial/captures/sky-09.png
+2026-10-13T12:42:28.134753Z  INFO solar_survival::config::sky_validation: SKY pose 10 : Surface, JD 2451545.00034525, pieds DVec3(23.46666666618049, 0.0019203064408585676, 7.53359460553297e-11), caméra 256v0
+2026-10-13T12:42:28.274362Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/sky-validation/sky-initial/captures/sky-10.png
+2026-10-13T12:42:31.160068Z  INFO solar_survival::config::sky_validation: SKY pose 11 : Surface, JD 2451545.00034525, pieds DVec3(23.46666666618049, 0.0019203064408585676, 7.53359460553297e-11), caméra 256v0
+2026-10-13T12:42:31.305030Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/sky-validation/sky-initial/captures/sky-11.png
+
+thread 'Compute Task Pool (3)' (164336) panicked at src/config/sky_validation.rs:226:9:
+assertion `left == right` failed
+  left: Surface
+ right: Space
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+Encountered a panic in system `<Enable the debug feature to see the name>`!
+Encountered a panic in system `<Enable the debug feature to see the name>`!

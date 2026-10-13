@@ -1,0 +1,48 @@
+{
+  "captures": [
+    "sky-00.png",
+    "sky-01.png",
+    "sky-02.png",
+    "sky-03.png",
+    "sky-04.png",
+    "sky-05.png",
+    "sky-06.png",
+    "sky-07.png",
+    "sky-08.png",
+    "sky-09.png",
+    "sky-10.png",
+    "sky-11.png",
+    "sky-12.png",
+    "sky-13.png",
+    "sky-14.png",
+    "sky-15.png",
+    "sky-16.png",
+    "sky-17.png",
+    "sky-18.png",
+    "sky-19.png",
+    "sky-20.png",
+    "sky-21.png",
+    "sky-22.png",
+    "sky-23.png"
+  ],
+  "boards": [
+    "board-00.jpg",
+    "board-01.jpg",
+    "board-02.jpg",
+    "board-03.jpg",
+    "board-04.jpg",
+    "board-05.jpg"
+  ],
+  "inspected": true,
+  "originals_inspected": [
+    "sky-03.png",
+    "sky-07.png"
+  ],
+  "observations": [
+    "Étoiles fines et irrégulières, disparition du quadrillage de la première proposition",
+    "Soleil et halo discrets, palette diurne poussiéreuse, étoiles atténuées au crépuscule",
+    "Disparition de la bande claire du sol avec reflectance nulle ; contraste sol/ciel et horizon simplifié restent artistiques",
+    "Toit/paroi opaque aux poses 05/06/22 sans fuite du ciel",
+    "Menu/reprise, M/G/O/U, échec/R, seconde époque et autre site présents"
+  ]
+}

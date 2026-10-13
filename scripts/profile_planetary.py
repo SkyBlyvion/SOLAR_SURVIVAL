@@ -33,7 +33,7 @@ def main():
     out = args.output.resolve()
     out.mkdir()  # préserver les campagnes précédentes
     binary = ROOT/'target/release'/('solar_survival.exe' if os.name == 'nt' else 'solar_survival')
-    sources = [*ROOT.glob('src/**/*.rs'), *ROOT.glob('tests/**/*.rs'), ROOT/'Cargo.toml', ROOT/'Cargo.lock']
+    sources = [*ROOT.glob('src/**/*.rs'), *ROOT.glob('tests/**/*.rs'), *ROOT.glob('assets/shaders/*.wgsl'), ROOT/'Cargo.toml', ROOT/'Cargo.lock']
     metadata = dict(binary_sha256=sha(binary), source_sha256={str(p.relative_to(ROOT)): sha(p) for p in sorted(sources)},
                     options=vars(args) | {'output': str(out)}, display=os.environ.get('DISPLAY'))
     (out/'environment.json').write_text(json.dumps(metadata, indent=2)+'\n')
@@ -41,7 +41,7 @@ def main():
     if args.gpu_probe:
         plan.append((f'run-{args.lod}-gpu', True, 'baseline'))
     if args.camera_probe:
-        plan.append((f'run-{args.lod}-no-space', False, 'no_space_camera'))
+        plan.append((f'run-{args.lod}-no-sky', False, 'no_sky'))
     results = []
     for name, gpu, variant in plan:
         env = {k:v for k,v in os.environ.items() if not k.startswith('SOLAR_')}

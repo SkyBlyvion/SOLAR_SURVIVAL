@@ -1,3 +1,5 @@
+> Rendu actuel du 13 octobre 2026 : une seule caméra de jeu réutilisée espace/surface, ciel dynamique dans la vue locale. [Contrat, sources réutilisées, palette et approximations](SURFACE_SKY.md). Les mentions de deux caméras ci-dessous décrivent les étapes historiques ; elles ne s'appliquent plus au rendu actuel. Aucune donnée astronomique ajoutée.
+
 # Données astronomiques et conventions du prototype
 
 Sources consultées le 12 octobre 2026. Toutes les données nécessaires au jeu sont embarquées dans `src/universe/catalog.rs` ; aucune requête réseau n'est exécutée par le jeu.

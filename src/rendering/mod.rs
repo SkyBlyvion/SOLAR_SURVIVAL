@@ -1,6 +1,7 @@
 mod buildings;
 mod construction;
 mod planets;
+pub mod sky;
 mod stars;
 pub mod terrain;
 use crate::GameSet;
@@ -12,6 +13,7 @@ impl Plugin for SpaceRenderingPlugin {
         app.add_plugins(MaterialPlugin::<PlanetMaterial>::default())
             .add_plugins((
                 terrain::SurfaceRenderingPlugin,
+                sky::SurfaceSkyPlugin,
                 buildings::BuildingRenderingPlugin,
                 construction::ConstructionRenderingPlugin,
             ))

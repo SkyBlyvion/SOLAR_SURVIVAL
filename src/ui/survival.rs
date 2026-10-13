@@ -88,8 +88,7 @@ fn refresh(
     mut root: Single<(Entity, &mut Node), With<OxygenRoot>>,
     mut text: Single<(&mut Text, &mut TextColor), With<OxygenText>>,
     mut bar: Single<(&mut Node, &mut BackgroundColor), (With<OxygenBar>, Without<OxygenRoot>)>,
-    space_camera: Single<Entity, With<crate::camera::SpaceCamera>>,
-    surface_camera: Single<Entity, With<crate::rendering::terrain::SurfaceCamera>>,
+    camera: Single<Entity, With<crate::camera::GameCamera>>,
     mut commands: Commands,
 ) {
     let active =
@@ -98,13 +97,7 @@ fn refresh(
     if !active {
         return;
     }
-    commands
-        .entity(root.0)
-        .insert(UiTargetCamera(if pilot.mode == MovementMode::Surface {
-            *surface_camera
-        } else {
-            *space_camera
-        }));
+    commands.entity(root.0).insert(UiTargetCamera(*camera));
     let color = if oxygen.failed || oxygen.remaining_seconds <= LOW_SECONDS {
         Color::srgb(1.0, 0.42, 0.27)
     } else {

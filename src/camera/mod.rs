@@ -9,7 +9,7 @@ use crate::{
     },
 };
 use bevy::{
-    camera::Hdr,
+    camera::{Hdr, visibility::RenderLayers},
     input::mouse::{AccumulatedMouseMotion, AccumulatedMouseScroll},
     math::{DQuat, DVec3},
     post_process::bloom::{Bloom, BloomCompositeMode, BloomPrefilter},
@@ -18,7 +18,7 @@ use bevy::{
 };
 
 #[derive(Component)]
-pub struct SpaceCamera;
+pub struct GameCamera;
 #[derive(Resource, Default)]
 pub struct NavigationRequest {
     pub visit: bool,
@@ -38,7 +38,8 @@ impl Plugin for ExplorationPlugin {
             .init_resource::<RenderOrigin>()
             .add_systems(Startup, setup)
             .add_systems(Update, controls.in_set(GameSet::Input))
-            .add_systems(Update, navigate.in_set(GameSet::Navigation));
+            .add_systems(Update, navigate.in_set(GameSet::Navigation))
+            .add_systems(Update, sync_view.in_set(GameSet::Rendering));
     }
 }
 fn setup(
@@ -49,7 +50,7 @@ fn setup(
 ) {
     pilot.visit(&solar, config.start_jd);
     commands.spawn((
-        SpaceCamera,
+        GameCamera,
         Camera3d::default(),
         Projection::Perspective(PerspectiveProjection {
             fov: 65_f32.to_radians(),
@@ -59,19 +60,37 @@ fn setup(
         }),
         Transform::from_rotation(pilot.rotation.as_quat()),
         Hdr,
-        Bloom {
-            intensity: 0.12,
-            low_frequency_boost: 0.4,
-            prefilter: BloomPrefilter {
-                threshold: 1.8,
-                threshold_softness: 0.1,
-            },
-            composite_mode: BloomCompositeMode::Additive,
-            ..Bloom::NATURAL
-        },
+        space_bloom(),
         Msaa::Sample4,
+        RenderLayers::layer(0),
+        AmbientLight {
+            color: Color::srgb(0.85, 0.64, 0.48),
+            brightness: 0.0,
+            ..default()
+        },
+        DistanceFog {
+            color: Color::srgb(0.28, 0.13, 0.075),
+            falloff: FogFalloff::Linear {
+                start: 30000.0,
+                end: 40000.0,
+            },
+            ..default()
+        },
     ));
 }
+fn space_bloom() -> Bloom {
+    Bloom {
+        intensity: 0.12,
+        low_frequency_boost: 0.4,
+        prefilter: BloomPrefilter {
+            threshold: 1.8,
+            threshold_softness: 0.1,
+        },
+        composite_mode: BloomCompositeMode::Additive,
+        ..Bloom::NATURAL
+    }
+}
+
 #[expect(
     clippy::too_many_arguments,
     reason = "Paramètres de système injectés par Bevy ECS."
@@ -196,7 +215,7 @@ pub(crate) fn navigate(
     mut pilot: ResMut<Explorer>,
     mut request: ResMut<NavigationRequest>,
     mut origin: ResMut<RenderOrigin>,
-    mut camera: Single<&mut Transform, With<SpaceCamera>>,
+    mut camera: Single<&mut Transform, With<GameCamera>>,
     mut surface: ResMut<SurfaceState>,
     mut terrain: ResMut<MarsTerrain>,
     mut buildings: Option<ResMut<crate::buildings::Buildings>>,
@@ -317,7 +336,72 @@ pub(crate) fn navigate(
     }
     origin.0 = pilot.global(&solar, clock.jd);
     camera.translation = Vec3::ZERO;
-    camera.rotation = pilot.rotation.as_quat();
+    camera.rotation = if pilot.mode == MovementMode::Surface {
+        surface.local_rotation(&terrain).as_quat()
+    } else {
+        pilot.rotation.as_quat()
+    };
+}
+
+#[expect(
+    clippy::type_complexity,
+    reason = "Composants de la vue et bloom optionnel du mode espace."
+)]
+fn sync_view(
+    pilot: Res<Explorer>,
+    state: Res<SurfaceState>,
+    terrain: Res<MarsTerrain>,
+    solar: Res<SolarSystem>,
+    clock: Res<SimulationClock>,
+    mut commands: Commands,
+    mut camera: Single<
+        (
+            Entity,
+            &mut Projection,
+            &mut RenderLayers,
+            &mut AmbientLight,
+            &mut DistanceFog,
+            Option<&Bloom>,
+        ),
+        With<GameCamera>,
+    >,
+) {
+    let surface = pilot.mode == MovementMode::Surface;
+    let (entity, projection, layers, ambient, fog, bloom) = &mut *camera;
+    if surface && bloom.is_some() {
+        commands.entity(*entity).remove::<Bloom>();
+    }
+    if !surface && bloom.is_none() {
+        commands.entity(*entity).insert(space_bloom());
+    }
+    if let Projection::Perspective(p) = &mut **projection {
+        p.near = if surface { 0.05 } else { 0.001 };
+        p.far = if surface { 1000.0 } else { 30000.0 };
+    }
+    **layers = RenderLayers::layer(usize::from(surface));
+    if surface {
+        let frame = terrain.inertial_frame(
+            solar
+                .body(BodyId::MARS)
+                .rotation(clock.seconds_since_epoch()),
+        );
+        let sun = frame.orientation.inverse() * (-pilot.global(&solar, clock.jd)).normalize();
+        let elevation = sun.dot(terrain.site_relative(state.eye(&terrain)).normalize());
+        let (_, horizon, _) = crate::rendering::sky::sky_palette(elevation);
+        fog.color = Color::linear_rgb(horizon.x, horizon.y, horizon.z);
+    }
+    ambient.brightness = if surface { 100.0 } else { 0.0 };
+    fog.falloff = if surface {
+        FogFalloff::Linear {
+            start: 40.0,
+            end: 60.0,
+        }
+    } else {
+        FogFalloff::Linear {
+            start: 30000.0,
+            end: 40000.0,
+        }
+    };
 }
 
 #[cfg(test)]
@@ -343,7 +427,13 @@ mod tests {
             .init_resource::<AccumulatedMouseScroll>()
             .configure_sets(
                 Update,
-                (GameSet::Input, GameSet::Simulation, GameSet::Navigation).chain(),
+                (
+                    GameSet::Input,
+                    GameSet::Simulation,
+                    GameSet::Navigation,
+                    GameSet::Rendering,
+                )
+                    .chain(),
             )
             .add_plugins((UniversePlugin, ExplorationPlugin));
         app.world_mut().spawn((
@@ -381,6 +471,64 @@ mod tests {
         assert!(pilot.captured);
         assert_eq!(pilot.anchor, Some(BodyId::EARTH));
         pilot.local_m.distance(start)
+    }
+
+    #[test]
+    fn one_camera_entity_keeps_options_and_changes_frame_projection_layers_on_all_exits() {
+        let mut app = app(60);
+        let entity = app
+            .world_mut()
+            .query_filtered::<Entity, With<GameCamera>>()
+            .single(app.world())
+            .unwrap();
+        for key in [KeyCode::KeyM, KeyCode::KeyG, KeyCode::KeyO, KeyCode::KeyU] {
+            press(&mut app, KeyCode::KeyM);
+            assert_eq!(
+                app.world().resource::<Explorer>().mode,
+                MovementMode::Surface
+            );
+            let state = app.world().resource::<SurfaceState>();
+            let terrain = app.world().resource::<MarsTerrain>();
+            assert_eq!(
+                app.world().get::<Transform>(entity).unwrap().rotation,
+                state.local_rotation(terrain).as_quat()
+            );
+            let Projection::Perspective(p) = app.world().get::<Projection>(entity).unwrap() else {
+                panic!("Perspective");
+            };
+            assert_eq!(p.near, 0.05);
+            assert_eq!(p.far, 1000.0);
+            assert_eq!(
+                app.world().get::<RenderLayers>(entity).unwrap(),
+                &RenderLayers::layer(1)
+            );
+            assert_eq!(
+                app.world_mut()
+                    .query::<&Camera3d>()
+                    .iter(app.world())
+                    .count(),
+                1
+            );
+            press(&mut app, key);
+            assert_eq!(app.world().resource::<Explorer>().mode, MovementMode::Space);
+            let Projection::Perspective(p) = app.world().get::<Projection>(entity).unwrap() else {
+                panic!("Perspective");
+            };
+            assert_eq!(p.near, 0.001);
+            assert_eq!(p.far, 30000.0);
+            assert_eq!(p.fov, 65_f32.to_radians());
+            assert_eq!(
+                app.world().get::<RenderLayers>(entity).unwrap(),
+                &RenderLayers::layer(0)
+            );
+            assert_eq!(
+                app.world_mut()
+                    .query_filtered::<Entity, With<GameCamera>>()
+                    .single(app.world())
+                    .unwrap(),
+                entity
+            );
+        }
     }
 
     #[test]
@@ -541,9 +689,9 @@ mod tests {
             world.resource::<RenderOrigin>().0,
             pilot.global(solar, clock.jd)
         );
-        let expected_rotation = pilot.rotation.as_quat();
+        let expected_rotation = state.local_rotation(terrain).as_quat();
         let camera = world
-            .query_filtered::<&Transform, With<SpaceCamera>>()
+            .query_filtered::<&Transform, With<GameCamera>>()
             .single(world)
             .unwrap();
         assert_eq!(camera.rotation, expected_rotation);

@@ -2,7 +2,7 @@
 
 Le projet avance par étapes vérifiables vers une boucle de survie sur Mars, en préservant l'exploration spatiale et l'échelle physique 1:1. Cette roadmap est la référence pour choisir le travail du prochain chat. Les dates de livraison dépendront des résultats ; les étapes futures ne sont pas des fonctionnalités déjà réalisées.
 
-Dernière mise à jour : 13 octobre 2026. Objectif **Mars traversable sur ses six faces avec chargement dynamique réalisé sur Ubuntu**. **P4, première boucle de survie jouable, terminé sur Ubuntu**. **P5, ressources et construction du même abri, réalisé sur Ubuntu**. **Phase moteur planétaire terminée sur Ubuntu** : LOD de résolution 32/16/8, index local, régressions/inspection et comparaisons CPU/GPU réalisés. Prochaine fonctionnalité P6 : sauvegarde/chargement de session, puis validation/distribution natives. À la demande explicite de l’utilisateur, le cadrage d’une chaîne fixe P3.5 est remplacé par cette fonctionnalité complète. P3.1 à P3.4 restent les fondations et régressions. La passation détaillée est dans [NEXT_CHAT](NEXT_CHAT.md), les résultats dans [VALIDATION](VALIDATION.md).
+Dernière mise à jour : 13 octobre 2026. Objectif **Mars traversable sur ses six faces avec chargement dynamique réalisé sur Ubuntu**. **P4, première boucle de survie jouable, terminé sur Ubuntu**. **P5, ressources et construction du même abri, réalisé sur Ubuntu**. **Phase moteur planétaire terminée sur Ubuntu** : LOD de résolution 32/16/8, index local, régressions/inspection et comparaisons CPU/GPU réalisés. **Caméra de jeu unique et ciel astronomique léger réalisés sur Ubuntu**, avec reprise visuelle après retour utilisateur. Prochaine fonctionnalité P6 : sauvegarde/chargement, puis validation/distribution natives. À la demande explicite de l’utilisateur, le cadrage d’une chaîne fixe P3.5 est remplacé par cette fonctionnalité complète. P3.1 à P3.4 restent les fondations et régressions. La passation détaillée est dans [NEXT_CHAT](NEXT_CHAT.md), les résultats dans [VALIDATION](VALIDATION.md).
 
 ## Fondations réalisées
 
@@ -18,6 +18,7 @@ Version 0.2 : exploration spatiale et catalogue embarqué, repères/origine flot
 | P4 Première survie | Terminé sur Ubuntu | Oxygène réel, abri instanciable fixe dans Mars, HUD, échec et reprise | Consommer/recharger/échouer/R, menu/espace/P/T, pose et service conservés après rebasage/changement de patch, seconde instance sans logique spécifique |
 | P5 Ressources et construction | Terminé sur Ubuntu | Caisses épuisables, inventaire, recette à 12 alliage, preview orientable et construction du **même OxygenShelter P4** | Récolte→stock→confirmation→porte/recharge, admission sol/volumes, annulation sans coût, poses/contact/proxies et retours de session vérifiés |
 | Optimisation moteur planétaire | Terminé sur Ubuntu, sphère sans relief | Profilage du rendu et streaming, **LOD adaptatif selon distance**, raccords mixtes et contacts fins | Mesures comparables, niveaux réellement différents, absence de fissure/oscillation aux faces/arêtes/coins, chargement et CPU/GPU bornés, régressions terrain/survie/construction |
+| Caméra unique et ciel de surface | Réalisé et testé sur Ubuntu | Une Camera3d réutilisée espace/surface, ciel intégré à la vue locale (étoiles, Soleil et astres), composition commune | Une seule caméra/vue principale, ciel et occultations cohérents, transitions/UI/options/P4/P5 conservés, ressources bornées ; captures et comparaison release CPU/GPU à qualité comparable |
 | P6 Version distribuable | Prévue | Sauvegarde/chargement, persistance et réglages graphiques complémentaires, validation Windows 11 et packaging Ubuntu/Windows | Sauvegarde testée, instructions de lancement, builds et essais natifs sur les deux plateformes |
 
 Les étapes P3, P5 et P6 seront découpées en sous-étapes lorsque leur architecture concrète sera examinée. Une régression bloquante ou un résultat de profilage peut justifier une étape corrective avant la suivante ; la raison et les nouveaux critères seront inscrits ici. Le suivi de performance et les réglages restent transversaux après P1 ; refaire les mesures sur la cible avant de fixer la qualité finale. La validation Windows peut commencer plus tôt dès qu'un hôte est disponible. L'objectif de 60 FPS doit être mesuré sur le matériel cible.
@@ -223,4 +224,31 @@ Résolutions intérieures **32/16/8 réellement choisies selon distance**, nivea
 
 Ce LOD adapte la résolution de patches de taille fixe ; il ne livre pas de quadtree, relief mondial, horizon complet, sauvegarde ou streaming asynchrone. Sur la sphère sans relief, les changements lointains restent sous 0,1 mm ; ce choix devra être réévalué avec du relief. Le chargement synchrone est borné au voisinage local et ses durées mesurées. Une extension n’est pas requise pour réintroduire un nombre fixe de cartes comme objectif.
 
-Mesures finales clôturées : seize profils réussis (baselines puis comparaisons finales), gain CPU de remplacement ~6,1→1,1 ms sur deux cas contrôlés, pas de gain FPS notable. Objectif suivant **P6 : sauvegarde/chargement de la session jouable**, puis réglages et distribution avec validation native Windows. Aucun résultat Ubuntu ne vaut validation Windows ni garantie 60 FPS RTX 4050/Core i5.
+Mesures finales clôturées : seize profils réussis (baselines puis comparaisons finales), gain CPU de remplacement ~6,1→1,1 ms sur deux cas contrôlés, pas de gain FPS notable. La demande utilisateur suivante place maintenant **la caméra unique et le remplacement du fond spatial en surface avant P6**. P6 reste **sauvegarde/chargement de la session jouable**, puis réglages et distribution avec validation native Windows. Aucun résultat Ubuntu ne vaut validation Windows ni garantie 60 FPS RTX 4050/Core i5.
+
+## Historique : priorité caméra unique — demande du 13 octobre 2026
+
+L’utilisateur demande une seule caméra et un remplacement du ciel astronomique en surface. Les deux vues actuelles coûtent ~51,5–51,7 ms dans le parcours mesuré ; retirer la vue spatiale donne ~32,2 ms mais enlève du contenu. Cette observation motive une fonctionnalité de rendu complète avant P6 : caméra unique réutilisée espace/surface, fond de ciel intégré à la même vue et représentations célestes légères pilotées par la simulation f64. Les choix précis restent à implémenter et mesurer avec Bevy exactement 0.19.1.
+
+Critères : une seule caméra de jeu/vue principale, pas de caméra de ciel cachée hors écran par frame ; étoiles/Soleil/astres orientés et dimensionnés correctement, horizon et occultation par le terrain/abris ; visites spatiales, M/G/O/U/R, menus/options/UI et P4/P5 conservés ; assets réutilisés et budgets bornés ; tests/captures inspectées et répétitions release CPU/GPU à résolution/MSAA/qualité comparables. Détails autonomes dans [NEXT_CHAT](NEXT_CHAT.md). La skybox et les couleurs atmosphériques sont des moyens de présentation à documenter, sans nouvelle prétention scientifique ni garantie de 31 FPS.
+
+Mise à jour documentaire uniquement : le code conserve ses deux caméras, les 115 tests et les anciennes validations décrivent l’implémentation LOD existante. Aucun nouveau test Cargo/GPU effectué pour cette décision d’ordre. Le LOD reste réalisé ; P6 est différé jusqu’au bilan de cette fonctionnalité.
+
+
+## Bilan caméra unique et ciel — 13 octobre 2026
+
+Une seule GameCamera/Camera3d, réutilisée entre visites spatiales et surface ; pose/projection/couches/options/UI adaptées avant extraction. Un triangle de fond dans la même passe opaque, panorama statique et neuf astres pilotés par directions/rayons angulaires f64 ; aucun second render target ou capture du ciel par frame. [Architecture et paramètres artistiques](SURFACE_SKY.md). La première apparence a été rejetée par l'utilisateur puis reprise : étoiles fines irrégulières, palette plus claire, brume/halo discrets et sol mat supprimant la bande claire rasant l'horizon.
+
+| Critère | État et preuve |
+|---|---|
+| Caméra/vue unique | Même identité active à toutes les poses ; une caméra extraite côté renderer, pas de vue de ciel séparée |
+| Directions, angles, visée et calendrier | Calcul SI/f64, tests à trois JD et après rebasage, P/T et jour/nuit inspectés |
+| Masquage et horizon | Profondeur infinie derrière les objets, toit/paroi inspectés ; horizon radial/fond sans support, brume 40–60 m, simplifications documentées |
+| Intégration | M/G/O/U et retours, R, menu/reprise et H inspectés ; options et gameplay P4/P5 testés |
+| Ressources | Un triangle, un panorama 32 Mio et un matériau/uniforme 608 octets constants, réutilisation testée |
+| Validation | 120 tests, six commandes Cargo réussies ; ciel/P5 code 0, 40 captures finales inspectées |
+| Mesures | Sept profils avant/après réussis ; deux répétitions 1440×900/MSAA ×4, vrai streaming, CPU/GPU et no_sky ; ~51→29 ms au repos sur le poste |
+
+[VALIDATION](VALIDATION.md) conserve aussi les essais intermédiaires ; [PERFORMANCE](PERFORMANCE.md) distingue gain de refonte, coût du fond et changements visuels. La portée de brume est plus courte et le panorama de surface diffère du champ spatial ; pas d'atmosphère scientifique ou d'horizon global géométrique revendiqué. Les captures ne vérifient pas chaque frame par vidéo. Le retour utilisateur initial a été traité ; le rendu révisé n'est pas présenté comme une approbation esthétique donnée par l'utilisateur.
+
+**Suite P6 : sauvegarde/chargement de session complète**, sans toucher à Bevy, aux horloges ou au LOD. Ajuster encore l'apparence si un nouveau retour utilisateur le demande. Windows natif/cible restent non validés ; aucun 60 FPS universel revendiqué.

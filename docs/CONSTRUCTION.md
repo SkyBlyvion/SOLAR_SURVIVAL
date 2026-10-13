@@ -54,3 +54,8 @@ Les départs devant la porte, de course et devant l'abri après retour sont des 
 ## Terrain adaptatif
 
 Le parcours mondial utilise désormais des résolutions 32/16/8 avec bords communs fins. La zone de déplacement/admission garde les triangles 32 et leurs extrema exacts ; le nouvel index local couvre toutes les requêtes admises. Bâtiments, colliders, services, dépôts et inventaire restent fixes dans leurs propriétaires corporels ; aucun changement de résolution ne les réinstalle ni ne les recentre. Les régressions numériques et le parcours graphique P5 sont vérifiés sur ce fournisseur. [Architecture et limites](GLOBAL_TERRAIN.md), [résultats](VALIDATION.md).
+
+
+## Caméra et ciel uniques
+
+13 octobre 2026 : les proxies locaux sont désormais rendus par la même GameCamera que les visites spatiales, sur la couche 1. [Ciel et masquage](SURFACE_SKY.md). Les poses corporelles, contacts, horloges, budgets terrain et services de jeu décrits ici restent autoritaires ; aucun objet de ciel ne fournit du support ou ne réinstalle un bâtiment/dépôt. Les nouvelles preuves sont distinctes des campagnes historiques.

@@ -11,7 +11,7 @@ import statistics
 import subprocess
 
 ROOT = Path(__file__).resolve().parent.parent
-VARIANTS = ("baseline", "no_space_camera", "no_surface_camera", "half_resolution", "msaa_off", "surface_unlit")
+VARIANTS = ("baseline", "no_sky", "no_game_camera", "half_resolution", "msaa_off", "surface_unlit")
 
 
 def percentile(values, fraction):

@@ -1,0 +1,41 @@
+    Blocking waiting for file lock on build directory
+    Checking solar_survival v0.2.0 (/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL)
+error: using `chunks_exact_mut` with a constant chunk size
+   --> src/rendering/sky.rs:121:21
+    |
+121 |     for p in pixels.chunks_exact_mut(4) {
+    |                     ^^^^^^^^^^^^^^^^^^^ help: consider using `as_chunks_mut` instead: `as_chunks_mut::<4>().0`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#chunks_exact_to_as_chunks
+    = note: `-D clippy::chunks-exact-to-as-chunks` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::chunks_exact_to_as_chunks)]`
+
+error: this function has too many arguments (8/7)
+   --> src/ui/mod.rs:279:1
+    |
+279 | / fn markers(
+280 | |     settings: Res<menu::PlayerSettings>,
+281 | |     pilot: Res<Explorer>,
+282 | |     solar: Res<SolarSystem>,
+...   |
+287 | |     mut markers: Query<(&Marker, &mut Node, &mut TextColor)>,
+288 | | ) {
+    | |_^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#too_many_arguments
+    = note: `-D clippy::too-many-arguments` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::too_many_arguments)]`
+
+error: this lint expectation is unfulfilled
+   --> src/rendering/terrain.rs:360:5
+    |
+360 |     clippy::too_many_arguments,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: Paramètres de système injectés par Bevy ECS.
+    = note: `-D unfulfilled-lint-expectations` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(unfulfilled_lint_expectations)]`
+
+error: could not compile `solar_survival` (lib) due to 3 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `solar_survival` (lib test) due to 3 previous errors

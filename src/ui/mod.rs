@@ -276,12 +276,18 @@ fn refresh(
         }
     );
 }
+#[expect(
+    clippy::too_many_arguments,
+    reason = "Paramètres ECS des marqueurs et de leur occultation locale."
+)]
 fn markers(
     settings: Res<menu::PlayerSettings>,
     pilot: Res<Explorer>,
     solar: Res<SolarSystem>,
     clock: Res<SimulationClock>,
     window: Single<&Window, With<PrimaryWindow>>,
+    terrain: Res<crate::planets::terrain::MarsTerrain>,
+    state: Res<SurfaceState>,
     mut markers: Query<(&Marker, &mut Node, &mut TextColor)>,
 ) {
     let position = pilot.global(&solar, clock.jd);
@@ -290,6 +296,36 @@ fn markers(
     let focal = height * 0.5 / (settings.fov_degrees().to_radians() * 0.5).tan();
     for (marker, mut node, mut color) in &mut markers {
         let relative = solar.position(marker.0, clock.jd) - position;
+        if pilot.mode == MovementMode::Surface {
+            let frame = terrain.inertial_frame(
+                solar
+                    .body(BodyId::MARS)
+                    .rotation(clock.seconds_since_epoch()),
+            );
+            let direction = frame.orientation.inverse() * relative.normalize_or_zero();
+            let eye = state.eye(&terrain);
+            let start = terrain.body_relative(eye);
+            let end = start + terrain.orientation * direction * 120.0;
+            let hidden = direction.dot(terrain.site_relative(eye).normalize()) <= 0.0
+                || terrain
+                    .building_solids
+                    .iter()
+                    .any(|solid| solid.blocks_segment(start, end))
+                || (0..3).any(|i| {
+                    let (center, size, orientation) =
+                        crate::physics::surface::obstacle_pose(&terrain, i);
+                    crate::physics::surface::BodyBox {
+                        center: terrain.body_relative(center),
+                        size,
+                        orientation: terrain.orientation * orientation,
+                    }
+                    .blocks_segment(start, end)
+                });
+            if hidden {
+                node.display = Display::None;
+                continue;
+            }
+        }
         let local = (pilot.rotation.inverse() * relative.normalize_or_zero()).as_vec3();
         if local.z >= -0.001 || solar.body(marker.0).radius_m / relative.length().max(1.0) > 0.025 {
             node.display = Display::None;
@@ -315,17 +351,11 @@ fn markers(
 
 fn target_camera(
     mut commands: Commands,
-    pilot: Res<Explorer>,
     root: Single<Entity, With<HudRoot>>,
-    space: Single<Entity, With<crate::camera::SpaceCamera>>,
-    surface: Single<Entity, With<crate::rendering::terrain::SurfaceCamera>>,
+    camera: Single<Entity, With<crate::camera::GameCamera>>,
     mut previous: Local<Option<Entity>>,
 ) {
-    let camera = if pilot.mode == MovementMode::Surface {
-        *surface
-    } else {
-        *space
-    };
+    let camera = *camera;
     if *previous != Some(camera) {
         commands.entity(*root).insert(UiTargetCamera(camera));
         *previous = Some(camera);

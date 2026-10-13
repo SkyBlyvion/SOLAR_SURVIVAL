@@ -1,10 +1,9 @@
 //! Menu et réglages de session. Le calendrier orbital continue indépendamment de l'UI.
 use crate::{
     GameSet,
-    camera::{SpaceCamera, controls},
+    camera::{GameCamera, controls},
     config::GameConfig,
-    player::{Explorer, MovementMode},
-    rendering::terrain::SurfaceCamera,
+    player::Explorer,
 };
 use bevy::{
     app::AppExit,
@@ -94,6 +93,8 @@ enum MenuAction {
 #[derive(Component)]
 struct Label(MenuAction);
 
+#[derive(SystemSet, Debug, Hash, PartialEq, Eq, Clone)]
+pub(crate) struct MenuInputSet;
 pub struct MenuPlugin;
 impl Plugin for MenuPlugin {
     fn build(&self, app: &mut App) {
@@ -108,7 +109,13 @@ impl Plugin for MenuPlugin {
         })
         .init_resource::<PlayerSettings>()
         .add_systems(Startup, setup)
-        .add_systems(Update, input.before(controls).in_set(GameSet::Input))
+        .add_systems(
+            Update,
+            input
+                .before(controls)
+                .in_set(MenuInputSet)
+                .in_set(GameSet::Input),
+        )
         .add_systems(Update, apply_settings.in_set(GameSet::Rendering))
         .add_systems(Update, display.in_set(GameSet::Interface));
     }
@@ -248,14 +255,10 @@ fn input(
     }
 }
 
-#[expect(
-    clippy::type_complexity,
-    reason = "Filtre ECS des deux caméras de jeu."
-)]
 fn apply_settings(
     settings: Res<PlayerSettings>,
     config: Res<GameConfig>,
-    mut cameras: Query<(&mut Projection, &mut Msaa), Or<(With<SpaceCamera>, With<SurfaceCamera>)>>,
+    mut cameras: Query<(&mut Projection, &mut Msaa), With<GameCamera>>,
     mut window: Single<&mut Window, With<PrimaryWindow>>,
 ) {
     if !settings.is_changed() || config.profile.is_some() {
@@ -282,19 +285,13 @@ fn display(
     mut commands: Commands,
     state: Res<MenuState>,
     settings: Res<PlayerSettings>,
-    pilot: Res<Explorer>,
     root: Single<(Entity, &mut Node), With<MenuRoot>>,
     mut panels: Query<(&Panel, &mut Node), Without<MenuRoot>>,
     mut labels: Query<(&Label, &mut Text)>,
-    space: Single<Entity, With<SpaceCamera>>,
-    surface: Single<Entity, With<SurfaceCamera>>,
+    camera: Single<Entity, With<GameCamera>>,
     mut previous: Local<Option<Entity>>,
 ) {
-    let camera = if pilot.mode == MovementMode::Surface {
-        *surface
-    } else {
-        *space
-    };
+    let camera = *camera;
     let (root, mut node) = root.into_inner();
     if *previous != Some(camera) {
         commands.entity(root).insert(UiTargetCamera(camera));
@@ -346,6 +343,7 @@ fn display(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::player::MovementMode;
     use crate::player::surface::SurfaceState;
     use crate::{
         camera::{ExplorationPlugin, NavigationRequest},
@@ -385,7 +383,13 @@ mod tests {
                     .chain(),
             )
             .add_plugins((UniversePlugin, ExplorationPlugin))
-            .add_systems(Update, input.before(controls).in_set(GameSet::Input))
+            .add_systems(
+                Update,
+                input
+                    .before(controls)
+                    .in_set(MenuInputSet)
+                    .in_set(GameSet::Input),
+            )
             .add_systems(Update, apply_settings.in_set(GameSet::Rendering));
         app.world_mut().spawn((
             Window {
@@ -395,8 +399,6 @@ mod tests {
             CursorOptions::default(),
             PrimaryWindow,
         ));
-        app.world_mut()
-            .spawn((SurfaceCamera, Projection::default(), Msaa::Sample4));
         app.update();
         app
     }

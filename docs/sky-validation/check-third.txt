@@ -1,0 +1,116 @@
+    Checking solar_survival v0.2.0 (/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL)
+error[E0599]: no variant, associated function, or constant named `ManageViews` found for enum `RenderSystems` in the current scope
+  --> src/config/sky_validation.rs:36:69
+   |
+36 |         render.add_systems(Render, check_views.after(RenderSystems::ManageViews));
+   |                                                                     ^^^^^^^^^^^ variant, associated function, or constant not found in `RenderSystems`
+
+error[E0063]: missing field `sky_validation_dir` in initializer of `config::GameConfig`
+   --> src/config/profiling.rs:500:30
+    |
+500 |             .insert_resource(GameConfig {
+    |                              ^^^^^^^^^^ missing `sky_validation_dir`
+
+error[E0599]: no associated function or constant named `default` found for struct `planets::terrain::MarsTerrain` in the current scope
+   --> src/rendering/sky.rs:244:44
+    |
+244 |             let mut terrain = MarsTerrain::default();
+    |                                            ^^^^^^^ associated function or constant not found in `planets::terrain::MarsTerrain`
+    |
+   ::: src/planets/terrain.rs:13:1
+    |
+ 13 | pub struct MarsTerrain {
+    | ---------------------- associated function or constant `default` not found for this struct
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `default`, perhaps you need to implement one of them:
+            candidate #1: `harfrust::hb::cache::AtomicStorage`
+            candidate #2: `std::default::Default`
+
+error[E0277]: the trait bound `universe::SimulationClock: std::default::Default` is not satisfied
+   --> src/rendering/sky.rs:255:49
+    |
+255 |             let clock = SimulationClock { jd, ..default() };
+    |                                                 ^^^^^^^^^ the trait `std::default::Default` is not implemented for `universe::SimulationClock`
+    |
+note: required by a bound in `bevy::bevy_utils::default`
+   --> /home/cfa_m2_cs/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/bevy_utils-0.19.1/src/default.rs:29:19
+    |
+ 29 | pub fn default<T: Default>() -> T {
+    |                   ^^^^^^^ required by this bound in `default`
+help: consider annotating `universe::SimulationClock` with `#[derive(Default)]`
+   --> src/universe/mod.rs:17:1
+    |
+ 17 + #[derive(Default)]
+ 18 | pub struct SimulationClock {
+    |
+
+error[E0599]: no associated function or constant named `default` found for struct `universe::SimulationClock` in the current scope
+   --> src/rendering/sky.rs:293:38
+    |
+293 |         let clock = SimulationClock::default();
+    |                                      ^^^^^^^ associated function or constant not found in `universe::SimulationClock`
+    |
+   ::: src/universe/mod.rs:17:1
+    |
+ 17 | pub struct SimulationClock {
+    | -------------------------- associated function or constant `default` not found for this struct
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `default`, perhaps you need to implement one of them:
+            candidate #1: `harfrust::hb::cache::AtomicStorage`
+            candidate #2: `std::default::Default`
+
+error[E0599]: no associated function or constant named `default` found for struct `planets::terrain::MarsTerrain` in the current scope
+   --> src/rendering/sky.rs:294:40
+    |
+294 |         let mut terrain = MarsTerrain::default();
+    |                                        ^^^^^^^ associated function or constant not found in `planets::terrain::MarsTerrain`
+    |
+   ::: src/planets/terrain.rs:13:1
+    |
+ 13 | pub struct MarsTerrain {
+    | ---------------------- associated function or constant `default` not found for this struct
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `default`, perhaps you need to implement one of them:
+            candidate #1: `harfrust::hb::cache::AtomicStorage`
+            candidate #2: `std::default::Default`
+
+error[E0277]: the trait bound `universe::SimulationClock: bevy::bevy_ecs::world::FromWorld` is not satisfied
+   --> src/rendering/sky.rs:339:30
+    |
+339 |             .init_resource::<SimulationClock>()
+    |              -------------   ^^^^^^^^^^^^^^^ the trait `std::default::Default` is not implemented for `universe::SimulationClock`
+    |              |
+    |              required by a bound introduced by this call
+    |
+    = help: the following other types implement trait `bevy::bevy_ecs::world::FromWorld`:
+              AtmosphereSampler
+              BatchedInstanceBuffer<BD>
+              ChildOf
+              DefaultImageSampler
+              DefaultQueryFilters
+              DiagnosticsRecorder
+              FallbackImage
+              FallbackImageCubemap
+            and 20 others
+    = note: required for `universe::SimulationClock` to implement `bevy::bevy_ecs::world::FromWorld`
+note: required by a bound in `bevy::bevy_app::App::init_resource`
+   --> /home/cfa_m2_cs/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/bevy_app-0.19.1/src/app.rs:485:40
+    |
+485 |     pub fn init_resource<R: Resource + FromWorld>(&mut self) -> &mut Self {
+    |                                        ^^^^^^^^^ required by this bound in `App::init_resource`
+help: consider annotating `universe::SimulationClock` with `#[derive(Default)]`
+   --> src/universe/mod.rs:17:1
+    |
+ 17 + #[derive(Default)]
+ 18 | pub struct SimulationClock {
+    |
+
+For more information about this error, try `rustc --explain E0599`.
+error: could not compile `solar_survival` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+Some errors have detailed explanations: E0063, E0277, E0599.
+For more information about an error, try `rustc --explain E0063`.
+error: could not compile `solar_survival` (lib test) due to 7 previous errors

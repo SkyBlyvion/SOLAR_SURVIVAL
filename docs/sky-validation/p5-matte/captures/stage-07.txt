@@ -1,0 +1,1 @@
+t=17.020688 mode=Surface alloy=12 active=false preview=None buildings=1 O2=162.979312 shelter=None rebases=0 feet=DVec3(6.899999999984312, 0.001990387712223047, -4.574999999997256)

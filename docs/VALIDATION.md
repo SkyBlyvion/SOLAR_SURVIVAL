@@ -1,4 +1,45 @@
-# Validation Solar Survival 0.2 — moteur planétaire adaptatif
+# Validation Solar Survival 0.2 — caméra unique et ciel local
+
+13 octobre 2026. Départ réel HEAD **43f163b** ; seuls NEXT_CHAT et ROADMAP modifiés au démarrage, copies exactes dans [sky-validation](sky-validation/NEXT_CHAT-before.md) et [ROADMAP-before](sky-validation/ROADMAP-before.md). Les preuves LOD/P4/P5 historiques sont conservées. Bevy **exactement =0.19.1**, édition 2024, Rust stable 1.99.0 ; aucune dépendance ni modification de Cargo.toml/Cargo.lock. Ubuntu 24.04.5 LTS/X11, i7-6700K/GTX 1060 3 Go/NVK/Mesa 25.2.8, présentation Mesa immediate. [Contexte](sky-validation/host.json), [architecture et approximations](SURFACE_SKY.md), [essais intermédiaires](sky-validation/NOTES.md).
+
+## Résultats finaux
+
+| Vérification | Résultat |
+|---|---|
+| fmt/check/check-all-targets/test/Clippy/release --locked | Six commandes réussies ; [codes et durées](sky-validation/final-matte/build-results.json) |
+| Tests | **120 réussis**, 40 internes ; les 115 régressions antérieures passent |
+| Ciel release | Code 0, **72,416 s**, 24 captures, aucun ERROR/WARN/panic, mêmes sources/shaders/binaire pendant l'essai |
+| P5 release | Code 0, **59,373 s**, 16 captures, aucun ERROR/WARN/panic, concordance vraie |
+| Mesures release | Sept profils avant/après réussis, ~51→29 ms au repos ; [comparaison](sky-validation/comparison.json) |
+| Inspection | **40 captures finales inspectées** sur dix planches ; nuit/crépuscule aussi originales |
+| Caméras | Une seule Camera3d/identité active dans chaque frame de diagnostic ; au plus une caméra extraite, une observée côté renderer |
+| Windows natif / RTX 4050 et Core i5 | Non exécutés |
+
+Journaux des six contrôles dans [final-matte](sky-validation/final-matte/), [tests](sky-validation/final-matte/tests.txt). Parcours ciel : [résultat](sky-validation/sky-matte/results.json), [journal](sky-validation/sky-matte/game.txt), [inspection](sky-validation/sky-matte/inspection/verified.json). P5 : [résultat](sky-validation/p5-matte/results.json), [journal](sky-validation/p5-matte/game.txt), [inspection](sky-validation/p5-matte/inspection/verified.json). Tous les lancements GPU sont successifs, après compilation. Les campagnes antérieures nommées sky-final/sky-verified précèdent le dernier réglage mat ; leur nom ne les rend pas finales pour ce bilan.
+
+## Numérique et architecture vérifiés
+
+Cinq tests nouveaux : rayon angulaire asin(R/d) et direction calculés en SI/f64 avant conversion ; projections identiques à celles de la caméra globale à J2000/J2000+0,5/JD 2461325,5 ; directions/angles et repère inertiel conservés au rebasage ; même entité/mesh/panorama/matériau pendant vingt alternances espace/surface et rotations ; une caméra réutilisée par les vraies sorties M/G/O/U avec pose locale/globale, near/far et couches adaptées avant rendu. Les tests de FOV/MSAA/menu ciblent désormais cette seule caméra. Les anciennes assertions de pose du fond spatial en surface ont été adaptées à la pose locale, sans modifier l'origine f64 publiée.
+
+Le fond est un triangle opaque à profondeur infinie, sans écriture de profondeur ; la scène locale le masque dans la même vue. Aucun second render target, caméra de ciel ou capture par frame en production. Le panorama artistique reste statique (4 096×2 048 RGBA8, 32 Mio) ; neuf entrées célestes dynamiques dans un uniforme de 608 octets. HDR/tonemapping/MSAA communs ; bloom conservé en espace, halo shader en surface. Les budgets de terrain et la simulation ne changent pas. Une caméra ne signifie pas une seule passe GPU ; ces plafonds d'assets ne mesurent pas toute la RAM/VRAM du moteur.
+
+## Inspection finale et correction visuelle
+
+Les 24 poses couvrent Soleil de jour, visée/horizon, nuit, toit et paroi occultant le fond, crépuscule, vraie course à 8 m/s et un rebasage, P/T, menu/reprise, M/G/O/U et leurs retours, échec/R, autre JD et autre site préparé. La caméra garde l'identité **266v0** dans ce parcours. Les préparations de site/JD/réserve sont explicites et distinctes des commandes de déplacement/navigation. Les étoiles sont fines, irrégulières et d'éclats variés. La palette reste artistique et poussiéreuse ; le contraste sol/ciel et l'horizon simplifié restent visibles, sans revendication d'horizon complet ou de relief lointain.
+
+La première proposition a été rejetée par l'utilisateur : panorama à points trop grands et quadrillage régulier, ciel brun sombre uniforme. Les essais successifs et leurs captures ne sont pas supprimés. La bande claire au sol sous Soleil rasant persistait après rapprochement du brouillard/suppression du bloom de surface ; elle disparaît dans la capture finale avec **reflectance du sol à 0**, rugosité/couleur/lumières conservées. Cette valeur mate est un choix artistique, pas une mesure martienne. Brume **40–60 m**, contre 70–125 m auparavant, pour terminer avant le disque local certifié de 66 m ; visibilité lointaine explicitement réduite. Pas de support physique dans le fond de sol sous l'horizon.
+
+P5 conserve récupération réelle (6 puis 12 unités), refus/preview/orientation, annulation sans coût, stock 0 après confirmation, second abri, porte/recharge, mur, course/rebasage, espace et menu. H conserve les HUD vitaux/construction. Les tests préservent les contacts, les propriétaires corporels, le LOD, les horloges et les règles d'oxygène. Aucun replay P2 complet ou campagne mondiale de 120 s supplémentaire sans modification de ces mécanismes.
+
+## Limites
+
+Rayons et directions issus du catalogue, sans nouvelle donnée astronomique. Les corps subpixel sont des points agrandis pour visibilité ; phases/éclats/couleurs/halo atmosphérique restent des approximations de présentation. Le panorama de surface diffère du champ triangulaire historique en espace. Horizon radial idéal sans dépression d'altitude, réfraction ou relief lointain. Les marqueurs UI filtrent horizon/boîtes à 120 m ; ils ne font pas une occlusion des collines historiques ou du texte par pixel. Les disques/étoiles utilisent, eux, la profondeur locale réelle.
+
+Les captures suivent la stabilisation de chaque pose ; pas de vidéo/pixel-audit de toutes les frames de transition ni nouvelle campagne des périphériques OS/DPI/suspension. Aucun nouveau modèle atmosphérique scientifique, carte IAU, retard lumineux, sauvegarde, relief, quadtree ou physique inertielle ajouté. Windows et matériel cible restent à valider nativement. Le bilan de comparaison release est dans [PERFORMANCE](PERFORMANCE.md).
+
+---
+
+# Historique : validation moteur planétaire adaptatif
 
 13 octobre 2026. Départ Git réel **ebddd90**, P5 commité, seul NEXT_CHAT modifié par l’utilisateur ; copie exacte dans [NEXT_CHAT-before](lod-validation/NEXT_CHAT-before.md). Historiques et essais intermédiaires conservés. Rust stable 1.99.0, édition 2024, Bevy **exactement =0.19.1**, Cargo.toml/Cargo.lock inchangés, aucune dépendance ajoutée. Ubuntu 24.04.5 LTS/X11, i7-6700K/GTX 1060 3 Go/NVK/Mesa 25.2.8. [Contexte](lod-validation/host.json), [sources et binaires finaux](lod-validation/final/environment.json), [journal et limites](lod-validation/NOTES.md).
 

@@ -106,3 +106,8 @@ P4 ajoute un abri de recharge fixe dans le corps. Le retour normal M conserve d�
 ## P5 : admission locale des constructions
 
 Le fournisseur expose aussi les extrema exacts sous un carré de construction (demi-largeur ≤5 m), avec le même index et certificat d’aire ; les contacts du joueur restent bornés à ≤1 m. La preview utilise un carré conservateur de 4,5 m entièrement dans le disque local de 66 m, sans charger de candidate ni modifier le terrain. Près de la bordure, avancer jusqu’au rebasage peut rendre le placement admissible. Bâtiments et dépôts sont fixes dans le corps et survivent aux rebasages/retours spatiaux. [CONSTRUCTION](CONSTRUCTION.md) décrit sol, volumes, coûts et budgets. Le chargement reste à résolution fixe, sans LOD adaptatif.
+
+
+## Caméra et ciel uniques
+
+13 octobre 2026 : les proxies locaux sont désormais rendus par la même GameCamera que les visites spatiales, sur la couche 1. [Ciel et masquage](SURFACE_SKY.md). Les poses corporelles, contacts, horloges, budgets terrain et services de jeu décrits ici restent autoritaires ; aucun objet de ciel ne fournit du support ou ne réinstalle un bâtiment/dépôt. Les nouvelles preuves sont distinctes des campagnes historiques.

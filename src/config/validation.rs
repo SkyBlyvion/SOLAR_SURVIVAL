@@ -14,6 +14,7 @@ use bevy::{
 pub struct ValidationPlugin;
 impl Plugin for ValidationPlugin {
     fn build(&self, app: &mut App) {
+        super::sky_validation::install(app);
         super::construction_validation::install(app);
         super::survival_validation::install(app);
         super::cube_validation::install(app);

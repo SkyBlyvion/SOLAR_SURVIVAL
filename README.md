@@ -4,6 +4,8 @@ Prototype d'exploration 3D de notre système solaire, fondation d'un jeu de surv
 
 **M ouvre un terrain martien mondial : six faces traversables, arêtes et coins continus, LOD adaptatif à trois résolutions et chargement local borné.** Les anciens parcours bornés restent des modes de régression. [Architecture et commandes](docs/GLOBAL_TERRAIN.md).
 
+**Caméra unique :** la même caméra rend les visites spatiales et la surface. Sur Mars : ciel poussiéreux, étoiles discrètes la nuit, Soleil et astres calculés depuis le catalogue, masqués par le terrain et les abris. Le ciel et le sol restent des présentations artistiques ; [architecture, ressources et limites](docs/SURFACE_SKY.md).
+
 **Construction P5 :** récupérer les caisses dorées avec **E**, placer le même abri avec **B**, déplacer avec les **flèches**, orienter avec **J/L**, confirmer avec **Entrée** ou annuler avec **X/Échap**. Coût : 12 alliage ; prévisualisation verte/rouge, inventaire et bâtiments conservés en session. [Règles et architecture](docs/CONSTRUCTION.md).
 
 **Survie P4 :** une combinaison de 180 s d’oxygène et un abri de recharge accessible à six mètres devant l’arrivée. Entrez par la porte pour recharger ; à zéro, **R** relance une expédition à l’abri. [Règles et architecture](docs/SURVIVAL.md).
@@ -125,7 +127,7 @@ src/config/validation.rs scénarios graphiques optionnels espace et surface
 src/config/profiling.rs mesures opt-in CPU/GPU et variantes de comparaison
 src/lib.rs            ordre des systèmes Input → Simulation → Navigation → Rendu → UI
 src/universe/         catalogue, unités SI, calculs orbitaux, horloge, repères f64
-src/rendering/        proxies astronomiques et caméra/meshes de terrain en mètres
+src/rendering/        proxies astronomiques, ciel local et meshes de terrain en mètres
 src/camera/           entrées et orchestration de navigation
 src/player/           état d'exploration, repère suivi et contrôleur FPS
 src/physics/          garde spatiale, gravité radiale et contacts cinématiques f64
@@ -146,7 +148,7 @@ src/ui/survival.rs    HUD vital et instruction de reprise
 src/ui/               panneau de navigation, télémétrie et marqueurs
 src/ui/menu.rs        menu principal, options de session et crédits
 src/config/           paramètres de démarrage
-assets/shaders/       shader WGSL de présentation des planètes
+assets/shaders/       shaders WGSL des planètes et du ciel local
 tests/               tests des fondations physiques et numériques
 ```
 
@@ -240,7 +242,7 @@ En mode espace, la garde de navigation maintient au moins 1 km d'altitude et bor
 
 Le prototype FPS utilise un site local **tournant avec Mars**, borné à ±4 096 m dans ses deux axes horizontaux. À chaque entrée, le site est choisi côté éclairé puis fixé dans les axes du corps ; il ne suit ensuite plus le Soleil. La rotation réutilise exactement la convention planétaire du prototype (phase nulle à J2000, inclinaison autour de Z fixe), sans orientation IAU exacte ni coordonnées géographiques revendiquées. Les visites spatiales restent translatoires. Le terrain est une grille de hauteur sur la sphère moyenne, et non encore un réseau mondial cube-sphere. Ses triangles CPU f64 sont la source commune du rendu et des contacts. Le volume joueur est une boîte de 0,6 × 1,8 × 0,6 m alignée sur le repère du site ; la caméra et la gravité suivent la verticale radiale. Ce contrôleur assume les pentes douces générées, sans grottes, corps dynamiques ni simulation de frottement générale. L'adhérence et la correction de hauteur assurent marche et repos ; les obstacles utilisent des collisions balayées et du glissement.
 
-Le pas physique est de 1/120 s, alimenté par `Time<Real>` dans `GameSet::Navigation`, après l'orbite. Chaque frame accepte au plus 0,25 s de physique : les longues interruptions sont abandonnées plutôt que rattrapées brutalement. P et T affectent le calendrier orbital, donc les orbites et la rotation du site, sans accélérer la physique locale. Échap retire les commandes de mouvement, mais la gravité et les contacts continuent. Le rendu local utilise une seconde caméra et une profondeur distincte ; Mars est masquée comme sphère globale pendant la visite au sol. L'éclairage, le brouillard et le ciel restent artistiques.
+Le pas physique est de 1/120 s, alimenté par `Time<Real>` dans `GameSet::Navigation`, après l'orbite. Chaque frame accepte au plus 0,25 s de physique : les longues interruptions sont abandonnées plutôt que rattrapées brutalement. P et T affectent le calendrier orbital, donc les orbites et la rotation du site, sans accélérer la physique locale. Échap retire les commandes de mouvement, mais la gravité et les contacts continuent. La même caméra rend le terrain en mètres et un fond de ciel à profondeur infinie ; les proxies astronomiques de la couche spatiale sont exclus pendant la visite au sol. L'éclairage, le brouillard et le ciel restent artistiques.
 
 `SurfaceState` conserve pieds, vitesse, yaw et pitch dans le site tournant. L’orientation fixe du site appartient à `MarsTerrain` ; `CelestialBody::rotation` fournit la rotation f64 commune à la surface et aux sphères. Après la physique, la navigation compose ces rotations et publie la pose globale dans `Explorer`, puis l’origine flottante. La caméra locale et les obstacles utilisent directement les différences dans le site ; la lumière solaire est convertie vers ses axes. Tourner Mars ne modifie pas les clés de tuiles ni leur révision et ne recrée aucun mesh.
 
@@ -252,7 +254,7 @@ Le pas physique est de 1/120 s, alimenté par `Time<Real>` dans `GameSet::Naviga
 
 Même en l’air, le joueur reste exprimé dans le site tournant. Aucune force de Coriolis, centrifuge, d’Euler ni due à l’accélération translatoire orbitale n’est appliquée ; aucune vitesse inertielle n’est transférée lors des téléportations M/G/O/U. Ce contrôleur est un compromis de gameplay, particulièrement visible sous T, pas une intégration inertielle d’un astronaute. Voir les formules et conventions dans [ASTRONOMY](docs/ASTRONOMY.md).
 
-**Suite :** phase dédiée au profilage/LOD adaptatif et au streaming, puis sauvegarde/distribution P6. P5 fournit maintenant récupération, inventaire et construction du même abri. LOD adaptatif selon la distance, relief et géométries plus complexes restent des extensions distinctes ; le chargement mondial actuel ne fournit pas de LOD mixte. [Roadmap](docs/ROADMAP.md).
+**Suite :** P6 sauvegarde/chargement, puis distribution et validations natives. La caméra unique et son ciel de surface sont livrés/testés sur Ubuntu. P5 fournit maintenant récupération, inventaire et construction du même abri. Le LOD adaptatif 32/16/8 est livré ; relief et géométries plus complexes restent des extensions distinctes. [Roadmap](docs/ROADMAP.md).
 
 
 Les sections P3.2–P3.4 ci-dessous décrivent les anciens modes de régression ; le lancement normal utilise le terrain mondial et la survie.
@@ -289,6 +291,6 @@ Diagnostic ciblé, après compilation release : `python3 scripts/validate_surviv
 
 Huit caisses dorées autour du départ fournissent six alliage chacune. Approcher puis E, récolter deux caisses, B pour placer un abri à 12 unités. La visée et la marche déplacent le fantôme ; flèches pour ajuster, J/L pour tourner. Vert signifie autorisé ; rouge affiche le refus. Entrée confirme après revalidation du sol et des volumes occupés, X/B/Échap annulent sans dépense. Entrer dans l’abri construit recharge avec le même service P4.
 
-Stock, caisses épuisées et bâtiments sont conservés pendant la session, y compris M/G/O/U, menu et R ; aucune sauvegarde disque. Ressource finie (48 unités), quatre abris constructibles en plus du premier. L’oxygène continue pendant le placement. Le terrain mondial reste à résolution fixe, sans LOD adaptatif.
+Stock, caisses épuisées et bâtiments sont conservés pendant la session, y compris M/G/O/U, menu et R ; aucune sauvegarde disque. Ressource finie (48 unités), quatre abris constructibles en plus du premier. L’oxygène continue pendant le placement. Le terrain mondial utilise désormais le LOD adaptatif 32/16/8.
 
 Diagnostic après compilation : `python3 scripts/validate_construction.py --output docs/mon-nouveau-p5 --mesa-immediate`, dossier neuf, seize captures à inspecter. [Conventions, architecture et limites](docs/CONSTRUCTION.md), [validation](docs/VALIDATION.md).

@@ -62,7 +62,7 @@ fn refresh(
     state: Res<SurfaceState>,
     mut root: Single<(Entity, &mut Node), With<Root>>,
     mut label: Single<(&mut Text, &mut TextColor), With<Label>>,
-    camera: Single<Entity, With<crate::rendering::terrain::SurfaceCamera>>,
+    camera: Single<Entity, With<crate::camera::GameCamera>>,
     mut commands: Commands,
 ) {
     let active = pilot.mode == MovementMode::Surface && !oxygen.failed && !menu.is_open();

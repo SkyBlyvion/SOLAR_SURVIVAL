@@ -1,4 +1,60 @@
-# Performance actuelle : LOD et streaming — 13 octobre 2026
+# Performance actuelle : caméra unique et ciel — 13 octobre 2026
+
+Deux versions release comparées sur le même poste Ubuntu/i7-6700K/GTX 1060 3 Go/NVK/Mesa immediate, **1440×900, MSAA ×4**, terrain mondial adaptatif, même calendrier/site/parcours et fenêtres : deux essais sans recorder et un avec avant changement, deux sans recorder/un avec/un diagnostic no_sky après. Tous les sept essais terminent code 0 sans ERROR/WARN/panic. Pas de compilation, autre jeu GPU ou capture pendant les fenêtres. Concordances vraies [avant](sky-validation/before/concordance.json) et [après](sky-validation/after/concordance.json). Les hashes après incluent aussi les shaders WGSL. [Données détaillées et transactions](sky-validation/comparison.json), [contexte matériel](sky-validation/host.json).
+
+## Résultat de la refonte complète
+
+| Frame moyenne / deux répétitions sans recorder | Deux caméras avant | Caméra unique avec ciel complet |
+|---|---|---|
+| Repos | 51,038 / 50,983 ms · 19,59 / 19,61 FPS | **29,313 / 29,096 ms · 34,11 / 34,37 FPS** |
+| Contact | 53,786 / 53,847 ms | 32,004 / 32,005 ms |
+| Course avec vrai streaming | 50,735 / 50,690 ms · 19,71 / 19,73 FPS | **28,875 / 28,965 ms · 34,63 / 34,52 FPS** |
+| p95 repos | 52,996 / 53,771 ms | 32,357 / 32,257 ms |
+| p95 course | 52,510 / 52,381 ms | 32,121 / 32,137 ms |
+| Contrôle en espace | 27,794 / 27,290 ms | 28,299 / 28,213 ms |
+
+La refonte complète réduit ici le temps moyen de frame au repos d'environ **43 %**, soit environ **34 FPS contre 20**. Les sources diffèrent entre versions et les séries ne sont pas immédiatement alternées : pas d'attribution de tout ce gain à une seule ligne. Le contrôle spatial reste proche (~0,7 ms d'écart moyen) ; deux répétitions ne caractérisent pas toute la dérive du poste. Aucun gain supplémentaire de terrain ou performance universelle revendiqué.
+
+Le contenu céleste est conservé sous une représentation différente en surface : panorama d'étoiles discret la nuit, disque solaire et points/disques issus des angles physiques, ciel artistique poussiéreux. Les visites spatiales conservent les sphères/anneaux et bloom. **Différences de présentation à relever** : étoiles de surface nouvelles/irrégulières ; atmosphère artistique et atténuation diurne ; sol mat (reflectance 0) ; brouillard 40–60 m au lieu de 70–125 m ; bloom du terrain absent comme sur l'ancienne caméra locale, halo solaire dans le shader. Le terrain reste rendu aux mêmes résolutions et budgets, mais sa visibilité lointaine est réduite. Comparaison de deux fonctionnalités complètes, pas de deux images strictement identiques.
+
+## Coût du ciel et spans GPU
+
+L'essai final avec recorder donne **29,867 ms au repos**, 29,504 ms en course ; l'ancien recorder donnait 51,552/51,628 ms. Sur une seule comparaison instrumentée : `main_opaque_pass_3d` au repos passe de **3,375 à 7,799 ms**, `tonemapping` 2,047→2,085 ms, `upscaling` 1,078→1,483 ms. Le ciel est dans la passe opaque et son traitement a un coût ; l'ancien chemin opaque était partagé entre les deux vues et n'en conservait pas forcément toutes les occurrences.
+
+Le span `msaa_writeback` (**9,629 ms** avant) n'est plus observé dans les phases de surface finales ; bloom (**2,175 ms** avant) n'y est plus installé. Bloom reste observé lors du contrôle spatial. L'absence d'un span ne mesure pas un coût nul du GPU entier. Les spans arrivent de façon asynchrone, peuvent être imbriqués et **ne s'additionnent pas** en un total GPU fiable. L'inspection ECS/renderer vérifie indépendamment une caméra principale, sans caméra de ciel hors écran.
+
+Le diagnostic **no_sky** donne 24,041 ms au repos et 23,934 ms en course. Écart avec le ciel complet ~5,2/~5,0 ms de frame sur ces essais successifs ; il retire tout le fond et n'est pas un réglage de production. Ce n'est pas une mesure GPU isolée du shader ou une garantie de son coût sur une autre visée/pilote. Les 32 Mio du panorama et son matériau restent résidents, seuls les pixels du fond sont retirés.
+
+## Streaming et CPU
+
+Chaque course mesurée renouvelle **cinq clés**, constructions 18→23, treize patches, 16 744 triangles au terme de la transaction. Les remplacements réellement dans les fenêtres coûtent **0,975/0,984 ms avant**, **0,924/1,052 ms après**. Ce sont des coûts similaires, sans optimisation LOD nouvelle. Les maxima de navigation sont 1,102/1,121→1,030/1,165 ms, synchronisation du rendu 0,441/0,154→0,131/0,143 ms. Le scénario canonique ne change pas le détail d'une clé commune pendant cette fenêtre ; les tests LOD historiques conservent ces autres cas.
+
+Au repos, la synchronisation rendering est ~0,037 ms avant et ~0,040 ms après ; simulation ~0,008 ms. La navigation par frame baisse ~0,114→0,070 ms en moyenne avec des frames plus courtes et moins de sous-pas à effectuer par frame : **pas une nouvelle accélération du contrôleur**. Les mesures entre GameSet n'incluent pas toute l'extraction/préparation/pilote ni les uploads GPU effectifs. Les données et plafonds géométriques restent ceux de [GLOBAL_TERRAIN](GLOBAL_TERRAIN.md).
+
+## Reproduire et variantes actuelles
+
+Après `cargo build --release --locked`, sans compilation concurrente :
+
+```bash
+python3 scripts/profile_planetary.py --scene global --lod adaptive --repeats 2 --gpu-probe --camera-probe --focus-x11 --mesa-immediate --output docs/mon-nouveau-profil
+```
+
+Dossier final nouveau, parent existant ; omettre X11/Mesa sur les autres postes. Les quatre essais durent chacun 54 s, échauffement 10 s, phases 11 s, première seconde de chaque phase exclue. Les anciennes preuves baseline/no_space_camera/no_surface_camera conservent leur signification d'origine.
+
+| Variante actuelle | Effet |
+|---|---|
+| baseline | Une caméra, ciel de surface complet, 1440×900/MSAA ×4 |
+| no_sky | Cache le fond local ; caméra, UI, physique et streaming conservés |
+| no_game_camera | Désactive la vue principale/UI uniquement en surface ; navigation conservée, vue restaurée en espace |
+| half_resolution | 720×450 |
+| msaa_off | MSAA off sur la caméra unique |
+| surface_unlit | Matériaux StandardMaterial locaux unlit, même ciel/meshes |
+
+Les variantes sont des diagnostics, sans modification automatique de qualité en partie normale. La variante no_sky est appliquée dans Update après Rendering, avant propagation de visibilité. Les anciens profils P5/historiques et toutes leurs preuves demeurent disponibles. Windows 11 natif, RTX 4050/Core i5, autres DPI, RAM/VRAM exhaustive et 60 FPS cible **non validés**.
+
+---
+
+# Historique : performance LOD et streaming
 
 Phase demandée après P5, avant P6. Binaire et sources finaux inchangés pendant les mesures, Ubuntu/i7-6700K/GTX 1060 3 Go/NVK/Mesa immediate, **1440×900, MSAA ×4 et deux caméras**. Aucune compilation ni autre lancement GPU concurrent. Les réglages de qualité normaux ne changent pas. [Protocole et empreintes](lod-validation/), [synthèse des CSV et transactions](lod-validation/summary.json), [limites et essais intermédiaires](lod-validation/NOTES.md).
 

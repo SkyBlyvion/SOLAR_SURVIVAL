@@ -2,12 +2,11 @@
 //! Aucun système ni diagnostic GPU ajouté en partie normale.
 use crate::{
     GameSet,
-    camera::{NavigationRequest, SpaceCamera},
+    camera::{GameCamera, NavigationRequest},
     config::GameConfig,
     physics::surface::HALF_WIDTH_M,
     planets::terrain::MarsTerrain,
     player::{Explorer, MovementMode, surface::SurfaceState},
-    rendering::terrain::SurfaceCamera,
     universe::{SimulationClock, units::J2000},
 };
 use bevy::{
@@ -33,8 +32,8 @@ const WARMUP_SECONDS: f64 = 10.0;
 const SETTLE_SECONDS: f64 = 1.0;
 const VARIANTS: [&str; 6] = [
     "baseline",
-    "no_space_camera",
-    "no_surface_camera",
+    "no_sky",
+    "no_game_camera",
     "half_resolution",
     "msaa_off",
     "surface_unlit",
@@ -216,7 +215,10 @@ impl Plugin for ProfilingPlugin {
                     finish.after(GameSet::Interface),
                 ),
             )
-            .add_systems(PostUpdate, isolate)
+            .add_systems(
+                Update,
+                isolate.after(GameSet::Rendering).before(GameSet::Interface),
+            )
             .add_systems(Last, collect);
     }
     fn finish(&self, app: &mut App) {
@@ -316,26 +318,22 @@ fn finish(mut samples: ResMut<ProfileSamples>) {
 fn isolate(
     config: Res<GameConfig>,
     pilot: Res<Explorer>,
-    mut cameras: Query<(
-        &mut Camera,
-        &mut Msaa,
-        Option<&SpaceCamera>,
-        Option<&SurfaceCamera>,
-    )>,
+    mut cameras: Query<(&mut Camera, &mut Msaa), With<GameCamera>>,
+    mut sky: Query<&mut Visibility, With<crate::rendering::sky::SurfaceSky>>,
     visuals: Query<(&MeshMaterial3d<StandardMaterial>, &RenderLayers)>,
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
     let variant = config.profile.as_ref().unwrap().variant.as_str();
     let surface = pilot.mode == MovementMode::Surface;
-    for (mut camera, mut msaa, space, ground) in &mut cameras {
-        if space.is_some() {
-            camera.is_active = !(surface && variant == "no_space_camera");
-        }
-        if ground.is_some() {
-            camera.is_active = surface && variant != "no_surface_camera";
-        }
+    for (mut camera, mut msaa) in &mut cameras {
+        camera.is_active = !(surface && variant == "no_game_camera");
         if variant == "msaa_off" {
             *msaa = Msaa::Off;
+        }
+    }
+    if surface && variant == "no_sky" {
+        for mut visibility in &mut sky {
+            *visibility = Visibility::Hidden;
         }
     }
     if variant == "surface_unlit" {
@@ -506,6 +504,7 @@ mod tests {
                 construction_validation_dir: None,
                 survival_validation_dir: None,
                 start_jd: J2000,
+                sky_validation_dir: None,
                 smoke_seconds: None,
                 surface_smoke_seconds: None,
                 rotation_smoke_seconds: None,

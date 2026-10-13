@@ -1,0 +1,11 @@
+{
+  "exit_code": 101,
+  "seconds": 36.393224941999506,
+  "focused_window": "0x4400004",
+  "diagnostics": [
+    "thread 'Compute Task Pool (3)' (164336) panicked at src/config/sky_validation.rs:226:9:"
+  ],
+  "completion": [],
+  "captures": 12,
+  "hashes_unchanged": true
+}

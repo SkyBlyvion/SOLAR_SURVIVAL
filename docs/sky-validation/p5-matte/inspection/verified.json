@@ -1,0 +1,33 @@
+{
+  "captures": [
+    "stage-00.png",
+    "stage-01.png",
+    "stage-02.png",
+    "stage-03.png",
+    "stage-04.png",
+    "stage-05.png",
+    "stage-06.png",
+    "stage-07.png",
+    "stage-08.png",
+    "stage-09.png",
+    "stage-10.png",
+    "stage-11.png",
+    "stage-12.png",
+    "stage-13.png",
+    "stage-14.png",
+    "stage-15.png"
+  ],
+  "boards": [
+    "board-00.jpg",
+    "board-01.jpg",
+    "board-02.jpg",
+    "board-03.jpg"
+  ],
+  "inspected": true,
+  "observations": [
+    "HUD vital/P5 conservé lorsque H masque la télémétrie",
+    "Refus rouge, récupération 6 puis 12, preview verte orientée et annulation sans paiement",
+    "Confirmation stock 0, second abri, porte/recharge, mur, course/rebasage",
+    "Retour Mars spatial et menu/reprise, seconde recharge, toit/parois opaques au ciel"
+  ]
+}

@@ -1,0 +1,25 @@
+    Checking solar_survival v0.2.0 (/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL)
+warning: unnecessary parentheses around type
+   --> src/rendering/terrain.rs:377:9
+    |
+377 |         (Without<SurfaceSun>),
+    |         ^                   ^
+    |
+    = note: `#[warn(unused_parens)]` (part of `#[warn(unused)]`) on by default
+help: remove these parentheses
+    |
+377 -         (Without<SurfaceSun>),
+377 +         Without<SurfaceSun>,
+    |
+
+warning: unused import: `MovementMode`
+ --> src/ui/menu.rs:6:24
+  |
+6 |     player::{Explorer, MovementMode},
+  |                        ^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: `solar_survival` (lib) generated 2 warnings (run `cargo fix --lib -p solar_survival` to apply 2 suggestions)
+warning: `solar_survival` (lib test) generated 1 warning (1 duplicate)
+    Finished `dev` profile [optimized] target(s) in 3.36s

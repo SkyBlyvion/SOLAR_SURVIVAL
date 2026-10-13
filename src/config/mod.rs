@@ -4,11 +4,13 @@ mod construction_validation;
 mod cube_validation;
 mod globe_validation;
 pub mod profiling;
+mod sky_validation;
 mod survival_validation;
 pub mod validation;
 #[derive(Resource, Debug)]
 pub struct GameConfig {
     pub start_jd: f64,
+    pub sky_validation_dir: Option<std::path::PathBuf>,
     pub construction_validation_dir: Option<std::path::PathBuf>,
     pub survival_validation_dir: Option<std::path::PathBuf>,
     pub smoke_seconds: Option<f64>,
@@ -42,6 +44,8 @@ impl Default for GameConfig {
             |p| p.global_terrain,
         );
         Self {
+            sky_validation_dir: std::env::var_os("SOLAR_SKY_VALIDATE_DIR")
+                .map(std::path::PathBuf::from),
             construction_validation_dir: std::env::var_os("SOLAR_CONSTRUCTION_VALIDATE_DIR")
                 .map(std::path::PathBuf::from),
             survival_validation_dir: std::env::var_os("SOLAR_SURVIVAL_VALIDATE_DIR")
@@ -88,7 +92,8 @@ impl Default for GameConfig {
 }
 impl GameConfig {
     pub fn automated(&self) -> bool {
-        self.profile.is_some()
+        self.sky_validation_dir.is_some()
+            || self.profile.is_some()
             || self.construction_validation_dir.is_some()
             || self.survival_validation_dir.is_some()
             || (self.mars_global && self.globe_validation_dir.is_some())

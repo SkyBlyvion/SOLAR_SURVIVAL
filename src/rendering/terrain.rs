@@ -1,4 +1,4 @@
-//! Rendu local en mètres, couche séparée de la profondeur astronomique compressée.
+//! Rendu local en mètres, visible par la caméra de jeu en mode surface.
 use crate::planets::{PatchKey, globe_terrain::SurfacePatch};
 use crate::{
     GameSet,
@@ -11,7 +11,7 @@ use crate::{
 };
 use bevy::{
     asset::RenderAssetUsages,
-    camera::{Hdr, visibility::RenderLayers},
+    camera::visibility::RenderLayers,
     math::{DQuat, DVec3},
     mesh::{Indices, PrimitiveTopology},
     prelude::*,
@@ -19,8 +19,6 @@ use bevy::{
 use std::collections::BTreeMap;
 use std::collections::HashMap;
 
-#[derive(Component)]
-pub struct SurfaceCamera;
 #[derive(Component)]
 struct LocalVisual {
     origin: DVec3,
@@ -61,39 +59,6 @@ fn setup(
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
     commands.spawn((
-        SurfaceCamera,
-        Camera3d::default(),
-        Camera {
-            order: 1,
-            is_active: false,
-            clear_color: ClearColorConfig::None,
-            ..default()
-        },
-        Projection::Perspective(PerspectiveProjection {
-            fov: 65_f32.to_radians(),
-            near: 0.05,
-            far: 1000.0,
-            ..default()
-        }),
-        RenderLayers::layer(1),
-        Transform::default(),
-        Hdr,
-        Msaa::Sample4,
-        AmbientLight {
-            color: Color::srgb(0.85, 0.64, 0.48),
-            brightness: 100.0,
-            ..default()
-        },
-        DistanceFog {
-            color: Color::srgb(0.28, 0.13, 0.075),
-            falloff: FogFalloff::Linear {
-                start: 70.0,
-                end: 125.0,
-            },
-            ..default()
-        },
-    ));
-    commands.spawn((
         SurfaceSun,
         DirectionalLight {
             illuminance: 11000.0,
@@ -125,6 +90,8 @@ fn setup(
     commands.insert_resource(TerrainAssets {
         material: materials.add(StandardMaterial {
             base_color: Color::srgb(0.55, 0.24, 0.115),
+            // Sol poussiéreux artistique : pas de bande spéculaire à angle rasant.
+            reflectance: 0.0,
             perceptual_roughness: 1.0,
             ..default()
         }),
@@ -391,24 +358,12 @@ fn stream(
     clippy::type_complexity,
     reason = "Filtres disjoints garantissant les emprunts des Transform ECS."
 )]
-#[expect(
-    clippy::too_many_arguments,
-    reason = "Paramètres de système injectés par Bevy ECS."
-)]
 fn sync(
     pilot: Res<Explorer>,
     surface: Res<SurfaceState>,
     terrain: Res<MarsTerrain>,
     solar: Res<SolarSystem>,
     clock: Res<SimulationClock>,
-    mut camera: Single<
-        (&mut Camera, &mut Transform),
-        (
-            With<SurfaceCamera>,
-            Without<LocalVisual>,
-            Without<SurfaceSun>,
-        ),
-    >,
     mut visuals: Query<
         (
             &LocalVisual,
@@ -417,28 +372,20 @@ fn sync(
             &mut Transform,
             &mut Visibility,
         ),
-        (Without<SurfaceCamera>, Without<SurfaceSun>),
+        Without<SurfaceSun>,
     >,
     mut light: Single<
         (&mut Transform, &mut DirectionalLight),
-        (
-            With<SurfaceSun>,
-            Without<SurfaceCamera>,
-            Without<LocalVisual>,
-        ),
+        (With<SurfaceSun>, Without<LocalVisual>),
     >,
 ) {
     let active = pilot.mode == MovementMode::Surface;
-    let (camera, transform) = &mut *camera;
-    camera.is_active = active;
     if !active {
         for (_, _, _, _, mut visibility) in &mut visuals {
             *visibility = Visibility::Hidden;
         }
         return;
     }
-    transform.translation = Vec3::ZERO;
-    transform.rotation = surface.local_rotation(&terrain).as_quat();
     // Soustraction dans le site en f64, sans aller-retour héliocentrique.
     let eye = surface.eye(&terrain);
     for (visual, obstacle, globe, mut transform, mut visibility) in &mut visuals {
@@ -850,10 +797,6 @@ mod tests {
         app.world_mut()
             .resource_mut::<MarsTerrain>()
             .set_site(DVec3::X);
-        let camera = app
-            .world_mut()
-            .spawn((SurfaceCamera, Camera::default(), Transform::default()))
-            .id();
         let light = app
             .world_mut()
             .spawn((
@@ -876,7 +819,6 @@ mod tests {
         app.update();
         let first = app.world().resource::<TileCache>().tiles.clone();
         let obstacle_pose = *app.world().get::<Transform>(obstacle).unwrap();
-        let camera_pose = *app.world().get::<Transform>(camera).unwrap();
         let sun_start = *app.world().get::<Transform>(light).unwrap();
         assert_eq!(
             app.world()
@@ -901,7 +843,6 @@ mod tests {
                 *app.world().get::<Transform>(obstacle).unwrap(),
                 obstacle_pose
             );
-            assert_eq!(*app.world().get::<Transform>(camera).unwrap(), camera_pose);
             for (entity, _) in first.values() {
                 let world = app.world();
                 let relative = world.get::<LocalVisual>(*entity).unwrap().origin
