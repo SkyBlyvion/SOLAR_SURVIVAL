@@ -3,10 +3,12 @@ use bevy::prelude::*;
 mod cube_validation;
 mod globe_validation;
 pub mod profiling;
+mod survival_validation;
 pub mod validation;
 #[derive(Resource, Debug)]
 pub struct GameConfig {
     pub start_jd: f64,
+    pub survival_validation_dir: Option<std::path::PathBuf>,
     pub smoke_seconds: Option<f64>,
     pub surface_smoke_seconds: Option<f64>,
     pub rotation_smoke_seconds: Option<f64>,
@@ -38,6 +40,8 @@ impl Default for GameConfig {
             |p| p.global_terrain,
         );
         Self {
+            survival_validation_dir: std::env::var_os("SOLAR_SURVIVAL_VALIDATE_DIR")
+                .map(std::path::PathBuf::from),
             mars_global,
             globe_validation_dir: std::env::var_os("SOLAR_GLOBAL_VALIDATE_DIR")
                 .map(std::path::PathBuf::from),
@@ -81,6 +85,7 @@ impl Default for GameConfig {
 impl GameConfig {
     pub fn automated(&self) -> bool {
         self.profile.is_some()
+            || self.survival_validation_dir.is_some()
             || (self.mars_global && self.globe_validation_dir.is_some())
             || (self.cube_surface && self.cube_validation_dir.is_some())
             || self.p2_seconds.is_some()

@@ -23,6 +23,7 @@ fn mu() -> f64 {
 }
 fn terrain(face: CubeFace) -> MarsTerrain {
     let mut terrain = MarsTerrain {
+        building_solids: Vec::new(),
         radius_m: R,
         seed: 42,
         orientation: DQuat::IDENTITY,

@@ -1,0 +1,48 @@
+2026-10-13T08:58:18.391150Z  INFO bevy_render::renderer: AdapterInfo { name: "NVIDIA GeForce GTX 1060 3GB (NVK GP106)", vendor: 4318, device: 7170, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "NVK", driver_info: "Mesa 25.2.8-0ubuntu0.24.04.2", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: false }
+2026-10-13T08:58:18.503373Z  INFO bevy_pbr::cluster: GPU clustering is supported on this device.
+2026-10-13T08:58:18.503407Z  INFO bevy_render::batching::gpu_preprocessing: GPU preprocessing is fully supported on this device.
+2026-10-13T08:58:18.503838Z  INFO bevy_winit::system: Creating new window Solar Survival · 0.2 · Mars (63v0)
+2026-10-13T08:58:18.507048Z  INFO winit::platform_impl::linux::x11::window: Guessed window scale factor: 1
+2026-10-13T08:58:18.515861Z  INFO solar_survival::config::survival_validation: P4 phase 0 t=0.000 O2=180.000 shelter=None feet=DVec3(0.0, 0.0, 0.0)
+2026-10-13T08:58:20.028878Z  INFO solar_survival::config::survival_validation: P4 capture 0 t=1.513374, mode=Surface, O2=78.486626, failed=false, shelter=None, rebases=0, feet=DVec3(0.0, 0.0019999374278592144, 0.0), buildings=1
+2026-10-13T08:58:20.282426Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p4-validation/graphics/captures/stage-00.png
+2026-10-13T08:58:20.540459Z  INFO solar_survival::config::survival_validation: P4 phase 1 t=2.024 O2=78.028 shelter=None feet=DVec3(0.0, 0.0019999374278592144, 0.0)
+2026-10-13T08:58:21.966281Z  INFO solar_survival::config::survival_validation: P4 phase 2 t=3.451 O2=96.935 shelter=Some(BuildingId(1)) feet=DVec3(0.0, 0.0019937332310062993, -6.412499999992416)
+2026-10-13T08:58:22.571931Z  INFO solar_survival::config::survival_validation: P4 capture 1 t=4.056548, mode=Surface, O2=116.802846, failed=false, shelter=Some(BuildingId(1)), rebases=0, feet=DVec3(0.0, 0.0019937332310062993, -6.412499999992416), buildings=1
+2026-10-13T08:58:22.820942Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p4-validation/graphics/captures/stage-01.png
+2026-10-13T08:58:27.023774Z  INFO solar_survival::config::survival_validation: P4 capture 2 t=8.508195, mode=Surface, O2=180.000000, failed=false, shelter=Some(BuildingId(1)), rebases=0, feet=DVec3(0.0, 0.0019937332310062993, -6.412499999992416), buildings=1
+2026-10-13T08:58:27.262002Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p4-validation/graphics/captures/stage-02.png
+2026-10-13T08:58:27.528370Z  INFO solar_survival::config::survival_validation: P4 phase 3 t=9.013 O2=180.000 shelter=Some(BuildingId(1)) feet=DVec3(0.0, 0.0019937332310062993, -6.412499999992416)
+2026-10-13T08:58:28.963908Z  INFO solar_survival::config::survival_validation: P4 phase 4 t=10.449 O2=179.174 shelter=None feet=DVec3(0.0, 0.0019999536659166704, 0.037499999999865655)
+2026-10-13T08:58:29.829643Z  INFO solar_survival::config::survival_validation: P4 capture 3 t=11.314178, mode=Surface, O2=179.173531, failed=false, shelter=None, rebases=0, feet=DVec3(0.0, 0.0019999536659166704, 0.037499999999865655), buildings=1
+2026-10-13T08:58:30.073477Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p4-validation/graphics/captures/stage-03.png
+2026-10-13T08:58:30.526588Z  INFO solar_survival::config::survival_validation: P4 phase 5 t=12.011 O2=179.174 shelter=None feet=DVec3(0.0, 0.0019999536659166704, 0.037499999999865655)
+2026-10-13T08:58:38.507577Z DEBUG solar_survival::player::surface: GLOBAL rebasage CPU 8.218 ms, patches 13, constructions 18
+2026-10-13T08:58:41.021910Z  INFO solar_survival::config::survival_validation: P4 capture 4 t=22.506594, mode=Surface, O2=168.623214, failed=false, shelter=None, rebases=1, feet=DVec3(20.400000000176572, 0.001940014953915782, -8.691280225659556e-11), buildings=1
+2026-10-13T08:58:41.169123Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p4-validation/graphics/captures/stage-04.png
+2026-10-13T08:58:41.520487Z  INFO solar_survival::config::survival_validation: P4 phase 6 t=23.005 O2=168.169 shelter=None feet=DVec3(24.066666666685588, 0.0019164432702832974, -8.691280225583637e-11)
+2026-10-13T08:58:52.519943Z  INFO solar_survival::config::survival_validation: P4 phase 7 t=34.005 O2=157.178 shelter=None feet=DVec3(-63.86666665869505, 0.0014035918176522233, -8.691280224605869e-11)
+2026-10-13T08:58:53.321261Z  INFO solar_survival::config::survival_validation: P4 capture 5 t=34.805818, mode=Surface, O2=156.323990, failed=false, shelter=None, rebases=1, feet=DVec3(-63.86666665869505, 0.0014035918176522233, -8.691280224605869e-11), buildings=1
+2026-10-13T08:58:53.495376Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p4-validation/graphics/captures/stage-05.png
+2026-10-13T08:58:54.548194Z  INFO solar_survival::config::survival_validation: P4 phase 8 t=36.033 O2=155.152 shelter=None feet=DVec3(-63.86666665869505, 0.0014035918176522233, -8.691280224605869e-11)
+2026-10-13T08:58:56.149537Z  INFO solar_survival::config::survival_validation: P4 capture 6 t=37.634030, mode=Surface, O2=0.000000, failed=true, shelter=None, rebases=1, feet=DVec3(-63.86666665869505, 0.0014035918176522233, -8.691280224605869e-11), buildings=1
+2026-10-13T08:58:56.330602Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p4-validation/graphics/captures/stage-06.png
+2026-10-13T08:58:56.529546Z  INFO solar_survival::config::survival_validation: P4 phase 9 t=38.014 O2=0.000 shelter=None feet=DVec3(-63.86666665869505, 0.0014035918176522233, -8.691280224605869e-11)
+2026-10-13T08:58:57.840667Z  INFO solar_survival::config::survival_validation: P4 capture 7 t=39.325327, mode=Surface, O2=180.000000, failed=false, shelter=Some(BuildingId(1)), rebases=0, feet=DVec3(0.0, 0.0019945207082398887, -5.999999999534339), buildings=1
+2026-10-13T08:58:58.011659Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p4-validation/graphics/captures/stage-07.png
+2026-10-13T08:58:58.523128Z  INFO solar_survival::config::survival_validation: P4 phase 10 t=40.008 O2=180.000 shelter=Some(BuildingId(1)) feet=DVec3(0.0, 0.0019945207082398887, -5.999999999534339)
+2026-10-13T08:58:59.531639Z  INFO solar_survival::config::survival_validation: P4 capture 8 t=41.016037, mode=Space, O2=180.000000, failed=false, shelter=None, rebases=0, feet=DVec3(0.0, 0.0019945207082398887, -5.999999999534339), buildings=1
+2026-10-13T08:58:59.663991Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p4-validation/graphics/captures/stage-08.png
+2026-10-13T08:59:00.533426Z  INFO solar_survival::config::survival_validation: P4 phase 11 t=42.018 O2=180.000 shelter=None feet=DVec3(0.0, 0.0019945207082398887, -5.999999999534339)
+2026-10-13T08:59:01.531976Z  INFO solar_survival::config::survival_validation: P4 capture 9 t=43.016488, mode=Surface, O2=178.977877, failed=false, shelter=None, rebases=0, feet=DVec3(0.0, 0.0019999371334760725, 0.0), buildings=1
+2026-10-13T08:59:01.760429Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p4-validation/graphics/captures/stage-09.png
+2026-10-13T08:59:02.538186Z  INFO solar_survival::config::survival_validation: P4 phase 12 t=44.023 O2=178.023 shelter=None feet=DVec3(0.0, 0.0019999371334760725, 0.0)
+2026-10-13T08:59:03.521240Z  INFO solar_survival::config::survival_validation: P4 capture 10 t=45.005730, mode=Surface, O2=58.965825, failed=false, shelter=None, rebases=0, feet=DVec3(16.0, 0.0019627970126331763, -1.1641532182693481e-10), buildings=2
+2026-10-13T08:59:03.693405Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p4-validation/graphics/captures/stage-10.png
+2026-10-13T08:59:04.559749Z  INFO solar_survival::config::survival_validation: P4 phase 13 t=46.045 O2=57.976 shelter=None feet=DVec3(16.0, 0.0019627970126331763, -1.1641532182693481e-10)
+2026-10-13T08:59:05.935763Z  INFO solar_survival::config::survival_validation: P4 phase 14 t=47.421 O2=75.400 shelter=Some(BuildingId(2)) feet=DVec3(15.999999999973822, 0.0019580623566681794, -6.150000000109728)
+2026-10-13T08:59:06.558938Z  INFO solar_survival::config::survival_validation: P4 capture 11 t=48.043379, mode=Surface, O2=95.698487, failed=false, shelter=Some(BuildingId(2)), rebases=0, feet=DVec3(15.999999999973822, 0.0019580623566681794, -6.150000000109728), buildings=2
+2026-10-13T08:59:06.784071Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p4-validation/graphics/captures/stage-11.png
+2026-10-13T08:59:12.528203Z  INFO solar_survival::config::survival_validation: P4 capture 12 t=54.012389, mode=Surface, O2=180.000000, failed=false, shelter=Some(BuildingId(2)), rebases=0, feet=DVec3(15.999999999973822, 0.0019580623566681794, -6.150000000109728), buildings=2
+2026-10-13T08:59:12.754055Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p4-validation/graphics/captures/stage-12.png
+2026-10-13T08:59:14.556745Z  INFO solar_survival::config::survival_validation: P4 terminé : consommation, recharge, menu, rebasage aller/retour, échec, R, espace, deuxième instance

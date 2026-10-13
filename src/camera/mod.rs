@@ -26,6 +26,7 @@ pub struct NavigationRequest {
     pub overview: bool,
     pub detach: bool,
     pub surface: bool,
+    pub restart: bool,
 }
 pub struct ExplorationPlugin;
 impl Plugin for ExplorationPlugin {
@@ -78,6 +79,7 @@ fn setup(
 pub(crate) fn controls(
     menu: Option<Res<crate::ui::menu::MenuState>>,
     settings: Option<Res<crate::ui::menu::PlayerSettings>>,
+    oxygen: Option<Res<crate::survival::Oxygen>>,
     keys: Res<ButtonInput<KeyCode>>,
     mouse: Res<ButtonInput<MouseButton>>,
     motion: Res<AccumulatedMouseMotion>,
@@ -103,6 +105,9 @@ pub(crate) fn controls(
     }
     if mouse.just_pressed(MouseButton::Right) && window.focused {
         pilot.captured = true;
+    }
+    if oxygen.as_ref().is_some_and(|o| o.enabled && o.failed) {
+        pilot.captured = false;
     }
     cursor.visible = !pilot.captured;
     cursor.grab_mode = if pilot.captured {
@@ -166,6 +171,7 @@ pub(crate) fn controls(
             pilot.selected = BodyId(i);
         }
     }
+    request.restart |= keys.just_pressed(KeyCode::KeyR);
     request.surface |= keys.just_pressed(KeyCode::KeyM);
     request.visit |= keys.just_pressed(KeyCode::KeyG);
     request.center |= keys.just_pressed(KeyCode::KeyF);
@@ -193,13 +199,19 @@ pub(crate) fn navigate(
     mut camera: Single<&mut Transform, With<SpaceCamera>>,
     mut surface: ResMut<SurfaceState>,
     mut terrain: ResMut<MarsTerrain>,
+    mut buildings: Option<ResMut<crate::buildings::Buildings>>,
+    mut oxygen: Option<ResMut<crate::survival::Oxygen>>,
 ) {
     if request.surface {
         if pilot.mode == MovementMode::Surface {
             pilot.selected = BodyId::MARS;
             pilot.visit(&solar, clock.jd);
         } else {
-            surface.enter(&mut pilot, &mut terrain, &solar, clock.jd);
+            if let Some(home) = buildings.as_ref().and_then(|b| b.home_orientation) {
+                surface.enter_home(&mut pilot, &mut terrain, home, None);
+            } else {
+                surface.enter(&mut pilot, &mut terrain, &solar, clock.jd);
+            }
         }
     }
     if pilot.mode == MovementMode::Surface && (request.visit || request.overview || request.detach)
@@ -227,8 +239,29 @@ pub(crate) fn navigate(
         let direction = solar.position(pilot.selected, clock.jd) - pilot.global(&solar, clock.jd);
         pilot.look_toward(direction);
     }
+    if request.restart
+        && oxygen.as_ref().is_some_and(|o| o.enabled && o.failed)
+        && let Some(buildings) = &buildings
+        && let Some(home) = buildings.home_orientation
+    {
+        surface.enter_home(
+            &mut pilot,
+            &mut terrain,
+            home,
+            Some(buildings.shelters[0].position_m),
+        );
+        oxygen.as_mut().unwrap().restart();
+        pilot.captured = false;
+    }
     *request = NavigationRequest::default();
     if pilot.mode == MovementMode::Surface {
+        if oxygen.as_ref().is_some_and(|o| o.enabled)
+            && let Some(buildings) = &mut buildings
+            && buildings.home_orientation.is_none()
+        {
+            buildings.install_first(&terrain);
+            buildings.publish_colliders(&mut terrain);
+        }
         surface.advance(
             &pilot,
             &mut terrain,

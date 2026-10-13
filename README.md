@@ -1,8 +1,10 @@
-# Solar Survival — version 0.2 · FPS Mars et repère tournant
+# Solar Survival — version 0.2 · Exploration et survie sur Mars
 
 Prototype d'exploration 3D de notre système solaire, fondation d'un jeu de survie spatial en première personne. **Les positions, rayons et distances physiques restent en mètres à l'échelle 1:1, en `f64`.** Bevy ne reçoit que des représentations relatives à la caméra.
 
 **Depuis le 13 octobre 2026, M ouvre un terrain martien mondial : six faces traversables, arêtes et coins continus, chargement local dynamique.** Les anciens parcours bornés restent des modes de régression. [Architecture et commandes](docs/GLOBAL_TERRAIN.md).
+
+**Survie P4 :** une combinaison de 180 s d’oxygène et un abri de recharge accessible à six mètres devant l’arrivée. Entrez par la porte pour recharger ; à zéro, **R** relance une expédition à l’abri. [Règles et architecture](docs/SURVIVAL.md).
 
 La suite du développement suit [la roadmap](docs/ROADMAP.md). Le [prompt du prochain chat](docs/NEXT_CHAT.md) est actualisé à chaque fin de chat de développement avec l'état réel et l'objectif suivant.
 
@@ -62,7 +64,7 @@ Le lancement normal affiche **Jouer**, **Options**, **Crédits** et **Quitter**.
 
 Les options s'appliquent immédiatement : sensibilité souris ×0,5/1/1,5/2, champ de vision **vertical** 55/65/75/90°, MSAA désactivé/×2/×4, affichage fenêtré/plein écran sans bordure. **Rétablir les valeurs par défaut** restaure ×1, 65°, MSAA ×4 et fenêtré. Les valeurs initiales de rendu restent celles du prototype. Les réglages sont conservés pour la session, sans sauvegarde sur disque. Il n'y a pas d'option sonore car l'audio n'est pas activé.
 
-Le menu libère la souris et bloque les commandes de navigation, P/T et H. Le calendrier orbital continue avec `Time<Real>` ; pour le figer, utiliser P avant d'ouvrir le menu. En surface, la gravité et les contacts continuent, sans entrée de déplacement. Cette convention conserve les deux horloges du prototype. Les scénarios de validation/profilage démarrent directement en jeu.
+Le menu libère la souris et bloque les commandes de navigation, P/T et H. Le calendrier orbital continue avec `Time<Real>` ; pour le figer, utiliser P avant d'ouvrir le menu. En surface, la gravité et les contacts continuent, sans entrée de déplacement. L’oxygène et sa recharge sont suspendus pendant le menu ; le calendrier et la gravité continuent. Cette convention conserve les deux horloges du prototype. Les scénarios de validation/profilage démarrent directement en jeu.
 
 ## Contrôles
 
@@ -86,7 +88,8 @@ Les touches de déplacement désignent des positions physiques : WASD sur QWERTY
 | U | Passer au repère héliocentrique ; depuis la surface, revenir d’abord à distance de sécurité |
 | T | Temps orbital ×1 / ×10 / ×100 / ×1000 |
 | P | Pause des orbites et des rotations |
-| H | Masquer / afficher l'interface |
+| H | Masquer / afficher la télémétrie ; le HUD vital reste visible |
+| R | Après épuisement de l’oxygène : repartir au premier abri, réserve pleine |
 
 Les vitesses disponibles sont 5 m/s, 250 m/s, 20 km/s, 20 000 km/s, 2 millions km/s et 100 millions km/s. Ce sont des choix de gameplay. En espace, l'interface affiche la **vitesse de déplacement configurée** ; à l'arrêt elle demeure affichée. En surface, elle indique aussi la vitesse résolue après contacts, l'état au sol/en l'air et la hauteur des pieds au-dessus du support. La marche utilise 4,5 m/s, la course 8 m/s et le saut une impulsion de vitesse de 4 m/s : conventions de gameplay. P et T commandent l’orbite et la rotation de Mars ; la marche, la course, le saut et la gravité restent en secondes réelles. La vitesse résolue affichée en surface est relative au site, sans vitesse d’entraînement orbitale ou rotatoire.
 
@@ -103,7 +106,9 @@ Les vitesses disponibles sont 5 m/s, 250 m/s, 20 km/s, 20 000 km/s, 2 millions k
 - Interface sélectionnable à la souris : FPS, temps, cible, altitude, rayon, repère, vitesse et astre le plus proche. Repères visuels pour les corps trop petits à l'écran.
 - FPS martien : site fixé au repère tournant de Mars, gravité radiale, marche/course/saut, contacts avec terrain et trois obstacles statiques dans le site.
 - Terrain mondial sphérique : six faces, voisinage local de treize patches maximum, marche/course/saut sans borne de site ; coordonnées et contacts f64, meshes réutilisés. Le terrain artistique historique de neuf tuiles reste disponible avec `SOLAR_MARS_GLOBAL=0`.
-- Contrat cube-sphere f64 : conversions, voisins orientés, graines reproductibles et raccord de deux patches de même niveau ; structures de survie encore inactives.
+- Contrat cube-sphere f64 : conversions, voisins orientés, graines reproductibles et raccord de deux patches de même niveau.
+- Première boucle de survie : réserve/consommation/recharge/HUD, expédition terminée et reprise ; abris instanciables avec identités et poses fixes sur Mars pour leur réutilisation en P5.
+- Chargement dynamique du terrain à résolution fixe : treize patches maximum, **sans LOD adaptatif**. Des niveaux de détail selon la distance du joueur restent à développer.
 
 ## Architecture
 
@@ -123,7 +128,10 @@ src/planets/cube_terrain.rs fournisseur optionnel de support de la paire f64
 src/planets/globe_terrain.rs voisinage mondial dynamique et contacts f64
 src/config/cube_validation.rs parcours graphique borné de franchissement
 examples/cube_seam.rs diagnostic graphique borné, indépendant du terrain jouable
-src/survival/         données vitales et inventaire futur
+src/buildings/        abris instanciables, identités et poses corporelles f64
+src/survival/         réserve d’oxygène et issue de l’expédition
+src/rendering/buildings.rs proxies locaux des abris et assets partagés
+src/ui/survival.rs    HUD vital et instruction de reprise
 src/ui/               panneau de navigation, télémétrie et marqueurs
 src/ui/menu.rs        menu principal, options de session et crédits
 src/config/           paramètres de démarrage
@@ -218,8 +226,10 @@ Le pas physique est de 1/120 s, alimenté par `Time<Real>` dans `GameSet::Naviga
 
 Même en l’air, le joueur reste exprimé dans le site tournant. Aucune force de Coriolis, centrifuge, d’Euler ni due à l’accélération translatoire orbitale n’est appliquée ; aucune vitesse inertielle n’est transférée lors des téléportations M/G/O/U. Ce contrôleur est un compromis de gameplay, particulièrement visible sous T, pas une intégration inertielle d’un astronaute. Voir les formules et conventions dans [ASTRONOMY](docs/ASTRONOMY.md).
 
-**Suite :** zones cube-sphere au-delà du site borné, profilage du rendu et contrôleur pour géométries plus complexes. Puis oxygène, ressources, inventaire et construction ; les structures de survie ne consomment encore rien.
+**Suite :** P5, ressource récoltable, inventaire minimal et construction du même abri. LOD adaptatif selon la distance, relief et géométries plus complexes restent des extensions distinctes ; le chargement mondial actuel ne fournit pas de LOD mixte. [Roadmap](docs/ROADMAP.md).
 
+
+Les sections P3.2–P3.4 ci-dessous décrivent les anciens modes de régression ; le lancement normal utilise le terrain mondial et la survie.
 
 ## Premier parcours cube-sphere P3.2
 
@@ -238,3 +248,12 @@ Pour le diagnostic après compilation, `SOLAR_CUBE_MIGRATION=1 SOLAR_CUBE_VALIDA
 `SOLAR_CUBE_OFFCENTER=1 cargo run --release --locked` ouvre après M un autre site, franchement hors du centre de la face, avec deux cartes adjacentes seulement. Leur couverture certifiée détermine le couloir de migration (~±49,44 m en Z) et deux seuils espacés de 2 m dans le repère d'entrée. Les refus ne construisent aucun terrain ; les deux patches/handles restent bornés et réutilisés. Boîte joueur et enveloppes d'obstacles sont réévaluées ; le terrain historique demeure le défaut, et les options P3.2/P3.3 seules conservent leurs parcours.
 
 Pour le diagnostic de 88 s, ajouter `SOLAR_CUBE_VALIDATE_DIR=<nouveau dossier>` après compilation. La suite `python3 scripts/validate_cube_suite.py --output docs/ma-nouvelle-campagne --mesa-immediate` lance successivement hors centre, centrale, P3.2 et historique, et conserve codes/empreintes/journaux/captures ; `--mesa-immediate` concerne ce poste NVK. Les captures demandent ensuite une inspection humaine. [Validation et limites](docs/VALIDATION.md), [contrat détaillé](docs/CUBE_SPHERE.md). La suite de P3 est cadrée dans [NEXT_CHAT](docs/NEXT_CHAT.md).
+
+
+## Première boucle de survie P4
+
+Après Jouer et M : marcher vers l’abri turquoise à six mètres, entrer par la porte ouverte et laisser la combinaison se recharger. Réserve maximale 180 s ; dehors, 1 s consommée par seconde réelle ; dedans, +30 s/s. Le HUD indique la réserve, l’alerte à 30 s et la distance/direction de l’abri. À zéro, l’expédition se termine et R repart à l’abri avec la réserve pleine. R n’agit pas avant un échec.
+
+P/T ne modifient pas la consommation. Le menu suspend la survie ; les visites spatiales conservent la réserve sans consommation/recharge. Le retour M retrouve le site fixé à la première arrivée de la session, éventuellement de nuit. Les bâtiments gardent leur identité et leur pose corporelle f64, indépendantes des patches/rebasages et des proxies. Aucun inventaire, recette, placement joueur ou sauvegarde disque en P4.
+
+Diagnostic ciblé, après compilation release : `python3 scripts/validate_survival.py --output docs/mon-nouveau-p4 --mesa-immediate`. Le dossier doit être neuf ; l’option Mesa concerne seulement ce poste NVK. Le parcours de 56 s vérifie consommation/recharge/échec/R, menu, rebasage et seconde instance, avec treize captures. Il prépare des réserves raccourcies sans modifier les taux. Les anciens scénarios et le profilage gardent la survie désactivée. [Détail technique et reproduction](docs/SURVIVAL.md), [preuves et limitations](docs/VALIDATION.md).

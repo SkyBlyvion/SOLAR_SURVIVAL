@@ -18,7 +18,7 @@ Le diagnostic exige un parent existant et un dossier final nouveau. Il prépare 
 
 ## Géométrie et chargement
 
-`planets/globe_terrain.rs` utilise les clés et voisins orientés P3.1 sur toutes les faces, au niveau 15 et **32 segments** par patch. Sphère au rayon moyen martien du catalogue, sans relief. Résolution fixe locale : pas un LOD universel ; les cellules centrales font ~6,47 m et leur flèche sphérique quelques micromètres. Leur taille ne réduit pas l'empreinte interrogée pour les contacts.
+`planets/globe_terrain.rs` utilise les clés et voisins orientés P3.1 sur toutes les faces, au niveau 15 et **32 segments** par patch. Sphère au rayon moyen martien du catalogue, sans relief. Résolution fixe locale : **pas un LOD adaptatif selon la distance du joueur** ; les cellules centrales font ~6,47 m et leur flèche sphérique quelques micromètres. Leur taille ne réduit pas l'empreinte interrogée pour les contacts.
 
 Chaque sommet est produit par `PatchKey::vertex`, donc par la même identité cubique entière et normalisation sur les deux représentations d'une arête ou d'un coin. Les patches construits indépendamment ont des positions de bord f64 identiques. Les indices sont orientés vers l'extérieur. Chaque patch a 1 089 sommets/2 048 triangles.
 
@@ -44,9 +44,16 @@ Au repos : ≤13 patches, **14 157 sommets et 26 624 triangles**, index local et
 
 Les tests mesurent des plafonds d'index sur les directions de couverture et vérifient absence de génération au repos, `Arc` communs, handles communs et libération à la sortie. Les coûts muraux de rebasage sont journalisables avec `RUST_LOG=info,solar_survival::player::surface=debug`. Ils excluent la synchronisation des meshes et le GPU. Les résultats graphiques et leurs limites sont consignés dans [VALIDATION](VALIDATION.md) ; Windows/RTX 4050 ne sont pas validés depuis Linux.
 
-Ce parcours est une sphère martienne complète jouable, avec chargement local. Il ne fournit pas encore relief mesuré, LOD mixte, carte géographique, survie, sauvegarde ou dynamique inertielle : les paramètres astronomiques, forces omises et visites spatiales translatoires restent ceux d'[ASTRONOMY](ASTRONOMY.md).
+Ce parcours est une sphère martienne complète jouable, avec chargement local. Il ne fournit pas encore relief mesuré, LOD mixte, carte géographique ou sauvegarde ; la survie P4 est décrite dans [SURVIVAL](SURVIVAL.md). Il ne fournit pas non plus de dynamique inertielle : les paramètres astronomiques, forces omises et visites spatiales translatoires restent ceux d'[ASTRONOMY](ASTRONOMY.md).
 
 
 ## Validation réalisée
 
 90 tests et vérifications Cargo finales réussis. 288 traversées dirigées d’arêtes aller-retour en marche/course et 30/60/144 FPS, 24 trajets de coins, conservation f64, contrôles ECS et réutilisation des ressources. Campagne mondiale de 120 s : code 0, douze franchissements en l’air, douze rebasages, 36 captures inspectées. Quatre régressions code 0 ; 112 captures inspectées au total. Comparaison release : ~19,1 FPS au repos pour historique/mondial/historique, remplacement réel mesuré dans un essai mondial de 54 s. [Preuves et limites](VALIDATION.md).
+
+
+## Extensions après P4
+
+Le chargement dynamique de treize patches est un voisinage à niveau/résolution fixes, **pas un système de LOD adaptatif**. L’extension demandée devra choisir plusieurs niveaux de détail selon la distance du joueur, produire des raccords entre niveaux sans fissures, gérer les transitions sans oscillation et conserver des contacts précis autour du joueur. Budgets de préparation/chargement CPU et meshes GPU à mesurer ; pas de génération de planète entière. Cette fonctionnalité reste future et possède ses propres critères dans [ROADMAP](ROADMAP.md).
+
+P4 ajoute un abri de recharge fixe dans le corps. Le retour normal M conserve désormais le site de session ; R après échec revient dans l’abri. Poses, contacts orientés, proxies et règles d’oxygène dans [SURVIVAL](SURVIVAL.md). Les campagnes historiques demeurent sans survie.

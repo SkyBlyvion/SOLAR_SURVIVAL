@@ -1,0 +1,35 @@
+[
+  {
+    "sheet": "sheet-00.jpg",
+    "sources": [
+      "stage-00.png",
+      "stage-01.png",
+      "stage-02.png",
+      "stage-03.png"
+    ]
+  },
+  {
+    "sheet": "sheet-01.jpg",
+    "sources": [
+      "stage-04.png",
+      "stage-05.png",
+      "stage-06.png",
+      "stage-07.png"
+    ]
+  },
+  {
+    "sheet": "sheet-02.jpg",
+    "sources": [
+      "stage-08.png",
+      "stage-09.png",
+      "stage-10.png",
+      "stage-11.png"
+    ]
+  },
+  {
+    "sheet": "sheet-03.jpg",
+    "sources": [
+      "stage-12.png"
+    ]
+  }
+]

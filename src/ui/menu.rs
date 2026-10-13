@@ -32,7 +32,7 @@ impl MenuState {
     pub fn open(&mut self) {
         self.screen = Screen::Main;
     }
-    fn play(&mut self) {
+    pub(crate) fn play(&mut self) {
         self.started = true;
         self.screen = Screen::Playing;
     }
@@ -345,6 +345,7 @@ fn display(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::player::surface::SurfaceState;
     use crate::{
         camera::{ExplorationPlugin, NavigationRequest},
         universe::{SimulationClock, UniversePlugin},
@@ -414,6 +415,42 @@ mod tests {
             .id();
         app.update();
         app.world_mut().despawn(entity);
+    }
+
+    #[test]
+    fn menu_suspends_oxygen_and_restart_but_keeps_orbit_and_gravity() {
+        let mut app = app();
+        app.add_plugins(crate::survival::SurvivalPlugin);
+        press(&mut app, KeyCode::Enter);
+        press(&mut app, KeyCode::KeyM);
+        let jd = app.world().resource::<SimulationClock>().jd;
+        let before = app
+            .world()
+            .resource::<crate::survival::Oxygen>()
+            .remaining_seconds;
+        app.world_mut().resource_mut::<MenuState>().open();
+        app.world_mut().resource_mut::<SurfaceState>().feet.y += 2.0;
+        let feet = app.world().resource::<SurfaceState>().feet;
+        app.insert_resource(TimeUpdateStrategy::ManualDuration(Duration::from_secs(12)));
+        app.update();
+        assert_eq!(
+            app.world()
+                .resource::<crate::survival::Oxygen>()
+                .remaining_seconds,
+            before
+        );
+        assert!(app.world().resource::<SimulationClock>().jd > jd);
+        assert!(app.world().resource::<SurfaceState>().feet.y < feet.y);
+        {
+            let mut o = app.world_mut().resource_mut::<crate::survival::Oxygen>();
+            o.failed = true;
+            o.remaining_seconds = 0.0;
+        }
+        press(&mut app, KeyCode::KeyR);
+        assert!(app.world().resource::<crate::survival::Oxygen>().failed);
+        press(&mut app, KeyCode::Enter);
+        press(&mut app, KeyCode::KeyR);
+        assert!(!app.world().resource::<crate::survival::Oxygen>().failed);
     }
 
     #[test]

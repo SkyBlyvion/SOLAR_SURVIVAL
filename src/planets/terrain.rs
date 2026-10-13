@@ -12,6 +12,7 @@ pub const SITE_LIMIT_M: f64 = 4096.0;
 #[derive(Resource)]
 pub struct MarsTerrain {
     pub radius_m: f64,
+    pub building_solids: Vec<crate::physics::surface::BodyBox>,
     pub seed: u64,
     /// Orientation fixe du site dans le repère du corps tournant de Mars.
     /// La rotation quotidienne ne modifie ni ce champ ni la révision des meshes.
@@ -33,6 +34,7 @@ impl FromWorld for MarsTerrain {
         let mars = world.resource::<SolarSystem>().body(BodyId::MARS);
         Self {
             radius_m: mars.radius_m,
+            building_solids: Vec::new(),
             seed: mars.generation.seed,
             orientation: DQuat::IDENTITY,
             revision: 0,

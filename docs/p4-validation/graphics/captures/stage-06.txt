@@ -1,0 +1,1 @@
+t=37.634030, mode=Surface, O2=0.000000, failed=true, shelter=None, rebases=1, feet=DVec3(-63.86666665869505, 0.0014035918176522233, -8.691280224605869e-11), buildings=1

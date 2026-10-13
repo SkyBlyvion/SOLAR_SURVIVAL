@@ -1,0 +1,105 @@
+**# Prochain chat Solar Survival**
+
+
+
+**\*\*Mars entière traversable est réalisée sur Ubuntu.\*\*** Prochaine fonctionnalité prévue : **\*\*P4, première boucle de survie jouable\*\***. Mise à jour : 13 octobre 2026.
+
+
+
+**## Prompt autonome de reprise**
+
+
+
+Nous poursuivons Solar Survival dans \`/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL\`. Lis AGENTS.md, README.md, docs/ASTRONOMY.md, docs/CUBE_SPHERE.md, docs/GLOBAL_TERRAIN.md, docs/VALIDATION.md, docs/ROADMAP.md, docs/PERFORMANCE.md et docs/NEXT_CHAT.md. Examine Git et le code, puis avance vers une fonctionnalité complète. Au départ de ce chat, HEAD était \`2031710\` (P3.4 commité) et seule NEXT_CHAT portait une correction utilisateur. Les nouveaux changements et preuves sont **\*\*non commités\*\*** : les préserver. Aucune preuve historique supprimée ou écrasée.
+
+
+
+**### Instruction utilisateur prioritaire**
+
+
+
+L’utilisateur veut accélérer significativement le développement : arrêter les micro-étapes à deux/trois patches, viser des fonctionnalités complètes et jouables, organiser librement les sous-étapes techniques et tester progressivement pour trouver vite les erreurs. Il a explicitement autorisé la révision des anciennes restrictions de roadmap. Ne pas revenir au cadrage d’une chaîne fixe P3.5 : l’objectif de six faces traversables est réalisé. Préserver f64 et stabilité moteur, privilégier les progrès fonctionnels mesurables ; adapter les campagnes aux changements réels.
+
+
+
+**### État réel**
+
+
+
+Application 0.2, Rust stable édition 2024, Bevy **\*\*exactement 0.19.1\*\***. Cargo.toml/Cargo.lock et dépendances inchangés. **\*\*90 tests\*\*** : 30 internes, 21 fondations, 15 surface historique, 9 géométrie cube-sphere, 4 contacts centraux, 3 migrations centrales, 4 hors centre, 4 mondiaux. Exploration spatiale, menu/options/crédits et FPS martien actifs. La survie reste inactive.
+
+
+
+Le lancement normal ouvre désormais un **\*\*terrain mondial sphérique\*\*** après M : toutes les faces, arêtes et coins accessibles par marche/course/saut, sans borne de site ou couloir. SI/échelle 1:1 : un voyage planétaire reste physiquement long. \`SOLAR_MARS_GLOBAL=1\` force le parcours ; \`=0\` retrouve l’historique artistique de neuf tuiles/±4 096 m. Les flags historiques P3.2/P3.3/P3.4 et scénarios P2/smoke sélectionnent leurs anciens fournisseurs sauf monde forcé. Ne pas mélanger les scénarios.
+
+
+
+\`planets/globe_terrain.rs\` : niveau 15, **\*\*32 segments\*\***, ≤13 patches par voisinage à distance de graphe ≤2 autour de la clé radiale courante, sur les six faces. \`PatchKey::vertex\` conserve les identités cubiques entières et les sommets de bord/coin f64 exactement communs. 1 089 sommets/2 048 triangles par patch ; pas de relief ni LOD mixte. Arc partage les géométries conservées, seuls les entrants sont générés. Index local XZ 8 m, contact exact par découpage des triangles et certification de l’aire entière de l’empreinte (tolérance 10⁻⁹ m²). Requêtes bornées à une demi-largeur ≤1 m ; empreinte joueur 0,3 m. Une hauteur centrale valide ne suffit pas à accepter une empreinte partielle.
+
+
+
+Le disque opérationnel va à 66 m et \`SurfaceState::migrate\` rebase après 64 m horizontaux : il s’agit d’un garde-fou de couverture locale, pas d’une borne de voyage. Origine au point radial sphérique, orientation transportée par rotation minimale de l’ancienne normale vers celle des pieds, indépendante des axes de face. Pas de quart de tour aux arêtes ni choix fixe de carte. Pieds/yeux/vitesse/base de visée conservés par transaction f64 ; yaw/pitch/accumulator/jump_pending/grounded conservés. Le support reboîté peut demander quelques µm au sous-pas suivant, sous la peau de 2 mm. La boîte joueur demeure alignée sur la carte ; pas de volume orienté invariant revendiqué.
+
+
+
+Les trois objets du site d’entrée restent fixes dans le corps. Monde : balayage **\*\*SAT continu sur 15 axes contre leurs OBB exactes\*\***, glissement et support des faces triangulaires supérieures sous l’empreinte ; plus d’expansion AABB cumulée pour ce parcours. Objets éloignés exclus des contacts, poses/rotations exactes en rendu. Les anciennes branches P3.2–P3.4 restent intactes comme régressions.
+
+
+
+\`rendering/terrain.rs\` : un mesh par patch dans son repère fixe propre, origine soustraite en f64 avant f32 ; différence corps origine−yeux puis rotation inverse f64 à chaque frame. Les rebasages ne réécrivent pas les meshes conservés. Handles/entités communs conservés, slots sortants recyclés pour les entrants, assets mondiaux libérés à la sortie. ≤13 meshes de terrain, 14 157 sommets/26 624 triangles résidents. Pendant rebasage : deux fournisseurs/index CPU, ≤26 occurrences de patch et 53 248 triangles locaux ; géométries communes partagées, borne conservative 28 314 sommets non partagés. Ancien site libéré avant entrée. Pas de génération par frame ordinaire ou rotation, pas de planète entière résidente. Ces plafonds sont structurels, sans mesure exhaustive RAM/VRAM/buffers internes Bevy.
+
+
+
+**### Preuves finales**
+
+
+
+Fmt/check/check-all-targets/test/Clippy/release --locked réussis, build final **\*\*133,907 s\*\***, 90 tests. 150 directions de couverture (six faces × cinq u × cinq v), empreintes et coins du disque ; rejet de couverture partielle. **\*\*288 traversées dirigées d’arêtes\*\*** aller-retour en marche/course et 30/60/144 FPS, sauts/réceptions/repos et 288 rebasages. Huit coins dans trois directions chacun : 24 trajets. Conservation pieds/yeux <4 nm, visée <10⁻¹³, vitesse <10⁻¹³ m/s ; état préservé. ECS P/T/M/G/O/U et publication sans sous-pas ; tests des Arc, handles/entités, meshes et libération.
+
+
+
+Neuf lancements du jeu successifs sur même binaire, aucun ERROR/WARN/panic : monde 120 s (12 franchissements en l’air, 12 rebasages, apex **\*\*2,131379 m\*\***, 36 captures), trois profils de 42 s, un mondial de 54 s, puis régressions hors centre/centrale/P3.2/historique. Régressions : huit/huit migrations, sept franchissements P3.2, historique rotation 50 s ; codes 0. **\*\*112 captures inspectées via 13 planches\*\***, cinq originaux supplémentaires. Sol continu, HUD/visée cohérents ; horizon du voisinage local et marqueurs superposés restent visibles. Pas de vidéo prouvant chaque frame ni de voyage de circumnavigation complet.
+
+
+
+Comparaison au repos : mondial **\*\*52,361 ms / 19,10 FPS\*\***, historique avant/après **\*\*52,257/52,188 ms / 19,14/19,16 FPS\*\***. Course sans remplacement retenu dans les 42 s : 51,778 ms mondial contre 51,838–51,913 ms historique. Le mondial de 54 s inclut un vrai remplacement en course (cinq patches entrants) : navigation max **\*\*5,616 ms\*\***, rendu-sync max **\*\*0,165 ms\*\***, frame moyenne/p95/max **\*\*52,005/54,932/56,741 ms\*\***. Douze rebasages graphiques : **\*\*4,644–7,203 ms\*\***, médiane **\*\*5,094 ms\*\***, captures actives, hors meshes/GPU. Pas de régression notable sur ce poste, sans garantie universelle/cible.
+
+
+
+Preuves dans \`docs/global-validation/\` : build/graphics/environment/summary JSON, logs, CSV et inspection/manifest. Le lanceur graphique initial a eu un TypeError avant les régressions ; reprise après correction, sans écraser les quatre premiers essais. Builds/essais intermédiaires conservés séparément ; le test initial de repos avant réajustement puis sans sous-pas à 144 FPS a été corrigé. NOTES donne la portée exacte. Empreintes Rust/tests/exemples/Cargo et binaire finales vérifiées ; aucun Rust modifié après build/campagnes finaux.
+
+
+
+Poste Ubuntu/X11 i7-6700K/GTX 1060 3 Go/NVK/Mesa 25.2.8. Windows natif et RTX 4050/Core i5 **\*\*non validés\*\*** ; modèle CPU/RAM/pilote/réglages cible à relever. Aucun nouvel essai périphérique OS, suspension réelle, menu interactif ou cycle P2 complet ; historiques préservés.
+
+
+
+**### Objectif suivant : P4, survie jouable**
+
+
+
+Suivre la roadmap vers une première boucle complète d’oxygène : réserve, consommation en temps réel, recharge dans un abri accessible, HUD et issue de manque d’oxygène jouable. Définir des conventions de gameplay claires ; la consommation ne suit pas le multiplicateur orbital T. Garder le monde traversable et les sorties spatiales cohérentes ; choisir la politique de survie pendant menu/visites au début de l’implémentation, sans architecture spéculative ni modules vides. Tester progressivement les invariants puis le parcours complet (consommer/recharger/échouer), avant ajout de ressources/construction ou sauvegarde. Ne pas refaire toute la batterie graphique P3 sans changement physique/rendu le justifiant.
+
+
+
+**### Exigence P4 : abri directement réutilisable en P5**
+
+Le premier abri de recharge d’oxygène doit être un **bâtiment de jeu réutilisable**, pas une zone d’oxygène codée en dur dans le contrôleur ou liée au patch courant. Dès P4, créer un objet/une entité instanciable avec une identité stable en session et une pose fixe dans le repère du corps martien en f64 (position et orientation indépendantes des patches, de l’origine flottante et des rebasages). Sa représentation et ses collisions doivent suivre correctement le chargement local et les changements de repère, sans faire dériver son emplacement sur Mars.
+
+Séparer la **fonction de recharge d’oxygène** de l’**installation/placement du bâtiment** : le même type d’abri doit pouvoir être instancié à plusieurs positions, sans dupliquer la logique de survie. En P4, placer automatiquement un premier abri accessible près du point d’arrivée et permettre de l’utiliser réellement pour la boucle consommer → recharger → manquer d’oxygène. Vérifier au minimum qu’un changement de patch ou un rebasage ne modifie pas la pose de l’abri ni son fonctionnement, et qu’une deuxième instance peut fonctionner sans code spécifique.
+
+En P5, ce **même type de bâtiment** devra devenir constructible et ultérieurement persistant, plutôt que d’être réécrit. **Ne pas développer en P4 l’inventaire, les recettes, l’interface de placement ou la sauvegarde disque** ; ne pas créer d’architecture spéculative ni de modules vides. Mettre à jour ROADMAP et NEXT_CHAT avec cette contrainte P4 → P5 et ses tests.
+
+**### Contraintes permanentes**
+
+
+
+SI/1:1, DVec3/DQuat f64 ; soustraction d’origine f64 puis conversion explicite vers proxies f32. GameSet Input→Simulation→Navigation→Rendering→Interface et Time\<Real> orbital préservés ; deltas souris déjà intégrés, sans delta time. Gravité martienne radiale, marche 4,5/course 8/saut 4 m/s, peau 2 mm, pas 1/120 s, maximum 0,25 s de physique/frame. P/T commandent calendrier/orbite/rotation, pas physique locale. Joueur entraîné même en l’air ; Coriolis/centrifuge/Euler/accélération translatoire omises. Visites spatiales translatoires ; M/G/O/U sans transfert inertiel. Pas de cartographie/IAU exacte ou relief scientifique implicite.
+
+
+
+Menu/options sans sauvegarde : commandes bloquées, souris libre, calendrier/gravité continuent. Échap libère d’abord le curseur puis ouvre le menu. Profilage prioritaire ; défaut historique, \`SOLAR_PROFILE_TERRAIN=global\` explicite. Pour mesurer un remplacement, utiliser au moins 54 s avec phases de 11 s. \`SOLAR_GLOBAL_VALIDATE_DIR\` exige parent existant/dossier final nouveau ; F12/SOLAR_CAPTURE_DIR exige un dossier créé. Mesa immediate est un contournement local NVK. Compiler puis lancer les scénarios GPU successivement, jamais en parallèle.
+
+
+
+Vérifications de fin appropriées : cargo fmt --check, cargo check --locked, cargo check --all-targets --locked, cargo test --locked, cargo clippy --all-targets --locked -- -D warnings, cargo build --release --locked ; lancement graphique et captures inspectées du nouveau parcours. Documenter environnement, preuves et limitations, actualiser ROADMAP/VALIDATION et documents techniques concernés, réécrire NEXT_CHAT autonome et fournir son lien. Pas de changement Bevy/dépendance inutile, pas de génération globale ou par frame, pas de validation Windows prétendue depuis Linux.

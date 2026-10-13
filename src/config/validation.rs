@@ -14,6 +14,7 @@ use bevy::{
 pub struct ValidationPlugin;
 impl Plugin for ValidationPlugin {
     fn build(&self, app: &mut App) {
+        super::survival_validation::install(app);
         super::cube_validation::install(app);
         super::globe_validation::install(app);
         if let Some(directory) = std::env::var_os("SOLAR_CAPTURE_DIR") {

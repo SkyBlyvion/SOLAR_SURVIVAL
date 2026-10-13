@@ -15,6 +15,7 @@ use solar_survival::{
 const R: f64 = 3_389_500.0;
 fn terrain(up: DVec3) -> MarsTerrain {
     let mut terrain = MarsTerrain {
+        building_solids: Vec::new(),
         radius_m: R,
         seed: 42,
         orientation: DQuat::IDENTITY,

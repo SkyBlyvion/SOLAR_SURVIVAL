@@ -54,6 +54,26 @@ impl SurfaceState {
         pilot.mode = MovementMode::Surface;
         self.sync(pilot, terrain, rotation);
     }
+    /// Retour au site de session : aucun nouveau choix solaire ni déplacement du bâtiment.
+    pub fn enter_home(
+        &mut self,
+        pilot: &mut Explorer,
+        terrain: &mut MarsTerrain,
+        orientation: DQuat,
+        feet_body: Option<DVec3>,
+    ) {
+        terrain.set_site(orientation * DVec3::Y);
+        // Les parties jouables P4 utilisent le repère radial mondial ou historique.
+        *self = Self::default();
+        if let Some(body) = feet_body {
+            self.feet = terrain.chart(body);
+        }
+        self.feet.y = terrain.support_height(self.feet, HALF_WIDTH_M) + 0.002;
+        self.grounded = true;
+        pilot.anchor = Some(BodyId::MARS);
+        pilot.selected = BodyId::MARS;
+        pilot.mode = MovementMode::Surface;
+    }
     pub fn look(&mut self, delta: Vec2) {
         self.yaw = (self.yaw - delta.x as f64 * 0.002).rem_euclid(std::f64::consts::TAU);
         self.pitch = (self.pitch - delta.y as f64 * 0.002).clamp(-1.55, 1.55);

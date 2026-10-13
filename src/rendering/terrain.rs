@@ -659,6 +659,7 @@ mod tests {
     #[test]
     fn tile_mesh_positions_match_physical_vertices_and_shared_edges() {
         let terrain = MarsTerrain {
+            building_solids: Vec::new(),
             radius_m: 3389500.0,
             seed: 42,
             orientation: bevy::math::DQuat::IDENTITY,
@@ -698,6 +699,7 @@ mod tests {
             .init_resource::<Explorer>()
             .init_resource::<SurfaceState>()
             .insert_resource(MarsTerrain {
+                building_solids: Vec::new(),
                 radius_m: 3389500.0,
                 seed: 42,
                 orientation: bevy::math::DQuat::IDENTITY,

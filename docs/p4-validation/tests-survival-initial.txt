@@ -1,0 +1,15 @@
+   Compiling solar_survival v0.2.0 (/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL)
+    Finished `test` profile [optimized] target(s) in 15.90s
+     Running tests/survival.rs (target/debug/deps/survival-1a4d11f7f7d656a5)
+
+running 7 tests
+test oxygen_policy_full_delta_menu_space_saturation_and_latched_failure ... ok
+test refill_requires_entire_player_inside_no_through_wall_or_roof ... ok
+test legacy_normal_game_keeps_a_usable_shelter ... ok
+test home_and_oxygen_persist_through_every_space_exit_and_orbital_rotation ... ok
+test playable_door_refill_wall_collision_failure_and_restart ... ok
+test ecs_consumption_real_time_matches_fps_and_orbital_controls ... ok
+test second_instance_and_rebase_keep_body_poses_contacts_and_recharge ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.32s
+

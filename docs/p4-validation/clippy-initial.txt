@@ -1,0 +1,80 @@
+    Checking solar_survival v0.2.0 (/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL)
+error: unused import: `MovementMode`
+ --> src/config/survival_validation.rs:8:24
+  |
+8 |     player::{Explorer, MovementMode, surface::SurfaceState},
+  |                        ^^^^^^^^^^^^
+  |
+  = note: `-D unused-imports` implied by `-D warnings`
+  = help: to override `-D warnings` add `#[allow(unused_imports)]`
+
+error[E0425]: cannot find type `SurfaceState` in this scope
+   --> src/ui/menu.rs:431:40
+    |
+431 |         app.world_mut().resource_mut::<SurfaceState>().feet.y += 2.0;
+    |                                        ^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this struct through its public re-export
+    |
+347 +     use crate::ui::SurfaceState;
+    |
+
+error[E0425]: cannot find type `SurfaceState` in this scope
+   --> src/ui/menu.rs:432:43
+    |
+432 |         let feet = app.world().resource::<SurfaceState>().feet;
+    |                                           ^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this struct through its public re-export
+    |
+347 +     use crate::ui::SurfaceState;
+    |
+
+error[E0425]: cannot find type `SurfaceState` in this scope
+   --> src/ui/menu.rs:442:40
+    |
+442 |         assert!(app.world().resource::<SurfaceState>().feet.y < feet.y);
+    |                                        ^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this struct through its public re-export
+    |
+347 +     use crate::ui::SurfaceState;
+    |
+
+error: this `if` statement can be collapsed
+   --> src/camera/mod.rs:258:9
+    |
+258 | /         if oxygen.as_ref().is_some_and(|o| o.enabled)
+259 | |             && let Some(buildings) = &mut buildings
+260 | |         {
+261 | |             if buildings.home_orientation.is_none() {
+...   |
+265 | |         }
+    | |_________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#collapsible_if
+    = note: `-D clippy::collapsible-if` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::collapsible_if)]`
+help: collapse nested if block
+    |
+259 ~             && let Some(buildings) = &mut buildings
+260 ~             && buildings.home_orientation.is_none() {
+261 |                 buildings.install_first(&terrain);
+262 |                 buildings.publish_colliders(&mut terrain);
+263 ~             }
+    |
+
+error: very complex type used. Consider factoring parts into `type` definitions
+  --> src/ui/survival.rs:83:14
+   |
+83 |     mut bar: Single<(&mut Node, &mut BackgroundColor), (With<OxygenBar>, Without<OxygenRoot>)>,
+   |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#type_complexity
+   = note: `-D clippy::type-complexity` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::type_complexity)]`
+
+error: could not compile `solar_survival` (lib) due to 3 previous errors
+warning: build failed, waiting for other jobs to finish...
+For more information about this error, try `rustc --explain E0425`.
+error: could not compile `solar_survival` (lib test) due to 4 previous errors

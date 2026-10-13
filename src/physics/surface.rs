@@ -17,6 +17,30 @@ pub struct SolidBox {
     pub min: DVec3,
     pub max: DVec3,
 }
+/// Boîte autoritaire fixe dans le repère du corps, en mètres/f64.
+#[derive(Clone, Copy, Debug)]
+pub struct BodyBox {
+    pub center: DVec3,
+    pub size: DVec3,
+    pub orientation: DQuat,
+}
+impl BodyBox {
+    pub fn chart_pose(&self, terrain: &MarsTerrain) -> (DVec3, DVec3, DQuat) {
+        (
+            terrain.chart(self.center),
+            self.size,
+            terrain.orientation.inverse() * self.orientation,
+        )
+    }
+}
+fn oriented_poses(terrain: &MarsTerrain) -> impl Iterator<Item = (DVec3, DVec3, DQuat)> + '_ {
+    (0..3).map(|i| obstacle_pose(terrain, i)).chain(
+        terrain
+            .building_solids
+            .iter()
+            .map(|b| b.chart_pose(terrain)),
+    )
+}
 /// Pose exacte du proxy ; boîte de contact conservatrice dans la carte active.
 pub fn obstacle_pose(terrain: &MarsTerrain, index: usize) -> (DVec3, DVec3, DQuat) {
     if let Some((frame, solids)) = &terrain.site_obstacles {
@@ -69,10 +93,9 @@ pub fn obstacles(terrain: &MarsTerrain) -> [SolidBox; 3] {
 /// Plan de support sous les pieds, y compris le dessus d'un obstacle statique.
 pub fn support_height(terrain: &MarsTerrain, feet: DVec3) -> f64 {
     let mut floor = terrain.support_height(feet, HALF_WIDTH_M);
-    if terrain.globe.is_some() {
-        for index in 0..3 {
-            let (center, size, rotation) = obstacle_pose(terrain, index);
-            if center.distance(feet) > 20.0 {
+    if terrain.globe.is_some() || !terrain.building_solids.is_empty() {
+        for (center, size, rotation) in oriented_poses(terrain) {
+            if center.distance(feet) > size.length() * 0.5 + PLAYER_HEIGHT_M + 2.0 * HALF_WIDTH_M {
                 continue;
             }
             // Faces supérieures de la boîte exacte, découpées sous l'empreinte.
@@ -183,11 +206,12 @@ fn move_on_globe(
 ) -> (DVec3, DVec3, bool) {
     let mut grounded = false;
     for _ in 0..4 {
-        let hit = (0..3)
-            .filter_map(|i| {
-                let (center, size, rotation) = obstacle_pose(terrain, i);
+        let hit = oriented_poses(terrain)
+            .filter_map(|(center, size, rotation)| {
                 // Ignore les objets éloignés ; pas de coordonnées astronomiques en f32.
-                if center.distance(feet) > 20.0 + delta.length() {
+                if center.distance(feet)
+                    > size.length() * 0.5 + PLAYER_HEIGHT_M + 2.0 * HALF_WIDTH_M + delta.length()
+                {
                     return None;
                 }
                 sweep_oriented(feet, delta, center, size, rotation)
@@ -288,16 +312,17 @@ pub fn step(
         velocity.z = tangent.z;
     }
     let old = *feet;
-    let (next, new_velocity, on_box) = if terrain.globe.is_some() {
-        move_on_globe(terrain, *feet, *velocity * STEP_SECONDS, *velocity)
-    } else {
-        move_and_slide(
-            *feet,
-            *velocity * STEP_SECONDS,
-            *velocity,
-            &obstacles(terrain),
-        )
-    };
+    let (next, new_velocity, on_box) =
+        if terrain.globe.is_some() || !terrain.building_solids.is_empty() {
+            move_on_globe(terrain, *feet, *velocity * STEP_SECONDS, *velocity)
+        } else {
+            move_and_slide(
+                *feet,
+                *velocity * STEP_SECONDS,
+                *velocity,
+                &obstacles(terrain),
+            )
+        };
     *feet = next;
     *velocity = new_velocity;
     let unbounded = *feet;

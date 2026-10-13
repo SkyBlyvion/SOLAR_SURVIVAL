@@ -13,6 +13,7 @@ use solar_survival::{
 };
 fn terrain(face: CubeFace) -> MarsTerrain {
     let mut terrain = MarsTerrain {
+        building_solids: Vec::new(),
         radius_m: 3389500.0,
         seed: 42,
         orientation: DQuat::IDENTITY,

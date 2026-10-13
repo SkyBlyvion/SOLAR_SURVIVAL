@@ -1,0 +1,62 @@
+{
+  "binary_sha256": "fb355447f2a642bdf9b51da596b3c116b46ce2cee515348892c1f066d99bac0b",
+  "source_sha256": {
+    "Cargo.lock": "57e95808be654e3c588e7e18975d9a926a01f8b7d32000460426f2db6c53e902",
+    "Cargo.toml": "230c4fd799222b4ca99956a43faf96554fdad1b9122a53954862afecce257dbb",
+    "src/buildings/mod.rs": "25ab087748c3b1332862e2f3e0aaaa1074f41c1563b259be8907dd0dfee96f84",
+    "src/camera/mod.rs": "842fc4f4d24dca5c4f7db92af54e6497c5d99620e04cfc73e76d3fdb0ee853dd",
+    "src/config/cube_validation.rs": "23a65d8fc2a7dfa7f0dc1938d58155a3c45b49c0923bd950c73e58a4f258a86e",
+    "src/config/globe_validation.rs": "c835e90e63c15651933e2db101d54a71ea0c9715befbf35aca0c107736cfda13",
+    "src/config/mod.rs": "bb6f5dd8496b8e743f4c3e1d1458d923213b19962b917df84b5dc8c6add28358",
+    "src/config/profiling.rs": "3426d848ba0879f27308e65da0db1f11de81d71a9f6e5cbac91ff0e7e0d4b79e",
+    "src/config/survival_validation.rs": "925e931be1885db090c00db76c3d8f9b12f6823f8d973e3200c7068064eb590c",
+    "src/config/validation.rs": "67eef343787535e4f1fb52ab4d2ded044a279613ed992ae3d8891a31bcfcdb1b",
+    "src/lib.rs": "2ecc859fc114f3db732dee487d13d87fb8d405550c268eaf492b42fcf1774851",
+    "src/main.rs": "d9edcae5840b1b7a2c79b73c99ff968d726a9742ff166dc60947cc9788e5882e",
+    "src/physics/mod.rs": "35e306a7214aca137769dd386c6093b87b3892720b23d8306902bbc4112f21f7",
+    "src/physics/surface.rs": "4fdd94b54168ed6d18bd9fde8619f87805ecd4b8485af99d00cae592dd804d2f",
+    "src/planets/cube_migration.rs": "fb7705e529a552b9fb38afc2ef53632d2b28a84fac7dfacf60de6302246675b5",
+    "src/planets/cube_sphere.rs": "b2cde3453b2873bf8d7aa660f499d7b70f9a5b85397000bf98b48a9df8d78900",
+    "src/planets/cube_terrain.rs": "8403391bc60f715237de8bd950169af471690b07ecb4d91fab229b58fb615b8c",
+    "src/planets/globe_terrain.rs": "0044775e079a85f132b05a4bd08ce64cb944bff8ae783a717104e607ca1c715c",
+    "src/planets/mod.rs": "b245a10d894716fcefc1b8f6c8b942a3b2b6a37563d86b359c5ac998d5707bf5",
+    "src/planets/terrain.rs": "88b8d1c10363a8eb97c2e73290f2bbf5b59cc505f2a9569804f3f0c411302489",
+    "src/player/mod.rs": "75a38af189f636a470f860a229801b216bb8277de430749e28f4d9f894fa410c",
+    "src/player/surface.rs": "179dee9f8eac8df6054a2d13f857357c1ea832ad0009ce6e5ef5b563147b512e",
+    "src/rendering/buildings.rs": "03e68172a29ddb224c3df4004f428a779859a0761e45e2a3d61d6702db21991b",
+    "src/rendering/mod.rs": "1e4cff59620c1c3b7d1f1e1e96721b15c8babbf913e10067acca15f7d2d32ed0",
+    "src/rendering/planets.rs": "608aba5f9812f2969cec793f6ded242129103e7c59861b7391f6bb8a3af13115",
+    "src/rendering/stars.rs": "ae58be318c3c1bf4b8034445a512274422eb472e9e5e7f73fc1d9318e0a02083",
+    "src/rendering/terrain.rs": "dfb06445d07318b7811344a1f2592aae21ee6bd9e60f0b94f0a3470bcce3098a",
+    "src/survival/mod.rs": "16bb7be88fc295b6e70e2ae5d7cb5b7696829c1e81eb8740d883b29d6c49b3f2",
+    "src/ui/menu.rs": "aa12cf7305581a51431ee549faf995200c07124fa0ef5f49006de0cbd19086ac",
+    "src/ui/mod.rs": "05d443722518ce6f0f69a5fcb3c0345012a5fe5467ad9ec75fb889b186ac0729",
+    "src/ui/survival.rs": "c7a0884c590eb6efebba8d8b2a6d226be4cda4657573676c05b8afbccef48b70",
+    "src/universe/catalog.rs": "f1a3a10c903ae65903fb4a88a0f31ad49947ef15ee731131a979e08046df2e48",
+    "src/universe/celestial_body.rs": "271ed90bd540ef273b2887c54d6a3de4f9407989328c42a76a4eb5ddca6c1f6f",
+    "src/universe/coordinates.rs": "2bf813371ac289deb7db067082ad893a11877f99f7c0d053ce4229ae1bc016f8",
+    "src/universe/mod.rs": "ae62923f1a646fed26d581129c563859e82cbc17971f792badbebffac25b76ff",
+    "src/universe/orbital_mechanics.rs": "53e1723db658c3bf15a48e83c9f63f35d1da0e17273819bd61f57f336ab9f973",
+    "src/universe/units.rs": "275298e228c26aa900b428beecc9a246f2c58235def777be3d1a54d3d3a4805a",
+    "tests/cube_contacts.rs": "6f996691581da5f3dce9260384ef151e0047ee9931c633e0e3b689ea434bbc59",
+    "tests/cube_migration.rs": "353af05411764328bd501162d07f4fdcc72573ed82e3c8f7d9b904135eec4635",
+    "tests/cube_offcenter.rs": "61f75bd4f4370df1d5eb665e79074c733a53538f77fe59864ba3330af4d20e42",
+    "tests/cube_sphere.rs": "e5fa5325896f7e0bcf6110c49bae472d906952ec60f1665abcb20c7841b62afe",
+    "tests/foundations.rs": "7b35e3c88600c7745a6a329811adc6774a6405369c5569ea6451f49d02da9a28",
+    "tests/globe_surface.rs": "48362724385753cbf48cab4ce4afc1f6b96521e4dcb69caecf3ee9e0e2a8e178",
+    "tests/surface.rs": "a6a0e01291129fd79df6852512b35c51c17088d01c2e7708bc411a0fed2411c4",
+    "tests/survival.rs": "403f676bb4b1993af6b20a80de90862d3e55c04358b744a8e6effb2ab8c50933"
+  },
+  "variables": {
+    "RUST_LOG": "info,solar_survival::player::surface=debug",
+    "SOLAR_SURVIVAL_VALIDATE_DIR": "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p4-validation/graphics/captures",
+    "MESA_VK_WSI_PRESENT_MODE": "immediate"
+  },
+  "display": ":1",
+  "command": [
+    "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/target/release/solar_survival"
+  ],
+  "environment": {
+    "os": "Linux"
+  }
+}

@@ -117,3 +117,10 @@ Le transport f64 conserve les poses dans le corps tournant au sol et en l'air, t
 Le repère local est mobile dans le corps : sa normale est transportée vers la direction radiale des pieds par rotation minimale, indépendamment des faces du cube. L’origine reste relative au centre de Mars. Les pieds, vitesse et base de visée sont transférés en f64 avant publication ; le rendu soustrait les origines/yeux en f64 avant conversion explicite en f32. La boîte joueur reste alignée sur le petit repère actif, avec petits changements par remplacement ; les objets fixes dans le corps utilisent maintenant leurs boîtes orientées exactes en contact pour ce parcours, sans expansion AABB cumulée. [Contrat complet](GLOBAL_TERRAIN.md).
 
 Le calendrier utilise toujours Time<Real> ; P/T entraînent Mars mais ne changent pas marche/gravité/saut. En l’air, le joueur reste entraîné cinématiquement par le corps. Coriolis, centrifuge, Euler et accélération translatoire restent omises ; M/G/O/U et les visites spatiales restent des transitions translatoires sans transfert inertiel. Aucune grande rotation instantanée d’une boîte joueur n’est introduite aux arêtes.
+
+
+## P4 : survie et site de session
+
+Aucun paramètre astronomique nouveau. Les abris utilisent des poses DVec3/DQuat fixes dans les axes du corps martien ; leur rotation inertielle demeure Q_Mars(t) × Q_abri. Leurs proxies soustraient les yeux en f64 avant conversion f32. La réserve de 180 s, sa consommation 1 s/s et la recharge 30 s/s sont des conventions de gameplay, pas des données physiologiques. Le menu et l’espace suspendent la survie ; P/T n’en changent pas le rythme.
+
+La première arrivée choisit le site éclairé selon la convention existante ; les retours normaux M de cette session conservent ce site au lieu de choisir à nouveau un point éclairé. R après échec retourne au premier abri. Le site peut donc être nocturne plus tard ; les visites spatiales restent translatoires sans transfert inertiel. Les scénarios de régression conservent leurs anciennes règles. [SURVIVAL](SURVIVAL.md) détaille les poses, collisions et limites.

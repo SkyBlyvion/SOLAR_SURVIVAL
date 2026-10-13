@@ -401,6 +401,7 @@ mod tests {
         let mut app = App::new();
         app.add_plugins(MinimalPlugins)
             .insert_resource(GameConfig {
+                survival_validation_dir: None,
                 start_jd: J2000,
                 smoke_seconds: None,
                 surface_smoke_seconds: None,

@@ -144,3 +144,12 @@ SOLAR_PROFILE_TERRAIN=global SOLAR_PROFILE_SECONDS=54 SOLAR_PROFILE_GPU=0 SOLAR_
 ```
 
 Ajouter Mesa immediate seulement sur le poste NVK. Mesurer nativement Windows/RTX 4050/Core i5 avec le modèle exact CPU, RAM, pilote, alimentation et réglages ; aucun 60 FPS cible ni résultat Windows n’est revendiqué ici.
+
+
+## P4 : bâtiments et clarification du LOD
+
+Le terrain conserve son voisinage de treize patches à niveau 15/32 segments. **Ce chargement dynamique n’est pas un LOD adaptatif** : aucun niveau n’est choisi selon la distance. La future extension à plusieurs niveaux devra mesurer le coût des changements/raccords, conserver des contacts fins localement et documenter les budgets CPU/GPU. Les performances historiques à résolution fixe ne valident pas cette fonctionnalité future.
+
+P4 ajoute six boîtes de contact et six proxies par abri local, un mesh de cube partagé et deux matériaux ; un abri en partie normale, deux dans le diagnostic. Proxies supprimés au-delà de 120 m et en espace ; les données corporelles restent en CPU, interrogées avec exclusion conservative. Pas de génération de mesh par frame ni de changement des budgets du terrain. Ces plafonds structurels ne sont pas des mesures complètes RAM/VRAM.
+
+La survie et ses assets/HUD sont désactivés dans le profilage et les scénarios historiques pour conserver leurs scènes. Le nouveau parcours de 56 s sert à valider la fonctionnalité avec captures ; ses FPS ponctuels ne constituent pas un benchmark P1 ni une garantie d’absence de régression. Une campagne dédiée aux bâtiments et, ultérieurement, au LOD devra être adaptée au nombre réel d’instances et mesurée sur la cible RTX 4050/Core i5.

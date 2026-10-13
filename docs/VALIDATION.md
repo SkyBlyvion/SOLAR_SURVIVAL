@@ -1,4 +1,51 @@
-# Validation Solar Survival 0.2 — Mars entière traversable
+# Validation Solar Survival 0.2 — P4 : survie et abri réutilisable
+
+13 octobre 2026. Départ réel Git **07e7af8**, terrain mondial déjà commité, avec seulement NEXT_CHAT modifié par l’utilisateur ; le prompt précédent citait un HEAD plus ancien. La copie exacte de cette passation est conservée dans [NEXT_CHAT-before](p4-validation/NEXT_CHAT-before.md). Les nouveaux changements P4 sont **non commités**. Aucune preuve historique supprimée/écrasée. Rust stable 1.99.0, édition 2024, Bevy **exactement 0.19.1**, Cargo.toml/Cargo.lock et dépendances inchangés. Ubuntu 24.04.5 LTS/X11 DISPLAY=:1, i7-6700K/GTX 1060 3 Go, Vulkan/NVK/Mesa 25.2.8. [Environnement final](p4-validation/final/environment.json), [contexte graphique et empreintes](p4-validation/graphics/environment.json), [notes](p4-validation/NOTES.md).
+
+La partie normale offre réserve de 180 s, consommation 1 s/s, recharge 30 s/s dans un abri accessible, HUD/alerte à 30 s et échec verrouillé avec reprise **R**. Le menu suspend la survie ; orbite/gravité continuent. Les visites spatiales conservent réserve/échec sans recharge ; M retrouve le site fixé à la première arrivée. P/T n’affectent pas la consommation. L’abri est instanciable avec identité stable et pose corporelle f64, réutilisable pour construction P5. [Règles et architecture](SURVIVAL.md).
+
+## Vérifications finales P4
+
+| Vérification | Résultat |
+|---|---|
+| cargo fmt --check | Réussi |
+| cargo check --locked et --all-targets --locked | Réussis |
+| cargo test --locked | **99 tests** : 32 internes, 21 fondations, 15 surface, 9 cube-sphere, 4 contacts, 3 migrations, 4 hors centre, 4 mondiaux, 7 survie |
+| cargo clippy --all-targets --locked -- -D warnings | Réussi |
+| cargo build --release --locked | Réussi ; premier build P4 **140,313 s**, vérification finale incrémentale également réussie |
+| Parcours graphique P4 release | **Code 0**, 56,469 s murales, 13 captures, aucun ERROR/WARN/panic |
+| Inspection visuelle | Treize captures via quatre planches ; originaux 00, 01 et 06 également inspectés |
+| Windows 11 / RTX 4050 et Core i5 | Non exécutés |
+
+[Contrôles finaux](p4-validation/final/build-results.json), [premier build](p4-validation/build-results.json), [campagne](p4-validation/graphics/results.json), [journal](p4-validation/graphics/game.txt), [captures/télémétrie](p4-validation/graphics/captures/), [manifest d’inspection](p4-validation/graphics/inspection/manifest.json). Les sept tests de survie ont été renforcés après la campagne ; les sources du **jeu** et le binaire graphique n’ont pas changé. L’environnement final distingue ces empreintes et vérifie cette correspondance. Pas de nouvelle campagne graphique après cette seule modification de test.
+
+## Couverture et preuve du bâtiment réutilisable
+
+Neuf tests ajoutés aux 90 tests P3, tous conservés et réussis :
+
+- Réserve en temps réel à 30/60/144 FPS, pause et accélération orbitale, delta de 12 s consommé entièrement ; bornes de réserve, recharge saturée, valeurs temporelles invalides ignorées et échec verrouillé.
+- Menu ECS : consommation suspendue pendant que JD et gravité avancent ; R ignoré dans le menu, reprise fonctionnelle. Recharge également suspendue par le test de politique.
+- Marche réelle par la porte ouverte, recharge pleine, mur bloquant, sortie par la porte, épuisement et immobilisation ; M vers l’espace ne réanime pas, R retourne au premier abri.
+- M/G/O/U et accélération de Mars : réserve gelée en espace, première pose/identité corporelle et nombre d’abris conservés, retour au site de session.
+- Deuxième installation via la même API, puis course traversant une clé de patch et rebasage ; six boîtes corporelles par instance, poses exactes immuables, conversion des contacts sous 2 nm et axes sous 10⁻¹². **Recharge de la deuxième et du premier abri dans la carte déjà rebasée**, sans appel au retour de site.
+- Huit coins du volume joueur exigés dans le volume utile, rejet derrière le mur et au-dessus du toit, pose de bâtiment inclinée.
+- Proxies : même unité de cube/entités au rebasage, restitution des centres dans le corps sous 5 µm, suppression en espace sans perte de données ; un mesh partagé.
+
+Le parcours graphique consomme dehors, entre par les vrais contrôles ECS, recharge, sort, ouvre/reprend le menu, court environ 88 m puis revient ; **un rebasage** pendant cette course aller-retour, pose d’abri conservée. Il provoque l’échec, presse R, effectue M aller/retour, installe la seconde instance et marche/recharge dedans. Il initialise une réserve de 80 s puis 1 s pour raccourcir l’échec, et 60 s devant le second abri. Le second départ est repositionné par le diagnostic ; aucune construction joueur, aucun changement de taux de production ou voyage intersite n’est revendiqué.
+
+L’inspection montre porte/murs/toit, progression du HUD, masque du menu, message d’échec/R lisible, Mars spatiale puis site conservé et deuxième abri identifié. Les vues intérieures regardent la paroi de face à hauteur des yeux ; l’abri reste un assemblage simple de boîtes, sans décoration/sas. L’éclairage devient plus sombre sous ×1000 ; le masque solaire historique reste actif. Les marqueurs peuvent se superposer, limite ancienne. Les captures espacées ne prouvent pas chaque frame ; les poses/contacts sont vérifiés numériquement/ECS. Aucun nouveau test des périphériques OS ou suspension réelle.
+
+## Portée, coûts et suites
+
+Six boîtes/proxies par abri, un mesh de cube et deux matériaux ; un abri normal, deux dans le diagnostic, proxies chargés dans un rayon de 120 m et supprimés en espace. Poses/boîtes autoritaires restent en CPU ; requêtes linéaires avec exclusion conservative. Les budgets du terrain restent ≤13 patches niveau 15/32 segments. **Ce chargement dynamique à résolution fixe n’est pas un LOD adaptatif**. Plusieurs niveaux de détail selon la distance du joueur sont désormais exigés et planifiés dans [ROADMAP](ROADMAP.md), avec raccords de niveaux mixtes et budgets à valider.
+
+Pas de benchmark complet P4, de mesures exhaustives RAM/VRAM, de cible 60 FPS, de validation Windows/RTX 4050 ni de nouveaux tests d’autres DPI. Le rebasage graphique isolé journalise 8,218 ms CPU, captures actives : hors GPU/meshes, sans comparaison contrôlée permettant d’attribuer une variation au nouvel abri. Pas de replay graphique massif P3/P2 ; les 90 régressions numériques/ECS et leurs anciennes preuves sont conservées. Les profils/scénarios historiques gardent bâtiments et survie désactivés.
+
+**P4 terminé sur Ubuntu**, dans les conventions de gameplay documentées. P5 doit rendre constructible **le même OxygenShelter** ; inventaire, recettes et placement joueur restent à faire, sauvegarde disque à P6. Pas de dépendance ajoutée ni d’architecture vide. Le LOD adaptatif demeure une extension distincte à implémenter, jamais présenté comme réalisé par les treize patches.
+
+---
+
+# Historique : validation Solar Survival 0.2 — Mars entière traversable
 
 13 octobre 2026. Départ Git `2031710` (P3.4 commité), avec uniquement la correction utilisateur dans NEXT_CHAT. L’utilisateur a ensuite demandé explicitement les six faces traversables et autorisé la révision de la roadmap : le cadrage d’une chaîne fixe est remplacé par un terrain mondial complet, chargé localement. Les changements de ce chat sont **non commités** ; aucune preuve antérieure supprimée/écrasée. Ubuntu 24.04.5 LTS/X11, DISPLAY=:1, Rust stable 1.99.0 édition 2024, Bevy exactement 0.19.1, i7-6700K/GTX 1060 3 Go/NVK/Mesa 25.2.8. Cargo.toml/Cargo.lock et dépendances inchangés. [Environnement et empreintes](global-validation/environment.json), [décisions/essais intermédiaires](global-validation/NOTES.md).
 
