@@ -68,8 +68,15 @@ fn input(
                 progress.air_migrations
             );
             info!(
-                "P3.3 terminé : {} migrations, {} en l'air, apex {:.6} m",
-                progress.migrations, progress.air_migrations, progress.max_air_m
+                "{} terminé : {} migrations, {} en l'air, apex {:.6} m",
+                if terrain.offcenter_enabled {
+                    "P3.4"
+                } else {
+                    "P3.3"
+                },
+                progress.migrations,
+                progress.air_migrations,
+                progress.max_air_m
             );
         }
         assert!(
@@ -96,8 +103,12 @@ fn input(
     if progress.stage != Some(stage) {
         progress.previous_x = None;
         if terrain.migration_enabled && matches!(stage, 1 | 3 | 6 | 9) {
-            state.feet.x = 96.0;
-            state.feet.z = 30.0;
+            if let Some(plan) = &terrain.migration {
+                state.feet = plan.approach(terrain.cube.as_ref().unwrap().pair.keys[0]);
+            } else {
+                state.feet.x = 96.0;
+                state.feet.z = 30.0;
+            }
             state.feet.y = terrain.support_height(state.feet, HALF_WIDTH_M) + 0.002;
             state.velocity = bevy::math::DVec3::ZERO;
             state.grounded = true;
@@ -110,7 +121,11 @@ fn input(
                 keys.press(KeyCode::KeyM);
             }
             5 | 8 => {
-                state.feet.x = if terrain.migration_enabled { 96.0 } else { 0.0 };
+                if let Some(plan) = &terrain.migration {
+                    state.feet = plan.approach(terrain.cube.as_ref().unwrap().pair.keys[0]);
+                } else {
+                    state.feet.x = if terrain.migration_enabled { 96.0 } else { 0.0 };
+                }
                 state.feet.y = terrain.support_height(state.feet, HALF_WIDTH_M) + 0.002;
                 state.velocity = bevy::math::DVec3::ZERO;
                 state.grounded = true;
@@ -127,7 +142,11 @@ fn input(
             }
             11 | 12 => {
                 if terrain.migration_enabled {
-                    state.feet.x = if stage == 11 { 101.0 } else { -111.0 };
+                    if let Some(plan) = &terrain.migration {
+                        state.feet = plan.preparation(terrain.cube.as_ref().unwrap().pair.keys[0]);
+                    } else {
+                        state.feet.x = if stage == 11 { 101.0 } else { -111.0 };
+                    }
                     assert!(
                         state.migrate(&mut terrain),
                         "Préparation explicite de limite"
@@ -195,8 +214,15 @@ fn capture(
             progress.migrations += 1;
             progress.air_migrations += (!state.grounded) as usize;
             info!(
-                "P3.3 migration {} : pieds {:?}, sol {}",
-                progress.migrations, state.feet, state.grounded
+                "{} migration {} : pieds {:?}, sol {}",
+                if terrain.offcenter_enabled {
+                    "P3.4"
+                } else {
+                    "P3.3"
+                },
+                progress.migrations,
+                state.feet,
+                state.grounded
             );
         }
         progress.previous_revision = Some(terrain.revision);
@@ -219,7 +245,9 @@ fn capture(
     progress.captured = Some(stage);
     info!(
         "{} étape {stage:02} : {:?}, pieds {:?}, vitesse {:?}, sol {}, JD {:.8}, pause {}, crossings {}, migrations {}",
-        if terrain.migration_enabled {
+        if terrain.offcenter_enabled {
+            "P3.4"
+        } else if terrain.migration_enabled {
             "P3.3"
         } else {
             "P3.2"
@@ -233,6 +261,12 @@ fn capture(
         progress.crossings,
         progress.migrations
     );
+    if let Some(plan) = &terrain.migration {
+        info!(
+            "P3.4 constructions CPU {}, dérive boîte {:.9} m",
+            plan.constructions, plan.box_drift_m
+        );
+    }
     if let Some(cube) = &terrain.cube {
         info!(
             "Paire : {:?}, {} sommets, {} triangles, index {:?}, bornes {:?} / {:?}",

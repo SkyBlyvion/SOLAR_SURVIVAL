@@ -698,17 +698,37 @@ mod tests {
 
     #[test]
     fn migration_uses_actual_ecs_controls_pause_rotation_and_all_space_exits() {
+        migration_controls(false);
+    }
+    #[test]
+    fn offcenter_migration_uses_actual_ecs_controls_pause_rotation_and_all_space_exits() {
+        migration_controls(true);
+    }
+    fn migration_controls(offcenter: bool) {
         let mut app = app(60);
         {
             let mut terrain = app.world_mut().resource_mut::<MarsTerrain>();
             terrain.cube_enabled = true;
             terrain.migration_enabled = true;
+            terrain.offcenter_enabled = offcenter;
         }
         press(&mut app, KeyCode::KeyM);
         app.world_mut().resource_mut::<Explorer>().captured = true;
+        let initial = if offcenter {
+            let terrain = app.world().resource::<MarsTerrain>();
+            let mut p = terrain
+                .migration
+                .as_ref()
+                .unwrap()
+                .approach(terrain.cube.as_ref().unwrap().pair.keys[0]);
+            p.y = terrain.support_height(p, crate::physics::surface::HALF_WIDTH_M) + 0.002;
+            p
+        } else {
+            DVec3::new(96.0, 0.0005, 30.0)
+        };
         {
             let mut state = app.world_mut().resource_mut::<SurfaceState>();
-            state.feet = DVec3::new(96.0, 0.0005, 30.0);
+            state.feet = initial;
             state.yaw = 0.0;
         }
         app.world_mut().resource_mut::<SimulationClock>().paused = true;

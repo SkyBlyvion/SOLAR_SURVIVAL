@@ -20,6 +20,8 @@ pub struct MarsTerrain {
     /// Opt-in de session ; une seule paire résidente, jamais une planète entière.
     pub cube_enabled: bool,
     pub migration_enabled: bool,
+    pub offcenter_enabled: bool,
+    pub migration: Option<super::cube_migration::CubeMigration>,
     /// Trois obstacles possédés par le site d'entrée, fixes dans le corps.
     pub site_obstacles: Option<(DQuat, [crate::physics::surface::SolidBox; 3])>,
     pub cube: Option<super::cube_terrain::CubeTerrain>,
@@ -38,6 +40,10 @@ impl FromWorld for MarsTerrain {
             migration_enabled: world
                 .get_resource::<crate::config::GameConfig>()
                 .is_some_and(|c| c.cube_migration),
+            offcenter_enabled: world
+                .get_resource::<crate::config::GameConfig>()
+                .is_some_and(|c| c.cube_offcenter),
+            migration: None,
             site_obstacles: None,
             cube: None,
         }
@@ -45,7 +51,35 @@ impl FromWorld for MarsTerrain {
 }
 impl MarsTerrain {
     pub fn set_site(&mut self, outward: DVec3) {
-        if self.cube_enabled {
+        self.migration = None;
+        if self.offcenter_enabled {
+            // L'entrée remplace le site : libérer l'ancienne paire avant de
+            // préparer les deux nouvelles, y compris lors de M/G/O/U.
+            self.cube = None;
+            let face = super::FaceCoordinates::from_direction(outward)
+                .expect("Direction valide")
+                .face;
+            let key = super::PatchKey {
+                face,
+                level: super::cube_terrain::LEVEL,
+                x: 24575,
+                y: 24576,
+            };
+            let (orientation, cube, migration) =
+                super::cube_migration::CubeMigration::prepare(key, self.radius_m)
+                    .expect("Recouvrement hors centre certifié");
+            info!(
+                "P3.4 plan {:?}, centre X {:.9} m, couloir Z ±{:.9} m, rotation {:.9} rad, dérive boîte {:.9} m",
+                migration.charts,
+                migration.center_x,
+                migration.half_z,
+                migration.rotation_rad,
+                migration.box_drift_m
+            );
+            self.orientation = orientation;
+            self.cube = Some(cube);
+            self.migration = Some(migration);
+        } else if self.cube_enabled {
             let (orientation, cube) = super::cube_terrain::CubeTerrain::new(outward, self.radius_m);
             self.orientation = orientation;
             self.cube = Some(cube);

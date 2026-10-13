@@ -10,7 +10,7 @@ pub const WALK_MPS: f64 = 4.5;
 pub const RUN_MPS: f64 = 8.0;
 pub const JUMP_MPS: f64 = 4.0;
 pub const STEP_SECONDS: f64 = 1.0 / 120.0;
-const SKIN_M: f64 = 0.002;
+pub(crate) const SKIN_M: f64 = 0.002;
 
 #[derive(Clone, Copy, Debug)]
 pub struct SolidBox {
@@ -41,7 +41,7 @@ pub fn obstacles(terrain: &MarsTerrain) -> [SolidBox; 3] {
         return std::array::from_fn(|index| {
             let (center, size, rotation) = obstacle_pose(terrain, index);
             // Enveloppe des huit coins, sans déplacer/dupliquer l'obstacle.
-            // Inclinaison <= 0,000062 rad dans ce parcours uniquement.
+            // P3.3/P3.4 : expansion bornée/testée pour les deux cartes seulement.
             let half = (rotation * DVec3::X).abs() * size.x * 0.5
                 + (rotation * DVec3::Y).abs() * size.y * 0.5
                 + (rotation * DVec3::Z).abs() * size.z * 0.5;

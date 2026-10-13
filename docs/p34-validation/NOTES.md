@@ -1,0 +1,15 @@
+# Campagne P3.4 — 13 octobre 2026
+
+Départ propre à `ea3a32b` : P3.3 déjà commité, ancienne passation corrigée. Aucune preuve précédente écrasée. Tous les essais numériques et graphiques de ce chat ont réussi ; les journaux initiaux sont conservés avec leurs noms, les vérifications finales dans build-results.json. La précision de la réserve d'exclusion des obstacles (dérive boîte + plafond d'expansion + peau) a été fixée avant les vérifications finales et le build release. Aucun changement Rust après ce build et les campagnes graphiques.
+
+Plan progressif suivi : examiner les seuils centraux et le coût des refus ; isoler deux cartes franchement décentrées ; certifier leur recouvrement et les budgets de contact ; tester numériquement et via ECS ; compiler ; lancer successivement hors centre/centrale/P3.2/historique ; inspecter puis documenter. Les seuils P3.3 restent leur propre régression.
+
+À l'entrée hors centre, `set_site` libère l'ancienne paire AVANT `prepare`. Cela évite trois CubeTerrain au retour M/G/O/U. `prepare` construit deux paires puis ne garde que la première et les métadonnées de la seconde. Pendant la migration : paire active + une candidate, puis seulement la candidate. Le plafond de deux paires simultanées est structurel ; les compteurs ne sont pas un profilage de l'allocateur.
+
+Les 21 planches et cinq originaux sont inspectés (manifest.json). Les marches sont préparées près du recouvrement ; ces téléportations et les deux migrations de préparation aux limites sont exclues des huit migrations comptées. Les captures espacées ne prouvent pas une continuité vidéo instantanée ; conservation f64 dans les tests. Raccord/coloration cohérents, HUD sol/en l'air, bords extérieurs visibles attendus, sorties/retours présents. Les marqueurs astronomiques superposés restent une limite ancienne.
+
+`launcher-source.py` est le snapshot exact du lanceur exécuté ; son empreinte et celle du binaire sont dans environment.json. L'utilitaire réutilisable `scripts/validate_cube_suite.py` a ensuite remplacé la date de campagne fixe par un horodatage UTC dynamique et séparé l'empreinte du lanceur de celles du jeu ; lancement des subprocess inchangé, syntaxe et --help vérifiés. Aucun résultat graphique ne dépend de cette modification de métadonnées. Les empreintes de toutes les sources Rust/tests/exemple/shader/Cargo de la campagne correspondent aux fichiers finaux.
+
+Contact-budget.json calcule abs(A)×taille à partir des quaternions du journal overlap.txt et des trois dimensions de gameplay. C'est un complément analytique aux tests des huit coins : expansion maximale 0,227457 mm, limite d'admission 0,5 mm. L'angle hors centre est PLUS PETIT que celui de P3.3 ; le roulis est toutefois inclus. Ce parcours ne valide aucun grand changement d'orientation.
+
+Windows natif, RTX 4050/Core i5, périphériques OS, suspension complète, cycle P2 complet et benchmark CPU/GPU/VRAM non rejoués ou non disponibles. Les temps de construction seuls ne permettent pas d'affirmer un gain de FPS ou une absence de pic de frame.

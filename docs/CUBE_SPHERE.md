@@ -130,3 +130,45 @@ MESA_VK_WSI_PRESENT_MODE=immediate SOLAR_CUBE_MIGRATION=1 SOLAR_CUBE_VALIDATE_DI
 ```
 
 Le parent doit exister, le dossier final doit être nouveau. Sans variable de capture, M ouvre le parcours jouable normalement. Le diagnostic commun dure 88 s et conserve 22 captures. En P3.3, les poses de préparation x=96 m/z=30 m précèdent marche/course aller-retour et saut ; ces poses ne comptent pas comme migrations. Les vraies commandes ECS provoquent huit migrations attendues, dont une en l'air, puis repos, P/×1000, limites et quatre sorties/retours M/G/O/U, enfin Terre. Les deux préparations de limite migrent explicitement et sont exclues du compteur de marche. Une mesure murale CPU de construction/transaction est journalisée à chaque remplacement ; elle n'est ni un profiler complet ni une mesure GPU. Résultats effectivement obtenus dans [VALIDATION](VALIDATION.md).
+
+## P3.4 : deux cartes franchement hors centre, même face
+
+`SOLAR_CUBE_OFFCENTER=1` implique cube et migration, sauf profilage prioritaire. Il choisit `(24575,24576)/(24576,24576)`, puis `(24576,24576)/(24577,24576)`, sur la face dominante de la direction solaire dans le corps à l'entrée. Origine de la première vers `u=0,5, v=0,5000305`, à ~35,26° du centre de face : nouvelle localisation de gameplay, sans coordonnées géographiques mesurées. La face sélectionnée ne réoriente jamais le site pendant une visite. `SOLAR_CUBE_MIGRATION=1` seul garde le parcours central P3.3 ; P3.2 seule et défaut historique restent disponibles. Pas de trajet automatique depuis la centrale jusqu'à ce site distant.
+
+Le module réel `planets/cube_migration.rs` prépare seulement deux `Chart` (clé, DQuat, rectangle certifié). À l'entrée, il construit les deux paires, conserve la première et libère la géométrie de la seconde. Le recouvrement provient ainsi des mêmes frontières/triangles que les contacts, pas d'une largeur nominale. Au rayon martien : première demi-largeur ~140,493461×62,108457 m, seconde ~140,486413×62,105910 m ; centres séparés de ~154,193858 m selon X de la première. Index observés : 2 978 cases, 44 610/44 627 références, maximum 18 triangles/case. Niveau/résolution et rayon inchangés.
+
+### Admission et hystérésis
+
+Toutes les décisions utilisent les coordonnées **dans la carte d'entrée**, même quand la voisine est active. Avec `c` égal à la moitié de la séparation des origines projetée selon X (~77,096929 m), le plan exige une boîte de pieds `|x−c|≤8 m`, `|y|≤100 m`, `|z|≤hz`. Pour chacune des deux cartes, `p'=A p+t` est calculé avec soustraction des origines en f64. Chaque contrainte X/Z du rectangle certifié inclut le rayon d'empreinte **0,30025 m** et les extrêmes de toute la boîte :
+
+```text
+|p'_centre[j]| + |A[j,X]| × 8 + |A[j,Y]| × 100
+                  + |A[j,Z]| × hz + 0,30025 ≤ rectangle.max[j], j=X,Z
+```
+
+`hz` est le minimum autorisé par les quatre inégalités, réduit encore de 20 % (~49,444528 m). Si les contraintes ne laissent aucun couloir utilisable, aucun plan n'est fourni. Les ±8 m, ±100 m, réserve de 20 % et hystérésis de 2 m sont des conventions bornées de gameplay ; la couverture est calculée, pas une donnée martienne ni un contrat mondial.
+
+Aller si `x>c+1 m` ; retour si `x<c−1 m`, dans ce repère commun. L'hystérésis est donc 2 m **dans la même coordonnée**, indépendante d'un décalage de repère. Le plan sélectionne au plus l'autre carte, vérifie encore les deux empreintes et rejette avant construction hors du volume, hors rectangle, dans la bande d'hystérésis ou pour une clé étrangère. Le joueur qui contourne le couloir peut atteindre la borne de la carte active : aucune borne n'est ouverte. Un mouvement en course ne parcourt que 0,0667 m par sous-pas ; la zone de 8 m laisse une large réserve, sans rattrapage mondial d'une téléportation hors admission.
+
+Les tests vérifient tous les coins du volume sur six faces, des requêtes de support sur une grille et aux altitudes −100/0/+100 m dans les deux cartes, les quatre bornes en l'air/réception, et des milliers de refus sans augmentation du compteur de constructions ni de révision. Le plan ne retient aucun cache de géométrie candidate et ne reconstruit rien pendant les refus.
+
+### Compromis de contacts réévalué
+
+Le transfert conserve les formules P3.3 pour pieds/yeux/vitesse/visée/gravité et la publication après physique. Tests aller et retour sur six faces, au sol/2/20/99 m : positions et centres d'objets <4 nm, axes de visée et vitesse/gravité <10⁻¹³ dans leurs unités, rayon du support <2 µm, écart vertical au support <20 µm. Le volume de contact demeure aligné sur la carte active. Le déplacement de chacun de ses huit coins lors du reboîtage est calculé en incluant la rotation complète : maximum **83,015 µm**, refus si >**0,25 mm**. L'angle complet ~4,54916×10⁻⁵ rad est inférieur au central, mais inclut aussi le roulis hors centre. On ne revendique toujours pas un volume orienté invariant ni un changement de face/grande inclinaison validé.
+
+Les obstacles restent possédés par le site d'entrée, leurs trois poses exactes dans le corps sont conservées. Leurs enveloppes `abs(A) × taille` sont admises seulement si l'expansion de chaque dimension reste ≤**0,5 mm** avant allocation ; calcul observé maximum **0,227457 mm**. Les huit coins sont testés inclus dans ces AABB. La migration est refusée à proximité d'un contact d'objet : le volume joueur dans la carte active est élargi de **2,75 mm** (0,25 mm de dérive + 0,5 mm d'expansion d'objet + peau 2 mm) pour exclure le contact dans les deux représentations. Ce choix préserve le petit contrôleur actuel et limite explicitement son usage. Le support terrain reste exact sous l'empreinte reboîtée ; l'écart des projections verticales ne signifie pas une translation physique du sol.
+
+### Ressources et reproduction
+
+Pendant `prepare` ou une transaction, maximum **deux CubeTerrain** CPU (quatre occurrences de patch, 16 770 sommets/32 768 triangles plus tableaux locaux/index/temporaires). `set_site` libère la paire précédente AVANT de préparer la nouvelle, y compris aux retours M/G/O/U : pas de troisième paire à l'entrée. Après préparation/remplacement : une paire, deux patches. Les métadonnées de deux cartes restent constantes ; compteur deux constructions à l'entrée, puis une par migration admise. Les deux handles et entités du terrain, les trois obstacles et la couleur du patch partagé sont réutilisés. Aucun nouveau proxy GPU ajouté ni génération par rotation/frame ordinaire. Les plafonds sont structurels, sans mesure RAM/VRAM totale ni garantie sur les buffers temporaires internes du renderer.
+
+```bash
+cargo build --release --locked
+MESA_VK_WSI_PRESENT_MODE=immediate SOLAR_CUBE_OFFCENTER=1 SOLAR_CUBE_VALIDATE_DIR=docs/mon-nouveau-parcours-p34 RUST_LOG=info target/release/solar_survival
+# Les quatre scénarios successifs, dans un dossier neuf pour les preuves :
+python3 scripts/validate_cube_suite.py --output docs/ma-nouvelle-campagne --mesa-immediate
+```
+
+Le premier diagnostic exige un parent existant et un dossier final nouveau. Sans variable de captures, M ouvre le parcours jouable. Le scénario de 88 s adapte ses poses de préparation au plan (x=c−3 m, z=hz/2) ; huit migrations par touches ECS, dont un saut, repos, pause/×1000, deux limites terminales, M/G/O/U puis Terre. Les deux migrations explicites de préparation des limites ne comptent pas parmi les marches. Sous Windows natif, omettre Mesa et utiliser les variables PowerShell ; ce protocole n'a pas été exécuté ici.
+
+Résultats : [VALIDATION](VALIDATION.md). P3.4 n'ajoute aucune chaîne de cartes, migration ±V, passage jouable entre faces, relief, LOD mixte ou changement du contrôleur. Une extension cumulant plusieurs orientations doit réévaluer les mêmes budgets, notamment l'expansion des obstacles depuis le **site d'entrée**, et justifier son plafond de préparation avant allocation.

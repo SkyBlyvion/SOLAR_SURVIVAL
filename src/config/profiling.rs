@@ -403,6 +403,7 @@ mod tests {
                 profile: None,
                 cube_surface: false,
                 cube_migration: false,
+                cube_offcenter: false,
                 cube_validation_dir: None,
             })
             .add_plugins(ProfilingPlugin);

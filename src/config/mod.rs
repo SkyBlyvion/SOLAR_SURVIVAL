@@ -12,6 +12,7 @@ pub struct GameConfig {
     pub p2_seconds: Option<f64>,
     pub cube_surface: bool,
     pub cube_migration: bool,
+    pub cube_offcenter: bool,
     pub cube_validation_dir: Option<std::path::PathBuf>,
     pub profile: Option<profiling::ProfileConfig>,
 }
@@ -19,10 +20,14 @@ impl Default for GameConfig {
     fn default() -> Self {
         let profile = profiling::ProfileConfig::from_env();
         Self {
-            cube_migration: std::env::var("SOLAR_CUBE_MIGRATION").is_ok_and(|s| s == "1")
+            cube_offcenter: std::env::var("SOLAR_CUBE_OFFCENTER").is_ok_and(|s| s == "1")
+                && profile.is_none(),
+            cube_migration: (std::env::var("SOLAR_CUBE_MIGRATION").is_ok_and(|s| s == "1")
+                || std::env::var("SOLAR_CUBE_OFFCENTER").is_ok_and(|s| s == "1"))
                 && profile.is_none(),
             cube_surface: (std::env::var("SOLAR_CUBE_SURFACE").is_ok_and(|s| s == "1")
-                || std::env::var("SOLAR_CUBE_MIGRATION").is_ok_and(|s| s == "1"))
+                || std::env::var("SOLAR_CUBE_MIGRATION").is_ok_and(|s| s == "1")
+                || std::env::var("SOLAR_CUBE_OFFCENTER").is_ok_and(|s| s == "1"))
                 && profile.is_none(),
             cube_validation_dir: std::env::var_os("SOLAR_CUBE_VALIDATE_DIR")
                 .map(std::path::PathBuf::from),

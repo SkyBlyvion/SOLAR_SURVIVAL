@@ -98,39 +98,99 @@ impl SurfaceState {
             self.accumulator = (self.accumulator - STEP_SECONDS).max(0.0);
         }
     }
-    /// Remplacement borné/reversible : centrale <-> voisine +U uniquement.
+    /// Remplacement réversible entre deux paires, sans franchir une face.
     /// Toute la transaction précède la publication et n'avance aucune horloge.
     pub fn migrate(&mut self, terrain: &mut MarsTerrain) -> bool {
-        if !terrain.migration_enabled || self.feet.z.abs() > 50.0 || self.feet.y.abs() > 100.0 {
+        if !terrain.migration_enabled {
             return false;
         }
         let Some(cube) = &terrain.cube else {
             return false;
         };
-        let mut key = cube.pair.keys[0];
-        let middle = 1 << (crate::planets::cube_terrain::LEVEL - 1);
-        if key.level != crate::planets::cube_terrain::LEVEL || key.y != middle {
-            return false;
-        }
-        if key.x == middle - 1 && self.feet.x > 100.0 {
-            key.x += 1;
-        } else if key.x == middle && self.feet.x < -110.0 {
-            key.x -= 1;
-        } else {
-            return false;
-        }
-        let started = std::time::Instant::now();
         let old_orientation = terrain.orientation;
-        let body_feet = terrain.body_relative(self.feet);
         let old_up = terrain.site_relative(self.feet).normalize();
-        let (orientation, next) =
-            crate::planets::cube_terrain::CubeTerrain::from_key(key, terrain.radius_m)
-                .expect("Voisine sur la même face");
-        let feet =
-            orientation.inverse() * (body_feet - orientation * (DVec3::Y * terrain.radius_m));
-        if next.support_height(feet, HALF_WIDTH_M).is_none() {
-            return false;
-        }
+        let started = std::time::Instant::now();
+        let (orientation, next, feet) = if let Some(plan) = &terrain.migration {
+            let Some((chart, feet)) = plan.candidate(cube.pair.keys[0], self.feet) else {
+                return false;
+            };
+            // Le reboîtage n'est admis qu'en dehors des contacts d'obstacles.
+            // Enveloppe des deux volumes dans la carte active, avec réserve.
+            let exclusion = crate::planets::cube_migration::BOX_DRIFT_LIMIT_M
+                + crate::planets::cube_migration::OBSTACLE_EXPANSION_LIMIT_M
+                + surface::SKIN_M;
+            let lo = self.feet
+                - DVec3::new(
+                    HALF_WIDTH_M + exclusion,
+                    exclusion,
+                    HALF_WIDTH_M + exclusion,
+                );
+            let hi = self.feet
+                + DVec3::new(
+                    HALF_WIDTH_M + exclusion,
+                    surface::PLAYER_HEIGHT_M + exclusion,
+                    HALF_WIDTH_M + exclusion,
+                );
+            if surface::obstacles(terrain)
+                .iter()
+                .any(|solid| lo.cmplt(solid.max).all() && hi.cmpgt(solid.min).all())
+            {
+                return false;
+            }
+            // Les obstacles restent la propriété de l'entrée : vérifier l'expansion
+            // complète dans la candidate avant allocation (limite de ce parcours).
+            if let Some((frame, solids)) = terrain.site_obstacles {
+                let rotation = chart.orientation.inverse() * frame;
+                if solids.iter().any(|solid| {
+                    let size = solid.max - solid.min;
+                    let envelope = (rotation * DVec3::X).abs() * size.x
+                        + (rotation * DVec3::Y).abs() * size.y
+                        + (rotation * DVec3::Z).abs() * size.z;
+                    (envelope - size).max_element()
+                        > crate::planets::cube_migration::OBSTACLE_EXPANSION_LIMIT_M
+                }) {
+                    return false;
+                }
+            }
+            // Aucun tableau de géométrie n'est construit pour un refus d'admission.
+            terrain.migration.as_mut().unwrap().constructions += 1;
+            let (orientation, next) =
+                crate::planets::cube_terrain::CubeTerrain::from_key(chart.key, terrain.radius_m)
+                    .expect("Candidate préparée");
+            assert_eq!(orientation, chart.orientation);
+            assert_eq!((next.min, next.max), (chart.min, chart.max));
+            assert!(
+                next.support_height(feet, HALF_WIDTH_M).is_some(),
+                "Certification de l'empreinte"
+            );
+            (orientation, next, feet)
+        } else {
+            // Régression P3.3 conservée avec ses conventions centrales historiques.
+            if self.feet.z.abs() > 50.0 || self.feet.y.abs() > 100.0 {
+                return false;
+            }
+            let mut key = cube.pair.keys[0];
+            let middle = 1 << (crate::planets::cube_terrain::LEVEL - 1);
+            if key.level != crate::planets::cube_terrain::LEVEL || key.y != middle {
+                return false;
+            }
+            if key.x == middle - 1 && self.feet.x > 100.0 {
+                key.x += 1;
+            } else if key.x == middle && self.feet.x < -110.0 {
+                key.x -= 1;
+            } else {
+                return false;
+            }
+            let (orientation, next) =
+                crate::planets::cube_terrain::CubeTerrain::from_key(key, terrain.radius_m)
+                    .expect("Voisine sur la même face");
+            let feet = orientation.inverse()
+                * (terrain.body_relative(self.feet) - orientation * (DVec3::Y * terrain.radius_m));
+            if next.support_height(feet, HALF_WIDTH_M).is_none() {
+                return false;
+            }
+            (orientation, next, feet)
+        };
         let delta = orientation.inverse() * old_orientation;
         let new_up = (feet + DVec3::Y * terrain.radius_m).normalize();
         self.heading = (DQuat::from_rotation_arc(DVec3::Y, new_up).inverse()
@@ -144,7 +204,12 @@ impl SurfaceState {
         terrain.cube = Some(next);
         terrain.revision = terrain.revision.wrapping_add(1);
         info!(
-            "P3.3 remplacement {:?}, construction/transaction CPU {:.3} ms, index {:?}",
+            "{} remplacement {:?}, construction/transaction CPU {:.3} ms, index {:?}",
+            if terrain.offcenter_enabled {
+                "P3.4"
+            } else {
+                "P3.3"
+            },
             terrain.cube.as_ref().unwrap().pair.keys,
             started.elapsed().as_secs_f64() * 1000.0,
             terrain.cube.as_ref().unwrap().index_counts()

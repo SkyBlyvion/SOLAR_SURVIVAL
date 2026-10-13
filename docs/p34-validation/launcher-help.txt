@@ -1,0 +1,8 @@
+usage: validate_cube_suite.py [-h] --output OUTPUT [--mesa-immediate]
+
+Parcours cube bornés et régression historique, successifs, sans compilation.
+
+options:
+  -h, --help        show this help message and exit
+  --output OUTPUT
+  --mesa-immediate

@@ -1,0 +1,215 @@
+{
+  "boards": [
+    {
+      "board": "docs/p34-validation/inspection/offcenter-00.jpg",
+      "sources": [
+        "docs/p34-validation/offcenter/crossing-00.png",
+        "docs/p34-validation/offcenter/crossing-01.png",
+        "docs/p34-validation/offcenter/crossing-02.png",
+        "docs/p34-validation/offcenter/crossing-03.png"
+      ],
+      "inspected": true
+    },
+    {
+      "board": "docs/p34-validation/inspection/offcenter-01.jpg",
+      "sources": [
+        "docs/p34-validation/offcenter/crossing-04.png",
+        "docs/p34-validation/offcenter/crossing-05.png",
+        "docs/p34-validation/offcenter/crossing-06.png",
+        "docs/p34-validation/offcenter/crossing-07.png"
+      ],
+      "inspected": true
+    },
+    {
+      "board": "docs/p34-validation/inspection/offcenter-02.jpg",
+      "sources": [
+        "docs/p34-validation/offcenter/crossing-08.png",
+        "docs/p34-validation/offcenter/crossing-09.png",
+        "docs/p34-validation/offcenter/crossing-10.png",
+        "docs/p34-validation/offcenter/crossing-11.png"
+      ],
+      "inspected": true
+    },
+    {
+      "board": "docs/p34-validation/inspection/offcenter-03.jpg",
+      "sources": [
+        "docs/p34-validation/offcenter/crossing-12.png",
+        "docs/p34-validation/offcenter/crossing-13.png",
+        "docs/p34-validation/offcenter/crossing-14.png",
+        "docs/p34-validation/offcenter/crossing-15.png"
+      ],
+      "inspected": true
+    },
+    {
+      "board": "docs/p34-validation/inspection/offcenter-04.jpg",
+      "sources": [
+        "docs/p34-validation/offcenter/crossing-16.png",
+        "docs/p34-validation/offcenter/crossing-17.png",
+        "docs/p34-validation/offcenter/crossing-18.png",
+        "docs/p34-validation/offcenter/crossing-19.png"
+      ],
+      "inspected": true
+    },
+    {
+      "board": "docs/p34-validation/inspection/offcenter-05.jpg",
+      "sources": [
+        "docs/p34-validation/offcenter/crossing-20.png",
+        "docs/p34-validation/offcenter/crossing-21.png"
+      ],
+      "inspected": true
+    },
+    {
+      "board": "docs/p34-validation/inspection/central-regression-00.jpg",
+      "sources": [
+        "docs/p34-validation/central-regression/crossing-00.png",
+        "docs/p34-validation/central-regression/crossing-01.png",
+        "docs/p34-validation/central-regression/crossing-02.png",
+        "docs/p34-validation/central-regression/crossing-03.png"
+      ],
+      "inspected": true
+    },
+    {
+      "board": "docs/p34-validation/inspection/central-regression-01.jpg",
+      "sources": [
+        "docs/p34-validation/central-regression/crossing-04.png",
+        "docs/p34-validation/central-regression/crossing-05.png",
+        "docs/p34-validation/central-regression/crossing-06.png",
+        "docs/p34-validation/central-regression/crossing-07.png"
+      ],
+      "inspected": true
+    },
+    {
+      "board": "docs/p34-validation/inspection/central-regression-02.jpg",
+      "sources": [
+        "docs/p34-validation/central-regression/crossing-08.png",
+        "docs/p34-validation/central-regression/crossing-09.png",
+        "docs/p34-validation/central-regression/crossing-10.png",
+        "docs/p34-validation/central-regression/crossing-11.png"
+      ],
+      "inspected": true
+    },
+    {
+      "board": "docs/p34-validation/inspection/central-regression-03.jpg",
+      "sources": [
+        "docs/p34-validation/central-regression/crossing-12.png",
+        "docs/p34-validation/central-regression/crossing-13.png",
+        "docs/p34-validation/central-regression/crossing-14.png",
+        "docs/p34-validation/central-regression/crossing-15.png"
+      ],
+      "inspected": true
+    },
+    {
+      "board": "docs/p34-validation/inspection/central-regression-04.jpg",
+      "sources": [
+        "docs/p34-validation/central-regression/crossing-16.png",
+        "docs/p34-validation/central-regression/crossing-17.png",
+        "docs/p34-validation/central-regression/crossing-18.png",
+        "docs/p34-validation/central-regression/crossing-19.png"
+      ],
+      "inspected": true
+    },
+    {
+      "board": "docs/p34-validation/inspection/central-regression-05.jpg",
+      "sources": [
+        "docs/p34-validation/central-regression/crossing-20.png",
+        "docs/p34-validation/central-regression/crossing-21.png"
+      ],
+      "inspected": true
+    },
+    {
+      "board": "docs/p34-validation/inspection/p32-regression-00.jpg",
+      "sources": [
+        "docs/p34-validation/p32-regression/crossing-00.png",
+        "docs/p34-validation/p32-regression/crossing-01.png",
+        "docs/p34-validation/p32-regression/crossing-02.png",
+        "docs/p34-validation/p32-regression/crossing-03.png"
+      ],
+      "inspected": true
+    },
+    {
+      "board": "docs/p34-validation/inspection/p32-regression-01.jpg",
+      "sources": [
+        "docs/p34-validation/p32-regression/crossing-04.png",
+        "docs/p34-validation/p32-regression/crossing-05.png",
+        "docs/p34-validation/p32-regression/crossing-06.png",
+        "docs/p34-validation/p32-regression/crossing-07.png"
+      ],
+      "inspected": true
+    },
+    {
+      "board": "docs/p34-validation/inspection/p32-regression-02.jpg",
+      "sources": [
+        "docs/p34-validation/p32-regression/crossing-08.png",
+        "docs/p34-validation/p32-regression/crossing-09.png",
+        "docs/p34-validation/p32-regression/crossing-10.png",
+        "docs/p34-validation/p32-regression/crossing-11.png"
+      ],
+      "inspected": true
+    },
+    {
+      "board": "docs/p34-validation/inspection/p32-regression-03.jpg",
+      "sources": [
+        "docs/p34-validation/p32-regression/crossing-12.png",
+        "docs/p34-validation/p32-regression/crossing-13.png",
+        "docs/p34-validation/p32-regression/crossing-14.png",
+        "docs/p34-validation/p32-regression/crossing-15.png"
+      ],
+      "inspected": true
+    },
+    {
+      "board": "docs/p34-validation/inspection/p32-regression-04.jpg",
+      "sources": [
+        "docs/p34-validation/p32-regression/crossing-16.png",
+        "docs/p34-validation/p32-regression/crossing-17.png",
+        "docs/p34-validation/p32-regression/crossing-18.png",
+        "docs/p34-validation/p32-regression/crossing-19.png"
+      ],
+      "inspected": true
+    },
+    {
+      "board": "docs/p34-validation/inspection/p32-regression-05.jpg",
+      "sources": [
+        "docs/p34-validation/p32-regression/crossing-20.png",
+        "docs/p34-validation/p32-regression/crossing-21.png"
+      ],
+      "inspected": true
+    },
+    {
+      "board": "docs/p34-validation/inspection/historical-00.jpg",
+      "sources": [
+        "docs/p34-validation/historical/docs/rotation-surface-00.png",
+        "docs/p34-validation/historical/docs/rotation-surface-01.png",
+        "docs/p34-validation/historical/docs/rotation-surface-02.png",
+        "docs/p34-validation/historical/docs/rotation-surface-03.png"
+      ],
+      "inspected": true
+    },
+    {
+      "board": "docs/p34-validation/inspection/historical-01.jpg",
+      "sources": [
+        "docs/p34-validation/historical/docs/rotation-surface-04.png",
+        "docs/p34-validation/historical/docs/rotation-surface-05.png",
+        "docs/p34-validation/historical/docs/rotation-surface-06.png",
+        "docs/p34-validation/historical/docs/rotation-surface-07.png"
+      ],
+      "inspected": true
+    },
+    {
+      "board": "docs/p34-validation/inspection/historical-02.jpg",
+      "sources": [
+        "docs/p34-validation/historical/docs/rotation-surface-08.png",
+        "docs/p34-validation/historical/docs/rotation-surface-09.png"
+      ],
+      "inspected": true
+    }
+  ],
+  "originals": [
+    "offcenter/crossing-00.png",
+    "offcenter/crossing-06.png",
+    "offcenter/crossing-11.png",
+    "p32-regression/crossing-05.png",
+    "historical/docs/rotation-surface-06.png"
+  ],
+  "captures": 76,
+  "observations": "Sol continu sur les vues inspectées, HUD sol/en l’air cohérent, couleurs stables du patch partagé. Bords extérieurs inclinés attendus hors centre ; transitions Mars/Terre présentes. Marqueurs astronomiques parfois superposés, limite antérieure. La conservation instantanée de la pose est établie par les tests f64, pas par ces captures espacées."
+}

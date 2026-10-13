@@ -1,4 +1,57 @@
-# Validation Solar Survival 0.2 — P3.3 migration bornée validée sur Ubuntu
+# Validation Solar Survival 0.2 — P3.4 hors centre validé sur Ubuntu
+
+13 octobre 2026. Départ Git **propre à `ea3a32b`**, P3.3 déjà commité contrairement à NEXT_CHAT ancien. Ses preuves sont préservées. Changements P3.4 laissés **non commités**. Ubuntu 24.04.5 LTS, X11 `DISPLAY=:1`, Rust stable 1.99.0 édition 2024, Bevy **exactement 0.19.1**, i7-6700K/GTX 1060 3 Go/NVK et Mesa 25.2.8. Cargo.toml/Cargo.lock et dépendances inchangés. [Empreintes sources/binaire et environnement](p34-validation/environment.json), [décisions et portée](p34-validation/NOTES.md).
+
+P3.4 ajoute `SOLAR_CUBE_OFFCENTER=1`, deux cartes fixes franchement hors centre (u≈0,5/v≈0,5), même face et mêmes niveau 15/64 segments. Le nouveau module `planets/cube_migration.rs` prépare leur recouvrement certifié, impose l'hystérésis dans le repère commun d'entrée et rejette avant toute construction. Centrale P3.3 et P3.2 restent leurs options indépendantes ; historique demeure le défaut. [CUBE_SPHERE](CUBE_SPHERE.md) définit le périmètre, les formules, les réserves et le plafond transitoire ; [ASTRONOMY](ASTRONOMY.md) précise les conventions physiques conservées.
+
+## Vérifications finales
+
+| Vérification | Résultat |
+|---|---|
+| `cargo fmt --check` | Réussi |
+| `cargo check --locked`, `cargo check --all-targets --locked` | Réussis, exemple P3.1 inchangé compris |
+| `cargo test --locked` | **82 tests réussis** : 26 internes, 21 fondations, 15 surface historique, 9 géométrie, 4 contacts centraux, 3 migrations centrales, 4 hors centre |
+| `cargo clippy --all-targets --locked -- -D warnings` | Réussi sans alerte |
+| `cargo build --release --locked` | Réussi, **2 min 06 s** (127,04 s murales du lanceur) |
+| Hors centre, diagnostic P3.4 de 88 s | **Code 0**, huit migrations dont une en l'air, apex **2,130986 m**, 22 captures inspectées |
+| Centrale, régression P3.3 de 88 s | **Code 0**, huit migrations dont une en l'air, apex **2,130985 m**, 22 captures inspectées |
+| Paire seule, régression P3.2 de 88 s | **Code 0**, six franchissements, apex **2,131309 m**, 22 captures inspectées |
+| Historique, rotation 50 s | **Code 0**, dix captures inspectées |
+| Windows natif / RTX 4050 et Core i5 | **Non exécutés** |
+
+[build-results.json](p34-validation/build-results.json) et [graphics-results.json](p34-validation/graphics-results.json) conservent commandes, variables, codes, durées et comptes ; [synthèse](p34-validation/summary.json). Journaux [fmt](p34-validation/fmt.txt), [check](p34-validation/check.txt), [all-targets](p34-validation/all-targets.txt), [tests](p34-validation/tests.txt), [Clippy](p34-validation/clippy.txt), [release](p34-validation/release.txt), [hors centre](p34-validation/offcenter.txt), [centrale](p34-validation/central-regression.txt), [P3.2](p34-validation/p32-regression.txt), [historique](p34-validation/historical.txt). **Aucun ERROR/WARN/panic dans les quatre journaux graphiques.** Aucun changement Rust après le build final ; les empreintes des sources et du binaire sont vérifiées après les campagnes. Compilations puis lancements GPU strictement successifs, présentation Mesa immediate. Le lanceur exact est conservé en snapshot ; seule la date de métadonnées de l'utilitaire réutilisable a ensuite été rendue dynamique, sans changement des commandes du jeu.
+
+## Preuves numériques et ECS
+
+Le volume d'admission est exprimé dans la carte d'entrée : x≈77,096929±8 m, |y|≤100 m, |z|≤49,444528 m. Chacun de ses coins, puis une grille de requêtes aux altitudes −100/0/+100 m, est vérifié dans les rectangles de **deux** cartes sur les six faces, avec toute l'empreinte et une réserve de reboîtage. Les seuils aller/retour sont c±1 m ; rien n'est extrapolé hors rectangles et les quatre bornes sont testées en l'air puis à réception. [Relevé des plans et index](p34-validation/overlap.txt).
+
+Les transactions aller et retour passent sur les six faces au sol/2/20/99 m. Pieds/yeux/centres d'obstacles conservés dans le corps à <4 nm, axes de visée à <10⁻¹³ sans unité, vitesse à <10⁻¹³ m/s, gravité à <10⁻¹³ m/s² ; rayon du support à <2 µm et hauteur verticale au support à <20 µm. Yaw/pitch, accumulator, pending jump et grounded ne sont pas réinitialisés. Les comparaisons en l'air distinguent le rayon du support et les projections verticales propres aux deux cartes.
+
+Le changement d'alignement de la boîte joueur est quantifié avec les huit coins et la rotation complète : **83,015 µm**, sous le plafond d'admission **0,25 mm** et la peau 2 mm. Angle ~4,54916×10⁻⁵ rad, PLUS PETIT que P3.3 : ce test hors centre inclut le roulis, sans prétendre valider une plus grande inclinaison. Les trois poses d'obstacles restent fixes dans le corps et leurs huit coins sont contenus dans l'enveloppe AABB de contact ; expansion analytique maximale **0,227457 mm** ([calcul](p34-validation/contact-budget.json)), limite admise 0,5 mm par dimension. La migration exclut une proximité de contact par réserve totale 2,75 mm avant construction. Aucun volume orienté rigoureusement invariant ni contact pour grand changement de repère n'est revendiqué.
+
+Les marches/courses aller-retour, saut pendant migration, réception et repos passent à 30/60/144 FPS sur les six faces. Refus répétés hors couloir/altitude/domaine et dans l'hystérésis : milliers de tentatives sans construction ni révision ; refus près d'un objet également testé. Les vrais systèmes ECS vérifient pause, P/T, publication de pose et M/G/O/U hors centre et au centre. Le rendu ECS vérifie géométrie issue des f64, indices, couleurs du patch commun, **mêmes deux handles et entités** après migration et réentrées. La paire et les trois objets sont toujours réutilisés ; aucun troisième proxy n'est ajouté.
+
+## Inspection graphique et portée
+
+**76 captures 1440×900 inspectées**, par 21 planches répertoriées dans [manifest.json](p34-validation/inspection/manifest.json) : six hors centre, six centrales, six P3.2, trois historiques. Cinq inspections supplémentaires à taille originale : hors centre [entrée/raccord](p34-validation/offcenter/crossing-00.png), [saut après migration](p34-validation/offcenter/crossing-06.png), [limite positive](p34-validation/offcenter/crossing-11.png), P3.2 [repos au raccord](p34-validation/p32-regression/crossing-05.png), historique [course/franchissement](p34-validation/historical/docs/rotation-surface-06.png).
+
+Le diagnostic hors centre montre repos, marche/course aller-retour et saut/réception, pause puis ×1000, deux limites X à vitesse nulle, quatre sorties/retours M/G/O/U puis Terre. Les poses de préparation à x=c−3 m et z=hz/2 ne comptent pas comme marches ; les deux migrations explicites aux limites sont également exclues. Huit migrations sont comptées pendant les commandes ECS, dont une avec grounded=false. Les planches montrent un sol continu sur les vues inspectées, visée/HUD cohérents, couleur du patch partagé stable et bords extérieurs inclinés attendus pour cette couverture limitée. Ces captures espacées ne sont pas une vidéo prouvant la continuité instantanée : conservation par tests f64. Les marqueurs astronomiques superposés sont une limite antérieure.
+
+Les régressions centrales et P3.2 conservent leurs raccords et commandes ; l'historique montre relief artistique, obstacles, marche/saut, course à travers les tuiles, repos puis Mars/Terre. Ni cycle P2 complet, ni menu/périphériques OS, ni suspension réelle du processus/OS rejoués. Les anciennes preuves restent valides dans leur périmètre, sans être présentées comme de nouveaux essais.
+
+## Ressources, observations CPU et limites
+
+Après entrée ou migration : deux patches dans une paire CPU, **8 385 sommets physiques/16 384 triangles**, deux meshes/handles de terrain. Préparation et remplacement : **deux paires CPU maximum**, 16 770 sommets/32 768 triangles plus positions locales/index/temporaires. À une réentrée, l'ancienne paire est libérée AVANT les deux constructions de préparation. La seconde géométrie préparée est ensuite libérée ; seules les deux métadonnées de cartes restent. Compteur deux constructions à l'entrée, une par migration admise, aucune pour un refus. Budget structurel contrôlé par le code et les tests de taille/handles ; pas de mesure exhaustive des allocations/RAM/VRAM ou des buffers GPU internes.
+
+Rectangles hors centre : ~280,987×124,217 m et ~280,973×124,212 m. Index observés **2 978 cases**, **44 610/44 627 références**, maximum **18 triangles/case**. Pas d'extrapolation des plafonds à une autre résolution, rayon, relief ou planète.
+
+Dix mesures murales de construction/transaction hors centre, huit migrations et deux préparations, captures actives : **6,918–9,750 ms**, médiane **7,306 ms**. Régression centrale : 7,758–11,458 ms, médiane 8,0705 ms. Elles excluent la synchronisation ultérieure du mesh, le GPU et la préparation initiale du plan ; aucune attribution de gain de FPS ni absence de pic de frame. Relevés HUD hors centre ~19–25 FPS ponctuels, distincts d'un benchmark. [PERFORMANCE](PERFORMANCE.md) conserve cette portée et le protocole cible.
+
+**P3.4 terminé dans ce périmètre Ubuntu** : deux cartes franchement hors centre sur une même face, couverture et contacts bornés, marche/course/saut, refus sans reconstruction, assets réutilisés et régressions inspectées. Aucun chargement de chaîne, migration ±V, passage jouable entre faces, planète entière, LOD mixte, relief scientifique, survie, Avian ou refonte du contrôleur. La suite P3.5 doit cadrer une courte chaîne bornée sur la même face, notamment l'inclinaison cumulée des objets du site d'entrée et le budget de préparation, avant les faces. Windows natif et matériel cible restent non validés.
+
+---
+
+# Historique : validation Solar Survival 0.2 — P3.3 migration bornée validée sur Ubuntu
 
 12 octobre 2026. Départ Git **propre au commit `b317d28`** : P3.2 avait été commité après la passation ancienne. Ubuntu 24.04.5 LTS/X11 (`DISPLAY=:1`), Rust stable 1.99.0 édition 2024, Bevy exactement 0.19.1, i7-6700K/GTX 1060 3 Go/NVK, Mesa 25.2.8 ; Cargo.toml/Cargo.lock et dépendances inchangés. Les preuves précédentes sont préservées. Les changements P3.3 restent non commités.
 

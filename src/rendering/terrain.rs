@@ -355,6 +355,14 @@ mod tests {
     use super::*;
     #[test]
     fn cube_mesh_matches_contacts_and_two_handles_survive_moves_rotation_and_reentry() {
+        cube_handles(false);
+    }
+    #[test]
+    fn offcenter_mesh_and_shared_colors_keep_two_handles_and_entities_after_migration_and_reentry()
+    {
+        cube_handles(true);
+    }
+    fn cube_handles(offcenter: bool) {
         let mut app = App::new();
         app.add_plugins(MinimalPlugins)
             .init_resource::<Explorer>()
@@ -370,6 +378,8 @@ mod tests {
         {
             let mut terrain = app.world_mut().resource_mut::<MarsTerrain>();
             terrain.cube_enabled = true;
+            terrain.migration_enabled = offcenter;
+            terrain.offcenter_enabled = offcenter;
             terrain.set_site(DVec3::Y);
         }
         app.world_mut().resource_mut::<Explorer>().mode = MovementMode::Surface;
@@ -415,7 +425,19 @@ mod tests {
         app.world_mut()
             .resource_mut::<MarsTerrain>()
             .migration_enabled = true;
-        app.world_mut().resource_mut::<SurfaceState>().feet = DVec3::new(101.0, 2.0, 30.0);
+        let feet = if offcenter {
+            let terrain = app.world().resource::<MarsTerrain>();
+            let mut p = terrain
+                .migration
+                .as_ref()
+                .unwrap()
+                .preparation(terrain.cube.as_ref().unwrap().pair.keys[0]);
+            p.y = 2.0;
+            p
+        } else {
+            DVec3::new(101.0, 2.0, 30.0)
+        };
+        app.world_mut().resource_mut::<SurfaceState>().feet = feet;
         app.world_mut()
             .resource_scope(|world, mut terrain: Mut<MarsTerrain>| {
                 assert!(world.resource_mut::<SurfaceState>().migrate(&mut terrain));
@@ -476,6 +498,8 @@ mod tests {
             revision: 1,
             cube_enabled: false,
             migration_enabled: false,
+            offcenter_enabled: false,
+            migration: None,
             site_obstacles: None,
             cube: None,
         };
@@ -511,6 +535,8 @@ mod tests {
                 revision: 1,
                 cube_enabled: false,
                 migration_enabled: false,
+                offcenter_enabled: false,
+                migration: None,
                 site_obstacles: None,
                 cube: None,
             })

@@ -19,6 +19,8 @@ fn terrain(face: CubeFace) -> MarsTerrain {
         revision: 0,
         cube_enabled: true,
         migration_enabled: true,
+        offcenter_enabled: false,
+        migration: None,
         site_obstacles: None,
         cube: None,
     };

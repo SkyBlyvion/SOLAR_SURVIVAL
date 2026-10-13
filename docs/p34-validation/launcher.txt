@@ -1,0 +1,8 @@
+Lancement offcenter
+offcenter 0 22 ["P3.4 terminé : 8 migrations, 1 en l'air, apex 2.130986 m"]
+Lancement central-regression
+central-regression 0 22 ["P3.3 terminé : 8 migrations, 1 en l'air, apex 2.130985 m"]
+Lancement p32-regression
+p32-regression 0 22 ['P3.2 terminé : 6 franchissements, apex 2.131309 m']
+Lancement historical
+historical 0 10 []

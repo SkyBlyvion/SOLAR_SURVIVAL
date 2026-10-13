@@ -21,6 +21,8 @@ fn terrain() -> MarsTerrain {
         revision: 1,
         cube_enabled: false,
         migration_enabled: false,
+        offcenter_enabled: false,
+        migration: None,
         site_obstacles: None,
         cube: None,
     }

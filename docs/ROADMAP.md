@@ -2,11 +2,11 @@
 
 Le projet avance par étapes vérifiables vers une boucle de survie sur Mars, en préservant l'exploration spatiale et l'échelle physique 1:1. Cette roadmap est la référence pour choisir le travail du prochain chat. Les dates de livraison dépendront des résultats ; les étapes futures ne sont pas des fonctionnalités déjà réalisées.
 
-Dernière mise à jour : 12 octobre 2026. Étape courante : **P3.4, cadrer puis étendre la migration bornée sur une même face**. P3.1, P3.2 et P3.3 sont terminés sur Ubuntu de développement. La passation détaillée est dans [NEXT_CHAT](NEXT_CHAT.md), les résultats dans [VALIDATION](VALIDATION.md).
+Dernière mise à jour : 13 octobre 2026. Étape suivante : **P3.5, cadrer une courte chaîne bornée sur une même face**. P3.1 à P3.4 sont terminés dans leurs périmètres sur Ubuntu de développement. La passation détaillée est dans [NEXT_CHAT](NEXT_CHAT.md), les résultats dans [VALIDATION](VALIDATION.md).
 
 ## Fondations réalisées
 
-Version 0.2 : exploration spatiale et catalogue embarqué, repères/origine flottante en f64, FPS martien avec marche/course/saut, gravité radiale, collisions, neuf tuiles locales et repère tournant conventionnel. Les 76 tests actuels et les lancements Ubuntu sont consignés dans VALIDATION. Le menu principal, les options de session et les crédits sont disponibles ; P2 a consolidé le cycle complet, P/T et la reprise après interruption. P3.1 ajoute le contrat géométrique cube-sphere et sa démonstration isolée. P3.2 implémente une paire centrale opt-in avec contacts communs au rendu ; sa validation est consignée ci-dessous. P3.3 ajoute une transaction réversible centrale↔voisine +U, avec transport f64 et obstacles fixes dans le corps. La survie est inactive. Windows 11 reste à valider nativement.
+Version 0.2 : exploration spatiale et catalogue embarqué, repères/origine flottante en f64, FPS martien avec marche/course/saut, gravité radiale, collisions, neuf tuiles locales et repère tournant conventionnel. Les 82 tests actuels et les lancements Ubuntu sont consignés dans VALIDATION. Le menu principal, les options de session et les crédits sont disponibles ; P2 a consolidé le cycle complet, P/T et la reprise après interruption. P3.1 ajoute le contrat géométrique cube-sphere et sa démonstration isolée. P3.2 implémente une paire centrale opt-in avec contacts communs au rendu ; sa validation est consignée ci-dessous. P3.3 ajoute une transaction réversible centrale↔voisine +U, avec transport f64 et obstacles fixes dans le corps. P3.4 valide deux cartes franchement hors centre, avec admission calculée depuis leur recouvrement et refus avant allocation. La survie est inactive. Windows 11 reste à valider nativement.
 
 ## Étapes prévues
 
@@ -14,7 +14,7 @@ Version 0.2 : exploration spatiale et catalogue embarqué, repères/origine flot
 |---|---|---|---|
 | P1 Performances | Terminé sur le poste de développement | Protocole release fixe, temps de frame et distribution, mesures CPU/GPU, comparaison des caméras, résolution et matériaux | Mesures reproductibles conservées, limites du pilote identifiées, coût principal établi ou incertitude explicitée, prochaine action fondée sur les résultats |
 | P2 Consolidation Mars et menu | Terminé sur Ubuntu de développement | Cycle jour/nuit complet inspecté, masque solaire sous horizon radial, P/T, suspension réelle de 12 s, deux séries M/G/O/U ; menu/options/crédits demandés par l’utilisateur | 54 tests réussis, 35 captures P2, essais X11 du menu et reprise ; limitations explicites dans VALIDATION |
-| P3 Terrain au-delà du site | En cours : P3.1/P3.2/P3.3 terminés, P3.4 suivant | Contrat, franchissement local et première migration opt-in validés ; extension bornée hors du centre suivante | Traverser des zones sans rupture de contacts ou de précision, voisinage chargé borné, budgets CPU/GPU vérifiés ; aucune génération de planète entière |
+| P3 Terrain au-delà du site | En cours : P3.1–P3.4 terminés, P3.5 à cadrer | Contrat, franchissement et migrations centrale/hors centre validés ; courte chaîne sur une même face suivante | Traverser des zones sans rupture de contacts ou de précision, voisinage chargé borné, budgets CPU/GPU vérifiés ; aucune génération de planète entière |
 | P4 Première survie | Prévue | Oxygène, réserve, consommation en temps réel, recharge dans un abri et HUD | Boucle jouable consommer/recharger/échouer, indépendante de T, paramètres de gameplay documentés |
 | P5 Ressources et construction | Prévue | Une ressource récoltable, inventaire minimal, placement d'un équipement utile | Récolte, stockage et placement persistants ; collisions et coût local validés |
 | P6 Version distribuable | Prévue | Sauvegarde/chargement, persistance et réglages graphiques complémentaires, validation Windows 11 et packaging Ubuntu/Windows | Sauvegarde testée, instructions de lancement, builds et essais natifs sur les deux plateformes |
@@ -125,3 +125,27 @@ Choisir une paire franchement décentrée et une voisine de même niveau/résolu
 Aucun passage jouable entre faces automatique, refonte simultanée du contrôleur, planète entière, LOD mixte, relief scientifique, survie, corps dynamiques, Avian ou changement Bevy. Les budgets CPU/GPU plus complets et la validation cible restent transversaux ; P3 global n'est pas déclaré terminé. Windows reste à valider nativement.
 
 - 12 octobre 2026 : P3.3 validé dans son parcours borné. Suite P3.4 sur même face, motivée par les couvertures non centrales observées et les seuils encore spécifiques au centre ; passages jouables entre faces différés.
+
+
+## Bilan P3.4 et cadrage suivant P3.5
+
+**P3.4 terminé sur Ubuntu de développement le 13 octobre 2026**, dans un parcours opt-in de deux cartes hors centre seulement. Git initial propre à `ea3a32b` (P3.3 déjà commité), changements P3.4 non commités. 82 tests, fmt/check/all-targets/Clippy/build release réussis. Quatre scénarios successifs code 0 et 76 captures inspectées, aucun ERROR/WARN/panic : hors centre et centrale huit migrations chacun dont une en l'air, P3.2 six franchissements, historique 50 s. [VALIDATION](VALIDATION.md), [contrat](CUBE_SPHERE.md), [preuves](p34-validation/).
+
+| Critère P3.4 | Résultat réel |
+|---|---|
+| Paire franchement décentrée et couverture | u≈0,5/v≈0,5 ; rectangles certifiés ~281×124 m, plan vérifié sur six faces et empreintes aux altitudes extrêmes |
+| Seuils et hystérésis | Recouvrement mesuré, volume d'admission commun, c±1 m, refus hors domaine avant allocation |
+| Pose/visée/vitesse au sol et en l'air | Aller/retour six faces, sol/2/20/99 m, conservation f64 et support ; marche/course/saut 30/60/144 FPS |
+| Boîte et obstacles réévalués | Coins de boîte déplacés ≤83,015 µm, plafond 0,25 mm ; enveloppe objets ≤0,227457 mm, plafond 0,5 mm ; proximité de contact exclue |
+| Ressources et refus bornés | Deux paires CPU transitoires, une après préparation/remplacement, deux handles/entités ; milliers de refus sans reconstruction |
+| Inspection et régressions | 76 captures inspectées, limites terminales et M/G/O/U ; centrales/P3.2/historique conservés |
+
+Le changement complet d'orientation hors centre est plus petit que celui de P3.3, avec roulis pris en compte. L'étape ne démontre pas une grande inclinaison, un volume joueur orienté invariant ou une chaîne de cartes. La coexistence CPU est structurellement bornée, sans mesure exhaustive RAM/VRAM ou benchmark GPU. Windows et RTX 4050/Core i5 restent à valider.
+
+**P3.5 : cadrer une courte chaîne sur la même face avant les faces.** Deux choix fixes ne suffisent pas à valider le choix de candidate à plusieurs étapes. Examiner d'abord les domaines certifiés et les budgets cumulés observés, puis choisir un nombre explicite de cartes (par exemple trois, à confirmer par les résultats) le long de U autour du site hors centre. Préparer leurs métadonnées sans garder toutes leurs géométries ; prouver le plafond CPU, y compris à l'entrée. Au plus une candidate construite après admission, hystérésis locale cohérente et refus sans reconstruction. Les obstacles appartiennent toujours à l'entrée : mesurer leur expansion cumulée, pas seulement celle de deux voisines. Réévaluer le reboîtage du joueur et exclure/refuser les contacts non couverts.
+
+Critères à fixer avant implémentation : marche/course dans les deux sens à travers toute la chaîne, saut pendant chaque remplacement, réception/repos, absence de trou et conservation de pose/visée/vitesse, quatre bornes terminales actives, choix sans ping-pong/allocation répétée, deux patches/handles après remplacement et plafond transitoire testé, P/T et M/G/O/U, nouvelles preuves inspectées et régressions P3.4/centrale/P3.2/historique. Si le recouvrement ou le budget d'orientation échoue, garder les bornes et poursuivre P3.5 ; ne pas passer directement aux faces.
+
+Ce découpage découle de la limite réelle « deux choix » de P3.4 et de l'absence de budget d'objets validé pour une orientation cumulée. Pas de migration ±V ou choix mondial implicite, faces automatiques, planète entière, LOD mixte, relief mesuré, Avian, survie ou refonte simultanée du contrôleur. P3 global reste en cours ; les performances cible restent transversales.
+
+- 13 octobre 2026 : P3.4 borné hors centre validé ; poursuivre par le cadrage d'une chaîne courte sur la même face, avant les arêtes entre faces. Conserver les seuils historiques comme régression et mesurer les changements cumulés avant de les autoriser.

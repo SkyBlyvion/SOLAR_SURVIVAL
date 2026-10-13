@@ -1,0 +1,54 @@
+{
+  "offcenter": {
+    "transactions": 10,
+    "cpu_ms": [
+      9.525,
+      7.369,
+      7.328,
+      7.07,
+      7.264,
+      9.75,
+      7.21,
+      6.918,
+      7.284,
+      7.466
+    ],
+    "min_ms": 6.918,
+    "median_ms": 7.306,
+    "max_ms": 9.75,
+    "completion": [
+      "P3.4 termin\u00e9 : 8 migrations, 1 en l'air, apex 2.130986 m"
+    ],
+    "index": [
+      "index (2978, 44610, 18)",
+      "index (2978, 44627, 18)"
+    ]
+  },
+  "central-regression": {
+    "transactions": 10,
+    "cpu_ms": [
+      8.243,
+      8.063,
+      8.183,
+      7.874,
+      8.043,
+      8.078,
+      7.758,
+      7.98,
+      8.141,
+      11.458
+    ],
+    "min_ms": 7.758,
+    "median_ms": 8.0705,
+    "max_ms": 11.458,
+    "completion": [
+      "P3.3 termin\u00e9 : 8 migrations, 1 en l'air, apex 2.130985 m"
+    ],
+    "index": [
+      "index (5408, 53240, 18)",
+      "index (5408, 53244, 18)",
+      "index (5408, 53255, 18)",
+      "index (5408, 53260, 18)"
+    ]
+  }
+}
