@@ -117,3 +117,30 @@ Le parcours isolé hors centre sur une même face conserve deux patches/handles.
 Campagne release du 13 octobre 2026 : dix transactions hors centre, **6,918–9,750 ms**, médiane **7,306 ms**, captures actives. Régression centrale sur le même binaire : dix transactions, 7,758–11,458 ms, médiane 8,0705 ms. [Synthèse](p34-validation/summary.json), [journaux et limites](VALIDATION.md). Ces mesures murales CPU incluent géométrie/index/transfert, excluent la préparation initiale du plan, la mise à jour des meshes et le GPU. Une seule campagne n'établit aucun gain de FPS entre cartes ni absence de pic de frame.
 
 L'index des deux cartes hors centre a 2 978 cases, 44 610/44 627 références et 18 triangles/case maximum ; rectangles conservateurs ~281×124 m. Les relevés HUD hors centre 19–25 FPS sont ponctuels, sans recorder GPU ou nouvelle campagne P1. Pas de mesure VRAM complète, Windows natif ou RTX 4050/Core i5. Avant une chaîne plus longue, chiffrer le coût/budget de préparation sans garder toutes ses géométries, puis mesurer les remplacements en release ; les budgets d'objets doivent tenir compte de l'orientation cumulée depuis l'entrée.
+
+
+## Terrain mondial : comparaison et remplacement réel
+
+13 octobre 2026. Le lancement normal utilise le terrain mondial ; le profiler historique reste le défaut. `SOLAR_PROFILE_TERRAIN=global` permet désormais une comparaison explicite avec les mêmes deux caméras, 1440×900, MSAA ×4, J2000, pause, parcours repos/contact/course/espace. `SOLAR_MARS_GLOBAL` ne remplace pas le choix du profiler. Niveau 15/32 segments, ≤13 patches/26 624 triangles et meshes communs réutilisés ; budgets structurels dans [GLOBAL_TERRAIN](GLOBAL_TERRAIN.md).
+
+Trois essais release successifs de 42 s, sans recorder GPU : historique avant, mondial, historique après. CSV et journaux dans [global-validation](global-validation/), même binaire, Mesa immediate, aucune compilation/lancement GPU concurrent.
+
+| Phase | Historique avant (frame ms / FPS) | Mondial (frame ms / FPS) | Historique après (frame ms / FPS) |
+|---|---|---|---|
+| Repos | 52,257 / 19,14 | 52,361 / 19,10 | 52,188 / 19,16 |
+| Contact | 54,942 / 18,20 | 55,022 / 18,17 | 55,067 / 18,16 |
+| Course | 51,838 / 19,29 | 51,778 / 19,31 | 51,913 / 19,26 |
+
+Ces mesures ne montrent pas de régression notable du rythme sur ce poste. Les p95 au repos sont 55,067/55,468/55,423 ms. La navigation mondiale coûte davantage en CPU (maximum au repos 0,163 ms contre 0,054 ms avant), mais reste petite face au temps de frame. Les géométries/reliefs des fournisseurs diffèrent ; il s’agit d’une comparaison de deux parcours jouables, pas de l’attribution d’un gain à une seule ligne ou d’une preuve de performance universelle.
+
+La phase course de 8 s du premier essai mondial termine à x≈63,8667 m après le rebasage de préparation ; elle **n’inclut pas de remplacement mesuré**. Un essai supplémentaire mondial de 54 s, phases de 11 s, inclut un véritable remplacement en course : compteur 18→23 constructions, cinq nouveaux patches. Navigation maximum **5,616 ms**, synchronisation du rendu maximum **0,165 ms** ; frame moyenne **52,005 ms**, p95 **54,932 ms**, maximum **56,741 ms** dans cette phase. Un rebasage seul, pas une garantie sur tous les pics/attentes GPU. Le rebasage de préparation de 6,066 ms est exclu par la seconde de stabilisation. [CSV](global-validation/global-streaming.csv), [journal](global-validation/global-streaming.txt).
+
+La campagne graphique globale de 120 s effectue douze rebasages, captures actives ; leurs temps muraux CPU sont conservés dans [summary.json](global-validation/summary.json). Ils incluent construction/index/transfert/libération, excluent la synchronisation ultérieure des meshes et le GPU. Le terrain n’est généré ni par frame ordinaire ni quand Mars tourne. Les CPU/index simultanés et la réutilisation des assets sont testés, sans instrumenter l’ensemble RAM/VRAM/buffers de Bevy.
+
+Pour reproduire un essai mondial incluant le remplacement, après compilation :
+
+```bash
+SOLAR_PROFILE_TERRAIN=global SOLAR_PROFILE_SECONDS=54 SOLAR_PROFILE_GPU=0 SOLAR_PROFILE_OUTPUT=docs/mon-profil-global.csv target/release/solar_survival
+```
+
+Ajouter Mesa immediate seulement sur le poste NVK. Mesurer nativement Windows/RTX 4050/Core i5 avec le modèle exact CPU, RAM, pilote, alimentation et réglages ; aucun 60 FPS cible ni résultat Windows n’est revendiqué ici.

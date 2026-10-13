@@ -21,6 +21,8 @@ fn terrain() -> MarsTerrain {
         migration: None,
         site_obstacles: None,
         cube: None,
+        globe_enabled: false,
+        globe: None,
     };
     terrain.set_site(DVec3::Y);
     terrain

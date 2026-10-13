@@ -25,6 +25,8 @@ pub struct MarsTerrain {
     /// Trois obstacles possédés par le site d'entrée, fixes dans le corps.
     pub site_obstacles: Option<(DQuat, [crate::physics::surface::SolidBox; 3])>,
     pub cube: Option<super::cube_terrain::CubeTerrain>,
+    pub globe_enabled: bool,
+    pub globe: Option<super::globe_terrain::GlobeTerrain>,
 }
 impl FromWorld for MarsTerrain {
     fn from_world(world: &mut World) -> Self {
@@ -46,13 +48,26 @@ impl FromWorld for MarsTerrain {
             migration: None,
             site_obstacles: None,
             cube: None,
+            globe_enabled: world
+                .get_resource::<crate::config::GameConfig>()
+                .is_some_and(|c| c.mars_global),
+            globe: None,
         }
     }
 }
 impl MarsTerrain {
     pub fn set_site(&mut self, outward: DVec3) {
         self.migration = None;
-        if self.offcenter_enabled {
+        self.globe = None;
+        if self.globe_enabled {
+            self.cube = None;
+            self.orientation = DQuat::from_rotation_arc(DVec3::Y, outward.normalize());
+            self.globe = Some(super::globe_terrain::GlobeTerrain::new(
+                outward,
+                self.orientation,
+                self.radius_m,
+            ));
+        } else if self.offcenter_enabled {
             // L'entrée remplace le site : libérer l'ancienne paire avant de
             // préparer les deux nouvelles, y compris lors de M/G/O/U.
             self.cube = None;
@@ -88,7 +103,7 @@ impl MarsTerrain {
             self.cube = None;
         }
         self.site_obstacles = None;
-        if self.migration_enabled && self.cube.is_some() {
+        if (self.migration_enabled && self.cube.is_some()) || self.globe.is_some() {
             self.site_obstacles =
                 Some((self.orientation, crate::physics::surface::obstacles(self)));
         }
@@ -135,6 +150,11 @@ impl MarsTerrain {
         [[a, c, b], [b, c, d]]
     }
     pub fn height(&self, x: f64, z: f64) -> f64 {
+        if let Some(globe) = &self.globe {
+            return globe
+                .support_height(DVec3::new(x, 0.0, z), 0.0)
+                .expect("Point local couvert");
+        }
         if let Some(cube) = &self.cube {
             return cube
                 .support_height(DVec3::new(x, 0.0, z), 0.0)
@@ -154,6 +174,11 @@ impl MarsTerrain {
     }
     /// Hauteur maximale exacte des triangles sous une empreinte rectangulaire.
     pub fn support_height(&self, feet: DVec3, half_width: f64) -> f64 {
+        if let Some(globe) = &self.globe {
+            return globe
+                .support_height(feet, half_width)
+                .expect("Empreinte locale couverte");
+        }
         if let Some(cube) = &self.cube {
             return cube
                 .support_height(feet, half_width)
@@ -177,6 +202,9 @@ impl MarsTerrain {
     }
     /// Borne conservatrice : toute l'empreinte reste sur les triangles chargés.
     pub fn clamp_feet(&self, feet: &mut DVec3, half_width: f64) {
+        if self.globe.is_some() {
+            return;
+        }
         let (min, max) = self.cube.as_ref().map_or(
             (DVec3::splat(-SITE_LIMIT_M), DVec3::splat(SITE_LIMIT_M)),
             |cube| (cube.min, cube.max),
@@ -201,6 +229,16 @@ pub(crate) fn triangle_support(
     min_z: f64,
     max_z: f64,
 ) -> Option<f64> {
+    triangle_support_area(triangle, min_x, max_x, min_z, max_z).map(|v| v.0)
+}
+/// Hauteur et aire XZ du même polygone découpé, pour certifier une empreinte.
+pub(crate) fn triangle_support_area(
+    triangle: [DVec3; 3],
+    min_x: f64,
+    max_x: f64,
+    min_z: f64,
+    max_z: f64,
+) -> Option<(f64, f64)> {
     // Une empreinte ponctuelle ne survit pas toujours au découpage dégénéré
     // (les intersections arrondies peuvent tomber de part et d'autre du point).
     if min_x == max_x && min_z == max_z {
@@ -211,7 +249,7 @@ pub(crate) fn triangle_support(
         let u = cross(point, c - a) / area;
         let v = cross(b - a, point) / area;
         return (u >= -1e-12 && v >= -1e-12 && u + v <= 1.0 + 1e-12)
-            .then_some(a.y + u * (b.y - a.y) + v * (c.y - a.y));
+            .then_some((a.y + u * (b.y - a.y) + v * (c.y - a.y), 0.0));
     }
     let mut polygon = triangle.to_vec();
     for (axis, bound, sign) in [
@@ -236,5 +274,15 @@ pub(crate) fn triangle_support(
         }
         polygon = clipped;
     }
-    polygon.into_iter().map(|p| p.y).reduce(f64::max)
+    let origin = *polygon.first()?;
+    let mut twice_area = 0.0;
+    for pair in polygon[1..].windows(2) {
+        let a = pair[0] - origin;
+        let b = pair[1] - origin;
+        twice_area += a.x * b.z - a.z * b.x;
+    }
+    Some((
+        polygon.into_iter().map(|p| p.y).reduce(f64::max)?,
+        twice_area.abs() * 0.5,
+    ))
 }

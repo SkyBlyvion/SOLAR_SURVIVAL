@@ -1,0 +1,14 @@
+   Compiling solar_survival v0.2.0 (/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL)
+    Finished `test` profile [optimized] target(s) in 4.38s
+     Running tests/globe_surface.rs (target/debug/deps/globe_surface-939d6204f0aaf831)
+
+running 4 tests
+test rebase_preserves_f64_pose_velocity_view_gravity_and_reuses_geometry ... ok
+test every_cube_corner_is_walkable_through_face_changes_and_dynamic_streaming ... ok
+global index maximum (9155, 91320, 26624)
+test six_faces_edges_and_corners_cover_operational_disk_with_full_footprints ... ok
+global directed crossings 288, rebases 288
+test all_directed_face_edges_walk_run_jump_return_without_bounds_or_pose_jump ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 7.74s
+

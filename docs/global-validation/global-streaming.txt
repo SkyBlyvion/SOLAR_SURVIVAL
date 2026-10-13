@@ -1,0 +1,15 @@
+2026-10-13T08:04:21.403321Z  INFO bevy_render::renderer: AdapterInfo { name: "NVIDIA GeForce GTX 1060 3GB (NVK GP106)", vendor: 4318, device: 7170, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "NVK", driver_info: "Mesa 25.2.8-0ubuntu0.24.04.2", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: false }
+2026-10-13T08:04:21.522201Z  INFO bevy_pbr::cluster: GPU clustering is supported on this device.
+2026-10-13T08:04:21.522254Z  INFO bevy_render::batching::gpu_preprocessing: GPU preprocessing is fully supported on this device.
+2026-10-13T08:04:21.522566Z  INFO solar_survival::config::profiling: Profilage GPU : timestamps true, encoders true, passes true
+2026-10-13T08:04:21.522663Z  INFO bevy_winit::system: Creating new window Solar Survival · 0.2 · Mars (63v0)
+2026-10-13T08:04:21.522962Z  INFO winit::platform_impl::linux::x11::window: Guessed window scale factor: 1
+2026-10-13T08:04:21.530076Z  INFO solar_survival::config::profiling: Profilage baseline phase warmup, pieds DVec3(0.0, 0.0, 0.0)
+2026-10-13T08:04:31.577932Z  INFO solar_survival::config::profiling: Profilage baseline phase rest, pieds DVec3(0.0, 0.0019999374278592144, 0.0)
+2026-10-13T08:04:42.563194Z  INFO solar_survival::config::profiling: Profilage baseline phase contact, pieds DVec3(0.0, 0.0019999374278592144, 0.0)
+2026-10-13T08:04:53.566464Z DEBUG solar_survival::player::surface: GLOBAL rebasage CPU 6.066 ms, patches 13, constructions 18
+2026-10-13T08:04:53.566524Z  INFO solar_survival::config::profiling: Profilage baseline phase streaming, pieds DVec3(2.2122861436648864e-10, 0.0019993063235884167, -9.097291306771685e-11)
+2026-10-13T08:05:01.530585Z DEBUG solar_survival::player::surface: GLOBAL rebasage CPU 5.473 ms, patches 13, constructions 23
+2026-10-13T08:05:04.542639Z  INFO solar_survival::config::profiling: Profilage baseline phase space, pieds DVec3(23.866666666018858, 0.0019174341069737538, -3.878568978175105e-10)
+2026-10-13T08:05:15.532088Z  INFO solar_survival::config::profiling: Profilage baseline phase finished, pieds DVec3(23.866666666018858, 0.0019174341069737538, -3.878568978175105e-10)
+2026-10-13T08:05:15.534857Z  INFO solar_survival::config::profiling: Profilage terminé : 20 métriques, CSV /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global-streaming.csv

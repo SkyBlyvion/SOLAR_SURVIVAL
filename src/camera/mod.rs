@@ -297,7 +297,10 @@ mod tests {
     fn app(fps: u32) -> App {
         let mut app = App::new();
         app.add_plugins(MinimalPlugins)
-            .insert_resource(GameConfig::default())
+            .insert_resource(GameConfig {
+                mars_global: false,
+                ..default()
+            })
             .insert_resource(TimeUpdateStrategy::ManualDuration(Duration::from_secs_f64(
                 1.0 / fps as f64,
             )))
@@ -699,6 +702,59 @@ mod tests {
     #[test]
     fn migration_uses_actual_ecs_controls_pause_rotation_and_all_space_exits() {
         migration_controls(false);
+    }
+    #[test]
+    fn global_surface_ecs_walk_streams_and_keeps_rotation_pause_and_space_exits() {
+        let mut app = app(60);
+        app.world_mut().resource_mut::<MarsTerrain>().globe_enabled = true;
+        press(&mut app, KeyCode::KeyM);
+        app.world_mut().resource_mut::<SurfaceState>().yaw = -std::f64::consts::FRAC_PI_2;
+        app.world_mut().resource_mut::<Explorer>().captured = true;
+        app.world_mut().resource_mut::<SimulationClock>().paused = true;
+        let jd = app.world().resource::<SimulationClock>().jd;
+        {
+            let mut keys = app.world_mut().resource_mut::<ButtonInput<KeyCode>>();
+            keys.press(KeyCode::KeyW);
+            keys.press(KeyCode::ShiftLeft);
+        }
+        for _ in 0..1100 {
+            app.update();
+            app.world_mut()
+                .resource_mut::<ButtonInput<KeyCode>>()
+                .clear();
+        }
+        assert_eq!(app.world().resource::<SimulationClock>().jd, jd);
+        assert!(
+            app.world()
+                .resource::<MarsTerrain>()
+                .globe
+                .as_ref()
+                .unwrap()
+                .rebases
+                >= 2
+        );
+        app.world_mut()
+            .resource_mut::<ButtonInput<KeyCode>>()
+            .reset_all();
+        press(&mut app, KeyCode::KeyP);
+        press(&mut app, KeyCode::KeyT);
+        app.insert_resource(TimeUpdateStrategy::ManualDuration(Duration::from_millis(1)));
+        app.world_mut().resource_mut::<SurfaceState>().accumulator = 0.0;
+        let feet = app.world().resource::<SurfaceState>().feet;
+        let eye = app.world().resource::<Explorer>().local_m;
+        app.update();
+        assert_eq!(app.world().resource::<SurfaceState>().feet, feet);
+        assert!(eye.distance(app.world().resource::<Explorer>().local_m) > 0.001);
+        for key in [KeyCode::KeyM, KeyCode::KeyG, KeyCode::KeyO, KeyCode::KeyU] {
+            press(&mut app, key);
+            assert_eq!(app.world().resource::<Explorer>().mode, MovementMode::Space);
+            press(&mut app, KeyCode::KeyM);
+            assert!(app.world().resource::<MarsTerrain>().globe.is_some());
+            assert_eq!(
+                app.world().resource::<Explorer>().mode,
+                MovementMode::Surface
+            );
+        }
     }
     #[test]
     fn offcenter_migration_uses_actual_ecs_controls_pause_rotation_and_all_space_exits() {

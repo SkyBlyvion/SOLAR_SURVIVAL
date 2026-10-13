@@ -1,0 +1,401 @@
+{
+  "historical-before": {
+    "contact/cpu/navigation": {
+      "count": 127,
+      "mean_ms": 0.033637204724409446,
+      "median_ms": 0.031381,
+      "p95_ms": 0.043639,
+      "p99_ms": 0.054385,
+      "max_ms": 0.150157
+    },
+    "contact/cpu/rendering_sync": {
+      "count": 127,
+      "mean_ms": 0.03356485826771653,
+      "median_ms": 0.030703,
+      "p95_ms": 0.043077,
+      "p99_ms": 0.070605,
+      "max_ms": 0.104973
+    },
+    "contact/frame": {
+      "count": 127,
+      "mean_ms": 54.94242362992126,
+      "median_ms": 55.348796,
+      "p95_ms": 58.437779,
+      "p99_ms": 59.31199,
+      "max_ms": 59.892353
+    },
+    "rest/cpu/navigation": {
+      "count": 134,
+      "mean_ms": 0.03740369402985075,
+      "median_ms": 0.036774,
+      "p95_ms": 0.046343,
+      "p99_ms": 0.050887,
+      "max_ms": 0.054379
+    },
+    "rest/cpu/rendering_sync": {
+      "count": 134,
+      "mean_ms": 0.031614432835820896,
+      "median_ms": 0.030501,
+      "p95_ms": 0.043601,
+      "p99_ms": 0.049678,
+      "max_ms": 0.067087
+    },
+    "rest/frame": {
+      "count": 134,
+      "mean_ms": 52.25701278358209,
+      "median_ms": 52.6278715,
+      "p95_ms": 55.066656,
+      "p99_ms": 55.980453,
+      "max_ms": 56.395621
+    },
+    "space/cpu/navigation": {
+      "count": 246,
+      "mean_ms": 0.008050719512195123,
+      "median_ms": 0.0074745,
+      "p95_ms": 0.012417,
+      "p99_ms": 0.021709,
+      "max_ms": 0.032814
+    },
+    "space/cpu/rendering_sync": {
+      "count": 246,
+      "mean_ms": 0.030219426829268294,
+      "median_ms": 0.02672,
+      "p95_ms": 0.052716,
+      "p99_ms": 0.102406,
+      "max_ms": 0.146178
+    },
+    "space/frame": {
+      "count": 246,
+      "mean_ms": 28.35774000406504,
+      "median_ms": 27.982482,
+      "p95_ms": 32.458648,
+      "p99_ms": 33.211376,
+      "max_ms": 34.821162
+    },
+    "streaming/cpu/navigation": {
+      "count": 135,
+      "mean_ms": 0.031916622222222225,
+      "median_ms": 0.030418,
+      "p95_ms": 0.042853,
+      "p99_ms": 0.052085,
+      "max_ms": 0.054
+    },
+    "streaming/cpu/rendering_sync": {
+      "count": 135,
+      "mean_ms": 0.0376436,
+      "median_ms": 0.031898,
+      "p95_ms": 0.049495,
+      "p99_ms": 0.081103,
+      "max_ms": 0.525774
+    },
+    "streaming/frame": {
+      "count": 135,
+      "mean_ms": 51.83769562962963,
+      "median_ms": 52.139447,
+      "p95_ms": 55.208611,
+      "p99_ms": 55.804404,
+      "max_ms": 56.097655
+    }
+  },
+  "global-profile": {
+    "contact/cpu/navigation": {
+      "count": 128,
+      "mean_ms": 0.0882508984375,
+      "median_ms": 0.09020449999999999,
+      "p95_ms": 0.109663,
+      "p99_ms": 0.116622,
+      "max_ms": 0.223314
+    },
+    "contact/cpu/rendering_sync": {
+      "count": 128,
+      "mean_ms": 0.03166978125,
+      "median_ms": 0.030010500000000002,
+      "p95_ms": 0.04548,
+      "p99_ms": 0.052617,
+      "max_ms": 0.066534
+    },
+    "contact/frame": {
+      "count": 128,
+      "mean_ms": 55.0218413984375,
+      "median_ms": 55.2831895,
+      "p95_ms": 58.47505,
+      "p99_ms": 59.231397,
+      "max_ms": 59.972736
+    },
+    "rest/cpu/navigation": {
+      "count": 133,
+      "mean_ms": 0.11054027067669173,
+      "median_ms": 0.113084,
+      "p95_ms": 0.133936,
+      "p99_ms": 0.147815,
+      "max_ms": 0.163112
+    },
+    "rest/cpu/rendering_sync": {
+      "count": 133,
+      "mean_ms": 0.03321060902255639,
+      "median_ms": 0.030903,
+      "p95_ms": 0.050347,
+      "p99_ms": 0.062062,
+      "max_ms": 0.11244
+    },
+    "rest/frame": {
+      "count": 133,
+      "mean_ms": 52.36090167669173,
+      "median_ms": 52.735221,
+      "p95_ms": 55.468179,
+      "p99_ms": 56.522674,
+      "max_ms": 56.971922
+    },
+    "space/cpu/navigation": {
+      "count": 247,
+      "mean_ms": 0.007797623481781376,
+      "median_ms": 0.007339,
+      "p95_ms": 0.011069,
+      "p99_ms": 0.013331,
+      "max_ms": 0.02992
+    },
+    "space/cpu/rendering_sync": {
+      "count": 247,
+      "mean_ms": 0.027760206477732793,
+      "median_ms": 0.025974,
+      "p95_ms": 0.041446,
+      "p99_ms": 0.056376,
+      "max_ms": 0.100652
+    },
+    "space/frame": {
+      "count": 247,
+      "mean_ms": 28.268702400809715,
+      "median_ms": 28.096548,
+      "p95_ms": 31.692637,
+      "p99_ms": 33.143836,
+      "max_ms": 34.661739
+    },
+    "streaming/cpu/navigation": {
+      "count": 135,
+      "mean_ms": 0.07513671851851852,
+      "median_ms": 0.073327,
+      "p95_ms": 0.105868,
+      "p99_ms": 0.113234,
+      "max_ms": 0.133531
+    },
+    "streaming/cpu/rendering_sync": {
+      "count": 135,
+      "mean_ms": 0.03468128148148148,
+      "median_ms": 0.029924,
+      "p95_ms": 0.044987,
+      "p99_ms": 0.052708,
+      "max_ms": 0.50341
+    },
+    "streaming/frame": {
+      "count": 135,
+      "mean_ms": 51.77805099259259,
+      "median_ms": 51.939456,
+      "p95_ms": 54.740512,
+      "p99_ms": 55.507511,
+      "max_ms": 56.344442
+    }
+  },
+  "historical-after": {
+    "contact/cpu/navigation": {
+      "count": 127,
+      "mean_ms": 0.03228661417322835,
+      "median_ms": 0.031285,
+      "p95_ms": 0.042514,
+      "p99_ms": 0.047453,
+      "max_ms": 0.12868
+    },
+    "contact/cpu/rendering_sync": {
+      "count": 127,
+      "mean_ms": 0.04367732283464567,
+      "median_ms": 0.030816,
+      "p95_ms": 0.065129,
+      "p99_ms": 0.147918,
+      "max_ms": 0.912162
+    },
+    "contact/frame": {
+      "count": 127,
+      "mean_ms": 55.06736180314961,
+      "median_ms": 55.335634,
+      "p95_ms": 59.025901,
+      "p99_ms": 59.790481,
+      "max_ms": 69.086087
+    },
+    "rest/cpu/navigation": {
+      "count": 134,
+      "mean_ms": 0.03689581343283582,
+      "median_ms": 0.0367665,
+      "p95_ms": 0.047149,
+      "p99_ms": 0.049439,
+      "max_ms": 0.051138
+    },
+    "rest/cpu/rendering_sync": {
+      "count": 134,
+      "mean_ms": 0.03387380597014925,
+      "median_ms": 0.031064500000000002,
+      "p95_ms": 0.052064,
+      "p99_ms": 0.08046,
+      "max_ms": 0.153059
+    },
+    "rest/frame": {
+      "count": 134,
+      "mean_ms": 52.18757698507463,
+      "median_ms": 52.3970255,
+      "p95_ms": 55.422822,
+      "p99_ms": 55.877634,
+      "max_ms": 56.762121
+    },
+    "space/cpu/navigation": {
+      "count": 248,
+      "mean_ms": 0.007606229838709677,
+      "median_ms": 0.0075735,
+      "p95_ms": 0.011404,
+      "p99_ms": 0.012862,
+      "max_ms": 0.01875
+    },
+    "space/cpu/rendering_sync": {
+      "count": 248,
+      "mean_ms": 0.027648806451612905,
+      "median_ms": 0.025467999999999998,
+      "p95_ms": 0.035563,
+      "p99_ms": 0.089242,
+      "max_ms": 0.14384
+    },
+    "space/frame": {
+      "count": 248,
+      "mean_ms": 28.250112524193547,
+      "median_ms": 28.1271965,
+      "p95_ms": 31.686628,
+      "p99_ms": 33.206764,
+      "max_ms": 34.077535
+    },
+    "streaming/cpu/navigation": {
+      "count": 135,
+      "mean_ms": 0.03362314074074074,
+      "median_ms": 0.031392,
+      "p95_ms": 0.044908,
+      "p99_ms": 0.052047,
+      "max_ms": 0.154523
+    },
+    "streaming/cpu/rendering_sync": {
+      "count": 135,
+      "mean_ms": 0.04517171111111111,
+      "median_ms": 0.031596,
+      "p95_ms": 0.065617,
+      "p99_ms": 0.15992,
+      "max_ms": 0.824172
+    },
+    "streaming/frame": {
+      "count": 135,
+      "mean_ms": 51.91284702222222,
+      "median_ms": 51.951649,
+      "p95_ms": 54.971141,
+      "p99_ms": 56.398327,
+      "max_ms": 56.940756
+    }
+  },
+  "global-streaming": {
+    "contact/cpu/navigation": {
+      "count": 181,
+      "mean_ms": 0.09016742541436464,
+      "median_ms": 0.091495,
+      "p95_ms": 0.110954,
+      "p99_ms": 0.115678,
+      "max_ms": 0.128326
+    },
+    "contact/cpu/rendering_sync": {
+      "count": 181,
+      "mean_ms": 0.03171010497237569,
+      "median_ms": 0.029861,
+      "p95_ms": 0.044399,
+      "p99_ms": 0.055642,
+      "max_ms": 0.126601
+    },
+    "contact/frame": {
+      "count": 181,
+      "mean_ms": 55.215162977900555,
+      "median_ms": 55.303429,
+      "p95_ms": 58.347535,
+      "p99_ms": 59.600735,
+      "max_ms": 59.998902
+    },
+    "rest/cpu/navigation": {
+      "count": 191,
+      "mean_ms": 0.11673402617801047,
+      "median_ms": 0.117087,
+      "p95_ms": 0.145466,
+      "p99_ms": 0.153301,
+      "max_ms": 0.167219
+    },
+    "rest/cpu/rendering_sync": {
+      "count": 191,
+      "mean_ms": 0.03333321465968586,
+      "median_ms": 0.031031,
+      "p95_ms": 0.048948,
+      "p99_ms": 0.082987,
+      "max_ms": 0.131267
+    },
+    "rest/frame": {
+      "count": 191,
+      "mean_ms": 52.3268742513089,
+      "median_ms": 52.435388,
+      "p95_ms": 55.417939,
+      "p99_ms": 56.704189,
+      "max_ms": 58.542779
+    },
+    "space/cpu/navigation": {
+      "count": 352,
+      "mean_ms": 0.0076491931818181815,
+      "median_ms": 0.0071719999999999996,
+      "p95_ms": 0.012083,
+      "p99_ms": 0.016164,
+      "max_ms": 0.033892
+    },
+    "space/cpu/rendering_sync": {
+      "count": 352,
+      "mean_ms": 0.03134191477272727,
+      "median_ms": 0.025652,
+      "p95_ms": 0.04257,
+      "p99_ms": 0.103361,
+      "max_ms": 1.175646
+    },
+    "space/frame": {
+      "count": 352,
+      "mean_ms": 28.373525232954545,
+      "median_ms": 28.1682105,
+      "p95_ms": 31.599617,
+      "p99_ms": 33.206526,
+      "max_ms": 52.531052
+    },
+    "streaming/cpu/navigation": {
+      "count": 192,
+      "mean_ms": 0.10599428125,
+      "median_ms": 0.074599,
+      "p95_ms": 0.105208,
+      "p99_ms": 0.122165,
+      "max_ms": 5.615788
+    },
+    "streaming/cpu/rendering_sync": {
+      "count": 192,
+      "mean_ms": 0.032168640625,
+      "median_ms": 0.029024,
+      "p95_ms": 0.048997,
+      "p99_ms": 0.077093,
+      "max_ms": 0.165118
+    },
+    "streaming/frame": {
+      "count": 192,
+      "mean_ms": 52.004577114583334,
+      "median_ms": 52.1245585,
+      "p95_ms": 54.932017,
+      "p99_ms": 55.749076,
+      "max_ms": 56.740553
+    }
+  },
+  "global_rebase_cpu": {
+    "count": 12,
+    "min_ms": 4.644,
+    "median_ms": 5.093999999999999,
+    "max_ms": 7.203
+  },
+  "source_and_binary_hashes_unchanged": true
+}

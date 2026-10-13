@@ -15,7 +15,7 @@ use bevy::{
 
 pub(super) fn install(app: &mut App) {
     let config = app.world().resource::<GameConfig>();
-    if !config.cube_surface || config.profile.is_some() {
+    if !config.cube_surface || config.mars_global || config.profile.is_some() {
         return;
     }
     let Some(directory) = &config.cube_validation_dir else {

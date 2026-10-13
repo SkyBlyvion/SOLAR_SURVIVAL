@@ -1,0 +1,19 @@
+   Compiling solar_survival v0.2.0 (/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL)
+    Finished `test` profile [optimized] target(s) in 1.20s
+     Running tests/globe_surface.rs (target/debug/deps/globe_surface-939d6204f0aaf831)
+
+running 1 test
+
+thread 'all_directed_face_edges_walk_run_jump_return_without_bounds_or_pose_jump' (39714) panicked at tests/globe_surface.rs:176:21:
+PositiveX NegativeU fps=30 boosted=false rest drift=0.000007770838024118422 velocity=DVec3(0.0, 0.0, 0.0)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test all_directed_face_edges_walk_run_jump_return_without_bounds_or_pose_jump ... FAILED
+
+failures:
+
+failures:
+    all_directed_face_edges_walk_run_jump_return_without_bounds_or_pose_jump
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.07s
+
+error: test failed, to rerun pass `--test globe_surface`

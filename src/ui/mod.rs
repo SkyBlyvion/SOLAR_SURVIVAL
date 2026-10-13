@@ -196,7 +196,9 @@ fn refresh(
         anchor
     };
     let mode = if pilot.mode == MovementMode::Surface {
-        if terrain.cube.is_some() {
+        if terrain.globe.is_some() {
+            "Mars · terrain mondial"
+        } else if terrain.cube.is_some() {
             "Mars · paire cube-sphere"
         } else {
             "surface Mars"

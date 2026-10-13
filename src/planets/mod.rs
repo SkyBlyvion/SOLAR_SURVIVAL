@@ -3,6 +3,7 @@ mod cube_sphere;
 pub use cube_sphere::{CubeFace, FaceCoordinates, PatchEdge, PatchKey, PatchNeighbor, PatchPair};
 pub mod cube_migration;
 pub mod cube_terrain;
+pub mod globe_terrain;
 pub mod terrain;
 #[derive(Clone, Copy, Debug)]
 pub struct GenerationSettings {

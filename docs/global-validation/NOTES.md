@@ -1,0 +1,15 @@
+# Parcours mondial — décisions et essais intermédiaires
+
+13 octobre 2026. Git initial à 2031710 ; seule NEXT_CHAT avait la correction locale indiquant P3.4 commité. Le premier cadrage de trois cartes a été rédigé puis supprimé avant intégration quand l’utilisateur a demandé explicitement Mars entière traversable, avec révision des limites. Aucun fichier de preuves antérieures n’a été supprimé ou écrasé.
+
+Le nouveau fournisseur global, le transport minimal de repère, le cache de meshes et les collisions OBB exactes forment une fonctionnalité complète, plutôt qu’une chaîne de cartes fixes. Les étapes d’implémentation sont techniques ; la roadmap ancienne ne borne plus le parcours mondial.
+
+Essais progressifs : le premier test de repos comparait la pose conservée après rebasage au support de la boîte reboîtée, avant son sous-pas suivant. Un réajustement vertical de 7,8 µm a été observé. Le test vérifie maintenant ce réajustement sous 50 µm puis un repos stable sous 0,1 µm ; deux frames sont utilisées pour garantir un sous-pas à 144 FPS. Un emprunt de test a aussi été déplacé avant l’avance physique. Journaux `edges-initial.txt`, `numerical-progress*.txt`. Aucune dégradation moteur n’est cachée par une tolérance millimétrique.
+
+Clippy initial : quatre conditions modulo remplacées par is_multiple_of et une condition imbriquée fusionnée (`clippy-progress.txt`). La première série complète à 89 tests/build est archivée dans `before-coverage-check/`. Le contrôle de couverture sous toute l’empreinte par aire et son garde-fou d’entrée ont ensuite été ajoutés ; l’étape de vérification avant extension du profiler est conservée dans `before-profile-support/`. Ces builds intermédiaires ne désignent pas le binaire des campagnes finales. La série finale compte 90 tests.
+
+Les quatre premiers lancements du lanceur graphique initial sont réussis. Il a ensuite levé TypeError avant de lancer la suite historique : un argument vide manquait à l’appel de son utilitaire run. `run_graphics-initial.py` est le snapshot initial ; reprise par `run_graphics.py --resume`, sans rejouer ni écraser les quatre essais réussis. Ce défaut du lanceur n’est pas un crash du jeu.
+
+La fenêtre streaming de 8 s du premier profilage mondial se termine à x≈63,8667 m après une préparation explicite x=116 m/rebasage ; elle n’inclut donc pas de remplacement dans ses métriques retenues. Un essai mondial de 54 s, avec phase de 11 s, est ajouté pour observer un vrai rebasage dans la fenêtre de mesure. Les statistiques comparatives de 42 s restent des mesures de rythme et coût courant, pas une mesure des pics de chargement.
+
+Les préparations graphiques de douze sites ne sont pas comptées comme voyages : 12 passages d’arête sont faits ensuite par touches ECS, tous en l’air ; 12 rebasages ordinaires. Aucun essai OS des périphériques, suspension complète ou Windows. Les captures montrent une sphère sans relief et un horizon du voisinage local, pas une planète entière simultanément rendue. Les marqueurs superposés restent une limite ancienne.

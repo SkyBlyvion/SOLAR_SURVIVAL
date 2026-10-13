@@ -1,0 +1,15 @@
+   Compiling solar_survival v0.2.0 (/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL)
+error[E0502]: cannot borrow `terrain` as mutable because it is also borrowed as immutable
+   --> tests/globe_surface.rs:174:43
+    |
+167 |                     let globe = terrain.globe.as_ref().unwrap();
+    |                                 ------------- immutable borrow occurs here
+...
+174 |                     state.advance(&pilot, &mut terrain, &keys, 1.0 / fps as f64, mu());
+    |                                           ^^^^^^^^^^^^ mutable borrow occurs here
+...
+177 |                     let construction_count = globe.constructions;
+    |                                              ------------------- immutable borrow later used here
+
+For more information about this error, try `rustc --explain E0502`.
+error: could not compile `solar_survival` (test "globe_surface") due to 1 previous error

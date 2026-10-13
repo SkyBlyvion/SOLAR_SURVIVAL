@@ -2,6 +2,8 @@
 
 Prototype d'exploration 3D de notre système solaire, fondation d'un jeu de survie spatial en première personne. **Les positions, rayons et distances physiques restent en mètres à l'échelle 1:1, en `f64`.** Bevy ne reçoit que des représentations relatives à la caméra.
 
+**Depuis le 13 octobre 2026, M ouvre un terrain martien mondial : six faces traversables, arêtes et coins continus, chargement local dynamique.** Les anciens parcours bornés restent des modes de régression. [Architecture et commandes](docs/GLOBAL_TERRAIN.md).
+
 La suite du développement suit [la roadmap](docs/ROADMAP.md). Le [prompt du prochain chat](docs/NEXT_CHAT.md) est actualisé à chaque fin de chat de développement avec l'état réel et l'objectif suivant.
 
 ## Démarrer sur ce poste Ubuntu
@@ -100,7 +102,7 @@ Les vitesses disponibles sont 5 m/s, 250 m/s, 20 km/s, 20 000 km/s, 2 millions k
 - Deux meshes de sphère partagés pour le LOD ; étoiles regroupées dans un mesh ; pas de création de mesh par frame.
 - Interface sélectionnable à la souris : FPS, temps, cible, altitude, rayon, repère, vitesse et astre le plus proche. Repères visuels pour les corps trop petits à l'écran.
 - FPS martien : site fixé au repère tournant de Mars, gravité radiale, marche/course/saut, contacts avec terrain et trois obstacles statiques dans le site.
-- Terrain artistique local courbé sur le rayon moyen de Mars ; neuf tuiles de 128 m, grille de 4 m, chargement et déchargement à chaque changement de tuile.
+- Terrain mondial sphérique : six faces, voisinage local de treize patches maximum, marche/course/saut sans borne de site ; coordonnées et contacts f64, meshes réutilisés. Le terrain artistique historique de neuf tuiles reste disponible avec `SOLAR_MARS_GLOBAL=0`.
 - Contrat cube-sphere f64 : conversions, voisins orientés, graines reproductibles et raccord de deux patches de même niveau ; structures de survie encore inactives.
 
 ## Architecture
@@ -118,6 +120,7 @@ src/physics/          garde spatiale, gravité radiale et contacts cinématiques
 src/planets/          clés cube-sphere, graines et géométrie du terrain local
 src/planets/cube_sphere.rs conversions, voisins et paire de patches à sommets partagés
 src/planets/cube_terrain.rs fournisseur optionnel de support de la paire f64
+src/planets/globe_terrain.rs voisinage mondial dynamique et contacts f64
 src/config/cube_validation.rs parcours graphique borné de franchissement
 examples/cube_seam.rs diagnostic graphique borné, indépendant du terrain jouable
 src/survival/         données vitales et inventaire futur
@@ -189,7 +192,9 @@ python3 scripts/profile_suite.py --seconds 42 --mesa-immediate --gpu-probe --out
 
 Le script utilise uniquement la bibliothèque standard Python et lance les essais successivement. `--mesa-immediate` est réservé au contournement Mesa de ce poste ; l'omettre sur la machine cible. Choisir un nouveau dossier de sortie pour chaque campagne. Un essai individuel sans Python est décrit dans PERFORMANCE.
 
-## Limites actuelles et suite
+## Limites et parcours historiques
+
+Le parcours mondial actuel est décrit dans [GLOBAL_TERRAIN](docs/GLOBAL_TERRAIN.md). Les restrictions de site/paire ci-dessous concernent les modes historiques de régression.
 
 Le [contrat P3.1](docs/CUBE_SPHERE.md) et sa démonstration optionnelle vérifient les premiers raccords cube-sphere. Après `cargo build --release --locked --example cube_seam`, lancer `target/release/examples/cube_seam docs/mon-nouveau-raccord` (ajouter `MESA_VK_WSI_PRESENT_MODE=immediate` sur ce poste). Le programme affiche quatre cas en 32 secondes et écrit quatre captures dans un nouveau dossier. Il génère deux patches à la fois ; le franchissement du joueur et les contacts cube-sphere sont désormais disponibles dans un parcours opt-in borné, décrit ci-dessous. Le FPS normal conserve les neuf tuiles et la borne ±4 096 m.
 

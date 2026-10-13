@@ -1,0 +1,203 @@
+{
+  "captures_inspected": 112,
+  "sheets": [
+    {
+      "sheet": "global-00.jpg",
+      "inspected": true,
+      "images": [
+        "global/global-00.png",
+        "global/global-01.png",
+        "global/global-02.png",
+        "global/global-03.png",
+        "global/global-04.png",
+        "global/global-05.png"
+      ]
+    },
+    {
+      "sheet": "global-01.jpg",
+      "inspected": true,
+      "images": [
+        "global/global-06.png",
+        "global/global-07.png",
+        "global/global-08.png",
+        "global/global-09.png",
+        "global/global-10.png",
+        "global/global-11.png"
+      ]
+    },
+    {
+      "sheet": "global-02.jpg",
+      "inspected": true,
+      "images": [
+        "global/global-12.png",
+        "global/global-13.png",
+        "global/global-14.png",
+        "global/global-15.png",
+        "global/global-16.png",
+        "global/global-17.png"
+      ]
+    },
+    {
+      "sheet": "global-03.jpg",
+      "inspected": true,
+      "images": [
+        "global/global-18.png",
+        "global/global-19.png",
+        "global/global-20.png",
+        "global/global-21.png",
+        "global/global-22.png",
+        "global/global-23.png"
+      ]
+    },
+    {
+      "sheet": "global-04.jpg",
+      "inspected": true,
+      "images": [
+        "global/global-24.png",
+        "global/global-25.png",
+        "global/global-26.png",
+        "global/global-27.png",
+        "global/global-28.png",
+        "global/global-29.png"
+      ]
+    },
+    {
+      "sheet": "global-05.jpg",
+      "inspected": true,
+      "images": [
+        "global/global-30.png",
+        "global/global-31.png",
+        "global/global-32.png",
+        "global/global-33.png",
+        "global/global-34.png",
+        "global/global-35.png"
+      ]
+    },
+    {
+      "sheet": "offcenter-00.jpg",
+      "inspected": true,
+      "images": [
+        "legacy/offcenter/crossing-00.png",
+        "legacy/offcenter/crossing-01.png",
+        "legacy/offcenter/crossing-02.png",
+        "legacy/offcenter/crossing-03.png",
+        "legacy/offcenter/crossing-04.png",
+        "legacy/offcenter/crossing-05.png",
+        "legacy/offcenter/crossing-06.png",
+        "legacy/offcenter/crossing-07.png",
+        "legacy/offcenter/crossing-08.png",
+        "legacy/offcenter/crossing-09.png",
+        "legacy/offcenter/crossing-10.png",
+        "legacy/offcenter/crossing-11.png"
+      ]
+    },
+    {
+      "sheet": "offcenter-01.jpg",
+      "inspected": true,
+      "images": [
+        "legacy/offcenter/crossing-12.png",
+        "legacy/offcenter/crossing-13.png",
+        "legacy/offcenter/crossing-14.png",
+        "legacy/offcenter/crossing-15.png",
+        "legacy/offcenter/crossing-16.png",
+        "legacy/offcenter/crossing-17.png",
+        "legacy/offcenter/crossing-18.png",
+        "legacy/offcenter/crossing-19.png",
+        "legacy/offcenter/crossing-20.png",
+        "legacy/offcenter/crossing-21.png"
+      ]
+    },
+    {
+      "sheet": "central-regression-00.jpg",
+      "inspected": true,
+      "images": [
+        "legacy/central-regression/crossing-00.png",
+        "legacy/central-regression/crossing-01.png",
+        "legacy/central-regression/crossing-02.png",
+        "legacy/central-regression/crossing-03.png",
+        "legacy/central-regression/crossing-04.png",
+        "legacy/central-regression/crossing-05.png",
+        "legacy/central-regression/crossing-06.png",
+        "legacy/central-regression/crossing-07.png",
+        "legacy/central-regression/crossing-08.png",
+        "legacy/central-regression/crossing-09.png",
+        "legacy/central-regression/crossing-10.png",
+        "legacy/central-regression/crossing-11.png"
+      ]
+    },
+    {
+      "sheet": "central-regression-01.jpg",
+      "inspected": true,
+      "images": [
+        "legacy/central-regression/crossing-12.png",
+        "legacy/central-regression/crossing-13.png",
+        "legacy/central-regression/crossing-14.png",
+        "legacy/central-regression/crossing-15.png",
+        "legacy/central-regression/crossing-16.png",
+        "legacy/central-regression/crossing-17.png",
+        "legacy/central-regression/crossing-18.png",
+        "legacy/central-regression/crossing-19.png",
+        "legacy/central-regression/crossing-20.png",
+        "legacy/central-regression/crossing-21.png"
+      ]
+    },
+    {
+      "sheet": "p32-regression-00.jpg",
+      "inspected": true,
+      "images": [
+        "legacy/p32-regression/crossing-00.png",
+        "legacy/p32-regression/crossing-01.png",
+        "legacy/p32-regression/crossing-02.png",
+        "legacy/p32-regression/crossing-03.png",
+        "legacy/p32-regression/crossing-04.png",
+        "legacy/p32-regression/crossing-05.png",
+        "legacy/p32-regression/crossing-06.png",
+        "legacy/p32-regression/crossing-07.png",
+        "legacy/p32-regression/crossing-08.png",
+        "legacy/p32-regression/crossing-09.png",
+        "legacy/p32-regression/crossing-10.png",
+        "legacy/p32-regression/crossing-11.png"
+      ]
+    },
+    {
+      "sheet": "p32-regression-01.jpg",
+      "inspected": true,
+      "images": [
+        "legacy/p32-regression/crossing-12.png",
+        "legacy/p32-regression/crossing-13.png",
+        "legacy/p32-regression/crossing-14.png",
+        "legacy/p32-regression/crossing-15.png",
+        "legacy/p32-regression/crossing-16.png",
+        "legacy/p32-regression/crossing-17.png",
+        "legacy/p32-regression/crossing-18.png",
+        "legacy/p32-regression/crossing-19.png",
+        "legacy/p32-regression/crossing-20.png",
+        "legacy/p32-regression/crossing-21.png"
+      ]
+    },
+    {
+      "sheet": "historical-00.jpg",
+      "inspected": true,
+      "images": [
+        "legacy/historical/docs/rotation-surface-00.png",
+        "legacy/historical/docs/rotation-surface-01.png",
+        "legacy/historical/docs/rotation-surface-02.png",
+        "legacy/historical/docs/rotation-surface-03.png",
+        "legacy/historical/docs/rotation-surface-04.png",
+        "legacy/historical/docs/rotation-surface-05.png",
+        "legacy/historical/docs/rotation-surface-06.png",
+        "legacy/historical/docs/rotation-surface-07.png",
+        "legacy/historical/docs/rotation-surface-08.png",
+        "legacy/historical/docs/rotation-surface-09.png"
+      ]
+    }
+  ],
+  "originals_inspected": [
+    "global/global-06.png",
+    "global/global-26.png",
+    "legacy/offcenter/crossing-06.png",
+    "legacy/p32-regression/crossing-05.png",
+    "legacy/historical/docs/rotation-surface-06.png"
+  ],
+  "scope": "Terrain/raccords et transitions sur toutes les planches ; HUD et d\u00e9tail sur les cinq originaux ; pas une vid\u00e9o de chaque frame."
+}

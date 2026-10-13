@@ -1,0 +1,14 @@
+2026-10-13T08:00:55.311452Z  INFO bevy_render::renderer: AdapterInfo { name: "NVIDIA GeForce GTX 1060 3GB (NVK GP106)", vendor: 4318, device: 7170, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "NVK", driver_info: "Mesa 25.2.8-0ubuntu0.24.04.2", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: false }
+2026-10-13T08:00:55.420361Z  INFO bevy_pbr::cluster: GPU clustering is supported on this device.
+2026-10-13T08:00:55.420406Z  INFO bevy_render::batching::gpu_preprocessing: GPU preprocessing is fully supported on this device.
+2026-10-13T08:00:55.420728Z  INFO solar_survival::config::profiling: Profilage GPU : timestamps true, encoders true, passes true
+2026-10-13T08:00:55.420844Z  INFO bevy_winit::system: Creating new window Solar Survival · 0.2 · Mars (63v0)
+2026-10-13T08:00:55.421224Z  INFO winit::platform_impl::linux::x11::window: Guessed window scale factor: 1
+2026-10-13T08:00:55.427930Z  INFO solar_survival::config::profiling: Profilage baseline phase warmup, pieds DVec3(0.0, 0.0, 0.0)
+2026-10-13T08:01:05.475813Z  INFO solar_survival::config::profiling: Profilage baseline phase rest, pieds DVec3(0.0, 0.0019999374278592144, 0.0)
+2026-10-13T08:01:13.432634Z  INFO solar_survival::config::profiling: Profilage baseline phase contact, pieds DVec3(0.0, 0.0019999374278592144, 0.0)
+2026-10-13T08:01:21.488207Z DEBUG solar_survival::player::surface: GLOBAL rebasage CPU 6.982 ms, patches 13, constructions 18
+2026-10-13T08:01:21.488247Z  INFO solar_survival::config::profiling: Profilage baseline phase streaming, pieds DVec3(2.2122861436648864e-10, 0.0019993063235884167, -9.097291306771685e-11)
+2026-10-13T08:01:29.466633Z  INFO solar_survival::config::profiling: Profilage baseline phase space, pieds DVec3(63.86666665934132, 0.0014032938474051334, -9.097645853270124e-11)
+2026-10-13T08:01:37.431811Z  INFO solar_survival::config::profiling: Profilage baseline phase finished, pieds DVec3(63.86666665934132, 0.0014032938474051334, -9.097645853270124e-11)
+2026-10-13T08:01:37.433974Z  INFO solar_survival::config::profiling: Profilage terminé : 20 métriques, CSV /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global-profile.csv

@@ -1,0 +1,114 @@
+2026-10-13T07:58:12.225779Z  INFO bevy_render::renderer: AdapterInfo { name: "NVIDIA GeForce GTX 1060 3GB (NVK GP106)", vendor: 4318, device: 7170, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "NVK", driver_info: "Mesa 25.2.8-0ubuntu0.24.04.2", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: false }
+2026-10-13T07:58:12.344695Z  INFO bevy_pbr::cluster: GPU clustering is supported on this device.
+2026-10-13T07:58:12.344744Z  INFO bevy_render::batching::gpu_preprocessing: GPU preprocessing is fully supported on this device.
+2026-10-13T07:58:12.345259Z  INFO bevy_winit::system: Creating new window Solar Survival · 0.2 · Mars (63v0)
+2026-10-13T07:58:12.345637Z  INFO winit::platform_impl::linux::x11::window: Guessed window scale factor: 1
+2026-10-13T07:58:12.371450Z  INFO solar_survival::config::globe_validation: GLOBAL préparation 0 PositiveX : départ 6 m avant arête, parcours par touches ECS
+2026-10-13T07:58:14.056955Z  INFO solar_survival::config::globe_validation: GLOBAL capture 0 face PositiveX, patches 13, constructions 13, rebasages 0, index (3137, 61287, 26624)
+2026-10-13T07:58:14.104447Z  INFO solar_survival::config::globe_validation: GLOBAL arête PositiveX → NegativeZ, au sol false
+2026-10-13T07:58:14.274185Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global/global-00.png
+2026-10-13T07:58:16.370674Z  INFO solar_survival::config::globe_validation: GLOBAL capture 1 face PositiveX, patches 13, constructions 13, rebasages 0, index (3137, 61287, 26624)
+2026-10-13T07:58:16.587253Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global/global-01.png
+2026-10-13T07:58:20.853684Z  INFO solar_survival::config::globe_validation: GLOBAL capture 2 face PositiveX, patches 13, constructions 13, rebasages 0, index (3137, 61287, 26624)
+2026-10-13T07:58:21.013374Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global/global-02.png
+2026-10-13T07:58:21.381900Z DEBUG solar_survival::player::surface: GLOBAL rebasage CPU 4.849 ms, patches 13, constructions 18
+2026-10-13T07:58:22.377389Z  INFO solar_survival::config::globe_validation: GLOBAL préparation 1 PositiveX : départ 6 m avant arête, parcours par touches ECS
+2026-10-13T07:58:23.088037Z  INFO solar_survival::config::globe_validation: GLOBAL arête PositiveX → PositiveY, au sol false
+2026-10-13T07:58:24.087526Z  INFO solar_survival::config::globe_validation: GLOBAL capture 3 face PositiveX, patches 13, constructions 13, rebasages 0, index (3137, 61618, 26624)
+2026-10-13T07:58:24.290555Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global/global-03.png
+2026-10-13T07:58:26.375686Z  INFO solar_survival::config::globe_validation: GLOBAL capture 4 face PositiveX, patches 13, constructions 13, rebasages 0, index (3137, 61618, 26624)
+2026-10-13T07:58:26.534507Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global/global-04.png
+2026-10-13T07:58:30.374846Z DEBUG solar_survival::player::surface: GLOBAL rebasage CPU 7.203 ms, patches 13, constructions 18
+2026-10-13T07:58:30.889765Z  INFO solar_survival::config::globe_validation: GLOBAL capture 5 face PositiveY, patches 13, constructions 18, rebasages 1, index (3139, 61640, 26624)
+2026-10-13T07:58:31.049694Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global/global-05.png
+2026-10-13T07:58:32.397524Z  INFO solar_survival::config::globe_validation: GLOBAL préparation 2 NegativeX : départ 6 m avant arête, parcours par touches ECS
+2026-10-13T07:58:33.136588Z  INFO solar_survival::config::globe_validation: GLOBAL arête NegativeX → PositiveZ, au sol false
+2026-10-13T07:58:34.066119Z  INFO solar_survival::config::globe_validation: GLOBAL capture 6 face NegativeX, patches 13, constructions 13, rebasages 0, index (3137, 61287, 26624)
+2026-10-13T07:58:34.227690Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global/global-06.png
+2026-10-13T07:58:36.382543Z  INFO solar_survival::config::globe_validation: GLOBAL capture 7 face NegativeX, patches 13, constructions 13, rebasages 0, index (3137, 61287, 26624)
+2026-10-13T07:58:36.537406Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global/global-07.png
+2026-10-13T07:58:40.395235Z DEBUG solar_survival::player::surface: GLOBAL rebasage CPU 5.143 ms, patches 13, constructions 18
+2026-10-13T07:58:40.855424Z  INFO solar_survival::config::globe_validation: GLOBAL capture 8 face PositiveZ, patches 13, constructions 18, rebasages 1, index (3139, 60945, 26624)
+2026-10-13T07:58:41.015735Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global/global-08.png
+2026-10-13T07:58:42.378769Z  INFO solar_survival::config::globe_validation: GLOBAL préparation 3 NegativeX : départ 6 m avant arête, parcours par touches ECS
+2026-10-13T07:58:43.121304Z  INFO solar_survival::config::globe_validation: GLOBAL arête NegativeX → PositiveY, au sol false
+2026-10-13T07:58:44.059994Z  INFO solar_survival::config::globe_validation: GLOBAL capture 9 face NegativeX, patches 13, constructions 13, rebasages 0, index (3137, 61618, 26624)
+2026-10-13T07:58:44.263777Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global/global-09.png
+2026-10-13T07:58:46.373478Z  INFO solar_survival::config::globe_validation: GLOBAL capture 10 face NegativeX, patches 13, constructions 13, rebasages 0, index (3137, 61618, 26624)
+2026-10-13T07:58:46.531128Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global/global-10.png
+2026-10-13T07:58:50.373111Z DEBUG solar_survival::player::surface: GLOBAL rebasage CPU 4.998 ms, patches 13, constructions 18
+2026-10-13T07:58:50.884995Z  INFO solar_survival::config::globe_validation: GLOBAL capture 11 face PositiveY, patches 13, constructions 18, rebasages 1, index (3139, 61640, 26624)
+2026-10-13T07:58:51.083106Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global/global-11.png
+2026-10-13T07:58:52.399151Z  INFO solar_survival::config::globe_validation: GLOBAL préparation 4 PositiveY : départ 6 m avant arête, parcours par touches ECS
+2026-10-13T07:58:53.095803Z  INFO solar_survival::config::globe_validation: GLOBAL arête PositiveY → PositiveX, au sol false
+2026-10-13T07:58:54.090465Z  INFO solar_survival::config::globe_validation: GLOBAL capture 12 face PositiveY, patches 13, constructions 13, rebasages 0, index (3137, 61618, 26624)
+2026-10-13T07:58:54.293541Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global/global-12.png
+2026-10-13T07:58:56.380885Z  INFO solar_survival::config::globe_validation: GLOBAL capture 13 face PositiveY, patches 13, constructions 13, rebasages 0, index (3137, 61618, 26624)
+2026-10-13T07:58:56.588057Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global/global-13.png
+2026-10-13T07:59:00.385579Z DEBUG solar_survival::player::surface: GLOBAL rebasage CPU 5.703 ms, patches 13, constructions 18
+2026-10-13T07:59:00.856998Z  INFO solar_survival::config::globe_validation: GLOBAL capture 14 face PositiveX, patches 13, constructions 18, rebasages 1, index (3139, 61640, 26624)
+2026-10-13T07:59:01.016013Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global/global-14.png
+2026-10-13T07:59:02.387651Z  INFO solar_survival::config::globe_validation: GLOBAL préparation 5 PositiveY : départ 6 m avant arête, parcours par touches ECS
+2026-10-13T07:59:03.085895Z  INFO solar_survival::config::globe_validation: GLOBAL arête PositiveY → NegativeZ, au sol false
+2026-10-13T07:59:04.058369Z  INFO solar_survival::config::globe_validation: GLOBAL capture 15 face PositiveY, patches 13, constructions 13, rebasages 0, index (3137, 61287, 26624)
+2026-10-13T07:59:04.226243Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global/global-15.png
+2026-10-13T07:59:06.366271Z  INFO solar_survival::config::globe_validation: GLOBAL capture 16 face PositiveY, patches 13, constructions 13, rebasages 0, index (3137, 61287, 26624)
+2026-10-13T07:59:06.590250Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global/global-16.png
+2026-10-13T07:59:10.362346Z DEBUG solar_survival::player::surface: GLOBAL rebasage CPU 5.565 ms, patches 13, constructions 18
+2026-10-13T07:59:10.862545Z  INFO solar_survival::config::globe_validation: GLOBAL capture 17 face NegativeZ, patches 13, constructions 18, rebasages 1, index (3139, 60945, 26624)
+2026-10-13T07:59:11.086479Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global/global-17.png
+2026-10-13T07:59:12.366152Z  INFO solar_survival::config::globe_validation: GLOBAL préparation 6 NegativeY : départ 6 m avant arête, parcours par touches ECS
+2026-10-13T07:59:13.106895Z  INFO solar_survival::config::globe_validation: GLOBAL arête NegativeY → PositiveX, au sol false
+2026-10-13T07:59:14.096030Z  INFO solar_survival::config::globe_validation: GLOBAL capture 18 face NegativeY, patches 13, constructions 13, rebasages 0, index (3137, 61618, 26624)
+2026-10-13T07:59:14.252608Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global/global-18.png
+2026-10-13T07:59:16.355848Z  INFO solar_survival::config::globe_validation: GLOBAL capture 19 face NegativeY, patches 13, constructions 13, rebasages 0, index (3137, 61618, 26624)
+2026-10-13T07:59:16.552711Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global/global-19.png
+2026-10-13T07:59:20.353742Z DEBUG solar_survival::player::surface: GLOBAL rebasage CPU 4.884 ms, patches 13, constructions 18
+2026-10-13T07:59:20.867779Z  INFO solar_survival::config::globe_validation: GLOBAL capture 20 face PositiveX, patches 13, constructions 18, rebasages 1, index (3139, 61640, 26624)
+2026-10-13T07:59:21.025013Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global/global-20.png
+2026-10-13T07:59:22.393684Z  INFO solar_survival::config::globe_validation: GLOBAL préparation 7 NegativeY : départ 6 m avant arête, parcours par touches ECS
+2026-10-13T07:59:23.127736Z  INFO solar_survival::config::globe_validation: GLOBAL arête NegativeY → PositiveZ, au sol false
+2026-10-13T07:59:24.069998Z  INFO solar_survival::config::globe_validation: GLOBAL capture 21 face NegativeY, patches 13, constructions 13, rebasages 0, index (3137, 61287, 26624)
+2026-10-13T07:59:24.236931Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global/global-21.png
+2026-10-13T07:59:26.353181Z  INFO solar_survival::config::globe_validation: GLOBAL capture 22 face NegativeY, patches 13, constructions 13, rebasages 0, index (3137, 61287, 26624)
+2026-10-13T07:59:26.511649Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global/global-22.png
+2026-10-13T07:59:30.362511Z DEBUG solar_survival::player::surface: GLOBAL rebasage CPU 5.304 ms, patches 13, constructions 18
+2026-10-13T07:59:30.873062Z  INFO solar_survival::config::globe_validation: GLOBAL capture 23 face PositiveZ, patches 13, constructions 18, rebasages 1, index (3139, 60945, 26624)
+2026-10-13T07:59:31.028863Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global/global-23.png
+2026-10-13T07:59:32.400663Z  INFO solar_survival::config::globe_validation: GLOBAL préparation 8 PositiveZ : départ 6 m avant arête, parcours par touches ECS
+2026-10-13T07:59:33.152735Z  INFO solar_survival::config::globe_validation: GLOBAL arête PositiveZ → PositiveX, au sol false
+2026-10-13T07:59:34.074711Z  INFO solar_survival::config::globe_validation: GLOBAL capture 24 face PositiveZ, patches 13, constructions 13, rebasages 0, index (3137, 61287, 26624)
+2026-10-13T07:59:34.299318Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global/global-24.png
+2026-10-13T07:59:36.394199Z  INFO solar_survival::config::globe_validation: GLOBAL capture 25 face PositiveZ, patches 13, constructions 13, rebasages 0, index (3137, 61287, 26624)
+2026-10-13T07:59:36.561623Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global/global-25.png
+2026-10-13T07:59:40.401531Z DEBUG solar_survival::player::surface: GLOBAL rebasage CPU 5.045 ms, patches 13, constructions 18
+2026-10-13T07:59:40.863092Z  INFO solar_survival::config::globe_validation: GLOBAL capture 26 face PositiveX, patches 13, constructions 18, rebasages 1, index (3139, 60945, 26624)
+2026-10-13T07:59:41.085861Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global/global-26.png
+2026-10-13T07:59:42.378020Z  INFO solar_survival::config::globe_validation: GLOBAL préparation 9 PositiveZ : départ 6 m avant arête, parcours par touches ECS
+2026-10-13T07:59:43.082369Z  INFO solar_survival::config::globe_validation: GLOBAL arête PositiveZ → PositiveY, au sol false
+2026-10-13T07:59:44.074025Z  INFO solar_survival::config::globe_validation: GLOBAL capture 27 face PositiveZ, patches 13, constructions 13, rebasages 0, index (3137, 61287, 26624)
+2026-10-13T07:59:44.230146Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global/global-27.png
+2026-10-13T07:59:46.398732Z  INFO solar_survival::config::globe_validation: GLOBAL capture 28 face PositiveZ, patches 13, constructions 13, rebasages 0, index (3137, 61287, 26624)
+2026-10-13T07:59:46.553302Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global/global-28.png
+2026-10-13T07:59:50.368252Z DEBUG solar_survival::player::surface: GLOBAL rebasage CPU 6.232 ms, patches 13, constructions 18
+2026-10-13T07:59:50.880250Z  INFO solar_survival::config::globe_validation: GLOBAL capture 29 face PositiveY, patches 13, constructions 18, rebasages 1, index (3139, 60945, 26624)
+2026-10-13T07:59:51.080644Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global/global-29.png
+2026-10-13T07:59:52.406161Z  INFO solar_survival::config::globe_validation: GLOBAL préparation 10 NegativeZ : départ 6 m avant arête, parcours par touches ECS
+2026-10-13T07:59:53.147360Z  INFO solar_survival::config::globe_validation: GLOBAL arête NegativeZ → NegativeX, au sol false
+2026-10-13T07:59:54.073012Z  INFO solar_survival::config::globe_validation: GLOBAL capture 30 face NegativeZ, patches 13, constructions 13, rebasages 0, index (3137, 61287, 26624)
+2026-10-13T07:59:54.230316Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global/global-30.png
+2026-10-13T07:59:56.376664Z  INFO solar_survival::config::globe_validation: GLOBAL capture 31 face NegativeZ, patches 13, constructions 13, rebasages 0, index (3137, 61287, 26624)
+2026-10-13T07:59:56.578131Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global/global-31.png
+2026-10-13T08:00:00.404586Z DEBUG solar_survival::player::surface: GLOBAL rebasage CPU 4.701 ms, patches 13, constructions 18
+2026-10-13T08:00:00.863545Z  INFO solar_survival::config::globe_validation: GLOBAL capture 32 face NegativeX, patches 13, constructions 18, rebasages 1, index (3139, 60945, 26624)
+2026-10-13T08:00:01.021098Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global/global-32.png
+2026-10-13T08:00:02.388690Z  INFO solar_survival::config::globe_validation: GLOBAL préparation 11 NegativeZ : départ 6 m avant arête, parcours par touches ECS
+2026-10-13T08:00:03.134298Z  INFO solar_survival::config::globe_validation: GLOBAL arête NegativeZ → PositiveY, au sol false
+2026-10-13T08:00:04.069815Z  INFO solar_survival::config::globe_validation: GLOBAL capture 33 face NegativeZ, patches 13, constructions 13, rebasages 0, index (3137, 61287, 26624)
+2026-10-13T08:00:04.270175Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global/global-33.png
+2026-10-13T08:00:06.383999Z  INFO solar_survival::config::globe_validation: GLOBAL capture 34 face NegativeZ, patches 13, constructions 13, rebasages 0, index (3137, 61287, 26624)
+2026-10-13T08:00:06.538222Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global/global-34.png
+2026-10-13T08:00:10.376856Z DEBUG solar_survival::player::surface: GLOBAL rebasage CPU 4.644 ms, patches 13, constructions 18
+2026-10-13T08:00:10.890833Z  INFO solar_survival::config::globe_validation: GLOBAL capture 35 face PositiveY, patches 13, constructions 18, rebasages 1, index (3139, 60945, 26624)
+2026-10-13T08:00:11.094332Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global/global-35.png
+2026-10-13T08:00:12.398366Z  INFO solar_survival::config::globe_validation: GLOBAL terminé : 12 franchissements, 12 rebasages, apex 2.131379 m

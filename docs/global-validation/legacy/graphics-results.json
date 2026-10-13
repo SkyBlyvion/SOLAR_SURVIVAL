@@ -1,0 +1,83 @@
+[
+  {
+    "name": "offcenter",
+    "command": [
+      "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/target/release/solar_survival"
+    ],
+    "cwd": "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL",
+    "variables": {
+      "RUST_LOG": "info",
+      "MESA_VK_WSI_PRESENT_MODE": "immediate",
+      "SOLAR_CUBE_OFFCENTER": "1",
+      "SOLAR_CUBE_VALIDATE_DIR": "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/legacy/offcenter"
+    },
+    "exit_code": 0,
+    "failure": null,
+    "seconds": 88.39294673400036,
+    "captures": 22,
+    "diagnostics": [],
+    "completion": [
+      "P3.4 termin\u00e9 : 8 migrations, 1 en l'air, apex 2.131369 m"
+    ]
+  },
+  {
+    "name": "central-regression",
+    "command": [
+      "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/target/release/solar_survival"
+    ],
+    "cwd": "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL",
+    "variables": {
+      "RUST_LOG": "info",
+      "MESA_VK_WSI_PRESENT_MODE": "immediate",
+      "SOLAR_CUBE_MIGRATION": "1",
+      "SOLAR_CUBE_VALIDATE_DIR": "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/legacy/central-regression"
+    },
+    "exit_code": 0,
+    "failure": null,
+    "seconds": 88.44034460400053,
+    "captures": 22,
+    "diagnostics": [],
+    "completion": [
+      "P3.3 termin\u00e9 : 8 migrations, 1 en l'air, apex 2.130985 m"
+    ]
+  },
+  {
+    "name": "p32-regression",
+    "command": [
+      "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/target/release/solar_survival"
+    ],
+    "cwd": "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL",
+    "variables": {
+      "RUST_LOG": "info",
+      "MESA_VK_WSI_PRESENT_MODE": "immediate",
+      "SOLAR_CUBE_SURFACE": "1",
+      "SOLAR_CUBE_VALIDATE_DIR": "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/legacy/p32-regression"
+    },
+    "exit_code": 0,
+    "failure": null,
+    "seconds": 88.38954032299989,
+    "captures": 22,
+    "diagnostics": [],
+    "completion": [
+      "P3.2 termin\u00e9 : 7 franchissements, apex 2.131371 m"
+    ]
+  },
+  {
+    "name": "historical",
+    "command": [
+      "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/target/release/solar_survival"
+    ],
+    "cwd": "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/legacy/historical",
+    "variables": {
+      "RUST_LOG": "info",
+      "MESA_VK_WSI_PRESENT_MODE": "immediate",
+      "SOLAR_ROTATION_SMOKE_SECONDS": "50"
+    },
+    "exit_code": 0,
+    "failure": null,
+    "seconds": 50.38547514600032,
+    "captures": 10,
+    "diagnostics": [],
+    "completion": []
+  }
+]

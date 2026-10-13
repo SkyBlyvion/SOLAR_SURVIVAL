@@ -1,6 +1,7 @@
 use crate::universe::{MAX_JD, MIN_JD};
 use bevy::prelude::*;
 mod cube_validation;
+mod globe_validation;
 pub mod profiling;
 pub mod validation;
 #[derive(Resource, Debug)]
@@ -13,13 +14,33 @@ pub struct GameConfig {
     pub cube_surface: bool,
     pub cube_migration: bool,
     pub cube_offcenter: bool,
+    pub mars_global: bool,
+    pub globe_validation_dir: Option<std::path::PathBuf>,
     pub cube_validation_dir: Option<std::path::PathBuf>,
     pub profile: Option<profiling::ProfileConfig>,
 }
 impl Default for GameConfig {
     fn default() -> Self {
         let profile = profiling::ProfileConfig::from_env();
+        let legacy = [
+            "SOLAR_CUBE_SURFACE",
+            "SOLAR_CUBE_MIGRATION",
+            "SOLAR_CUBE_OFFCENTER",
+            "SOLAR_CUBE_VALIDATE_DIR",
+            "SOLAR_P2_SECONDS",
+            "SOLAR_SURFACE_SMOKE_SECONDS",
+            "SOLAR_ROTATION_SMOKE_SECONDS",
+        ]
+        .iter()
+        .any(|name| std::env::var_os(name).is_some());
+        let mars_global = profile.as_ref().map_or_else(
+            || std::env::var("SOLAR_MARS_GLOBAL").map_or(!legacy, |value| value == "1"),
+            |p| p.global_terrain,
+        );
         Self {
+            mars_global,
+            globe_validation_dir: std::env::var_os("SOLAR_GLOBAL_VALIDATE_DIR")
+                .map(std::path::PathBuf::from),
             cube_offcenter: std::env::var("SOLAR_CUBE_OFFCENTER").is_ok_and(|s| s == "1")
                 && profile.is_none(),
             cube_migration: (std::env::var("SOLAR_CUBE_MIGRATION").is_ok_and(|s| s == "1")
@@ -60,6 +81,7 @@ impl Default for GameConfig {
 impl GameConfig {
     pub fn automated(&self) -> bool {
         self.profile.is_some()
+            || (self.mars_global && self.globe_validation_dir.is_some())
             || (self.cube_surface && self.cube_validation_dir.is_some())
             || self.p2_seconds.is_some()
             || self.smoke_seconds.is_some()

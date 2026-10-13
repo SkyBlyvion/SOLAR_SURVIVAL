@@ -1,4 +1,5 @@
 //! Rendu local en mètres, couche séparée de la profondeur astronomique compressée.
+use crate::planets::{PatchKey, globe_terrain::SurfacePatch};
 use crate::{
     GameSet,
     physics::surface::obstacle_pose,
@@ -11,11 +12,12 @@ use crate::{
 use bevy::{
     asset::RenderAssetUsages,
     camera::{Hdr, visibility::RenderLayers},
-    math::DVec3,
+    math::{DQuat, DVec3},
     mesh::{Indices, PrimitiveTopology},
     prelude::*,
 };
 use std::collections::BTreeMap;
+use std::collections::HashMap;
 
 #[derive(Component)]
 pub struct SurfaceCamera;
@@ -25,6 +27,11 @@ struct LocalVisual {
 }
 #[derive(Component)]
 struct ObstacleVisual(usize);
+#[derive(Component)]
+struct GlobeVisual {
+    origin: DVec3,
+    orientation: DQuat,
+}
 #[derive(Component)]
 struct SurfaceSun;
 #[derive(Resource)]
@@ -36,6 +43,7 @@ struct TileCache {
     revision: u64,
     pair: Vec<(Entity, Handle<Mesh>)>,
     tiles: BTreeMap<(i32, i32), (Entity, Handle<Mesh>)>,
+    globe: HashMap<PatchKey, (Entity, Handle<Mesh>)>,
 }
 
 pub struct SurfaceRenderingPlugin;
@@ -190,6 +198,37 @@ fn cube_mesh(terrain: &MarsTerrain, patch: usize) -> Mesh {
     .with_inserted_attribute(Mesh::ATTRIBUTE_COLOR, colors)
     .with_inserted_indices(Indices::U32(cube.pair.indices[patch].clone()))
 }
+fn globe_mesh(patch: &SurfacePatch) -> (Mesh, GlobeVisual) {
+    let up = patch.key.center_direction().unwrap();
+    let radius = patch.positions_m[0].length();
+    let origin = up * radius;
+    let orientation = DQuat::from_rotation_arc(DVec3::Y, up);
+    let inverse = orientation.inverse();
+    let positions: Vec<_> = patch
+        .positions_m
+        .iter()
+        .map(|p| local_to_render(inverse * (*p - origin)).unwrap().to_array())
+        .collect();
+    let normals: Vec<_> = patch
+        .positions_m
+        .iter()
+        .map(|p| (inverse * p.normalize()).as_vec3().to_array())
+        .collect();
+    let mesh = Mesh::new(
+        PrimitiveTopology::TriangleList,
+        RenderAssetUsages::default(),
+    )
+    .with_inserted_attribute(Mesh::ATTRIBUTE_POSITION, positions)
+    .with_inserted_attribute(Mesh::ATTRIBUTE_NORMAL, normals)
+    .with_inserted_indices(Indices::U32(patch.indices.clone()));
+    (
+        mesh,
+        GlobeVisual {
+            origin,
+            orientation,
+        },
+    )
+}
 fn stream(
     mut commands: Commands,
     pilot: Res<Explorer>,
@@ -205,6 +244,7 @@ fn stream(
     cache.tiles.retain(|&(x, z), (entity, mesh)| {
         let keep = active
             && terrain.cube.is_none()
+            && terrain.globe.is_none()
             && !revision_changed
             && (x - center.0).abs() <= 1
             && (z - center.1).abs() <= 1;
@@ -214,6 +254,50 @@ fn stream(
         }
         keep
     });
+    let mut recycled = Vec::new();
+    cache.globe.retain(|key, slot| {
+        let keep = active
+            && terrain
+                .globe
+                .as_ref()
+                .is_some_and(|g| g.patches.contains_key(key));
+        if !keep {
+            recycled.push(slot.clone());
+        }
+        keep
+    });
+    if active && let Some(globe) = &terrain.globe {
+        for (key, patch) in &globe.patches {
+            cache.globe.entry(*key).or_insert_with(|| {
+                let (mesh, visual) = globe_mesh(patch);
+                if let Some((entity, handle)) = recycled.pop() {
+                    *meshes.get_mut(&handle).unwrap() = mesh;
+                    commands.entity(entity).insert(visual);
+                    (entity, handle)
+                } else {
+                    let handle = meshes.add(mesh);
+                    let entity = commands
+                        .spawn((
+                            LocalVisual {
+                                origin: DVec3::ZERO,
+                            },
+                            visual,
+                            Mesh3d(handle.clone()),
+                            MeshMaterial3d(assets.material.clone()),
+                            RenderLayers::layer(1),
+                            Transform::default(),
+                            Visibility::Hidden,
+                        ))
+                        .id();
+                    (entity, handle)
+                }
+            });
+        }
+    }
+    for (entity, handle) in recycled {
+        commands.entity(entity).despawn();
+        meshes.remove(handle.id());
+    }
     if active && terrain.cube.is_some() {
         for patch in 0..2 {
             if cache.pair.len() <= patch {
@@ -239,7 +323,7 @@ fn stream(
         }
     }
     cache.revision = terrain.revision;
-    if !active || terrain.cube.is_some() {
+    if !active || terrain.cube.is_some() || terrain.globe.is_some() {
         return;
     }
     for z in center.1 - 1..=center.1 + 1 {
@@ -288,6 +372,7 @@ fn sync(
         (
             &LocalVisual,
             Option<&ObstacleVisual>,
+            Option<&GlobeVisual>,
             &mut Transform,
             &mut Visibility,
         ),
@@ -306,7 +391,7 @@ fn sync(
     let (camera, transform) = &mut *camera;
     camera.is_active = active;
     if !active {
-        for (_, _, _, mut visibility) in &mut visuals {
+        for (_, _, _, _, mut visibility) in &mut visuals {
             *visibility = Visibility::Hidden;
         }
         return;
@@ -315,7 +400,23 @@ fn sync(
     transform.rotation = surface.local_rotation(&terrain).as_quat();
     // Soustraction dans le site en f64, sans aller-retour héliocentrique.
     let eye = surface.eye(&terrain);
-    for (visual, obstacle, mut transform, mut visibility) in &mut visuals {
+    for (visual, obstacle, globe, mut transform, mut visibility) in &mut visuals {
+        if let Some(globe) = globe {
+            let inverse = terrain.orientation.inverse();
+            let relative = inverse * (globe.origin - terrain.body_relative(eye));
+            transform.rotation = (inverse * globe.orientation).as_quat();
+            if let Some(relative) = local_to_render(relative) {
+                transform.translation = relative;
+                *visibility = Visibility::Visible;
+            } else {
+                *visibility = Visibility::Hidden;
+            }
+            continue;
+        }
+        if terrain.globe.is_some() && obstacle.is_none() {
+            *visibility = Visibility::Hidden;
+            continue;
+        }
         let origin = if let Some(obstacle) = obstacle {
             let (center, size, rotation) = obstacle_pose(&terrain, obstacle.0);
             transform.scale = size.as_vec3();
@@ -353,6 +454,72 @@ fn sync(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn global_streaming_keeps_shared_handles_and_releases_all_assets_on_exit() {
+        let mut app = App::new();
+        app.add_plugins(MinimalPlugins)
+            .init_resource::<Explorer>()
+            .init_resource::<SurfaceState>()
+            .init_resource::<SolarSystem>()
+            .init_resource::<MarsTerrain>()
+            .init_resource::<Assets<Mesh>>()
+            .init_resource::<TileCache>()
+            .insert_resource(TerrainAssets {
+                material: Handle::default(),
+            })
+            .add_systems(Update, stream);
+        {
+            let mut terrain = app.world_mut().resource_mut::<MarsTerrain>();
+            terrain.globe_enabled = true;
+            terrain.set_site(DVec3::Y);
+        }
+        app.world_mut().resource_mut::<Explorer>().mode = MovementMode::Surface;
+        app.update();
+        let first = app.world().resource::<TileCache>().globe.clone();
+        assert_eq!(first.len(), 13);
+        for _ in 0..4 {
+            app.world_mut().resource_mut::<SurfaceState>().feet = DVec3::new(64.1, 0.0, 0.0);
+            app.world_mut()
+                .resource_scope(|world, mut terrain: Mut<MarsTerrain>| {
+                    assert!(world.resource_mut::<SurfaceState>().migrate(&mut terrain));
+                });
+            app.update();
+        }
+        let cache = app.world().resource::<TileCache>();
+        assert_eq!(cache.globe.len(), 13);
+        assert_eq!(app.world().resource::<Assets<Mesh>>().len(), 13);
+        let mut shared = 0;
+        for (key, slot) in &cache.globe {
+            if let Some(old) = first.get(key) {
+                assert_eq!(slot, old);
+                shared += 1;
+            }
+            let visual = app.world().get::<GlobeVisual>(slot.0).unwrap();
+            let terrain = app.world().resource::<MarsTerrain>();
+            let patch = &terrain.globe.as_ref().unwrap().patches[key];
+            let mesh = app.world().resource::<Assets<Mesh>>().get(&slot.1).unwrap();
+            let bevy::mesh::VertexAttributeValues::Float32x3(positions) =
+                mesh.attribute(Mesh::ATTRIBUTE_POSITION).unwrap()
+            else {
+                panic!()
+            };
+            for (p, body) in positions.iter().zip(&patch.positions_m) {
+                assert!(
+                    (visual.origin + visual.orientation * Vec3::from_array(*p).as_dvec3())
+                        .distance(*body)
+                        < 0.00003
+                );
+            }
+        }
+        assert!(shared >= 8);
+        let stable = cache.globe.clone();
+        app.update();
+        assert_eq!(app.world().resource::<TileCache>().globe, stable);
+        app.world_mut().resource_mut::<Explorer>().mode = MovementMode::Space;
+        app.update();
+        assert!(app.world().resource::<TileCache>().globe.is_empty());
+        assert!(app.world().resource::<Assets<Mesh>>().is_empty());
+    }
     #[test]
     fn cube_mesh_matches_contacts_and_two_handles_survive_moves_rotation_and_reentry() {
         cube_handles(false);
@@ -502,6 +669,8 @@ mod tests {
             migration: None,
             site_obstacles: None,
             cube: None,
+            globe_enabled: false,
+            globe: None,
         };
         let left = tile_mesh(&terrain, (-1, 0));
         let right = tile_mesh(&terrain, (0, 0));
@@ -539,6 +708,8 @@ mod tests {
                 migration: None,
                 site_obstacles: None,
                 cube: None,
+                globe_enabled: false,
+                globe: None,
             })
             .init_resource::<Assets<Mesh>>()
             .init_resource::<Assets<StandardMaterial>>()

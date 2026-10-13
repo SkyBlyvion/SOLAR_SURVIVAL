@@ -1,4 +1,51 @@
-# Validation Solar Survival 0.2 — P3.4 hors centre validé sur Ubuntu
+# Validation Solar Survival 0.2 — Mars entière traversable
+
+13 octobre 2026. Départ Git `2031710` (P3.4 commité), avec uniquement la correction utilisateur dans NEXT_CHAT. L’utilisateur a ensuite demandé explicitement les six faces traversables et autorisé la révision de la roadmap : le cadrage d’une chaîne fixe est remplacé par un terrain mondial complet, chargé localement. Les changements de ce chat sont **non commités** ; aucune preuve antérieure supprimée/écrasée. Ubuntu 24.04.5 LTS/X11, DISPLAY=:1, Rust stable 1.99.0 édition 2024, Bevy exactement 0.19.1, i7-6700K/GTX 1060 3 Go/NVK/Mesa 25.2.8. Cargo.toml/Cargo.lock et dépendances inchangés. [Environnement et empreintes](global-validation/environment.json), [décisions/essais intermédiaires](global-validation/NOTES.md).
+
+Le lancement normal utilise maintenant le terrain mondial après M : six faces, arêtes et coins, chargement dynamique ≤13 patches, pas de borne de site. Réutilisation des géométries/meshes communs, repère transporté indépendamment des axes des faces, contacts sous toute l’empreinte et obstacles orientés exacts. Anciens modes historique/P3.2–P3.4 disponibles pour régression ; le profiler conserve le parcours historique sauf sélection explicite `SOLAR_PROFILE_TERRAIN=global`. [Architecture, budgets et commandes](GLOBAL_TERRAIN.md).
+
+## Vérifications finales
+
+| Vérification | Résultat |
+|---|---|
+| fmt, check --locked, check --all-targets --locked | Réussis, exemple P3.1 inchangé compris |
+| cargo test --locked | **90 tests** : 30 internes, 21 fondations, 15 surface historique, 9 géométrie, 4 contacts centraux, 3 migrations centrales, 4 hors centre, 4 mondiaux |
+| Clippy --all-targets --locked -- -D warnings | Réussi sans alerte |
+| build release --locked | Réussi, **133,907 s** murales |
+| Monde, 120 s | Code 0, **12 franchissements d’arête en l’air, 12 rebasages**, apex **2,131379 m**, 36 captures |
+| Profilage historique–mondial–historique | Trois codes 0, 42 s chacun, quatre phases/CSV ; pas de régression notable de rythme |
+| Profilage mondial avec remplacement mesuré | Code 0, 54 s ; cinq nouveaux patches, navigation maximum 5,616 ms |
+| Régressions P3.4 / centrale P3.3 / P3.2 / historique | Quatre codes 0 : huit/huit migrations, sept franchissements P3.2, dix captures historiques |
+| Windows 11 / RTX 4050 et Core i5 | Non exécutés |
+
+[Commandes/codes/temps de build](global-validation/build-results.json), [campagnes](global-validation/graphics-results.json), [détail des régressions](global-validation/legacy/graphics-results.json), [synthèse](global-validation/summary.json). **Neuf lancements du jeu successifs**, après compilation : monde, quatre profils puis quatre régressions. Aucun ERROR/WARN/panic dans leurs journaux finaux. Empreintes Rust/tests/exemples/Cargo et binaire vérifiées après les campagnes ; aucun Rust modifié après le build final. Le premier lanceur a échoué avant de lancer les régressions (argument manquant), puis a repris sans écraser les essais réussis : détails dans NOTES.
+
+## Numérique, ECS et couverture
+
+Les 82 tests historiques restent réussis. Huit tests supplémentaires vérifient couverture, traversées et ressources mondiales :
+
+- 150 directions sur les six faces (u/v = −1/−0,5/0/0,5/1), arêtes et huit coins, repère tourné horizontalement ; disque opérationnel, empreintes 0,6×0,6 m et leurs quatre coins, indices extérieurs. Les aires des polygones découpés certifient chaque empreinte avec tolérance arithmétique 10⁻⁹ m². Une empreinte partiellement couverte avec centre valide est refusée par un test dédié.
+- **288 traversées dirigées d’arête**, aller-retour sur les 24 arêtes dirigées, marche/course et 30/60/144 FPS, saut au raccord, réception et repos ; **288 rebasages**. Les huit coins sont également traversés dans trois directions chacun (24 trajets). Pieds au-dessus du support, déplacements par frame bornés, pas de borne terminale mondiale.
+- Conservation f64 lors du transport : pieds/yeux <4 nm, axes de visée <10⁻¹³ et vitesse <10⁻¹³ m/s sur orientations de face/pôle/coin ; état temporel/saut conservé. Petits réajustements de support après reboîtage sous 50 µm, puis repos stable sous 0,1 µm. Aucun volume orienté invariant revendiqué.
+- Réutilisation Arc des géométries communes, absence de génération au repos ; deux anneaux locaux, ≤13 patches et 26 624 triangles. Relevé de couverture : au plus 9 155 cases/91 320 références ; ce relevé est dans les diagnostics progressifs, dont la construction d’index est inchangée dans les sources finales.
+- Contrôles ECS mondiaux : marche réelle, rebasages, pause/P/T et M/G/O/U ; pose publiée même sans sous-pas. Rendu : handles/entités des patches communs conservés, slots entrants recyclés, 13 meshes maximum sur le parcours testé, libération à la sortie ; vertices locaux reconstruits dans le corps sous 30 µm.
+- SAT continu contre les boîtes orientées exactes : concordance avec les boîtes alignées, collision balayée inclinée et refus du faux contact qu’aurait donné une enveloppe AABB. Les supports d’obstacles utilisent leurs faces triangulaires exactes.
+
+Le disque n’est pas une nouvelle limite de voyage : son origine est remplacée après 64 m, avant la fin de couverture à 66 m. La direction radiale choisit librement la face/clé suivante ; voisins ±U/±V et arêtes orientées alimentent le cache. Les tests ne parcourent pas chaque clé d’une planète entière, ni une circumnavigation à vitesse réelle ; ils couvrent le mécanisme local répété, les 24 raccords dirigés et les huit coins.
+
+## Inspection et performances
+
+**112 captures inspectées** via [13 planches](global-validation/inspection/manifest.json) : 36 mondiales, 22 hors centre, 22 centrales, 22 P3.2, dix historiques. Cinq originaux supplémentaires : monde 06/26, hors centre 06, P3.2 05, historique 06. Monde : sol continu et HUD cohérent, sauts/réceptions et rebasages, faces éclairées ou nocturnes ; aucun trou local visible. Les captures espacées ne prouvent pas la continuité instantanée, vérifiée en f64/ECS. La sphère n’a pas de relief ; le bord lointain du voisinage peut rester visible à l’horizon, et les marqueurs superposés restent une limite antérieure. Régressions : raccords/colors, obstacles, bornes propres aux anciens modes, Mars/Terre et terrain artistique conservés.
+
+Douze rebasages release du parcours mondial, captures actives : **4,644–7,203 ms**, médiane **5,094 ms**, géométrie/index/transfert/libération ; hors meshes/GPU. Comparaison 42 s au repos : mondial **52,361 ms / 19,10 FPS**, historique avant/après **52,257/52,188 ms / 19,14/19,16 FPS**. Course : **51,778 ms** mondial contre **51,838–51,913 ms** historique. La phase mondiale de 8 s n’inclut pas de remplacement retenu ; l’essai de 54 s en inclut un : navigation max **5,616 ms**, rendu-sync max **0,165 ms**, frame moyenne/p95/max **52,005/54,932/56,741 ms**. Ces essais ne montrent pas de régression notable sur ce poste, sans garantie universelle ou mesure cible. [PERFORMANCE](PERFORMANCE.md) détaille portée et reproduction.
+
+## État et limites
+
+**L’objectif de Mars traversable sur six faces est réalisé et validé sur Ubuntu de développement** dans ce parcours sphérique à résolution fixe. Chargement CPU/GPU borné, SI/échelle 1:1, données physiques f64, conversions locales explicites f32 et Bevy inchangés. Pas de planète entière résidente, relief scientifique, LOD mixte, corps dynamiques, dépendance supplémentaire, survie active ou sauvegarde. Les anciens plafonds de deux cartes ne limitent plus le parcours normal. Les budgets transitoires sont structurels, sans mesure exhaustive RAM/VRAM/buffers internes de Bevy ; aucun 60 FPS cible revendiqué. Pas de nouvel essai des périphériques OS, menu interactif, suspension réelle ou cycle P2 complet ; preuves antérieures conservées. Windows et RTX 4050 restent à vérifier nativement.
+
+---
+
+# Historique : validation Solar Survival 0.2 — P3.4 hors centre validé sur Ubuntu
 
 13 octobre 2026. Départ Git **propre à `ea3a32b`**, P3.3 déjà commité contrairement à NEXT_CHAT ancien. Ses preuves sont préservées. Changements P3.4 laissés **non commités**. Ubuntu 24.04.5 LTS, X11 `DISPLAY=:1`, Rust stable 1.99.0 édition 2024, Bevy **exactement 0.19.1**, i7-6700K/GTX 1060 3 Go/NVK et Mesa 25.2.8. Cargo.toml/Cargo.lock et dépendances inchangés. [Empreintes sources/binaire et environnement](p34-validation/environment.json), [décisions et portée](p34-validation/NOTES.md).
 

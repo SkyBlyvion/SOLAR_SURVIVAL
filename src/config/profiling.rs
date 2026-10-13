@@ -46,6 +46,7 @@ pub struct ProfileConfig {
     pub variant: String,
     pub output: PathBuf,
     pub gpu_diagnostics: bool,
+    pub global_terrain: bool,
 }
 impl ProfileConfig {
     pub fn from_env() -> Option<Self> {
@@ -62,6 +63,7 @@ impl ProfileConfig {
             return None;
         }
         Some(Self {
+            global_terrain: std::env::var("SOLAR_PROFILE_TERRAIN").as_deref() == Ok("global"),
             gpu_diagnostics: std::env::var("SOLAR_PROFILE_GPU").as_deref() != Ok("0"),
             seconds: seconds.unwrap(),
             output: std::env::var_os("SOLAR_PROFILE_OUTPUT")
@@ -207,7 +209,7 @@ fn prepare(
     mut samples: ResMut<ProfileSamples>,
     mut pilot: ResMut<Explorer>,
     mut surface: ResMut<SurfaceState>,
-    terrain: Res<MarsTerrain>,
+    mut terrain: ResMut<MarsTerrain>,
     mut keys: ResMut<ButtonInput<KeyCode>>,
     mut request: ResMut<NavigationRequest>,
     mut clock: ResMut<SimulationClock>,
@@ -229,6 +231,9 @@ fn prepare(
                 // Départ canonique proche d'une limite : franchissement garanti
                 // sans dépendre du nombre de frames de la phase contact.
                 surface.feet = DVec3::new(116.0, 0.0, 0.0);
+                if terrain.globe.is_some() {
+                    surface.migrate(&mut terrain);
+                }
                 surface.feet.y = terrain.support_height(surface.feet, HALF_WIDTH_M) + 0.002;
                 surface.velocity = DVec3::ZERO;
                 surface.grounded = true;
@@ -373,6 +378,7 @@ mod tests {
             variant: "baseline".into(),
             output: "unused.csv".into(),
             gpu_diagnostics: true,
+            global_terrain: false,
         };
         for (seconds, phase, local) in [
             (0.0, "warmup", 0.0),
@@ -404,6 +410,8 @@ mod tests {
                 cube_surface: false,
                 cube_migration: false,
                 cube_offcenter: false,
+                mars_global: false,
+                globe_validation_dir: None,
                 cube_validation_dir: None,
             })
             .add_plugins(ProfilingPlugin);

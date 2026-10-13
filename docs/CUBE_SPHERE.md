@@ -1,5 +1,7 @@
 # Cube-sphere : contrat P3.1 et contacts bornés P3.2
 
+**Parcours actuel : [Mars entière avec chargement local dynamique](GLOBAL_TERRAIN.md).** Les contrats P3.1–P3.4 ci-dessous restent les fondations et modes historiques de régression ; leurs restrictions de paire ne limitent plus le terrain mondial.
+
 La géométrie opérationnelle est dans `src/planets/cube_sphere.rs`, réexportée par `planets` pour conserver les chemins `CubeFace` et `PatchKey`. Elle ne dépend d'aucun système ECS, mesh GPU ou contrôleur. Le terrain par défaut de `planets/terrain.rs` reste le site tournant de neuf tuiles borné à ±4 096 m. P3.2 ajoute un fournisseur optionnel de contacts pour une paire ; voir ci-dessous.
 
 ## Repère et projection
@@ -172,3 +174,10 @@ python3 scripts/validate_cube_suite.py --output docs/ma-nouvelle-campagne --mesa
 Le premier diagnostic exige un parent existant et un dossier final nouveau. Sans variable de captures, M ouvre le parcours jouable. Le scénario de 88 s adapte ses poses de préparation au plan (x=c−3 m, z=hz/2) ; huit migrations par touches ECS, dont un saut, repos, pause/×1000, deux limites terminales, M/G/O/U puis Terre. Les deux migrations explicites de préparation des limites ne comptent pas parmi les marches. Sous Windows natif, omettre Mesa et utiliser les variables PowerShell ; ce protocole n'a pas été exécuté ici.
 
 Résultats : [VALIDATION](VALIDATION.md). P3.4 n'ajoute aucune chaîne de cartes, migration ±V, passage jouable entre faces, relief, LOD mixte ou changement du contrôleur. Une extension cumulant plusieurs orientations doit réévaluer les mêmes budgets, notamment l'expansion des obstacles depuis le **site d'entrée**, et justifier son plafond de préparation avant allocation.
+
+
+## Terrain mondial, six faces
+
+Le fournisseur `globe_terrain.rs` utilise le même `PatchKey::vertex` et les voisins orientés sur toutes les faces. Identités cubiques et sommets de bord/coin restent exacts en f64. Treize patches maximum à distance de graphe ≤2, niveau 15/32 segments, pas de planète entière ni LOD mixte. Les triangles sont réindexés localement pour les contacts, avec soustraction d’origine f64, puis un contrôle de l’aire couverte sous toute l’empreinte : un centre valide ne suffit pas à autoriser un support partiel.
+
+Le repère transporté évite le changement d’axes U/V lors des arêtes ; génération seulement pour les nouvelles clés, géométries et meshes communs réutilisés. Les anciens couloirs/hystérésis/cartes fixes servent uniquement aux régressions P3.2–P3.4. Ressources, physique orientée et commandes dans [GLOBAL_TERRAIN](GLOBAL_TERRAIN.md) ; résultats dans [VALIDATION](VALIDATION.md).

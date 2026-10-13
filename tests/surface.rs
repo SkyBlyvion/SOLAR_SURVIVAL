@@ -25,6 +25,8 @@ fn terrain() -> MarsTerrain {
         migration: None,
         site_obstacles: None,
         cube: None,
+        globe_enabled: false,
+        globe: None,
     }
 }
 fn mu() -> f64 {

@@ -1,0 +1,2 @@
+   Compiling solar_survival v0.2.0 (/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL)
+    Finished `release` profile [optimized] target(s) in 2m 15s

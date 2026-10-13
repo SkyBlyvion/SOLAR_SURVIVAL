@@ -1,0 +1,101 @@
+[
+  {
+    "name": "global",
+    "command": [
+      "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/target/release/solar_survival"
+    ],
+    "variables": {
+      "SOLAR_MARS_GLOBAL": "1",
+      "SOLAR_GLOBAL_VALIDATE_DIR": "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global"
+    },
+    "exit_code": 0,
+    "seconds": 120.49348654000005,
+    "diagnostics": [],
+    "completion": [
+      "GLOBAL termin\u00e9 : 12 franchissements, 12 rebasages, apex 2.131379 m"
+    ]
+  },
+  {
+    "name": "historical-before",
+    "command": [
+      "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/target/release/solar_survival"
+    ],
+    "variables": {
+      "SOLAR_PROFILE_SECONDS": "42",
+      "SOLAR_PROFILE_GPU": "0",
+      "SOLAR_PROFILE_VARIANT": "baseline",
+      "SOLAR_PROFILE_TERRAIN": "historical",
+      "SOLAR_PROFILE_OUTPUT": "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/historical-before.csv"
+    },
+    "exit_code": 0,
+    "seconds": 42.39094456800012,
+    "diagnostics": [],
+    "completion": []
+  },
+  {
+    "name": "global-profile",
+    "command": [
+      "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/target/release/solar_survival"
+    ],
+    "variables": {
+      "SOLAR_PROFILE_SECONDS": "42",
+      "SOLAR_PROFILE_GPU": "0",
+      "SOLAR_PROFILE_VARIANT": "baseline",
+      "SOLAR_PROFILE_TERRAIN": "global",
+      "SOLAR_PROFILE_OUTPUT": "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global-profile.csv"
+    },
+    "exit_code": 0,
+    "seconds": 42.38639830000011,
+    "diagnostics": [],
+    "completion": []
+  },
+  {
+    "name": "historical-after",
+    "command": [
+      "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/target/release/solar_survival"
+    ],
+    "variables": {
+      "SOLAR_PROFILE_SECONDS": "42",
+      "SOLAR_PROFILE_GPU": "0",
+      "SOLAR_PROFILE_VARIANT": "baseline",
+      "SOLAR_PROFILE_TERRAIN": "historical",
+      "SOLAR_PROFILE_OUTPUT": "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/historical-after.csv"
+    },
+    "exit_code": 0,
+    "seconds": 42.43494221600031,
+    "diagnostics": [],
+    "completion": []
+  },
+  {
+    "name": "global-streaming",
+    "command": [
+      "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/target/release/solar_survival"
+    ],
+    "variables": {
+      "SOLAR_PROFILE_SECONDS": "54",
+      "SOLAR_PROFILE_GPU": "0",
+      "SOLAR_PROFILE_VARIANT": "baseline",
+      "SOLAR_PROFILE_TERRAIN": "global",
+      "SOLAR_PROFILE_OUTPUT": "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/global-streaming.csv"
+    },
+    "exit_code": 0,
+    "seconds": 54.37674297099966,
+    "diagnostics": [],
+    "completion": []
+  },
+  {
+    "name": "legacy-suite",
+    "command": [
+      "python3",
+      "scripts/validate_cube_suite.py",
+      "--output",
+      "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/global-validation/legacy",
+      "--mesa-immediate"
+    ],
+    "variables": {},
+    "exit_code": 0,
+    "seconds": 316.7697634999995,
+    "diagnostics": [],
+    "completion": []
+  }
+]

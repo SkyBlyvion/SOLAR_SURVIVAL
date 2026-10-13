@@ -1,0 +1,60 @@
+    Checking solar_survival v0.2.0 (/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL)
+error: manual implementation of `.is_multiple_of()`
+  --> src/config/globe_validation.rs:79:20
+   |
+79 |                 if stage % 2 == 0 { 1.0 } else { 0.23 },
+   |                    ^^^^^^^^^^^^^^ help: replace with: `stage.is_multiple_of(2)`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#manual_is_multiple_of
+   = note: `-D clippy::manual-is-multiple-of` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::manual_is_multiple_of)]`
+
+error: manual implementation of `.is_multiple_of()`
+  --> src/config/globe_validation.rs:80:20
+   |
+80 |                 if stage % 2 == 0 { 0.23 } else { 1.0 },
+   |                    ^^^^^^^^^^^^^^ help: replace with: `stage.is_multiple_of(2)`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#manual_is_multiple_of
+
+error: manual implementation of `.is_multiple_of()`
+  --> src/config/globe_validation.rs:85:20
+   |
+85 |                 if stage % 2 == 0 { 0.99999 } else { 0.23 },
+   |                    ^^^^^^^^^^^^^^ help: replace with: `stage.is_multiple_of(2)`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#manual_is_multiple_of
+
+error: manual implementation of `.is_multiple_of()`
+  --> src/config/globe_validation.rs:86:20
+   |
+86 |                 if stage % 2 == 0 { 0.23 } else { 0.99999 },
+   |                    ^^^^^^^^^^^^^^ help: replace with: `stage.is_multiple_of(2)`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#manual_is_multiple_of
+
+error: this `if` statement can be collapsed
+   --> src/physics/surface.rs:97:25
+    |
+ 97 | /                         if let Some(h) = crate::planets::terrain::triangle_support(
+ 98 | |                             ids.map(|i| points[i]),
+ 99 | |                             feet.x - HALF_WIDTH_M,
+100 | |                             feet.x + HALF_WIDTH_M,
+...   |
+107 | |                         }
+    | |_________________________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#collapsible_if
+    = note: `-D clippy::collapsible-if` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::collapsible_if)]`
+help: collapse nested if block
+    |
+103 ~                         )
+104 ~                             && feet.y >= h - SKIN_M {
+105 |                                 floor = floor.max(h);
+106 ~                             }
+    |
+
+error: could not compile `solar_survival` (lib) due to 5 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `solar_survival` (lib test) due to 5 previous errors

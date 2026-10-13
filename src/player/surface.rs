@@ -101,6 +101,9 @@ impl SurfaceState {
     /// Remplacement réversible entre deux paires, sans franchir une face.
     /// Toute la transaction précède la publication et n'avance aucune horloge.
     pub fn migrate(&mut self, terrain: &mut MarsTerrain) -> bool {
+        if terrain.globe.is_some() {
+            return self.rebase_globe(terrain);
+        }
         if !terrain.migration_enabled {
             return false;
         }
@@ -213,6 +216,45 @@ impl SurfaceState {
             terrain.cube.as_ref().unwrap().pair.keys,
             started.elapsed().as_secs_f64() * 1000.0,
             terrain.cube.as_ref().unwrap().index_counts()
+        );
+        true
+    }
+    /// Transport minimal de la base radiale, indépendant des axes d'une face.
+    /// Les arêtes du cube ne provoquent donc aucun quart de tour du joueur.
+    fn rebase_globe(&mut self, terrain: &mut MarsTerrain) -> bool {
+        if self.feet.x.hypot(self.feet.z) <= crate::planets::globe_terrain::REBASE_M {
+            return false;
+        }
+        let started = std::time::Instant::now();
+        let old_q = terrain.orientation;
+        let body = terrain.body_relative(self.feet);
+        let up = body.normalize();
+        let q = (DQuat::from_rotation_arc(old_q * DVec3::Y, up) * old_q).normalize();
+        let feet = q.inverse() * (body - q * (DVec3::Y * terrain.radius_m));
+        let next = terrain
+            .globe
+            .as_ref()
+            .unwrap()
+            .rebased(up, q, terrain.radius_m);
+        assert!(next.support_height(feet, HALF_WIDTH_M).is_some());
+        let delta = q.inverse() * old_q;
+        let old_up = terrain.site_relative(self.feet).normalize();
+        let new_up = (feet + DVec3::Y * terrain.radius_m).normalize();
+        self.heading = (DQuat::from_rotation_arc(DVec3::Y, new_up).inverse()
+            * delta
+            * DQuat::from_rotation_arc(DVec3::Y, old_up)
+            * self.heading)
+            .normalize();
+        self.feet = feet;
+        self.velocity = delta * self.velocity;
+        terrain.orientation = q;
+        terrain.globe = Some(next);
+        terrain.revision = terrain.revision.wrapping_add(1);
+        debug!(
+            "GLOBAL rebasage CPU {:.3} ms, patches {}, constructions {}",
+            started.elapsed().as_secs_f64() * 1000.0,
+            terrain.globe.as_ref().unwrap().patches.len(),
+            terrain.globe.as_ref().unwrap().constructions
         );
         true
     }
