@@ -1,0 +1,127 @@
+[
+  {
+    "board": "board-00.jpg",
+    "captures": [
+      {
+        "capture": "save/stage-00.png",
+        "label": "Arrivée",
+        "sha256": "39ab9dccf00131e2184050fad6b0aafae594ea2aad3b39666ce4d24fa54e7e5e"
+      },
+      {
+        "capture": "save/stage-01.png",
+        "label": "Stock 12",
+        "sha256": "3550902a380fb26b05795325cb25a9ff5d6d3047b9dc2aedf78304b44b0f8579"
+      },
+      {
+        "capture": "save/stage-02.png",
+        "label": "Placement vert",
+        "sha256": "874f0b781a549c9e349392e00b9c71274290069f0d1e9b2c544e56cab922a007"
+      },
+      {
+        "capture": "save/stage-03.png",
+        "label": "Abri construit",
+        "sha256": "fc6e27d776bb292fe689e7e63b85cbfe3df34e60be35e7e484d34b34bbb25f0b"
+      }
+    ]
+  },
+  {
+    "board": "board-01.jpg",
+    "captures": [
+      {
+        "capture": "save/stage-04.png",
+        "label": "Recharge après rebasage",
+        "sha256": "6397e3b2c46fcdf204c87009053704a9b891ad48e1c774c3d49a065133b757d0"
+      },
+      {
+        "capture": "save/stage-05.png",
+        "label": "Menu avant sauvegarde",
+        "sha256": "92abcf18fd5dc977700b02132be954ad8522d3e555ea4e68b656ea848386bfec"
+      },
+      {
+        "capture": "save/stage-06.png",
+        "label": "Sauvegarde réussie",
+        "sha256": "ba714b6a48bb33fdca4e6fe11141037295c48bba7e0b41c4ba0503a03284087d"
+      },
+      {
+        "capture": "save/stage-07.png",
+        "label": "Fichier sauvegardé",
+        "sha256": "ba714b6a48bb33fdca4e6fe11141037295c48bba7e0b41c4ba0503a03284087d"
+      }
+    ]
+  },
+  {
+    "board": "board-02.jpg",
+    "captures": [
+      {
+        "capture": "load/stage-00.png",
+        "label": "Menu au redémarrage",
+        "sha256": "30e86d3e60abf284bcf185e45e0bb101a7be0a2eb03765e984b50deda7b12dab"
+      },
+      {
+        "capture": "load/stage-01.png",
+        "label": "Session chargée",
+        "sha256": "7ebf1a6ccf97da1cf9adc0119e1df7687d358acefe8e0f1098b2a857a1d8dfca"
+      },
+      {
+        "capture": "load/stage-02.png",
+        "label": "Pose/stocks restaurés",
+        "sha256": "7ebf1a6ccf97da1cf9adc0119e1df7687d358acefe8e0f1098b2a857a1d8dfca"
+      },
+      {
+        "capture": "load/stage-03.png",
+        "label": "Recharge après reprise",
+        "sha256": "c48d71d911eb58dd830a5940d9019931793f8a4005ab619d18a6e0dcf0693a9e"
+      }
+    ]
+  },
+  {
+    "board": "board-03.jpg",
+    "captures": [
+      {
+        "capture": "load/stage-04.png",
+        "label": "Sauvegarde en espace",
+        "sha256": "7138de998d0c80e651f5bada57e2a99aad54aa21bf054dc23228e79ac77aab63"
+      },
+      {
+        "capture": "load/stage-05.png",
+        "label": "Chargement en espace",
+        "sha256": "67e6415bec2e6fe944ed0a397e9cf406d740156d707cb9c14c1869a045bfa71b"
+      },
+      {
+        "capture": "load/stage-06.png",
+        "label": "Retour sur Mars",
+        "sha256": "6c61450e347dc5dcc36c14d8b3eb48fbe127ed2f777d9589ce53a5a36b9dad1e"
+      },
+      {
+        "capture": "load/stage-07.png",
+        "label": "Échec sauvegardé",
+        "sha256": "e7146f60417007387ba4bd30de40d838168f9326953396840d4b477950a39fe9"
+      }
+    ]
+  },
+  {
+    "board": "board-04.jpg",
+    "captures": [
+      {
+        "capture": "load/stage-08.png",
+        "label": "Échec chargé",
+        "sha256": "523c0d9efe68580a9ec2f642c277c206df5d9748f7559844f74e1868901ef3b8"
+      },
+      {
+        "capture": "load/stage-09.png",
+        "label": "R après chargement",
+        "sha256": "b3bd99dfc2bae7576d4ee12075634b17dbc2455875d9fefb10dc05f834c66a8a"
+      },
+      {
+        "capture": "load/stage-10.png",
+        "label": "Fichier corrompu refusé",
+        "sha256": "482db4a9cf18eb3d6f6bfc21beefa82b414db0e76a4c2f04b800eaac1ae722e7"
+      },
+      {
+        "capture": "load/stage-11.png",
+        "label": "Partie conservée après refus",
+        "sha256": "482db4a9cf18eb3d6f6bfc21beefa82b414db0e76a4c2f04b800eaac1ae722e7"
+      }
+    ]
+  }
+]

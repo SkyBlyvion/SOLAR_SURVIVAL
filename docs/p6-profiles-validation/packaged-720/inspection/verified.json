@@ -1,0 +1,57 @@
+{
+  "inspected": true,
+  "method": "32 captures sur huit planches, plus originaux listés ; inspection visuelle par le modèle",
+  "resolution": [
+    1280,
+    720
+  ],
+  "captures": {
+    "load/stage-00.png": "9987c016fbaf36c8671f6f14e81abcca71e4c96cd2c4a0403477828d4de744de",
+    "load/stage-01.png": "2b768699b0f579058890ac102094e55eefd7955d9bcd080eda77f3f7160fb7ca",
+    "load/stage-02.png": "a1f429e411f8d389e17d69d7986f0bc93b2636e80ad8c9d7fde4b99eebc63d17",
+    "load/stage-03.png": "91f630cd25818bc76dffa85f9f48cc52390c5cfbb58959476e76dedd9b5e4116",
+    "load/stage-04.png": "4713ed5bbcbb63dd44adc7435d242471f28402afb313b87b2001ddd5004262df",
+    "load/stage-05.png": "ff4f11662200ece30ad1ca56022d7c40f06cb1b6ba77a139800f1e6e6d758c25",
+    "load/stage-06.png": "a861c155f726cd701a1e7ba28973e9e21853d2f70ccb10369fc7950fdf7abff7",
+    "load/stage-07.png": "5e562f671078bd62830b38bc65470c0df4936ad4c470ffbea215b578a93fb177",
+    "load/stage-08.png": "b1b5a49e151cbecaaef4f8f85731c2d618b83d52a2faa5daa4a89c20e7c69eca",
+    "load/stage-09.png": "e6515ab211a9c2c2ac40520bb93c2849a8680bc816461e455c28eaa016e02b95",
+    "load/stage-10.png": "2e600d3f5f85dddd4ee46ba85dcdba7728fc97ebd25e086e4650c0e49521ead0",
+    "load/stage-11.png": "7d28e17b2c274f92bb20e408dfbbea2c1d4755eb194a4a751481d6560b13776a",
+    "load/stage-12.png": "379c6a466d7e0a2dc8c3b59dee95ade5adc3c03dc61bd58fcb0dac56b17bd7e2",
+    "load/stage-13.png": "2a300ddffc8bdf68d51097ec768bbf05f4b0843a3c71dee39b5229458edaa568",
+    "load/stage-14.png": "0f66a80905ace9e12b7c25c6f21fb18492330b37a56a674688e46b65b5859045",
+    "load/stage-15.png": "94f4ecf956ca2a8fcddbb16d5077713bebe841d6e02ec3e028f79e18b6892c2e",
+    "save/stage-00.png": "d34e255baca768254de11a0e031911aababf20bb59165a69cbdded5e6a41f64f",
+    "save/stage-01.png": "025b88362ec36a172c9a67ac57c397ca4a3312586375f37623b6ccd283e3fe84",
+    "save/stage-02.png": "fb0618eaa104dc70515d8e27355fccde0835ba7425e2264891d5a27400d9cfcc",
+    "save/stage-03.png": "c973f9033d6314814d45bf7f9d9f8fe87e2004df3359fb7bf56cb8f800d1fa76",
+    "save/stage-04.png": "c38f86540f5bec2d33040a41dd402f8cf794fab41b848375b101bc5af6dfaa9f",
+    "save/stage-05.png": "660e8078cbce874373635390e638fa5383fbe69416ebbaf7a00ac547a54f9d7a",
+    "save/stage-06.png": "410663d266b04bda4051bfb233f110775ce105af884ee734e1655baf177dc127",
+    "save/stage-07.png": "887009cee4499fb37faa514e46143c3d3621e203e923682c92b78a6bc2985926",
+    "save/stage-08.png": "b21334b3178bb631d3b3806bfae2d891b7e39d717bbea31f399ce265bce4d7b4",
+    "save/stage-09.png": "ec2f4ad6e4cfd266dc28e5f1b89b4a7a05a24581e0a5906436a1a31734fdc6b0",
+    "save/stage-10.png": "d262a22bb3ecf076b8b310c49276c9fe93624325632072abc4fd9a2ae5fe7392",
+    "save/stage-11.png": "1b615075e26f3e08aecb9b3300faa41f253a07714991566bfd6aac7e42756615",
+    "save/stage-12.png": "a861c155f726cd701a1e7ba28973e9e21853d2f70ccb10369fc7950fdf7abff7",
+    "save/stage-13.png": "5e562f671078bd62830b38bc65470c0df4936ad4c470ffbea215b578a93fb177",
+    "save/stage-14.png": "b21334b3178bb631d3b3806bfae2d891b7e39d717bbea31f399ce265bce4d7b4",
+    "save/stage-15.png": "9af3cff529bea718db700f4be43d01a361328a856436fd968ae025699946a3d4"
+  },
+  "originals": [
+    "save/stage-00.png",
+    "save/stage-02.png",
+    "save/stage-04.png",
+    "load/stage-14.png",
+    "load/stage-15.png"
+  ],
+  "findings": [
+    "Accueil, champ de nom, sélection/chargement et statut visibles",
+    "Catalogue, coût/stock disponible ou insuffisant et boutons lisibles",
+    "HUD vital/stock/aide sans chevauchement constaté dans ces poses",
+    "Zone centrale dégagée en jeu, menu principal masquant le HUD",
+    "Erreur de profil affichée avec Alpha toujours actif"
+  ],
+  "limits": "Pas de test tous DPI/ultralarge, périphériques OS ou approbation esthétique utilisateur"
+}

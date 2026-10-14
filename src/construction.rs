@@ -29,17 +29,20 @@ pub struct Placement {
     pub orientation: DQuat,
     pub verdict: Result<(), &'static str>,
 }
-#[derive(Resource)]
+#[derive(Resource, Clone)]
 pub struct Construction {
     pub alloy: u32,
     pub deposits: Vec<Salvage>,
     pub active: bool,
+    pub catalog_open: bool,
+    pub(crate) place_requested: bool,
+    pub(crate) close_requested: bool,
     pub distance_m: f64,
     pub lateral_m: f64,
     pub angle_rad: f64,
     pub preview: Option<Placement>,
     pub message: &'static str,
-    initialized: bool,
+    pub(crate) initialized: bool,
 }
 impl Default for Construction {
     fn default() -> Self {
@@ -47,6 +50,9 @@ impl Default for Construction {
             alloy: 0,
             deposits: Vec::new(),
             active: false,
+            catalog_open: false,
+            place_requested: false,
+            close_requested: false,
             distance_m: 9.0,
             lateral_m: 0.0,
             angle_rad: 0.0,
@@ -120,6 +126,9 @@ impl Construction {
     }
     pub fn cancel(&mut self) {
         self.active = false;
+        self.catalog_open = false;
+        self.place_requested = false;
+        self.close_requested = false;
         self.preview = None;
         self.message = "Placement annulé · aucune dépense";
     }
@@ -258,24 +267,37 @@ fn update(
         || pilot.mode != MovementMode::Surface
         || menu.is_some_and(|m| m.is_open())
     {
-        if c.active {
+        if c.active || c.catalog_open {
             c.cancel();
         }
         return;
     }
     c.seed_site(&terrain);
     if keys.just_pressed(KeyCode::KeyB) {
-        if c.active {
+        if c.active || c.catalog_open {
             c.cancel();
         } else {
-            c.active = true;
-            c.distance_m = 9.0;
-            c.lateral_m = 0.0;
-            c.angle_rad = 0.0;
+            c.catalog_open = true;
         }
     }
-    if c.active && (keys.just_pressed(KeyCode::KeyX) || keys.just_pressed(KeyCode::Escape)) {
+    if (c.active || c.catalog_open)
+        && (c.close_requested
+            || keys.just_pressed(KeyCode::KeyX)
+            || keys.just_pressed(KeyCode::Escape))
+    {
         c.cancel();
+        return;
+    }
+    let started = c.catalog_open && (c.place_requested || keys.just_pressed(KeyCode::Enter));
+    if started {
+        c.active = true;
+        c.catalog_open = false;
+        c.place_requested = false;
+        c.distance_m = 9.0;
+        c.lateral_m = 0.0;
+        c.angle_rad = 0.0;
+    }
+    if c.catalog_open {
         return;
     }
     if !c.active && keys.just_pressed(KeyCode::KeyE) {
@@ -300,7 +322,8 @@ fn update(
         + (keys.pressed(KeyCode::KeyL) as i32 - keys.pressed(KeyCode::KeyJ) as i32) as f64 * dt)
         .rem_euclid(std::f64::consts::TAU);
     c.preview = Some(c.candidate(&terrain, &state, &buildings));
-    if keys.just_pressed(KeyCode::Enter)
+    if !started
+        && keys.just_pressed(KeyCode::Enter)
         && let Err(reason) = c.confirm(&mut terrain, &state, &mut buildings)
     {
         c.message = reason;

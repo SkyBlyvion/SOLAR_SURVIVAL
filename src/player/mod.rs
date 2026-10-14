@@ -10,7 +10,7 @@ pub enum MovementMode {
     Space,
     Surface,
 }
-#[derive(Resource)]
+#[derive(Resource, Clone)]
 pub struct Explorer {
     /// Offset f64 en axes inertiels depuis l'astre suivi, ou héliocentrique si None.
     /// En surface, pose publiée depuis SurfaceState dans le site tournant.

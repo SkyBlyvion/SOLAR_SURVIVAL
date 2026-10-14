@@ -1,0 +1,117 @@
+{
+  "captures": [
+    {
+      "capture": "save/stage-00.png",
+      "label": "Arrivée",
+      "sha256": "38e8ae4bc2ea382c618ece1d4593577bc594ef4e1a953794a68739f8a1716015"
+    },
+    {
+      "capture": "save/stage-01.png",
+      "label": "Stock 12",
+      "sha256": "9838f0f0983391f08c562744743529da77ae172be022fb913a405c2c812052f3"
+    },
+    {
+      "capture": "save/stage-02.png",
+      "label": "Placement vert",
+      "sha256": "eefb9202700e5e64425ff30e6bcfa71d03810baa12f52f7700159d9160dbb0b9"
+    },
+    {
+      "capture": "save/stage-03.png",
+      "label": "Abri construit",
+      "sha256": "4d3b1433e4e2dc6041d8c053ca114bd99f0c6f79b70fb8cdfa68a6d3ad13abbc"
+    },
+    {
+      "capture": "save/stage-04.png",
+      "label": "Recharge après rebasage",
+      "sha256": "8e86f3e37356b84bfc874c44193ffc468d0fd10d28ac493d2b7ea3b288c816f2"
+    },
+    {
+      "capture": "save/stage-05.png",
+      "label": "Menu avant sauvegarde",
+      "sha256": "92abcf18fd5dc977700b02132be954ad8522d3e555ea4e68b656ea848386bfec"
+    },
+    {
+      "capture": "save/stage-06.png",
+      "label": "Sauvegarde réussie",
+      "sha256": "ca35b00f74421ccd7dde9d925d9956f45ad40de4cacf33e11493e31d34bafc56"
+    },
+    {
+      "capture": "save/stage-07.png",
+      "label": "Fichier sauvegardé",
+      "sha256": "ca35b00f74421ccd7dde9d925d9956f45ad40de4cacf33e11493e31d34bafc56"
+    },
+    {
+      "capture": "load/stage-00.png",
+      "label": "Menu au redémarrage",
+      "sha256": "30e86d3e60abf284bcf185e45e0bb101a7be0a2eb03765e984b50deda7b12dab"
+    },
+    {
+      "capture": "load/stage-01.png",
+      "label": "Session chargée",
+      "sha256": "d7ac6e72491fae68a185f0e0fc45fdeefffbd03a49f826f6f475e417d0aa8269"
+    },
+    {
+      "capture": "load/stage-02.png",
+      "label": "Pose/stocks restaurés",
+      "sha256": "d7ac6e72491fae68a185f0e0fc45fdeefffbd03a49f826f6f475e417d0aa8269"
+    },
+    {
+      "capture": "load/stage-03.png",
+      "label": "Recharge après reprise",
+      "sha256": "f8f2b5a230fe8ceaeb43d42f7fada3e71eacb12694e363688221c52a46315e1b"
+    },
+    {
+      "capture": "load/stage-04.png",
+      "label": "Sauvegarde en espace",
+      "sha256": "ab0adebf398ff6ba78b1ce40a81d9b15e5d651d77eca90a795bdb7b0628edc90"
+    },
+    {
+      "capture": "load/stage-05.png",
+      "label": "Chargement en espace",
+      "sha256": "49b8708d31878a5ea78f9ee62ab7b3a08e3fed2ca2d7bdac9a61d4e87d260df7"
+    },
+    {
+      "capture": "load/stage-06.png",
+      "label": "Retour sur Mars",
+      "sha256": "28b00f97ad3949ee2e039d5e56d48177beac5b7d76e81a0afbe3ad3e34075cb7"
+    },
+    {
+      "capture": "load/stage-07.png",
+      "label": "Échec sauvegardé",
+      "sha256": "ab0d6c69fb5dc1f09f63a8266348960b7a5906d048ec35f4329f2e6f6c782571"
+    },
+    {
+      "capture": "load/stage-08.png",
+      "label": "Échec chargé",
+      "sha256": "620dac1396514e24c2ea813f948dcf9bf4df76bd992bcb062ea0820ca2891824"
+    },
+    {
+      "capture": "load/stage-09.png",
+      "label": "R après chargement",
+      "sha256": "b138420030b14a0797a5754dfb30de1db5404e1fa933639fdee17a3c2df206d4"
+    },
+    {
+      "capture": "load/stage-10.png",
+      "label": "Fichier corrompu refusé",
+      "sha256": "934121ecfec5f2912ff640318dc7f4a47a50d657d2a54c1f2e5bc0df98f0c8c5"
+    },
+    {
+      "capture": "load/stage-11.png",
+      "label": "Partie conservée après refus",
+      "sha256": "934121ecfec5f2912ff640318dc7f4a47a50d657d2a54c1f2e5bc0df98f0c8c5"
+    }
+  ],
+  "boards": [
+    "board-00.jpg",
+    "board-01.jpg",
+    "board-02.jpg",
+    "board-03.jpg",
+    "board-04.jpg"
+  ],
+  "originals_also_inspected": [
+    "load/stage-05.png",
+    "save/stage-06.png",
+    "load/stage-10.png"
+  ],
+  "limits": "Captures espacées, aucun benchmark/Windows/périphérique OS."
+}

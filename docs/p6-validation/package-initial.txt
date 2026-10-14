@@ -1,0 +1,6 @@
+{
+  "folder": "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/dist/solar-survival-ubuntu-p6",
+  "archive": "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/dist/solar-survival-ubuntu-p6.tar.gz",
+  "platform": "Linux",
+  "bytes": 23322401
+}

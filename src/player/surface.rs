@@ -13,7 +13,7 @@ use bevy::{
     prelude::*,
 };
 
-#[derive(Resource, Default)]
+#[derive(Resource, Default, Clone)]
 pub struct SurfaceState {
     /// État autoritaire dans les axes du site tournant, mètres et m/s réelles.
     pub feet: DVec3,

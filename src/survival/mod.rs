@@ -13,7 +13,7 @@ pub const CAPACITY_SECONDS: f64 = 180.0;
 pub const REFILL_PER_SECOND: f64 = 30.0;
 pub const LOW_SECONDS: f64 = 30.0;
 
-#[derive(Resource, Debug)]
+#[derive(Resource, Debug, Clone)]
 pub struct Oxygen {
     pub enabled: bool,
     pub remaining_seconds: f64,
@@ -69,7 +69,8 @@ impl Plugin for SurvivalPlugin {
         let config = app.world().resource::<GameConfig>();
         // Les campagnes historiques gardent leurs scènes exactes ; le diagnostic P4 est actif.
         let enabled = !config.automated() && !config.cube_surface
-            || (config.survival_validation_dir.is_some()
+            || (config.persistence_validation_dir.is_some()
+                || config.survival_validation_dir.is_some()
                 || config.construction_validation_dir.is_some()
                 || config.sky_validation_dir.is_some())
                 && config.profile.is_none();

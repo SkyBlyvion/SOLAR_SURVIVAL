@@ -1,4 +1,5 @@
 //! HUD vital indépendant de H : le manque d'oxygène conserve toujours une issue visible.
+use super::theme;
 use crate::{
     GameSet,
     buildings::Buildings,
@@ -32,16 +33,17 @@ fn setup(mut commands: Commands, assets: Res<AssetServer>) {
             Node {
                 position_type: PositionType::Absolute,
                 top: px(24),
-                left: px(270),
-                right: px(360),
+                left: px(24),
+                width: percent(40),
+                max_width: px(420),
                 padding: UiRect::all(px(14)),
                 flex_direction: FlexDirection::Column,
                 row_gap: px(8),
                 display: Display::None,
-                border_radius: BorderRadius::all(px(8)),
+                border_radius: BorderRadius::ZERO,
                 ..default()
             },
-            BackgroundColor(Color::srgba(0.025, 0.04, 0.065, 0.93)),
+            BackgroundColor(theme::PANEL),
         ))
         .with_children(|root| {
             root.spawn((
@@ -49,7 +51,7 @@ fn setup(mut commands: Commands, assets: Res<AssetServer>) {
                 Text::new("OXYGÈNE"),
                 TextFont {
                     font: font.into(),
-                    font_size: FontSize::Px(17.0),
+                    font_size: FontSize::Px(15.0),
                     ..default()
                 },
                 TextColor(Color::WHITE),
@@ -60,7 +62,7 @@ fn setup(mut commands: Commands, assets: Res<AssetServer>) {
                     width: percent(100),
                     ..default()
                 },
-                BackgroundColor(Color::srgb(0.12, 0.18, 0.22)),
+                BackgroundColor(Color::srgb(0.15, 0.17, 0.16)),
             ))
             .with_child((
                 OxygenBar,
@@ -97,11 +99,21 @@ fn refresh(
     if !active {
         return;
     }
+    root.1.left = if pilot.mode == MovementMode::Space {
+        auto()
+    } else {
+        px(24)
+    };
+    root.1.right = if pilot.mode == MovementMode::Space {
+        px(24)
+    } else {
+        auto()
+    };
     commands.entity(root.0).insert(UiTargetCamera(*camera));
     let color = if oxygen.failed || oxygen.remaining_seconds <= LOW_SECONDS {
-        Color::srgb(1.0, 0.42, 0.27)
+        theme::DANGER
     } else {
-        Color::srgb(0.55, 0.95, 0.89)
+        theme::SAFE
     };
     text.1.0 = color;
     bar.0.width = percent((oxygen.remaining_seconds / CAPACITY_SECONDS * 100.0) as f32);

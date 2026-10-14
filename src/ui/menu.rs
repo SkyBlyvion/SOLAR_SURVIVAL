@@ -1,25 +1,33 @@
-//! Menu et réglages de session. Le calendrier orbital continue indépendamment de l'UI.
+//! Menus de partie, profils nommés et options. Une seule caméra de jeu.
+use super::theme;
 use crate::{
     GameSet,
     camera::{GameCamera, controls},
     config::GameConfig,
+    persistence::{SaveAction, SaveControl},
     player::Explorer,
 };
 use bevy::{
     app::AppExit,
+    input::{
+        ButtonState,
+        keyboard::{Key, KeyboardInput},
+    },
     prelude::*,
     window::{MonitorSelection, PrimaryWindow, WindowMode},
 };
 
-#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+#[derive(Clone, Copy, PartialEq, Eq, Debug, Default)]
 enum Screen {
+    #[default]
     Main,
+    NewAdventure,
+    Profiles,
     Options,
     Credits,
     Playing,
 }
-
-#[derive(Resource)]
+#[derive(Resource, Default)]
 pub struct MenuState {
     screen: Screen,
     started: bool,
@@ -27,6 +35,13 @@ pub struct MenuState {
 impl MenuState {
     pub fn is_open(&self) -> bool {
         self.screen != Screen::Playing
+    }
+    pub(crate) fn loaded(&mut self) {
+        self.started = true;
+        self.screen = Screen::Main;
+    }
+    pub fn started(&self) -> bool {
+        self.started
     }
     pub fn open(&mut self) {
         self.screen = Screen::Main;
@@ -36,20 +51,19 @@ impl MenuState {
         self.screen = Screen::Playing;
     }
     fn back(&mut self) {
-        if self.screen == Screen::Main && self.started {
-            self.screen = Screen::Playing;
+        self.screen = if self.screen == Screen::Main && self.started {
+            Screen::Playing
         } else {
-            self.screen = Screen::Main;
-        }
+            Screen::Main
+        };
     }
 }
-
-#[derive(Resource)]
+#[derive(Resource, Clone)]
 pub struct PlayerSettings {
-    sensitivity_index: usize,
-    fov_index: usize,
-    msaa_index: usize,
-    fullscreen: bool,
+    pub(crate) sensitivity_index: usize,
+    pub(crate) fov_index: usize,
+    pub(crate) msaa_index: usize,
+    pub(crate) fullscreen: bool,
 }
 impl Default for PlayerSettings {
     fn default() -> Self {
@@ -72,14 +86,27 @@ impl PlayerSettings {
         [Msaa::Off, Msaa::Sample2, Msaa::Sample4][self.msaa_index]
     }
 }
-
+#[derive(Component)]
+struct Brand;
 #[derive(Component)]
 struct MenuRoot;
 #[derive(Component)]
 struct Panel(Screen);
-#[derive(Component, Clone, Copy)]
+#[derive(Component)]
+struct SaveStatus;
+#[derive(Component)]
+struct DraftText;
+#[derive(Component)]
+struct ProfileList;
+#[derive(Component, Clone, Copy, PartialEq)]
 enum MenuAction {
     Play,
+    New,
+    Create,
+    Choose(usize),
+    OpenSelected,
+    Previous,
+    Next,
     Options,
     Credits,
     Back,
@@ -88,11 +115,12 @@ enum MenuAction {
     Msaa,
     Fullscreen,
     Reset,
+    Save,
+    Load,
     Quit,
 }
 #[derive(Component)]
 struct Label(MenuAction);
-
 #[derive(SystemSet, Debug, Hash, PartialEq, Eq, Clone)]
 pub(crate) struct MenuInputSet;
 pub struct MenuPlugin;
@@ -108,10 +136,12 @@ impl Plugin for MenuPlugin {
             started: automated,
         })
         .init_resource::<PlayerSettings>()
+        .add_message::<KeyboardInput>()
         .add_systems(Startup, setup)
         .add_systems(
             Update,
-            input
+            (text_input, input)
+                .chain()
                 .before(controls)
                 .in_set(MenuInputSet)
                 .in_set(GameSet::Input),
@@ -120,7 +150,6 @@ impl Plugin for MenuPlugin {
         .add_systems(Update, display.in_set(GameSet::Interface));
     }
 }
-
 fn button(parent: &mut ChildSpawnerCommands, action: MenuAction, handle: &Handle<Font>) {
     parent
         .spawn((
@@ -128,74 +157,194 @@ fn button(parent: &mut ChildSpawnerCommands, action: MenuAction, handle: &Handle
             action,
             Node {
                 width: percent(100),
-                padding: UiRect::axes(px(20), px(12)),
-                border_radius: BorderRadius::all(px(6)),
+                padding: UiRect::axes(px(18), px(13)),
+                border: UiRect::left(px(2)),
                 ..default()
             },
-            BackgroundColor(Color::srgb(0.055, 0.12, 0.17)),
+            BorderColor::all(theme::MUTED),
+            BackgroundColor(theme::BUTTON),
         ))
         .with_child((
             Label(action),
             Text::new(""),
             super::font(17.0, handle),
-            TextColor(Color::srgb(0.83, 0.93, 0.98)),
+            TextColor(theme::TEXT),
         ));
 }
-
+fn heading(parent: &mut ChildSpawnerCommands, text: &str, font: &Handle<Font>) {
+    parent.spawn((
+        Text::new(text),
+        super::font(24.0, font),
+        TextColor(theme::TEXT),
+    ));
+}
+fn description(parent: &mut ChildSpawnerCommands, text: &str, font: &Handle<Font>) {
+    parent.spawn((
+        Text::new(text),
+        super::font(14.0, font),
+        TextColor(theme::MUTED),
+    ));
+}
 fn setup(mut commands: Commands, assets: Res<AssetServer>) {
-    let handle = assets.load("fonts/DejaVuSans.ttf");
-    commands.spawn((MenuRoot, GlobalZIndex(100),
-        Node { width: percent(100), height: percent(100), position_type: PositionType::Absolute,
-            align_items: AlignItems::Center, justify_content: JustifyContent::Center, ..default() },
-        BackgroundColor(Color::srgba(0.008, 0.015, 0.025, 0.93)),
-    )).with_children(|root| {
-        root.spawn((Node { width: percent(90), max_width: px(540), padding: UiRect::all(px(28)),
-            flex_direction: FlexDirection::Column, row_gap: px(12),
-            border_radius: BorderRadius::all(px(12)), ..default() },
-            BackgroundColor(Color::srgb(0.018, 0.035, 0.052)),
-        )).with_children(|card| {
-            card.spawn((Text::new("SOLAR SURVIVAL"), super::font(30.0, &handle),
-                TextColor(Color::srgb(0.78, 0.9, 1.0))));
-            card.spawn((Text::new("0.2  ·  EXPLORATION & PROTOTYPE MARS"), super::font(12.0, &handle),
-                TextColor(Color::srgb(0.46, 0.66, 0.77))));
-            for screen in [Screen::Main, Screen::Options, Screen::Credits] {
-                card.spawn((Panel(screen), Node { flex_direction: FlexDirection::Column,
-                    row_gap: px(9), ..default() })).with_children(|panel| {
-                    match screen {
-                        Screen::Main => {
-                            panel.spawn((Text::new("Un système solaire à explorer.\nUn premier pas sur Mars."),
-                                super::font(16.0, &handle), TextColor(Color::srgb(0.66, 0.77, 0.83))));
-                            for action in [MenuAction::Play, MenuAction::Options, MenuAction::Credits, MenuAction::Quit] {
-                                button(panel, action, &handle);
+    let font = assets.load("fonts/DejaVuSans.ttf");
+    commands.spawn((MenuRoot,GlobalZIndex(100),Node {width:percent(100),height:percent(100),position_type:PositionType::Absolute,
+        align_items:AlignItems::Center,padding:UiRect::axes(vw(6.0),px(28)),column_gap:vw(8.0),..default()},
+        BackgroundColor(Color::srgba(0.025,0.03,0.03,0.93)))).with_children(|root| {
+        root.spawn(Node {width:percent(48),max_width:px(560),flex_direction:FlexDirection::Column,row_gap:px(24),..default()})
+            .with_children(|left| {
+                left.spawn((Brand,Text::new("SOLAR\nSURVIVAL"),super::font(48.0,&font),TextColor(theme::TEXT)));
+                for screen in [Screen::Main,Screen::NewAdventure,Screen::Profiles,Screen::Options,Screen::Credits] {
+                    left.spawn((Panel(screen),Node {flex_direction:FlexDirection::Column,row_gap:px(8),..default()})).with_children(|panel| {
+                        match screen {
+                            Screen::Main=>{
+                                for action in [MenuAction::Play,MenuAction::New,MenuAction::Load,MenuAction::Save,MenuAction::Options,MenuAction::Credits,MenuAction::Quit] {button(panel,action,&font);}
                             }
-                        }
-                        Screen::Options => {
-                            panel.spawn((Text::new("OPTIONS"), super::font(20.0, &handle)));
-                            for action in [MenuAction::Sensitivity, MenuAction::Fov, MenuAction::Msaa,
-                                MenuAction::Fullscreen, MenuAction::Reset, MenuAction::Back] {
-                                button(panel, action, &handle);
+                            Screen::NewAdventure=>{
+                                heading(panel,"Nouvelle aventure",&font);
+                                description(panel,"Nom de l’aventure\nUn répertoire indépendant sera créé pour cette partie.",&font);
+                                panel.spawn((Node {padding:UiRect::all(px(16)),border:UiRect::bottom(px(2)),..default()},BackgroundColor(theme::BUTTON),BorderColor::all(theme::ACCENT)))
+                                    .with_child((DraftText,Text::new(""),super::font(23.0,&font),TextColor(theme::TEXT)));
+                                description(panel,"40 caractères maximum · lettres, chiffres, espaces, tirets\nVotre aventure active sera sauvegardée avant le changement.",&font);
+                                button(panel,MenuAction::Create,&font);button(panel,MenuAction::Back,&font);
                             }
-                            panel.spawn((Text::new("Cliquez pour changer de valeur.\nRéglages conservés pendant cette session.\nLe calendrier continue ; P le met en pause en jeu."),
-                                super::font(12.0, &handle), TextColor(Color::srgb(0.52, 0.68, 0.76))));
+                            Screen::Profiles=>{
+                                heading(panel,"Charger une aventure",&font);
+                                panel.spawn((ProfileList,Node {flex_direction:FlexDirection::Column,row_gap:px(6),..default()}));
+                                panel.spawn(Node {flex_direction:FlexDirection::Row,column_gap:px(8),..default()}).with_children(|row| {
+                                    button(row,MenuAction::Previous,&font);button(row,MenuAction::Next,&font);
+                                });
+                                button(panel,MenuAction::OpenSelected,&font);button(panel,MenuAction::Back,&font);
+                                description(panel,"↑ / ↓ : sélectionner · Entrée : charger\nLes aventures ont des inventaires et des constructions séparés.",&font);
+                            }
+                            Screen::Options=>{
+                                heading(panel,"Options",&font);
+                                for action in [MenuAction::Sensitivity,MenuAction::Fov,MenuAction::Msaa,MenuAction::Fullscreen,MenuAction::Reset,MenuAction::Back] {button(panel,action,&font);}
+                                description(panel,"Cliquez pour changer une valeur.\nCes réglages sont inclus dans les sauvegardes.",&font);
+                            }
+                            Screen::Credits=>{
+                                heading(panel,"Crédits",&font);
+                                description(panel,"Solar Survival · Rust / Bevy · licence MIT\n\nMoteur : Bevy (MIT / Apache-2.0)\nDonnées astronomiques : NASA / JPL\nPolice : DejaVu Sans\n\nDéveloppement assisté par OpenAI Codex.\nTextures, ciel et terrain de présentation artistiques.",&font);
+                                button(panel,MenuAction::Back,&font);
+                            }
+                            Screen::Playing=>unreachable!(),
                         }
-                        Screen::Credits => {
-                            panel.spawn((Text::new("CRÉDITS"), super::font(20.0, &handle)));
-                            panel.spawn((Text::new("Solar Survival · prototype 0.2\nProjet Rust / Bevy · licence MIT\n\nMoteur : Bevy et ses contributeurs (MIT / Apache-2.0).\nDonnées astronomiques : NASA et JPL.\nPolice : DejaVu Sans, licence embarquée dans assets/fonts.\n\nDéveloppement assisté par OpenAI Codex.\nRelief et textures artistiques ; aucune cartographie\nréelle ni orientation IAU exacte revendiquée."),
-                                super::font(15.0, &handle), TextColor(Color::srgb(0.72, 0.82, 0.88))));
-                            button(panel, MenuAction::Back, &handle);
-                        }
-                        Screen::Playing => unreachable!(),
-                    }
-                });
-            }
-        });
+                    });
+                }
+                left.spawn((SaveStatus,Text::new(""),super::font(13.0,&font),TextColor(theme::MUTED)));
+            });
+        root.spawn((Node {width:percent(36),flex_direction:FlexDirection::Column,row_gap:px(20),padding:UiRect::left(px(32)),border:UiRect::left(px(1)),..default()},BorderColor::all(Color::srgb(0.25,0.24,0.21))))
+            .with_children(|right| {
+                right.spawn((Text::new("EXPLORATION / SURVIE"),super::font(13.0,&font),TextColor(theme::ACCENT)));
+                right.spawn((Text::new("MARS\nSURVIE EN SURFACE"),super::font(36.0,&font),TextColor(theme::TEXT)));
+                description(right,"Explorez le système solaire.\nRécoltez des ressources sur Mars.\nConstruisez vos abris et surveillez votre oxygène.",&font);
+                right.spawn((Node {height:px(1),width:px(64),..default()},BackgroundColor(theme::ACCENT)));
+                description(right,"Chaque aventure conserve son monde,\nson inventaire et ses constructions.",&font);
+            });
     });
 }
-
+fn text_input(
+    mut events: MessageReader<KeyboardInput>,
+    state: Res<MenuState>,
+    mut control: Option<ResMut<SaveControl>>,
+) {
+    for event in events.read() {
+        if state.screen != Screen::NewAdventure || event.state != ButtonState::Pressed {
+            continue;
+        }
+        let Some(c) = control.as_mut() else {
+            continue;
+        };
+        if event.logical_key == Key::Backspace {
+            c.draft.pop();
+            continue;
+        }
+        if let Some(text) = &event.text {
+            for ch in text.chars().filter(|ch| !ch.is_control()) {
+                if c.draft.chars().count() < 40 {
+                    c.draft.push(ch);
+                }
+            }
+        }
+    }
+}
+fn action(
+    action: MenuAction,
+    state: &mut MenuState,
+    settings: &mut PlayerSettings,
+    c: Option<&mut SaveControl>,
+) {
+    match action {
+        MenuAction::Play => {
+            if state.started {
+                state.play();
+            } else {
+                state.screen = Screen::NewAdventure;
+            }
+        }
+        MenuAction::New => {
+            state.screen = Screen::NewAdventure;
+            if let Some(c) = c {
+                c.draft.clear();
+                c.status = "Nommez cette nouvelle aventure".into();
+            }
+        }
+        MenuAction::Create => {
+            if let Some(c) = c {
+                c.request = Some(SaveAction::Create(c.draft.clone()));
+            }
+        }
+        MenuAction::Save => {
+            if let Some(c) = c {
+                c.request = Some(SaveAction::Save);
+            }
+        }
+        MenuAction::Load => {
+            state.screen = Screen::Profiles;
+            if let Some(c) = c {
+                c.request = Some(SaveAction::Refresh);
+            }
+        }
+        MenuAction::Choose(i) => {
+            if let Some(c) = c {
+                c.selected = i;
+            }
+        }
+        MenuAction::Previous => {
+            if let Some(c) = c {
+                c.selected = c.selected.saturating_sub(1);
+            }
+        }
+        MenuAction::Next => {
+            if let Some(c) = c {
+                c.selected = (c.selected + 1).min(c.profiles.len().saturating_sub(1));
+            }
+        }
+        MenuAction::OpenSelected => {
+            if let Some(c) = c
+                && let Some(name) = c.profiles.get(c.selected)
+            {
+                c.request = Some(SaveAction::Open(name.clone()));
+            }
+        }
+        MenuAction::Options => state.screen = Screen::Options,
+        MenuAction::Credits => state.screen = Screen::Credits,
+        MenuAction::Back => state.back(),
+        MenuAction::Sensitivity => {
+            settings.sensitivity_index = (settings.sensitivity_index + 1) % 4
+        }
+        MenuAction::Fov => settings.fov_index = (settings.fov_index + 1) % 4,
+        MenuAction::Msaa => settings.msaa_index = (settings.msaa_index + 1) % 3,
+        MenuAction::Fullscreen => settings.fullscreen = !settings.fullscreen,
+        MenuAction::Reset => *settings = PlayerSettings::default(),
+        MenuAction::Quit => {}
+    }
+}
+#[expect(clippy::too_many_arguments, reason = "Menu, profils et options ECS.")]
 fn input(
     keys: Res<ButtonInput<KeyCode>>,
     pilot: Res<Explorer>,
     construction: Option<Res<crate::construction::Construction>>,
+    mut persistence: Option<ResMut<SaveControl>>,
     mut state: ResMut<MenuState>,
     mut settings: ResMut<PlayerSettings>,
     mut interactions: Query<
@@ -204,57 +353,70 @@ fn input(
     >,
     mut exit: MessageWriter<AppExit>,
 ) {
-    if keys.just_pressed(KeyCode::Escape) && !construction.is_some_and(|c| c.active) {
+    if keys.just_pressed(KeyCode::Escape)
+        && !construction.is_some_and(|c| c.active || c.catalog_open)
+    {
         if state.is_open() {
             state.back();
         } else if !pilot.captured {
             state.open();
         }
+        return;
     }
-    if state.screen == Screen::Main && keys.just_pressed(KeyCode::Enter) {
-        state.play();
+    let shortcut = if keys.just_pressed(KeyCode::Enter) {
+        match state.screen {
+            Screen::Main => Some(MenuAction::Play),
+            Screen::NewAdventure => Some(MenuAction::Create),
+            Screen::Profiles => Some(MenuAction::OpenSelected),
+            _ => None,
+        }
+    } else if state.screen == Screen::Main && keys.just_pressed(KeyCode::F5) {
+        Some(MenuAction::Save)
+    } else if state.screen == Screen::Main && keys.just_pressed(KeyCode::F9) {
+        Some(MenuAction::Load)
+    } else if state.screen == Screen::Profiles && keys.just_pressed(KeyCode::ArrowUp) {
+        Some(MenuAction::Previous)
+    } else if state.screen == Screen::Profiles && keys.just_pressed(KeyCode::ArrowDown) {
+        Some(MenuAction::Next)
+    } else {
+        None
+    };
+    if let Some(a) = shortcut {
+        action(a, &mut state, &mut settings, persistence.as_deref_mut());
     }
-    for (interaction, action, mut color) in &mut interactions {
+    for (interaction, a, mut color) in &mut interactions {
         color.0 = match interaction {
-            Interaction::Hovered => Color::srgb(0.1, 0.24, 0.31),
-            Interaction::Pressed => Color::srgb(0.16, 0.34, 0.42),
-            Interaction::None => Color::srgb(0.055, 0.12, 0.17),
+            Interaction::Hovered => theme::HOVER,
+            Interaction::Pressed => theme::ACTIVE,
+            Interaction::None => theme::BUTTON,
         };
         if !state.is_open() || *interaction != Interaction::Pressed {
             continue;
         }
-        // Les panneaux cachés ne doivent pas déclencher d'action.
-        let expected = match action {
+        let expected = match a {
             MenuAction::Sensitivity
             | MenuAction::Fov
             | MenuAction::Msaa
             | MenuAction::Fullscreen
             | MenuAction::Reset => Screen::Options,
+            MenuAction::Create => Screen::NewAdventure,
+            MenuAction::Choose(_)
+            | MenuAction::OpenSelected
+            | MenuAction::Previous
+            | MenuAction::Next => Screen::Profiles,
             MenuAction::Back => state.screen,
             _ => Screen::Main,
         };
-        if state.screen != expected {
+        if expected != state.screen {
             continue;
         }
-        match action {
-            MenuAction::Play => state.play(),
-            MenuAction::Options => state.screen = Screen::Options,
-            MenuAction::Credits => state.screen = Screen::Credits,
-            MenuAction::Back => state.back(),
-            MenuAction::Sensitivity => {
-                settings.sensitivity_index = (settings.sensitivity_index + 1) % 4
-            }
-            MenuAction::Fov => settings.fov_index = (settings.fov_index + 1) % 4,
-            MenuAction::Msaa => settings.msaa_index = (settings.msaa_index + 1) % 3,
-            MenuAction::Fullscreen => settings.fullscreen = !settings.fullscreen,
-            MenuAction::Reset => *settings = PlayerSettings::default(),
-            MenuAction::Quit => {
-                exit.write(AppExit::Success);
-            }
+        if *a == MenuAction::Quit {
+            exit.write(AppExit::Success);
+        } else {
+            action(*a, &mut state, &mut settings, persistence.as_deref_mut());
         }
     }
 }
-
 fn apply_settings(
     settings: Res<PlayerSettings>,
     config: Res<GameConfig>,
@@ -265,8 +427,8 @@ fn apply_settings(
         return;
     }
     for (mut projection, mut msaa) in &mut cameras {
-        if let Projection::Perspective(ref mut perspective) = *projection {
-            perspective.fov = settings.fov_degrees().to_radians();
+        if let Projection::Perspective(p) = &mut *projection {
+            p.fov = settings.fov_degrees().to_radians();
         }
         *msaa = settings.msaa();
     }
@@ -276,10 +438,10 @@ fn apply_settings(
         WindowMode::Windowed
     };
 }
-
 #[expect(
     clippy::too_many_arguments,
-    reason = "Paramètres ECS des panneaux et de leur caméra cible."
+    clippy::type_complexity,
+    reason = "Affichage des panneaux, profils et saisie, emprunts de textes disjoints."
 )]
 fn display(
     mut commands: Commands,
@@ -287,24 +449,51 @@ fn display(
     settings: Res<PlayerSettings>,
     root: Single<(Entity, &mut Node), With<MenuRoot>>,
     mut panels: Query<(&Panel, &mut Node), Without<MenuRoot>>,
-    mut labels: Query<(&Label, &mut Text)>,
+    mut labels: Query<(&Label, &mut Text), (Without<SaveStatus>, Without<DraftText>)>,
     camera: Single<Entity, With<GameCamera>>,
-    mut previous: Local<Option<Entity>>,
+    persistence: Option<Res<SaveControl>>,
+    mut statuses: Query<&mut Text, (With<SaveStatus>, Without<Label>, Without<DraftText>)>,
+    mut drafts: Query<&mut Text, (With<DraftText>, Without<Label>, Without<SaveStatus>)>,
+    lists: Query<Entity, With<ProfileList>>,
+    mut buttons: Query<
+        (&MenuAction, &mut Node, &mut BorderColor),
+        (Without<MenuRoot>, Without<Panel>),
+    >,
+    assets: Res<AssetServer>,
+    mut brand: Single<
+        (&mut Text, &mut TextFont),
+        (
+            With<Brand>,
+            Without<Label>,
+            Without<SaveStatus>,
+            Without<DraftText>,
+        ),
+    >,
+    window: Single<&Window, With<PrimaryWindow>>,
 ) {
-    let camera = *camera;
-    let (root, mut node) = root.into_inner();
-    if *previous != Some(camera) {
-        commands.entity(root).insert(UiTargetCamera(camera));
-        *previous = Some(camera);
-    }
+    let (entity, mut node) = root.into_inner();
+    commands.entity(entity).insert(UiTargetCamera(*camera));
     node.display = if state.is_open() {
         Display::Flex
     } else {
         Display::None
     };
-    if !state.is_changed() && !settings.is_changed() {
+    if !state.is_changed()
+        && !settings.is_changed()
+        && !persistence.as_ref().is_some_and(|p| p.is_changed())
+    {
         return;
     }
+    **brand.0 = if state.screen == Screen::Main {
+        "SOLAR\nSURVIVAL".into()
+    } else {
+        "SOLAR SURVIVAL".into()
+    };
+    brand.1.font_size = FontSize::Px(if state.screen == Screen::Main {
+        48.0
+    } else {
+        20.0
+    });
     for (panel, mut node) in &mut panels {
         node.display = if panel.0 == state.screen {
             Display::Flex
@@ -312,11 +501,65 @@ fn display(
             Display::None
         };
     }
+    let c = persistence.as_deref();
+    for mut text in &mut statuses {
+        **text = c.map_or_else(
+            || "".into(),
+            |c| {
+                format!(
+                    "{}{}",
+                    c.active_profile
+                        .as_ref()
+                        .map_or(String::new(), |n| format!("Aventure active : {n}\n")),
+                    c.status
+                )
+            },
+        );
+    }
+    for mut text in &mut drafts {
+        **text = c
+            .filter(|c| !c.draft.is_empty())
+            .map_or("Nom de votre aventure…".into(), |c| {
+                format!("{}│", c.draft)
+            });
+    }
+    for (a, mut node, mut border) in &mut buttons {
+        node.display = if (*a == MenuAction::Play && !state.started)
+            || (*a == MenuAction::Save && c.is_none_or(|c| c.active_profile.is_none()))
+        {
+            Display::None
+        } else {
+            Display::Flex
+        };
+        *border = if matches!(
+            a,
+            MenuAction::New | MenuAction::Create | MenuAction::OpenSelected
+        ) || matches!(a,MenuAction::Choose(i) if c.is_some_and(|c|c.selected==*i))
+        {
+            BorderColor::all(theme::ACCENT)
+        } else {
+            BorderColor::all(theme::BUTTON)
+        };
+    }
     for (label, mut text) in &mut labels {
         **text = match label.0 {
-            MenuAction::Play => if state.started { "Reprendre" } else { "Jouer" }.into(),
+            MenuAction::Play => "Reprendre".into(),
+            MenuAction::New => "Nouvelle aventure".into(),
+            MenuAction::Create => "Créer l’aventure".into(),
+            MenuAction::Choose(i) => c
+                .and_then(|c| {
+                    c.profiles
+                        .get(i)
+                        .map(|n| format!("{}  {n}", if c.selected == i { "›" } else { " " }))
+                })
+                .unwrap_or_default(),
+            MenuAction::OpenSelected => "Charger cette aventure".into(),
+            MenuAction::Previous => "↑ Précédente".into(),
+            MenuAction::Next => "↓ Suivante".into(),
             MenuAction::Options => "Options".into(),
             MenuAction::Credits => "Crédits".into(),
+            MenuAction::Save => "Sauvegarder l’aventure · F5".into(),
+            MenuAction::Load => "Charger une aventure · F9".into(),
             MenuAction::Quit => "Quitter".into(),
             MenuAction::Back => "Retour".into(),
             MenuAction::Reset => "Rétablir les valeurs par défaut".into(),
@@ -338,8 +581,24 @@ fn display(
             ),
         };
     }
+    if state.screen == Screen::Profiles {
+        let font = assets.load("fonts/DejaVuSans.ttf");
+        for entity in &lists {
+            commands.entity(entity).despawn_related::<Children>();
+            commands.entity(entity).with_children(|parent| {
+                if let Some(c)=c && !c.profiles.is_empty() {
+                    let per_page=if window.height()<800.0 {3}else{5};
+                    let start=c.selected/per_page*per_page;
+                    for (i,name) in c.profiles.iter().enumerate().skip(start).take(per_page) {
+                        parent.spawn((Button,MenuAction::Choose(i),Node {width:percent(100),padding:UiRect::all(px(13)),..default()},BackgroundColor(if i==c.selected{theme::ACTIVE}else{theme::BUTTON})))
+                            .with_child((Label(MenuAction::Choose(i)),Text::new(format!("{}  {name}",if i==c.selected{"›"}else{" "})),super::font(17.0,&font),TextColor(theme::TEXT)));
+                    }
+                    description(parent,&format!("{} aventure(s) · sélection {}/{}",c.profiles.len(),c.selected+1,c.profiles.len()),&font);
+                }else{description(parent,"Aucune aventure sauvegardée.\nCréez votre première aventure depuis le menu.",&font);}
+            });
+        }
+    }
 }
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -362,9 +621,10 @@ mod tests {
             .insert_resource(GameConfig::default())
             .insert_resource(MenuState {
                 screen: Screen::Main,
-                started: false,
+                started: true,
             })
             .init_resource::<PlayerSettings>()
+            .add_message::<KeyboardInput>()
             .init_resource::<ButtonInput<KeyCode>>()
             .init_resource::<ButtonInput<MouseButton>>()
             .init_resource::<AccumulatedMouseMotion>()
@@ -385,7 +645,8 @@ mod tests {
             .add_plugins((UniversePlugin, ExplorationPlugin))
             .add_systems(
                 Update,
-                input
+                (text_input, input)
+                    .chain()
                     .before(controls)
                     .in_set(MenuInputSet)
                     .in_set(GameSet::Input),
@@ -572,6 +833,93 @@ mod tests {
         );
     }
     #[test]
+    fn named_adventures_from_menu_text_input_and_profile_browser() {
+        let mut app = app();
+        app.add_plugins((
+            crate::survival::SurvivalPlugin,
+            crate::construction::ConstructionPlugin,
+            crate::persistence::PersistencePlugin,
+        ));
+        app.world_mut().resource_mut::<MenuState>().started = false;
+        let root = std::env::temp_dir().join(format!("solar-menu-profiles-{}", std::process::id()));
+        assert!(!root.exists());
+        app.world_mut().resource_mut::<SaveControl>().root = root.clone();
+        click(&mut app, MenuAction::New);
+        assert_eq!(
+            app.world().resource::<MenuState>().screen,
+            Screen::NewAdventure
+        );
+        press(&mut app, KeyCode::Enter);
+        assert!(!root.exists());
+        let window = app
+            .world_mut()
+            .query_filtered::<Entity, With<PrimaryWindow>>()
+            .single(app.world())
+            .unwrap();
+        app.world_mut().write_message(KeyboardInput {
+            key_code: KeyCode::KeyA,
+            logical_key: Key::Character("Alpha".into()),
+            state: ButtonState::Pressed,
+            text: Some("Alpha".into()),
+            repeat: false,
+            window,
+        });
+        app.update();
+        assert_eq!(app.world().resource::<SaveControl>().draft, "Alpha");
+        press(&mut app, KeyCode::Enter);
+        assert!(!app.world().resource::<MenuState>().is_open());
+        assert!(root.join("Alpha/session.solar").is_file());
+        press(&mut app, KeyCode::KeyM);
+        let orientation = app
+            .world()
+            .resource::<crate::planets::terrain::MarsTerrain>()
+            .orientation;
+        press(&mut app, KeyCode::Escape);
+        click(&mut app, MenuAction::Options);
+        click(&mut app, MenuAction::Fov);
+        click(&mut app, MenuAction::Back);
+        press(&mut app, KeyCode::F5);
+        click(&mut app, MenuAction::New);
+        app.world_mut().resource_mut::<SaveControl>().draft = "Bravo".into();
+        click(&mut app, MenuAction::Create);
+        assert_eq!(app.world().resource::<Explorer>().mode, MovementMode::Space);
+        assert!(
+            app.world()
+                .resource::<crate::buildings::Buildings>()
+                .shelters
+                .is_empty()
+        );
+        press(&mut app, KeyCode::Escape);
+        press(&mut app, KeyCode::F9);
+        assert_eq!(app.world().resource::<MenuState>().screen, Screen::Profiles);
+        assert_eq!(
+            app.world().resource::<SaveControl>().profiles,
+            vec!["Alpha", "Bravo"]
+        );
+        click(&mut app, MenuAction::Choose(0));
+        press(&mut app, KeyCode::Enter);
+        assert_eq!(
+            app.world()
+                .resource::<SaveControl>()
+                .active_profile
+                .as_deref(),
+            Some("Alpha")
+        );
+        assert_eq!(
+            app.world().resource::<Explorer>().mode,
+            MovementMode::Surface
+        );
+        assert_eq!(
+            app.world()
+                .resource::<crate::planets::terrain::MarsTerrain>()
+                .orientation,
+            orientation
+        );
+        assert_eq!(app.world().resource::<PlayerSettings>().fov_degrees(), 75.0);
+        std::fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
     fn placement_escape_cancels_before_menu_and_menu_preserves_inventory() {
         let mut app = app();
         app.add_plugins((
@@ -581,6 +929,7 @@ mod tests {
         click(&mut app, MenuAction::Play);
         press(&mut app, KeyCode::KeyM);
         press(&mut app, KeyCode::KeyB);
+        press(&mut app, KeyCode::Enter);
         assert!(
             app.world()
                 .resource::<crate::construction::Construction>()
@@ -597,6 +946,7 @@ mod tests {
             .resource_mut::<crate::construction::Construction>()
             .alloy = 12;
         press(&mut app, KeyCode::KeyB);
+        press(&mut app, KeyCode::Enter);
         click(&mut app, MenuAction::Play); // Bouton inactif en jeu.
         app.world_mut().resource_mut::<MenuState>().open();
         app.update();

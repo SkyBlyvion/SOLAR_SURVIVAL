@@ -52,10 +52,10 @@ impl OxygenShelter {
     }
 }
 
-#[derive(Resource, Default)]
+#[derive(Resource, Default, Clone)]
 pub struct Buildings {
     pub shelters: Vec<OxygenShelter>,
-    next_id: u64,
+    pub(crate) next_id: u64,
     /// Site de retour choisi une seule fois à la première arrivée en session.
     pub home_orientation: Option<DQuat>,
 }

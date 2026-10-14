@@ -6,7 +6,9 @@ Prototype d'exploration 3D de notre système solaire, fondation d'un jeu de surv
 
 **Caméra unique :** la même caméra rend les visites spatiales et la surface. Sur Mars : ciel poussiéreux, étoiles discrètes la nuit, Soleil et astres calculés depuis le catalogue, masqués par le terrain et les abris. Le ciel et le sol restent des présentations artistiques ; [architecture, ressources et limites](docs/SURFACE_SKY.md).
 
-**Construction P5 :** récupérer les caisses dorées avec **E**, placer le même abri avec **B**, déplacer avec les **flèches**, orienter avec **J/L**, confirmer avec **Entrée** ou annuler avec **X/Échap**. Coût : 12 alliage ; prévisualisation verte/rouge, inventaire et bâtiments conservés en session. [Règles et architecture](docs/CONSTRUCTION.md).
+**Construction P5 :** récupérer les caisses dorées avec **E**, ouvrir le catalogue avec **B**, choisir **Prévisualiser**, déplacer avec les **flèches**, orienter avec **J/L**, confirmer avec **Entrée** ou annuler avec **X/Échap**. Coût : 12 alliage ; prévisualisation verte/rouge, inventaire et bâtiments conservés en session. [Règles et architecture](docs/CONSTRUCTION.md).
+
+**Aventures P6 :** **Nouvelle aventure** demande un nom et crée une partie indépendante ; **Charger une aventure / F9** permet de choisir un profil. **Sauvegarder / F5** met à jour uniquement l’aventure active. Bâtiments, caisses épuisées, stock, oxygène, pose, calendrier et options sont conservés sur disque. Plusieurs aventures nommées, chacune dans son répertoire avec sa copie de secours ; aucune sauvegarde automatique à Quitter. [Format, restauration et distribution](docs/PERSISTENCE.md).
 
 **Survie P4 :** une combinaison de 180 s d’oxygène et un abri de recharge accessible à six mètres devant l’arrivée. Entrez par la porte pour recharger ; à zéro, **R** relance une expédition à l’abri. [Règles et architecture](docs/SURVIVAL.md).
 
@@ -27,7 +29,7 @@ La tâche VS Code **Solar Survival: lancer** fonctionne aussi avec `Terminal →
 cargo run --release
 ```
 
-Depuis le menu principal, cliquez sur **Jouer** (ou appuyez sur Entrée). Appuyez ensuite sur **M**, ou sur **Surface Mars / retour** dans le panneau gauche, pour rejoindre le prototype FPS martien. Clic droit capture la souris ; WASD / ZQSD permet de marcher, Shift de courir et Espace de sauter. **M** revient à la visite spatiale de Mars ; G, O et U permettent aussi de quitter la surface. Le jeu commence près de la Terre, à J2000 (1 janvier 2000, 12 h à l'échelle temporelle du modèle). Cliquez droit pour piloter ; Échap libère le curseur. Cliquez sur Mars dans le panneau gauche puis sur **Visiter**, ou utilisez **4 puis G**. La visite est une téléportation de gameplay à une distance de sécurité, avec suivi orbital de la cible.
+Depuis le menu principal, choisissez **Nouvelle aventure**, saisissez un nom puis confirmez **Créer l’aventure** (Entrée). Appuyez ensuite sur **M**, ou sur **Surface Mars / retour** dans le panneau gauche, pour rejoindre le prototype FPS martien. Clic droit capture la souris ; WASD / ZQSD permet de marcher, Shift de courir et Espace de sauter. **M** revient à la visite spatiale de Mars ; G, O et U permettent aussi de quitter la surface. Le jeu commence près de la Terre, à J2000 (1 janvier 2000, 12 h à l'échelle temporelle du modèle). Cliquez droit pour piloter ; Échap libère le curseur. Cliquez sur Mars dans le panneau gauche puis sur **Visiter**, ou utilisez **4 puis G**. La visite est une téléportation de gameplay à une distance de sécurité, avec suivi orbital de la cible.
 
 ## Installation sur un autre Ubuntu
 
@@ -64,11 +66,11 @@ cargo run
 
 ## Menu principal et options
 
-Le lancement normal affiche **Jouer**, **Options**, **Crédits** et **Quitter**. Après avoir joué, **Reprendre** retrouve la même session et la même pose ; il ne réinitialise pas le site. Le bouton **Menu principal** du HUD et Échap lorsque le curseur est libre ouvrent le menu. Un premier Échap en pilotage libère seulement la souris. Entrée lance/reprend depuis l'écran principal ; Échap revient depuis les sous-écrans.
+Le menu affiche **Nouvelle aventure**, **Charger une aventure**, **Options**, **Crédits** et **Quitter**. Donnez un nom à la nouvelle aventure : un répertoire de sauvegarde indépendant est créé. **Reprendre** et **Sauvegarder** apparaissent avec une aventure active. F5 sauvegarde ce profil ; F9 ouvre la liste des aventures. Les erreurs sont affichées et conservent la partie courante. Avec une aventure active, **Reprendre** retrouve la même session et la même pose ; il ne réinitialise pas le site. Le bouton **Menu principal** du panneau de navigation (N en surface) et Échap lorsque le curseur est libre ouvrent le menu. Un premier Échap en pilotage libère seulement la souris. Entrée lance/reprend depuis l'écran principal ; Échap revient depuis les sous-écrans.
 
-Les options s'appliquent immédiatement : sensibilité souris ×0,5/1/1,5/2, champ de vision **vertical** 55/65/75/90°, MSAA désactivé/×2/×4, affichage fenêtré/plein écran sans bordure. **Rétablir les valeurs par défaut** restaure ×1, 65°, MSAA ×4 et fenêtré. Les valeurs initiales de rendu restent celles du prototype. Les réglages sont conservés pour la session, sans sauvegarde sur disque. Il n'y a pas d'option sonore car l'audio n'est pas activé.
+Les options s'appliquent immédiatement : sensibilité souris ×0,5/1/1,5/2, champ de vision **vertical** 55/65/75/90°, MSAA désactivé/×2/×4, affichage fenêtré/plein écran sans bordure. **Rétablir les valeurs par défaut** restaure ×1, 65°, MSAA ×4 et fenêtré. Les valeurs initiales de rendu restent celles du prototype. Les réglages sont conservés pour la session et inclus dans une sauvegarde explicite. Il n'y a pas d'option sonore car l'audio n'est pas activé.
 
-Le menu libère la souris et bloque les commandes de navigation, P/T et H. Le calendrier orbital continue avec `Time<Real>` ; pour le figer, utiliser P avant d'ouvrir le menu. En surface, la gravité et les contacts continuent, sans entrée de déplacement. L’oxygène et sa recharge sont suspendus pendant le menu ; le calendrier et la gravité continuent. Cette convention conserve les deux horloges du prototype. Les scénarios de validation/profilage démarrent directement en jeu.
+Le menu libère la souris et bloque les commandes de navigation, P/T et H. Le calendrier orbital continue avec `Time<Real>` ; pour le figer, utiliser P avant d'ouvrir le menu. En surface, la gravité et les contacts continuent, sans entrée de déplacement. L’oxygène et sa recharge sont suspendus pendant le menu ; le calendrier et la gravité continuent. Cette convention conserve les deux horloges du prototype. Les scénarios historiques de validation/profilage démarrent directement en jeu ; le diagnostic P6 parcourt aussi les menus.
 
 ## Contrôles
 
@@ -92,11 +94,12 @@ Les touches de déplacement désignent des positions physiques : WASD sur QWERTY
 | U | Passer au repère héliocentrique ; depuis la surface, revenir d’abord à distance de sécurité |
 | T | Temps orbital ×1 / ×10 / ×100 / ×1000 |
 | P | Pause des orbites et des rotations |
-| H | Masquer / afficher la télémétrie ; le HUD vital reste visible |
+| H / N | Télémétrie / navigation ; les HUD vitaux restent visibles |
 | E | En surface : récupérer une caisse dorée à moins de 2,5 m |
-| B | Ouvrir / annuler le placement d’un abri (12 alliage) |
+| B | Ouvrir le catalogue de construction ; choisir Prévisualiser pour placer un abri |
 | Flèches, J/L | Pendant le placement : déplacer / tourner la prévisualisation |
 | Entrée, X / Échap | Pendant le placement : confirmer / annuler sans dépense |
+| F5 / F9 | Dans le menu principal : sauvegarder le profil actif / choisir une aventure |
 | R | Après épuisement de l’oxygène : repartir au premier abri, réserve pleine |
 
 Les vitesses disponibles sont 5 m/s, 250 m/s, 20 km/s, 20 000 km/s, 2 millions km/s et 100 millions km/s. Ce sont des choix de gameplay. En espace, l'interface affiche la **vitesse de déplacement configurée** ; à l'arrêt elle demeure affichée. En surface, elle indique aussi la vitesse résolue après contacts, l'état au sol/en l'air et la hauteur des pieds au-dessus du support. La marche utilise 4,5 m/s, la course 8 m/s et le saut une impulsion de vitesse de 4 m/s : conventions de gameplay. P et T commandent l’orbite et la rotation de Mars ; la marche, la course, le saut et la gravité restent en secondes réelles. La vitesse résolue affichée en surface est relative au site, sans vitesse d’entraînement orbitale ou rotatoire.
@@ -142,6 +145,8 @@ src/construction.rs   récupération, inventaire, admission et transaction de pl
 src/rendering/construction.rs fantôme et caisses locaux, cube partagé
 src/ui/construction.rs stock, commandes et motifs de refus
 src/config/construction_validation.rs parcours graphique ciblé P5
+src/persistence.rs   instantané versionné, écriture avec secours et chargement transactionnel
+src/config/persistence_validation.rs diagnostic à deux processus après redémarrage réel
 src/survival/         réserve d’oxygène et issue de l’expédition
 src/rendering/buildings.rs proxies locaux des abris et assets partagés
 src/ui/survival.rs    HUD vital et instruction de reprise
@@ -254,7 +259,7 @@ Le pas physique est de 1/120 s, alimenté par `Time<Real>` dans `GameSet::Naviga
 
 Même en l’air, le joueur reste exprimé dans le site tournant. Aucune force de Coriolis, centrifuge, d’Euler ni due à l’accélération translatoire orbitale n’est appliquée ; aucune vitesse inertielle n’est transférée lors des téléportations M/G/O/U. Ce contrôleur est un compromis de gameplay, particulièrement visible sous T, pas une intégration inertielle d’un astronaute. Voir les formules et conventions dans [ASTRONOMY](docs/ASTRONOMY.md).
 
-**Suite :** P6 sauvegarde/chargement, puis distribution et validations natives. La caméra unique et son ciel de surface sont livrés/testés sur Ubuntu. P5 fournit maintenant récupération, inventaire et construction du même abri. Le LOD adaptatif 32/16/8 est livré ; relief et géométries plus complexes restent des extensions distinctes. [Roadmap](docs/ROADMAP.md).
+**P6 :** sauvegarde/chargement de session et préparation d’archives natives ; validation Windows 11 à réaliser. La caméra unique et son ciel de surface sont livrés/testés sur Ubuntu. P5 fournit maintenant récupération, inventaire et construction du même abri. Le LOD adaptatif 32/16/8 est livré ; relief et géométries plus complexes restent des extensions distinctes. [Roadmap](docs/ROADMAP.md).
 
 
 Les sections P3.2–P3.4 ci-dessous décrivent les anciens modes de régression ; le lancement normal utilise le terrain mondial et la survie.
@@ -280,7 +285,7 @@ Pour le diagnostic de 88 s, ajouter `SOLAR_CUBE_VALIDATE_DIR=<nouveau dossier>` 
 
 ## Première boucle de survie P4
 
-Après Jouer et M : marcher vers l’abri turquoise à six mètres, entrer par la porte ouverte et laisser la combinaison se recharger. Réserve maximale 180 s ; dehors, 1 s consommée par seconde réelle ; dedans, +30 s/s. Le HUD indique la réserve, l’alerte à 30 s et la distance/direction de l’abri. À zéro, l’expédition se termine et R repart à l’abri avec la réserve pleine. R n’agit pas avant un échec.
+Après création ou reprise d’une aventure et M : marcher vers l’abri turquoise à six mètres, entrer par la porte ouverte et laisser la combinaison se recharger. Réserve maximale 180 s ; dehors, 1 s consommée par seconde réelle ; dedans, +30 s/s. Le HUD indique la réserve, l’alerte à 30 s et la distance/direction de l’abri. À zéro, l’expédition se termine et R repart à l’abri avec la réserve pleine. R n’agit pas avant un échec.
 
 P/T ne modifient pas la consommation. Le menu suspend la survie ; les visites spatiales conservent la réserve sans consommation/recharge. Le retour M retrouve le site fixé à la première arrivée de la session, éventuellement de nuit. Les bâtiments gardent leur identité et leur pose corporelle f64, indépendantes des patches/rebasages et des proxies. Aucun inventaire, recette, placement joueur ou sauvegarde disque en P4.
 
@@ -289,8 +294,17 @@ Diagnostic ciblé, après compilation release : `python3 scripts/validate_surviv
 
 ## Ressources et construction P5
 
-Huit caisses dorées autour du départ fournissent six alliage chacune. Approcher puis E, récolter deux caisses, B pour placer un abri à 12 unités. La visée et la marche déplacent le fantôme ; flèches pour ajuster, J/L pour tourner. Vert signifie autorisé ; rouge affiche le refus. Entrée confirme après revalidation du sol et des volumes occupés, X/B/Échap annulent sans dépense. Entrer dans l’abri construit recharge avec le même service P4.
+Huit caisses dorées autour du départ fournissent six alliage chacune. Approcher puis E, récolter deux caisses, B pour ouvrir le catalogue puis Prévisualiser pour placer un abri à 12 unités. La visée et la marche déplacent le fantôme ; flèches pour ajuster, J/L pour tourner. Vert signifie autorisé ; rouge affiche le refus. Entrée confirme après revalidation du sol et des volumes occupés, X/B/Échap annulent sans dépense. Entrer dans l’abri construit recharge avec le même service P4.
 
-Stock, caisses épuisées et bâtiments sont conservés pendant la session, y compris M/G/O/U, menu et R ; aucune sauvegarde disque. Ressource finie (48 unités), quatre abris constructibles en plus du premier. L’oxygène continue pendant le placement. Le terrain mondial utilise désormais le LOD adaptatif 32/16/8.
+Stock, caisses épuisées et bâtiments sont conservés pendant la session, y compris M/G/O/U, menu et R ; le menu P6 permet aussi de les sauvegarder sur disque. Ressource finie (48 unités), quatre abris constructibles en plus du premier. L’oxygène continue pendant le placement. Le terrain mondial utilise désormais le LOD adaptatif 32/16/8.
 
 Diagnostic après compilation : `python3 scripts/validate_construction.py --output docs/mon-nouveau-p5 --mesa-immediate`, dossier neuf, seize captures à inspecter. [Conventions, architecture et limites](docs/CONSTRUCTION.md), [validation](docs/VALIDATION.md).
+
+
+## Aventures, construction et archive P6
+
+**Nouvelle aventure** demande un nom : `saves/Alpha/session.solar` et `saves/Bravo/session.solar` sont deux parties indépendantes. Chaque profil conserve joueur, abris, caisses épuisées, stock, oxygène/échec, calendrier et options. F9 ouvre une liste pour sélectionner l’aventure ; F5 sauvegarde le profil actif. Changer de profil ou créer une autre aventure sauvegarde d’abord la partie quittée. Un nom vide, réservé ou déjà utilisé est refusé. `SOLAR_SAVE_ROOT` choisit le répertoire parent.
+
+Le catalogue de construction en jeu s’ouvre avec B, présente l’abri, son coût et le stock. Choisir Prévisualiser, puis placer/orienter et confirmer. Le catalogue libère la souris ; l’oxygène continue. HUD et menus utilisent les mêmes couleurs et échelles de texte. La navigation N et la télémétrie H sont séparées des instruments vitaux.
+
+Après un build natif, `python3 scripts/package_release.py --output dist/solar-survival-ubuntu` produit le binaire, les assets, licences, manifeste et lanceur dans une archive Linux. Extraire, puis lancer `lancer.sh` ; sous Windows natif, le même script produit zip/exe/lancer.cmd. [Contrat des profils, chemins et limites](docs/PERSISTENCE.md), [validations réellement exécutées](docs/VALIDATION.md). Windows 11 reste à vérifier sur un hôte Windows.

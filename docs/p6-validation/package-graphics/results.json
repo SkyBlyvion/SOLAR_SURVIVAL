@@ -1,0 +1,24 @@
+[
+  {
+    "stage": "save",
+    "exit_code": 0,
+    "seconds": 18.354501284000435,
+    "focused_window": null,
+    "captures": 8,
+    "diagnostics": [],
+    "completion": [
+      "P6 save termin\u00e9 : r\u00e9colte/construction, rebasage, recharge, menu/F5, fichier ferm\u00e9"
+    ]
+  },
+  {
+    "stage": "load",
+    "exit_code": 0,
+    "seconds": 30.37714534299812,
+    "focused_window": null,
+    "captures": 12,
+    "diagnostics": [],
+    "completion": [
+      "P6 load termin\u00e9 : red\u00e9marrage r\u00e9el, poses/stocks/options, recharge, espace, \u00e9chec/R, refus corrompu sans mutation"
+    ]
+  }
+]

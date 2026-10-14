@@ -1,0 +1,298 @@
+//! P6 : deux processus successifs, vraies commandes de session et poses préparées explicitement.
+use crate::{
+    GameSet,
+    buildings::Buildings,
+    camera::GameCamera,
+    config::GameConfig,
+    construction::Construction,
+    persistence::{SaveControl, Session},
+    planets::terrain::MarsTerrain,
+    player::{Explorer, MovementMode, surface::SurfaceState},
+    survival::Oxygen,
+    ui::menu::{MenuInputSet, MenuState, PlayerSettings},
+    universe::SimulationClock,
+};
+use bevy::{
+    app::AppExit,
+    math::DVec3,
+    prelude::*,
+    render::view::screenshot::{Screenshot, save_to_disk},
+};
+#[derive(Resource)]
+struct Progress {
+    phase: Option<usize>,
+    shot: usize,
+    load: bool,
+    camera: Option<Entity>,
+}
+pub(super) fn install(app: &mut App) {
+    let config = app.world().resource::<GameConfig>();
+    let Some(dir) = &config.persistence_validation_dir else {
+        return;
+    };
+    assert!(
+        config.mars_global
+            && config.profile.is_none()
+            && !config.cube_surface
+            && config.construction_validation_dir.is_none()
+            && config.sky_validation_dir.is_none()
+            && config.survival_validation_dir.is_none()
+            && config.globe_validation_dir.is_none()
+            && config.smoke_seconds.is_none()
+            && config.p2_seconds.is_none(),
+        "P6 exige un diagnostic mondial isolé"
+    );
+    std::fs::create_dir(dir).expect("Dossier P6 neuf dans un parent existant");
+    let stage = std::env::var("SOLAR_P6_STAGE").unwrap();
+    assert!(["save", "load"].contains(&stage.as_str()));
+    let load = stage == "load";
+    app.insert_resource(Progress {
+        phase: None,
+        shot: 0,
+        load,
+        camera: None,
+    })
+    .add_systems(Update, input.before(MenuInputSet).in_set(GameSet::Input))
+    .add_systems(Update, capture.after(GameSet::Interface));
+}
+fn press(world: &mut World, key: KeyCode) {
+    world.resource_mut::<ButtonInput<KeyCode>>().press(key);
+}
+fn prepare(world: &mut World, x: f64, z: f64) {
+    let y = world
+        .resource::<MarsTerrain>()
+        .support_height(DVec3::new(x, 0.0, z), 0.3)
+        + 0.002;
+    let mut state = world.resource_mut::<SurfaceState>();
+    state.feet = DVec3::new(x, y, z);
+    state.velocity = DVec3::ZERO;
+    state.yaw = 0.0;
+    state.pitch = 0.0;
+}
+fn input(world: &mut World) {
+    let seconds = world.resource::<Time<Real>>().elapsed_secs_f64();
+    world.resource_mut::<ButtonInput<KeyCode>>().reset_all();
+    let phase = (seconds / 2.0) as usize;
+    if world.resource::<Progress>().phase == Some(phase) {
+        return;
+    }
+    let load = world.resource::<Progress>().load;
+    let camera = world
+        .query_filtered::<Entity, With<GameCamera>>()
+        .single(world)
+        .unwrap();
+    if let Some(old) = world.resource::<Progress>().camera {
+        assert_eq!(old, camera);
+    } else {
+        world.resource_mut::<Progress>().camera = Some(camera);
+    }
+    info!(
+        "P6 {} phase {phase} t={seconds:.3} stock={} abris={} O2={:.6} mode={:?} camera={camera:?}",
+        if load { "load" } else { "save" },
+        world.resource::<Construction>().alloy,
+        world.resource::<Buildings>().shelters.len(),
+        world.resource::<Oxygen>().remaining_seconds,
+        world.resource::<Explorer>().mode
+    );
+    if !load {
+        match phase {
+            0 => {
+                world.resource_mut::<SimulationClock>().paused = true;
+                press(world, KeyCode::KeyM);
+            }
+            1 => {
+                prepare(world, 8.0, 0.0);
+                press(world, KeyCode::KeyE);
+            }
+            2 => {
+                assert_eq!(world.resource::<Construction>().alloy, 6);
+                prepare(world, 8.0, -6.0);
+                press(world, KeyCode::KeyE);
+            }
+            3 => {
+                assert_eq!(world.resource::<Construction>().alloy, 12);
+                prepare(world, 16.0, 0.0);
+                press(world, KeyCode::KeyB);
+            }
+            4 => {
+                assert!(
+                    world
+                        .resource::<Construction>()
+                        .preview
+                        .as_ref()
+                        .unwrap()
+                        .verdict
+                        .is_ok()
+                );
+                press(world, KeyCode::Enter);
+            }
+            5 => {
+                assert_eq!(world.resource::<Buildings>().shelters.len(), 2);
+                prepare(world, 64.1, 0.0);
+                world.resource_scope(|world, mut terrain: Mut<MarsTerrain>| {
+                    assert!(world.resource_mut::<SurfaceState>().migrate(&mut terrain));
+                });
+                let b = world.resource::<Buildings>().shelters[1].clone();
+                let p = world.resource::<MarsTerrain>().chart(b.position_m);
+                prepare(world, p.x, p.z);
+                world.resource_mut::<Oxygen>().remaining_seconds = 60.0;
+                world.resource_mut::<PlayerSettings>().fov_index = 2;
+                world.resource_mut::<PlayerSettings>().msaa_index = 0;
+                world.resource_mut::<PlayerSettings>().sensitivity_index = 2;
+                world.resource_mut::<SimulationClock>().jd = 2451545.1;
+            }
+            6 => {
+                assert_eq!(
+                    world.resource::<Oxygen>().shelter,
+                    Some(world.resource::<Buildings>().shelters[1].id)
+                );
+                world.resource_mut::<Construction>().active = true;
+                world.resource_mut::<MenuState>().open();
+            }
+            7 => {
+                press(world, KeyCode::F5);
+            }
+            8 => {
+                assert!(
+                    world
+                        .resource::<SaveControl>()
+                        .status
+                        .starts_with("Session sauvegardée")
+                );
+                assert!(!world.resource::<Construction>().active);
+                let text = std::fs::read_to_string(&world.resource::<SaveControl>().path).unwrap();
+                Session::decode(&text).unwrap();
+            }
+            _ => {
+                info!(
+                    "P6 save terminé : récolte/construction, rebasage, recharge, menu/F5, fichier fermé"
+                );
+                world.write_message(AppExit::Success);
+            }
+        }
+    } else {
+        match phase {
+            0 => world.resource_mut::<MenuState>().open(),
+            1 => press(world, KeyCode::F9),
+            2 => {
+                assert!(
+                    world
+                        .resource::<SaveControl>()
+                        .status
+                        .starts_with("Session chargée")
+                );
+                assert_eq!(world.resource::<Buildings>().shelters.len(), 2);
+                assert_eq!(world.resource::<Construction>().alloy, 0);
+                assert_eq!(
+                    world
+                        .resource::<Construction>()
+                        .deposits
+                        .iter()
+                        .filter(|d| d.remaining == 0)
+                        .count(),
+                    2
+                );
+                assert_eq!(
+                    world.resource::<Oxygen>().shelter,
+                    Some(world.resource::<Buildings>().shelters[1].id)
+                );
+                assert_eq!(world.resource::<PlayerSettings>().fov_degrees(), 75.0);
+                assert_eq!(world.resource::<PlayerSettings>().sensitivity(), 1.5);
+                let text = std::fs::read_to_string(&world.resource::<SaveControl>().path).unwrap();
+                Session::decode(&text).unwrap().verify_restored(world);
+            }
+            3 => press(world, KeyCode::Enter),
+            4 => {
+                assert!(world.resource::<Oxygen>().remaining_seconds > 170.0);
+                press(world, KeyCode::KeyM);
+            }
+            5 => {
+                assert_eq!(world.resource::<Explorer>().mode, MovementMode::Space);
+                world.resource_mut::<MenuState>().open();
+                press(world, KeyCode::F5);
+            }
+            6 => press(world, KeyCode::F9),
+            7 => {
+                assert_eq!(world.resource::<Explorer>().mode, MovementMode::Space);
+                press(world, KeyCode::Enter);
+                press(world, KeyCode::KeyM);
+            }
+            8 => {
+                prepare(world, 16.0, 0.0);
+                world.resource_mut::<Oxygen>().remaining_seconds = 0.001;
+            }
+            9 => {
+                assert!(world.resource::<Oxygen>().failed);
+                world.resource_mut::<MenuState>().open();
+                press(world, KeyCode::F5);
+            }
+            10 => press(world, KeyCode::F9),
+            11 => {
+                assert!(world.resource::<Oxygen>().failed);
+                assert_eq!(world.resource::<Construction>().alloy, 0);
+            }
+            12 => {
+                press(world, KeyCode::Enter);
+                press(world, KeyCode::KeyR);
+            }
+            13 => {
+                assert!(!world.resource::<Oxygen>().failed);
+                world.resource_mut::<MenuState>().open();
+                let dir = world
+                    .resource::<GameConfig>()
+                    .persistence_validation_dir
+                    .as_ref()
+                    .unwrap()
+                    .clone();
+                let path = dir.join("corrupt.solar");
+                std::fs::write(&path, "fichier corrompu").unwrap();
+                world.resource_mut::<SaveControl>().path = path;
+                press(world, KeyCode::F9);
+            }
+            14 => {
+                assert!(
+                    world
+                        .resource::<SaveControl>()
+                        .status
+                        .contains("impossible")
+                );
+                assert!(!world.resource::<Oxygen>().failed);
+                assert_eq!(world.resource::<Buildings>().shelters.len(), 2);
+            }
+            _ => {
+                info!(
+                    "P6 load terminé : redémarrage réel, poses/stocks/options, recharge, espace, échec/R, refus corrompu sans mutation"
+                );
+                world.write_message(AppExit::Success);
+            }
+        }
+    }
+    world.resource_mut::<Progress>().phase = Some(phase);
+}
+fn capture(world: &mut World) {
+    let seconds = world.resource::<Time<Real>>().elapsed_secs_f64();
+    let progress = world.resource::<Progress>();
+    let shots: &[f64] = if progress.load {
+        &[
+            1.0, 3.5, 5.0, 7.5, 11.5, 13.5, 15.5, 19.5, 23.0, 25.5, 27.5, 29.5,
+        ]
+    } else {
+        &[1.0, 5.0, 7.0, 9.0, 11.5, 13.0, 15.5, 17.5]
+    };
+    let index = progress.shot;
+    if index >= shots.len() || seconds < shots[index] {
+        return;
+    }
+    let dir = world
+        .resource::<GameConfig>()
+        .persistence_validation_dir
+        .as_ref()
+        .unwrap()
+        .clone();
+    let pose = Session::capture(world).unwrap().encode();
+    std::fs::write(dir.join(format!("stage-{index:02}.solar")), pose).unwrap();
+    world
+        .spawn(Screenshot::primary_window())
+        .observe(save_to_disk(dir.join(format!("stage-{index:02}.png"))));
+    world.resource_mut::<Progress>().shot += 1;
+}

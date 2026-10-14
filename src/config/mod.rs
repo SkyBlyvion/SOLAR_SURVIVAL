@@ -3,6 +3,7 @@ use bevy::prelude::*;
 mod construction_validation;
 mod cube_validation;
 mod globe_validation;
+mod persistence_validation;
 pub mod profiling;
 mod sky_validation;
 mod survival_validation;
@@ -10,6 +11,7 @@ pub mod validation;
 #[derive(Resource, Debug)]
 pub struct GameConfig {
     pub start_jd: f64,
+    pub persistence_validation_dir: Option<std::path::PathBuf>,
     pub sky_validation_dir: Option<std::path::PathBuf>,
     pub construction_validation_dir: Option<std::path::PathBuf>,
     pub survival_validation_dir: Option<std::path::PathBuf>,
@@ -44,6 +46,8 @@ impl Default for GameConfig {
             |p| p.global_terrain,
         );
         Self {
+            persistence_validation_dir: std::env::var_os("SOLAR_P6_VALIDATE_DIR")
+                .map(std::path::PathBuf::from),
             sky_validation_dir: std::env::var_os("SOLAR_SKY_VALIDATE_DIR")
                 .map(std::path::PathBuf::from),
             construction_validation_dir: std::env::var_os("SOLAR_CONSTRUCTION_VALIDATE_DIR")
@@ -92,7 +96,8 @@ impl Default for GameConfig {
 }
 impl GameConfig {
     pub fn automated(&self) -> bool {
-        self.sky_validation_dir.is_some()
+        self.persistence_validation_dir.is_some()
+            || self.sky_validation_dir.is_some()
             || self.profile.is_some()
             || self.construction_validation_dir.is_some()
             || self.survival_validation_dir.is_some()
@@ -103,4 +108,13 @@ impl GameConfig {
             || self.surface_smoke_seconds.is_some()
             || self.rotation_smoke_seconds.is_some()
     }
+}
+
+/// Les archives distribuées embarquent assets à côté du binaire ; le checkout reste le repli de développement.
+pub fn asset_directory() -> std::path::PathBuf {
+    std::env::current_exe()
+        .ok()
+        .and_then(|exe| exe.parent().map(|p| p.join("assets")))
+        .filter(|p| p.is_dir())
+        .unwrap_or_else(|| std::path::PathBuf::from(concat!(env!("CARGO_MANIFEST_DIR"), "/assets")))
 }

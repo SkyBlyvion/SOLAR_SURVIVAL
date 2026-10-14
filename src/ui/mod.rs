@@ -17,9 +17,14 @@ use bevy::{
 mod construction;
 pub mod menu;
 mod survival;
+mod theme;
 
 #[derive(Component)]
 struct HudRoot;
+#[derive(Component)]
+struct NavigationPanel;
+#[derive(Component)]
+struct DebugPanel;
 #[derive(Component)]
 struct StatusText;
 #[derive(Component)]
@@ -40,33 +45,37 @@ enum Action {
 #[derive(Resource)]
 struct HudState {
     visible: bool,
+    navigation: bool,
 }
 #[derive(SystemSet, Debug, Hash, PartialEq, Eq, Clone)]
 pub struct HudInputSet;
 pub struct HudPlugin;
 impl Plugin for HudPlugin {
     fn build(&self, app: &mut App) {
-        app.insert_resource(HudState { visible: true })
-            .add_plugins((
-                menu::MenuPlugin,
-                survival::SurvivalHudPlugin,
-                construction::ConstructionHudPlugin,
-            ))
-            .add_plugins(FrameTimeDiagnosticsPlugin::default())
-            .add_systems(Startup, setup)
-            .add_systems(
-                Update,
-                buttons
-                    .after(controls)
-                    .in_set(HudInputSet)
-                    .in_set(GameSet::Input),
-            )
-            .add_systems(
-                Update,
-                (target_camera, toggle, help, refresh, markers)
-                    .chain()
-                    .in_set(GameSet::Interface),
-            );
+        app.insert_resource(HudState {
+            visible: false,
+            navigation: false,
+        })
+        .add_plugins((
+            menu::MenuPlugin,
+            survival::SurvivalHudPlugin,
+            construction::ConstructionHudPlugin,
+        ))
+        .add_plugins(FrameTimeDiagnosticsPlugin::default())
+        .add_systems(Startup, setup)
+        .add_systems(
+            Update,
+            buttons
+                .after(controls)
+                .in_set(HudInputSet)
+                .in_set(GameSet::Input),
+        )
+        .add_systems(
+            Update,
+            (target_camera, toggle, help, refresh, markers)
+                .chain()
+                .in_set(GameSet::Interface),
+        );
     }
 }
 fn font(size: f32, handle: &Handle<Font>) -> TextFont {
@@ -80,48 +89,47 @@ fn setup(mut commands: Commands, solar: Res<SolarSystem>, assets: Res<AssetServe
     let ui_font = assets.load("fonts/DejaVuSans.ttf");
     commands.spawn((HudRoot, Node { width: percent(100), height: percent(100), position_type: PositionType::Absolute, ..default() }))
     .with_children(|root| {
-        root.spawn((Node { position_type: PositionType::Absolute, top: px(24), left: px(24), width: px(212), padding: UiRect::all(px(16)), flex_direction: FlexDirection::Column, row_gap: px(6), border_radius: BorderRadius::all(px(10)), ..default() }, BackgroundColor(Color::srgba(0.025,0.04,0.065,0.93))))
+        root.spawn((NavigationPanel,Node { position_type: PositionType::Absolute, top: px(24), left: px(24), width: px(212), padding: UiRect::all(px(16)), flex_direction: FlexDirection::Column, row_gap: px(4), border_radius: BorderRadius::ZERO, ..default() }, BackgroundColor(theme::PANEL)))
         .with_children(|panel| {
-            panel.spawn((Text::new("SOLAR SURVIVAL"), font(19.0, &ui_font), TextColor(Color::srgb(0.8,0.92,1.0))));
-            panel.spawn((Text::new("0.2  /  MARS\nSystème solaire · échelle 1:1"), font(12.0, &ui_font), TextColor(Color::srgb(0.43,0.65,0.75))));
+            panel.spawn((Text::new("SOLAR SURVIVAL"), font(19.0, &ui_font), TextColor(theme::TEXT)));
+            panel.spawn((Text::new("0.2  /  MARS\nSystème solaire · échelle 1:1"), font(12.0, &ui_font), TextColor(theme::MUTED)));
             for body in &solar.bodies {
-                panel.spawn((Button, Action::Select(body.id), Node { padding: UiRect::axes(px(12),px(6)), border_radius: BorderRadius::all(px(4)), ..default() }, BackgroundColor(Color::srgb(0.05,0.08,0.12))))
-                    .with_child((Text::new(format!("{}   {}",body.id.0,body.name)),font(16.0, &ui_font),TextColor(Color::srgb(0.75,0.83,0.89))));
+                panel.spawn((Button, Action::Select(body.id), Node { padding: UiRect::axes(px(12),px(4)), border_radius: BorderRadius::ZERO, ..default() }, BackgroundColor(theme::BUTTON)))
+                    .with_child((Text::new(format!("{}   {}",body.id.0,body.name)),font(13.0, &ui_font),TextColor(theme::TEXT)));
             }
             for (action,label) in [(Action::Center,"F   Centrer"),(Action::Visit,"G   Visiter"),(Action::Overview,"O   Vue du système"),(Action::Surface,"M   Surface Mars / retour"),(Action::Menu,"Échap   Menu principal")] {
-                panel.spawn((Button,action,Node { padding: UiRect::axes(px(12),px(8)), border_radius: BorderRadius::all(px(4)), ..default() }, BackgroundColor(Color::srgb(0.07,0.18,0.24))))
-                    .with_child((Text::new(label),font(14.0, &ui_font),TextColor(Color::srgb(0.6,0.9,1.0))));
+                panel.spawn((Button,action,Node { padding: UiRect::axes(px(12),px(6)), border_radius: BorderRadius::ZERO, ..default() }, BackgroundColor(theme::BUTTON)))
+                    .with_child((Text::new(label),font(13.0, &ui_font),TextColor(theme::TEXT)));
             }
         });
-        root.spawn((Node { position_type: PositionType::Absolute, top: px(24), right: px(24), width: px(314), padding: UiRect::all(px(18)), flex_direction: FlexDirection::Column, row_gap: px(14), border_radius: BorderRadius::all(px(10)), ..default() }, BackgroundColor(Color::srgba(0.025,0.04,0.065,0.90))))
+        root.spawn((DebugPanel,Node { position_type: PositionType::Absolute, top: px(24), right: px(24), width: px(314), padding: UiRect::all(px(18)), flex_direction: FlexDirection::Column, row_gap: px(14), border_radius: BorderRadius::ZERO, ..default() }, BackgroundColor(theme::PANEL)))
             .with_children(|panel| {
-                panel.spawn((StatusText,Text::new("Initialisation..."),font(14.0, &ui_font),TextColor(Color::srgb(0.69,0.83,0.90))));
-                panel.spawn((TargetText,Text::new("Terre"),font(15.0, &ui_font),TextColor(Color::srgb(0.93,0.86,0.61))));
+                panel.spawn((StatusText,Text::new("Initialisation..."),font(13.0, &ui_font),TextColor(theme::MUTED)));
+                panel.spawn((TargetText,Text::new("Terre"),font(15.0, &ui_font),TextColor(theme::ACCENT)));
             });
-        root.spawn((Node { position_type: PositionType::Absolute, bottom: px(24), left: px(24), right: px(24), padding: UiRect::all(px(14)), border_radius: BorderRadius::all(px(8)), ..default() }, BackgroundColor(Color::srgba(0.025,0.04,0.065,0.92))))
-            .with_child((HelpText,Text::new("Clic droit : piloter  ·  Échap : curseur  ·  WASD / ZQSD : vol  ·  Espace : saut / monter  ·  Ctrl : descendre en vol  ·  Shift : course / ×10\nMolette / Pg↑ Pg↓ : vitesse  ·  Tab / 0–9 : cible  ·  F : centrer  ·  G : visite spatiale  ·  M : surface Mars / retour  ·  U : repère solaire  ·  T : temps ×1/10/100/1000  ·  P : pause  ·  H : interface"),font(13.0, &ui_font),TextColor(Color::srgb(0.67,0.76,0.84))));
+        root.spawn((Node { position_type: PositionType::Absolute, bottom: px(24), left: px(24), right: px(24), padding: UiRect::all(px(14)), border_radius: BorderRadius::ZERO, ..default() }, BackgroundColor(theme::PANEL)))
+            .with_child((HelpText,Text::new("Clic droit : piloter  ·  Échap : curseur  ·  WASD / ZQSD : vol  ·  Espace : saut / monter  ·  Ctrl : descendre en vol  ·  Shift : course / ×10\nMolette / Pg↑ Pg↓ : vitesse  ·  Tab / 0–9 : cible  ·  F : centrer  ·  G : visite spatiale  ·  M : surface Mars / retour  ·  U : repère solaire  ·  T : temps ×1/10/100/1000  ·  P : pause  ·  H : télémétrie · N : navigation"),font(13.0, &ui_font),TextColor(theme::MUTED)));
         for body in &solar.bodies {
             root.spawn((Marker(body.id), Node { position_type: PositionType::Absolute, display: Display::None, ..default() }, Text::new(format!("◇ {}",body.name)),font(12.0, &ui_font),TextColor(Color::srgb(0.48,0.70,0.79))));
         }
     });
 }
 fn buttons(
-    state: Res<HudState>,
     mut menu: ResMut<menu::MenuState>,
     mut query: Query<(Ref<Interaction>, &Action, &mut BackgroundColor)>,
     mut pilot: ResMut<Explorer>,
     mut request: ResMut<NavigationRequest>,
 ) {
-    if !state.visible || menu.is_open() {
+    if menu.is_open() {
         return;
     }
     for (interaction, action, mut color) in &mut query {
         let selected = matches!(action, Action::Select(id) if *id == pilot.selected);
         color.0 = match *interaction {
-            Interaction::Hovered => Color::srgb(0.10, 0.23, 0.30),
-            Interaction::Pressed => Color::srgb(0.14, 0.36, 0.43),
-            Interaction::None if selected => Color::srgb(0.07, 0.23, 0.32),
-            _ => Color::srgb(0.05, 0.08, 0.12),
+            Interaction::Hovered => theme::HOVER,
+            Interaction::Pressed => theme::ACTIVE,
+            Interaction::None if selected => theme::ACTIVE,
+            _ => theme::BUTTON,
         };
         if interaction.is_changed() && *interaction == Interaction::Pressed {
             match *action {
@@ -135,16 +143,50 @@ fn buttons(
         }
     }
 }
+#[expect(
+    clippy::type_complexity,
+    reason = "Filtres ECS disjoints des panneaux du HUD."
+)]
 fn toggle(
     keys: Res<ButtonInput<KeyCode>>,
     menu: Res<menu::MenuState>,
     mut state: ResMut<HudState>,
-    mut root: Single<&mut Node, With<HudRoot>>,
+    mut root: Single<&mut Node, (With<HudRoot>, Without<NavigationPanel>, Without<DebugPanel>)>,
+    mut navigation: Single<
+        &mut Node,
+        (With<NavigationPanel>, Without<HudRoot>, Without<DebugPanel>),
+    >,
+    mut debug: Single<&mut Node, (With<DebugPanel>, Without<HudRoot>, Without<NavigationPanel>)>,
+    pilot: Res<Explorer>,
 ) {
     if !menu.is_open() && keys.just_pressed(KeyCode::KeyH) {
         state.visible = !state.visible;
     }
-    root.display = if state.visible && !menu.is_open() {
+    if !menu.is_open() && keys.just_pressed(KeyCode::KeyN) {
+        state.navigation = !state.navigation;
+    }
+    navigation.display = if pilot.mode == MovementMode::Space || state.navigation {
+        Display::Flex
+    } else {
+        Display::None
+    };
+    navigation.top = px(24);
+    navigation.left = if pilot.mode == MovementMode::Space {
+        px(24)
+    } else {
+        auto()
+    };
+    navigation.right = if pilot.mode == MovementMode::Surface {
+        px(24)
+    } else {
+        auto()
+    };
+    debug.display = if state.visible && !state.navigation {
+        Display::Flex
+    } else {
+        Display::None
+    };
+    root.display = if !menu.is_open() {
         Display::Flex
     } else {
         Display::None
@@ -372,8 +414,8 @@ fn help(
     }
     *previous = Some(pilot.mode);
     ***text = if pilot.mode == MovementMode::Surface {
-        "Clic droit : jouer · Échap : curseur · WASD / ZQSD : marcher · Espace : sauter · Shift : courir · Souris : regarder\nM : retour spatial · G : visiter la cible · O : vue du système · T : temps orbital · P : pause orbitale · H : interface".into()
+        "WASD / ZQSD : marcher · Shift : courir · Espace : sauter · E : récolter · B : construction\nClic droit : piloter · Échap : curseur / menu · M : espace · N : navigation · H : télémétrie".into()
     } else {
-        "Clic droit : piloter · Échap : curseur · WASD / ZQSD : vol · Espace / Ctrl : monter / descendre · Shift : ×10\nMolette / Pg↑ Pg↓ : vitesse · Tab / 0–9 : cible · F : centrer · G : visiter · M : surface Mars · O : système · U : repère solaire · T / P : temps · H : interface".into()
+        "Clic droit : piloter · Échap : curseur · WASD / ZQSD : vol · Espace / Ctrl : monter / descendre · Shift : ×10\nMolette / Pg↑ Pg↓ : vitesse · Tab / 0–9 : cible · F : centrer · G : visiter · M : surface Mars · O : système · U : repère solaire · T / P : temps · H : télémétrie · N : navigation".into()
     };
 }

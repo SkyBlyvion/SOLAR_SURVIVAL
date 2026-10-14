@@ -1,0 +1,37 @@
+{
+  "captures_inspected": [
+    "stage-00.png",
+    "stage-01.png",
+    "stage-02.png",
+    "stage-03.png",
+    "stage-04.png",
+    "stage-05.png",
+    "stage-06.png",
+    "stage-07.png",
+    "stage-08.png",
+    "stage-09.png",
+    "stage-10.png",
+    "stage-11.png",
+    "stage-12.png",
+    "stage-13.png",
+    "stage-14.png",
+    "stage-15.png"
+  ],
+  "sheets_inspected": [
+    "sheet-00.jpg",
+    "sheet-01.jpg",
+    "sheet-02.jpg",
+    "sheet-03.jpg"
+  ],
+  "originals_also_inspected": [
+    "stage-06.png",
+    "stage-15.png"
+  ],
+  "observations": [
+    "Stock 0, puis 6 et 12 ; refus rouge et motif lisible.",
+    "Fantôme vert déplacé et orienté, annulation à stock 12.",
+    "Abri construit, stock 0 ; porte et recharge abri 2.",
+    "Mur, terrain après rebasage, Mars spatiale, menu et recharge au retour visibles."
+  ],
+  "limits": "Captures espacées, pas une vidéo de toutes les frames ni une validation des périphériques OS/Windows."
+}

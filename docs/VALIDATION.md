@@ -1,4 +1,43 @@
-# Validation Solar Survival 0.2 — caméra unique et ciel local
+# Validation Solar Survival 0.2 — P6, aventures multiples et interface
+
+14 octobre 2026. Départ réel **22efa72**, P4/P5/LOD/caméra unique déjà réalisés. La reprise P4 reçue était périmée ; l’utilisateur a corrigé le cadrage, puis exigé plusieurs nouvelles aventures nommées et une interface de jeu conventionnelle. La passe à emplacement unique dans [p6-validation](p6-validation/NOTES.md) et le contrôle P5 dans [p5-recheck](p5-recheck-2026-10-13/) restent des preuves intermédiaires. Les résultats courants sont exclusivement ceux ci-dessous. [Contrat des profils](PERSISTENCE.md), [essais et limites](p6-profiles-validation/NOTES.md).
+
+Rust stable 1.99.0, édition 2024, Bevy **exactement =0.19.1**, Cargo.toml/Cargo.lock inchangés, aucune dépendance ajoutée. Ubuntu 24.04.5 LTS/X11, i7-6700K/GTX 1060 3 Go/NVK/Mesa 25.2.8 ; contournement local Mesa immediate. [Contexte relevé](p6-profiles-validation/host.json), adaptateur/pilote dans les journaux graphiques. Windows 11 et RTX 4050/Core i5 **non validés**.
+
+## Résultats actuels
+
+| Vérification | Résultat |
+|---|---|
+| fmt, check, check-all-targets, tests, Clippy -D warnings, release --locked | Six commandes réussies ; [codes/durées](p6-profiles-validation/build-responsive/results.json), release **152,440 s** |
+| Tests | **130 réussis**, 49 internes ; [journal complet](p6-profiles-validation/build-responsive/tests.txt) |
+| Profils/menu/HUD 1440×900 | Deux processus, **48,373 + 54,377 s**, codes 0, 32 captures, aucun ERROR/WARN/panic ; [résultats](p6-profiles-validation/graphics-responsive/results.json) |
+| Archive extraite, 1280×720 | Deux processus hors checkout, **48,358 + 54,431 s**, codes 0, 32 captures, aucun ERROR/WARN/panic ; [résultats](p6-profiles-validation/packaged-720/results.json) |
+| Inspection visuelle | **64 captures** sur seize planches et originaux de menus/catalogue/erreur ; [grande fenêtre](p6-profiles-validation/graphics-responsive/inspection/verified.json), [720p](p6-profiles-validation/packaged-720/inspection/verified.json) |
+| Concordance | Sources Rust/tests/shaders/Cargo et binaire inchangés dans les deux campagnes ; [1440×900](p6-profiles-validation/graphics-responsive/concordance.json), [720p](p6-profiles-validation/packaged-720/concordance.json) |
+| Packaging Ubuntu | Tar.gz **23 393 264 octets**, **731 fichiers** vérifiés après extraction, binaire identique au release ; [empreintes](p6-profiles-validation/package.json) |
+| Windows natif et matériel cible | Non exécutés ; distribution sur les deux OS encore à terminer |
+
+Les lancements GPU se succèdent après compilation. build-ui-initial précède le dernier réglage de hauteur/pagination ; seul build-responsive est la référence finale. Aucun changement du jeu après ce build, uniquement documentation et scripts de preuves/packaging.
+
+## Ce qui est effectivement vérifié
+
+Nouvelle aventure demande un nom via KeyboardInput, écrit `saves/Nom/session.solar` et remet la progression à zéro. Alpha récolte 12 unités et construit le même abri P4 via B → catalogue → Prévisualiser → confirmation : deux abris, stock nul. Bravo démarre neuf, récolte une seule caisse : un abri, six unités. Le retour sélectionné à Alpha retrouve ses objets et sa réserve ; un second processus retrouve séparément Alpha et Bravo. Création et changement sauvegardent la partie quittée ; recharger le profil actif n’écrase pas sa sauvegarde avant lecture. Le catalogue bloque le pilotage, libère le curseur et conserve la consommation réelle ; fermer/annuler ne dépense rien.
+
+Les tests couvrent noms Unicode/vides/réservés/chemins/doublons, fichiers absents/corrompus/incompatibles/trop grands, données invalides, refus sans mutation, écriture et secours. Roundtrip complet : f64 corporels, abris/identités/colliders, caisses/stock, oxygène/échec, espace/surface, carte après rebasage/en l’air, options et calendrier. Recharge de l’abri restauré, prochaine identité/construction et règles R sont vérifiées. Les caches/contacts sont reconstruits avant publication ; même GameCamera conservée. Les régressions terrain/contacts/horloges/caméra restent réussies. Le remplacement des dépôts par une session vide supprime aussi les anciens proxies.
+
+Les captures vérifient accueil, nom, liste de profils, sélection explicite, reprise, catalogue avec et sans stock suffisant, placement, HUD et erreur de profil Broken avec Alpha conservé. Menu/HUD partagent palette et tailles cohérentes ; navigation N et télémétrie H sont à la demande en surface. Aucun texte coupé ou chevauchement constaté dans ces poses aux deux résolutions. Il s’agit d’une vérification de lisibilité, pas d’une approbation esthétique de l’utilisateur.
+
+Le diagnostic prépare explicitement poses proches des caisses/abris, franchissement de rebasage, réserves 60/45/0,001 s, JD et options ; il n’injecte pas d’alliage ni d’abri construit. Les clics/commandes sont ECS, pas périphériques OS. La recharge/reprise est réelle, sans attente continue de trois minutes ni prétention de benchmark. Les contacts/marches/portes sont également couverts par les tests conservés ; les campagnes mondiales historiques ne sont pas rejouées sans changement de leur physique.
+
+## Limites conservées
+
+Un profil actif en mémoire ; plusieurs répertoires indépendants sur disque. Pas de sauvegarde automatique à Quitter, cloud, gestion de suppression/renommage, saisie riche/IME ou prise en charge de plusieurs processus écrivant le même profil. Format local version 1, checksum de corruption accidentelle, secours `.bak` ; pas de garantie universelle de panne électrique. Les paramètres existants sont persistés sans ajout arbitraire d’options.
+
+Archive native Linux testée depuis /tmp avec assets voisins du binaire. Le script sait assembler un zip à partir d’un build Windows natif ; aucun exe Windows ni test Windows n’a été produit ici. Pas de nouveau benchmark/RAM/VRAM exhaustive, campagne P2 complète, DPI/périphériques/suspension. Les résultats historiques LOD/ciel ci-dessous restent datés et ne mesurent pas universellement P6.
+
+---
+
+# Historique : caméra unique et ciel local
 
 13 octobre 2026. Départ réel HEAD **43f163b** ; seuls NEXT_CHAT et ROADMAP modifiés au démarrage, copies exactes dans [sky-validation](sky-validation/NEXT_CHAT-before.md) et [ROADMAP-before](sky-validation/ROADMAP-before.md). Les preuves LOD/P4/P5 historiques sont conservées. Bevy **exactement =0.19.1**, édition 2024, Rust stable 1.99.0 ; aucune dépendance ni modification de Cargo.toml/Cargo.lock. Ubuntu 24.04.5 LTS/X11, i7-6700K/GTX 1060 3 Go/NVK/Mesa 25.2.8, présentation Mesa immediate. [Contexte](sky-validation/host.json), [architecture et approximations](SURFACE_SKY.md), [essais intermédiaires](sky-validation/NOTES.md).
 

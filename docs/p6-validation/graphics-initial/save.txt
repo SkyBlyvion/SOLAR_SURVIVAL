@@ -1,0 +1,25 @@
+2026-10-13T14:20:13.827236Z  INFO bevy_render::renderer: AdapterInfo { name: "NVIDIA GeForce GTX 1060 3GB (NVK GP106)", vendor: 4318, device: 7170, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "NVK", driver_info: "Mesa 25.2.8-0ubuntu0.24.04.2", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: false }
+2026-10-13T14:20:13.935644Z  INFO bevy_pbr::cluster: GPU clustering is supported on this device.
+2026-10-13T14:20:13.935685Z  INFO bevy_render::batching::gpu_preprocessing: GPU preprocessing is fully supported on this device.
+2026-10-13T14:20:13.936070Z  INFO bevy_winit::system: Creating new window Solar Survival · 0.2 · Mars (63v0)
+2026-10-13T14:20:13.936466Z  INFO winit::platform_impl::linux::x11::window: Guessed window scale factor: 1
+2026-10-13T14:20:13.964670Z  INFO solar_survival::config::persistence_validation: P6 save phase 0 t=0.000 stock=0 abris=0 O2=180.000000 mode=Space camera=270v0
+2026-10-13T14:20:15.165655Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p6-validation/graphics-initial/save/stage-00.png
+2026-10-13T14:20:15.979610Z  INFO solar_survival::config::persistence_validation: P6 save phase 1 t=2.016 stock=0 abris=1 O2=178.016571 mode=Surface camera=270v0
+2026-10-13T14:20:17.979521Z  INFO solar_survival::config::persistence_validation: P6 save phase 2 t=4.016 stock=6 abris=1 O2=176.015210 mode=Surface camera=270v0
+2026-10-13T14:20:19.139886Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p6-validation/graphics-initial/save/stage-01.png
+2026-10-13T14:20:19.977954Z  INFO solar_survival::config::persistence_validation: P6 save phase 3 t=6.014 stock=12 abris=1 O2=174.016395 mode=Surface camera=270v0
+2026-10-13T14:20:21.109732Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p6-validation/graphics-initial/save/stage-02.png
+2026-10-13T14:20:21.993954Z  INFO solar_survival::config::persistence_validation: P6 save phase 4 t=8.030 stock=12 abris=1 O2=172.008269 mode=Surface camera=270v0
+2026-10-13T14:20:23.081408Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p6-validation/graphics-initial/save/stage-03.png
+2026-10-13T14:20:23.986712Z  INFO solar_survival::config::persistence_validation: P6 save phase 5 t=10.023 stock=0 abris=2 O2=170.005224 mode=Surface camera=270v0
+2026-10-13T14:20:23.987773Z DEBUG solar_survival::player::surface: GLOBAL rebasage CPU 0.999 ms, patches 13, constructions 18, LOD ([7, 5, 1], 9893, 18096), changements 0, géométrie 0.223 ms, index 0.719 ms
+2026-10-13T14:20:25.557165Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p6-validation/graphics-initial/save/stage-04.png
+2026-10-13T14:20:25.965928Z  INFO solar_survival::config::persistence_validation: P6 save phase 6 t=12.002 stock=0 abris=2 O2=119.795088 mode=Surface camera=270v0
+2026-10-13T14:20:27.070480Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p6-validation/graphics-initial/save/stage-05.png
+2026-10-13T14:20:27.974855Z  INFO solar_survival::config::persistence_validation: P6 save phase 7 t=14.011 stock=0 abris=2 O2=119.795088 mode=Surface camera=270v0
+2026-10-13T14:20:29.551619Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p6-validation/graphics-initial/save/stage-06.png
+2026-10-13T14:20:29.971651Z  INFO solar_survival::config::persistence_validation: P6 save phase 8 t=16.008 stock=0 abris=2 O2=119.795088 mode=Surface camera=270v0
+2026-10-13T14:20:31.536109Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p6-validation/graphics-initial/save/stage-07.png
+2026-10-13T14:20:31.973247Z  INFO solar_survival::config::persistence_validation: P6 save phase 9 t=18.010 stock=0 abris=2 O2=119.795088 mode=Surface camera=270v0
+2026-10-13T14:20:31.973297Z  INFO solar_survival::config::persistence_validation: P6 save terminé : récolte/construction, rebasage, recharge, menu/F5, fichier fermé

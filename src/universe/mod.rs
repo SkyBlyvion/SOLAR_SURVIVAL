@@ -13,7 +13,7 @@ use units::{DAY, J2000};
 
 pub const MIN_JD: f64 = 2_378_496.5; // 1800-01-01
 pub const MAX_JD: f64 = 2_469_807.5; // 2050-01-01, limite conservatrice JPL
-#[derive(Resource, Debug)]
+#[derive(Resource, Debug, Clone)]
 pub struct SimulationClock {
     pub jd: f64,
     pub speed_index: usize,

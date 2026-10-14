@@ -4,15 +4,15 @@
 
 ## Jouer
 
-Après Jouer et M, huit caisses dorées se trouvent à gauche et à droite du premier abri, à x=±8 m et z=0/−6/−12/−18 m dans le site d'arrivée. Ce sont des objets de récupération artistiques, sans donnée de minerai martien. Approcher une caisse à moins de 2,5 m puis presser **E** stocke ses six unités d'alliage. La caisse disparaît ; elle ne réapparaît pas lors de M, R, d'un menu ou d'un rebasage. Le HUD indique le stock et la distance/direction de la caisse restante la plus proche. Un mur ou obstacle coupant le segment yeux→centre de caisse interdit la récupération. Les caisses sont des collectibles sans collision de déplacement.
+Après création ou chargement d’une aventure et M, huit caisses dorées se trouvent à gauche et à droite du premier abri, à x=±8 m et z=0/−6/−12/−18 m dans le site d'arrivée. Ce sont des objets de récupération artistiques, sans donnée de minerai martien. Approcher une caisse à moins de 2,5 m puis presser **E** stocke ses six unités d'alliage. La caisse disparaît ; elle ne réapparaît pas lors de M, R, d'un menu ou d'un rebasage. Le HUD indique le stock et la distance/direction de la caisse restante la plus proche. Un mur ou obstacle coupant le segment yeux→centre de caisse interdit la récupération. Les caisses sont des collectibles sans collision de déplacement.
 
 L'inventaire commence vide. Deux caisses financent un abri : **12 unités d'alliage**, recette de gameplay sans masse SI implicite. Les huit caisses donnent 48 unités, donc quatre constructions supplémentaires au maximum dans cette première boucle. Ressource finie, pas de renouvellement, réseau mondial de dépôts, autre recette ou démantèlement.
 
-**B** ouvre la prévisualisation. L'abri suit la visée horizontale et les déplacements du joueur, initialement neuf mètres devant lui, porte vers lui. **Flèches haut/bas** règlent la distance (4–24 m), **gauche/droite** le décalage latéral (±16 m), à 4 m/s réel. **J/L** tournent le bâtiment à 1 rad/s réel. La souris continue de viser en pilotage ; les deltas souris ne sont pas multipliés par le temps. La porte et les six pièces sont visibles dans le fantôme. Le HUD et le fantôme affichent vert/autorisée ou rouge/interdite avec le motif.
+**B** ouvre le catalogue de construction en jeu : fiche de l’abri, coût, stock et disponibilité. Cliquez **Prévisualiser** ou pressez Entrée pour ouvrir la prévisualisation. L'abri suit la visée horizontale et les déplacements du joueur, initialement neuf mètres devant lui, porte vers lui. **Flèches haut/bas** règlent la distance (4–24 m), **gauche/droite** le décalage latéral (±16 m), à 4 m/s réel. **J/L** tournent le bâtiment à 1 rad/s réel. La souris continue de viser en pilotage ; les deltas souris ne sont pas multipliés par le temps. La porte et les six pièces sont visibles dans le fantôme. Le HUD et le fantôme affichent vert/autorisée ou rouge/interdite avec le motif.
 
-**Entrée** confirme. Une confirmation interdite conserve stock et prévisualisation. **X**, **B** ou **Échap** annulent sans dépense. Échap pendant le placement annule et libère le curseur avant le menu. Ouvrir le menu, quitter la surface ou épuiser l'oxygène annule aussi. Aucune confirmation par clic souris ; le clic droit garde sa fonction de capture. L'oxygène continue pendant le placement en jeu et se recharge dans les abris existants selon les règles P4.
+**Entrée** confirme. Une confirmation interdite conserve stock et prévisualisation. **X**, **B** ou **Échap** annulent sans dépense ; dans le catalogue ils le ferment. Échap pendant le placement annule et libère le curseur avant le menu. Ouvrir le menu, quitter la surface ou épuiser l'oxygène annule aussi. Aucune confirmation par clic souris ; le clic droit garde sa fonction de capture. Le catalogue libère la souris et bloque le pilotage ; l’oxygène continue pendant le catalogue et le placement en jeu et se recharge dans les abris existants selon les règles P4.
 
-Une fois construit, entrer par la porte recharge à +30 s/s réel. Marche, mur, toit et service utilisent les mêmes pièces et contacts P4. H conserve le HUD d'inventaire/placement et le HUD vital. Les retours spatiaux, menus et R gardent inventaire, dépôts épuisés et bâtiments pendant la session. **Aucune sauvegarde disque** : quitter l'application termine la session, P6 devra la rendre persistante.
+Une fois construit, entrer par la porte recharge à +30 s/s réel. Marche, mur, toit et service utilisent les mêmes pièces et contacts P4. H conserve le HUD d'inventaire/placement et le HUD vital. Les retours spatiaux, menus et R gardent inventaire, dépôts épuisés et bâtiments pendant la session. **Sauvegarde P6** : le menu conserve maintenant cette session sur disque, avec reprise après fermeture ; sauvegarder explicitement avant Quitter. [Contrat](PERSISTENCE.md).
 
 ## Admission et transaction f64
 
@@ -59,3 +59,11 @@ Le parcours mondial utilise désormais des résolutions 32/16/8 avec bords commu
 ## Caméra et ciel uniques
 
 13 octobre 2026 : les proxies locaux sont désormais rendus par la même GameCamera que les visites spatiales, sur la couche 1. [Ciel et masquage](SURFACE_SKY.md). Les poses corporelles, contacts, horloges, budgets terrain et services de jeu décrits ici restent autoritaires ; aucun objet de ciel ne fournit du support ou ne réinstalle un bâtiment/dépôt. Les nouvelles preuves sont distinctes des campagnes historiques.
+
+## Reprise P6
+
+P6 restaure le stock, l’épuisement des dépôts et les identités/poses corporelles des mêmes abris. La preview est annulée ; aucune transaction de placement ni nouveau débit ne se produit au chargement. Les contacts/proxies sont reconstruits depuis les objets restaurés ; les vieux proxies de dépôts sont libérés même au chargement d’une session antérieure à l’arrivée sur Mars. [PERSISTENCE](PERSISTENCE.md).
+
+## Profils et interface P6
+
+Chaque aventure nommée possède ses propres caisses, stock et abris. Une nouvelle aventure ne reprend aucun objet de la précédente. Le catalogue B et les instructions de placement utilisent la palette commune du HUD ; l’état de disponibilité ne remplace pas l’admission finale et aucun coût n’est dépensé pendant la consultation/prévisualisation. [PERSISTENCE](PERSISTENCE.md).

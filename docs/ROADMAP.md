@@ -2,7 +2,7 @@
 
 Le projet avance par étapes vérifiables vers une boucle de survie sur Mars, en préservant l'exploration spatiale et l'échelle physique 1:1. Cette roadmap est la référence pour choisir le travail du prochain chat. Les dates de livraison dépendront des résultats ; les étapes futures ne sont pas des fonctionnalités déjà réalisées.
 
-Dernière mise à jour : 13 octobre 2026. Objectif **Mars traversable sur ses six faces avec chargement dynamique réalisé sur Ubuntu**. **P4, première boucle de survie jouable, terminé sur Ubuntu**. **P5, ressources et construction du même abri, réalisé sur Ubuntu**. **Phase moteur planétaire terminée sur Ubuntu** : LOD de résolution 32/16/8, index local, régressions/inspection et comparaisons CPU/GPU réalisés. **Caméra de jeu unique et ciel astronomique léger réalisés sur Ubuntu**, avec reprise visuelle après retour utilisateur. Prochaine fonctionnalité P6 : sauvegarde/chargement, puis validation/distribution natives. À la demande explicite de l’utilisateur, le cadrage d’une chaîne fixe P3.5 est remplacé par cette fonctionnalité complète. P3.1 à P3.4 restent les fondations et régressions. La passation détaillée est dans [NEXT_CHAT](NEXT_CHAT.md), les résultats dans [VALIDATION](VALIDATION.md).
+Dernière mise à jour : 14 octobre 2026. Objectif **Mars traversable sur ses six faces avec chargement dynamique réalisé sur Ubuntu**. **P4, première boucle de survie jouable, terminé sur Ubuntu**. **P5, ressources et construction du même abri, réalisé sur Ubuntu**. **Phase moteur planétaire terminée sur Ubuntu** : LOD de résolution 32/16/8, index local, régressions/inspection et comparaisons CPU/GPU réalisés. **Caméra de jeu unique et ciel astronomique léger réalisés sur Ubuntu**, avec reprise visuelle après retour utilisateur. P6 est en cours : plusieurs aventures nommées, répertoires indépendants, menu principal refait, catalogue de construction et HUD communs ; la validation Windows 11 reste nécessaire avant de déclarer la distribution sur les deux OS terminée. À la demande explicite de l’utilisateur, le cadrage d’une chaîne fixe P3.5 est remplacé par cette fonctionnalité complète. P3.1 à P3.4 restent les fondations et régressions. La passation détaillée est dans [NEXT_CHAT](NEXT_CHAT.md), les résultats dans [VALIDATION](VALIDATION.md).
 
 ## Fondations réalisées
 
@@ -19,7 +19,7 @@ Version 0.2 : exploration spatiale et catalogue embarqué, repères/origine flot
 | P5 Ressources et construction | Terminé sur Ubuntu | Caisses épuisables, inventaire, recette à 12 alliage, preview orientable et construction du **même OxygenShelter P4** | Récolte→stock→confirmation→porte/recharge, admission sol/volumes, annulation sans coût, poses/contact/proxies et retours de session vérifiés |
 | Optimisation moteur planétaire | Terminé sur Ubuntu, sphère sans relief | Profilage du rendu et streaming, **LOD adaptatif selon distance**, raccords mixtes et contacts fins | Mesures comparables, niveaux réellement différents, absence de fissure/oscillation aux faces/arêtes/coins, chargement et CPU/GPU bornés, régressions terrain/survie/construction |
 | Caméra unique et ciel de surface | Réalisé et testé sur Ubuntu | Une Camera3d réutilisée espace/surface, ciel intégré à la vue locale (étoiles, Soleil et astres), composition commune | Une seule caméra/vue principale, ciel et occultations cohérents, transitions/UI/options/P4/P5 conservés, ressources bornées ; captures et comparaison release CPU/GPU à qualité comparable |
-| P6 Version distribuable | Prévue | Sauvegarde/chargement, persistance et réglages graphiques complémentaires, validation Windows 11 et packaging Ubuntu/Windows | Sauvegarde testée, instructions de lancement, builds et essais natifs sur les deux plateformes |
+| P6 Version distribuable | En cours : sauvegarde locale et packaging natif implémentés ; Windows à valider | Sauvegarde/chargement complets, options persistées, archives avec assets/licences/lanceurs, essais natifs Ubuntu/Windows | Reprise après redémarrage et refus sans mutation validés, archive Ubuntu testée hors checkout ; build/essai/archive Windows natifs encore requis |
 
 Les étapes P3, P5 et P6 seront découpées en sous-étapes lorsque leur architecture concrète sera examinée. Une régression bloquante ou un résultat de profilage peut justifier une étape corrective avant la suivante ; la raison et les nouveaux critères seront inscrits ici. Le suivi de performance et les réglages restent transversaux après P1 ; refaire les mesures sur la cible avant de fixer la qualité finale. La validation Windows peut commencer plus tôt dès qu'un hôte est disponible. L'objectif de 60 FPS doit être mesuré sur le matériel cible.
 
@@ -252,3 +252,43 @@ Une seule GameCamera/Camera3d, réutilisée entre visites spatiales et surface ;
 [VALIDATION](VALIDATION.md) conserve aussi les essais intermédiaires ; [PERFORMANCE](PERFORMANCE.md) distingue gain de refonte, coût du fond et changements visuels. La portée de brume est plus courte et le panorama de surface diffère du champ spatial ; pas d'atmosphère scientifique ou d'horizon global géométrique revendiqué. Les captures ne vérifient pas chaque frame par vidéo. Le retour utilisateur initial a été traité ; le rendu révisé n'est pas présenté comme une approbation esthétique donnée par l'utilisateur.
 
 **Suite P6 : sauvegarde/chargement de session complète**, sans toucher à Bevy, aux horloges ou au LOD. Ajuster encore l'apparence si un nouveau retour utilisateur le demande. Windows natif/cible restent non validés ; aucun 60 FPS universel revendiqué.
+
+
+## Première implémentation P6 à emplacement unique — 13 octobre 2026 (corrigée ci-dessous)
+
+L’utilisateur corrige explicitement une reprise mal cadrée : **l’étape réelle est P6**. HEAD de départ `22efa72` possède déjà P4/P5, LOD et caméra unique ; la passation P4 reçue est conservée dans [p6-validation/NEXT_CHAT-before](p6-validation/NEXT_CHAT-before.md). La vérification P5 intermédiaire est conservée séparément, sans être présentée comme un nouveau développement P4/P5.
+
+P6 ajoute un emplacement local versionné, contrôles complets avant mutation, écriture temporaire avec secours `.bak`, boutons/menu F5/F9 et reprise en mémoire des données f64. Sauvegarde explicite de l’oxygène/échec, stock/caisses, abris/identités, pose espace/surface, carte active/obstacles/site de retour, calendrier et options. Les caches de terrain/contacts sont reconstruits ; caméra unique conservée. [Contrat](PERSISTENCE.md), [preuves et limites](VALIDATION.md).
+
+| Critère de persistance | État |
+|---|---|
+| Données autoritaires conservées | Poses corporelles et identités stables, bilan d’alliage/dépôts, oxygène/échec, visée/vitesse et carte après rebasage, options/horloge |
+| Réutilisation de P4/P5 | Même abri, service et colliders ; aucun paiement ou récolte au chargement, prochaine identité monotone |
+| Reprise de partie | Deux processus successifs avec fermeture normale entre F5 et F9 ; recharge, espace, échec/R et refus corrompu vérifiés |
+| Refus sûrs | Fichier absent/corrompu/incompatible/trop volumineux, indices/quaternions/poses invalides ; aucune mutation partielle ; écriture refusée sans perte de copie |
+| Menu et rendu | Boutons/raccourcis depuis le menu principal, statut/chemin visibles, preview annulée, paramètres de la même caméra réappliqués |
+| Packaging | Assets voisins du binaire, manifeste/licences/lanceur, tar.gz Linux et zip Windows natif ; test Ubuntu extrait hors checkout |
+| Suite P6 | Validation native Windows 11 et RTX 4050/Core i5, archive Windows et vérification d’installation sur la cible ; restent non réalisées depuis Linux |
+
+Le format est local et versionné, sans cloud/réseau, nouvelle dépendance, autosave ou rattrapage du temps hors application. Le secours protège un arrêt du processus entre renommages ; pas de garantie de toute coupure matérielle ni d’écriture concurrente de plusieurs instances. Les paramètres de qualité existants sont persistés ; aucun réglage nouveau ajouté sans besoin observé. **Ne pas déclarer P6 distribué sur les deux OS terminé avant les essais Windows.**
+
+
+## P6 : aventures multiples et reprise de l’interface — 14 octobre 2026
+
+L’utilisateur exige plusieurs nouvelles aventures avec un nom de répertoire lors de la création. La première implémentation à fichier unique ne remplissait pas ce besoin ; elle reste une preuve intermédiaire. Le produit utilise désormais `saves/Nom/session.solar` et un secours par aventure. Nouvelle aventure demande un nom, écrit la session initiale et réinitialise joueur/stock/dépôts/abris/site/temps. La liste de profils permet de choisir la partie à restaurer. Les profils ne sont pas des alias d’une seule session ; Alpha et Bravo sont vérifiés séparément après redémarrage.
+
+La même demande ajoute une refonte concrète du menu principal et du HUD, et un menu de construction en jeu. Interface de jeu classique : nouvelle aventure/reprise/chargement/options/quitter, champ de nom obligatoire, sélection explicite, erreurs sans écrasement, texte et boutons alignés. Palette/fonds/typographie communs ; surface dégagée, navigation N et télémétrie H séparées des instruments vitaux. B ouvre le catalogue avec fiche, coût et stock, puis le placement existant après Prévisualiser/Entrée.
+
+| Critère | Réalisation |
+|---|---|
+| Plusieurs aventures | Création nommée, répertoires indépendants, liste et sélection, réinitialisation complète de progression |
+| Isolation et reprise | Stocks/épuisement/identités/poses/oxygène propres à chaque aventure ; changement sauvegardant le profil quitté, redémarrage réel |
+| Noms et erreurs | Nom obligatoire, limites et noms réservés, doublons refusés, aucun écrasement d’un profil existant ; partie active conservée si le chargement échoue |
+| Menu principal | Nouvelle partie, saisie de nom, liste paginée et chargement explicite, reprise/options ; captures aux deux tailles de fenêtre |
+| Construction en jeu | Catalogue B manipulable à la souris/Entrée, disponibilité/coût réels, fermeture sans dépense ; oxygène actif, pilotage bloqué |
+| HUD | Palette et hiérarchie communes, instruments séparés, navigation et télémétrie à la demande ; lisibilité vérifiée sur captures |
+| Suite de distribution P6 | Native Windows 11/RTX 4050/Core i5 et archive Windows restent à valider ; aucun résultat Ubuntu ne les remplace |
+
+[Contrat actuel](PERSISTENCE.md), [preuves réelles et limites](VALIDATION.md). Le code reste Rust stable 2024/Bevy exactement 0.19.1, sans dépendance ajoutée. Les validations d’apparence ne sont pas présentées comme une approbation esthétique déjà donnée par l’utilisateur.
+
+Validation finale du périmètre profils/interface : **130 tests**, six contrôles Cargo réussis, quatre processus graphiques code 0 et **64 captures inspectées** à 1440×900 et 1280×720, cette dernière depuis l’archive extraite hors checkout. Aucune erreur/alerte/panic ; profils Alpha/Bravo indépendants après fermeture, erreur Broken refusée avec Alpha conservé. Archives/journaux/empreintes dans [VALIDATION](VALIDATION.md). Le jeu n’a pas changé après le build final ; les anciens résultats à fichier unique restent intermédiaires. P6 demeure partiellement ouvert pour la validation/distribution Windows native.

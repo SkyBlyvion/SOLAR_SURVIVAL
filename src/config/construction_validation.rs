@@ -86,6 +86,9 @@ fn input(
     let elapsed = time.elapsed_secs_f64();
     keys.reset_all();
     motion.delta = Vec2::ZERO;
+    if c.catalog_open {
+        keys.press(KeyCode::Enter);
+    }
     if elapsed >= 59.0 {
         assert_eq!(buildings.shelters.len(), 2);
         assert_eq!(c.alloy, 0);

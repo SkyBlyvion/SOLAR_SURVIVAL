@@ -1,6 +1,6 @@
 # P4 : oxygène et abri de session
 
-13 octobre 2026. La partie normale offre une première boucle de survie sur Mars. Après Jouer puis M, l'abri turquoise est à six mètres devant le point d'arrivée ; sa porte ouverte est du côté du joueur. Marcher à l'intérieur recharge automatiquement. Le HUD vital montre la réserve, l'abri en service ou la distance/direction du plus proche. H masque la télémétrie, mais conserve l'oxygène et l'issue de l'expédition visibles.
+13 octobre 2026. La partie normale offre une première boucle de survie sur Mars. Après création ou chargement d’une aventure puis M, l'abri turquoise est à six mètres devant le point d'arrivée ; sa porte ouverte est du côté du joueur. Marcher à l'intérieur recharge automatiquement. Le HUD vital montre la réserve, l'abri en service ou la distance/direction du plus proche. H masque la télémétrie, mais conserve l'oxygène et l'issue de l'expédition visibles.
 
 ## Conventions de gameplay
 
@@ -26,7 +26,7 @@ Le système utilise **Time<Real> après Navigation**, sans multiplicateur orbita
 
 L'abri mesure environ 6,3 × 3,8 × 6,3 m avec une porte de 2,4 m côté +Z. Deux murs latéraux, un fond, deux jambages et un toit composent six boîtes orientées. Les murs descendent de 0,5 m sous l'origine de pose ; pas de dalle/rampes, le terrain fait office de sol. La liste de pièces est commune aux collisions et aux proxies. Le volume utile est x/z ±2,7 m, y −0,5 à 3,15 m dans le repère du bâtiment ; les **huit coins du joueur 0,6 × 1,8 × 0,6 m** doivent tous y tenir. Une proximité au centre, une position derrière un mur ou au-dessus du toit ne suffisent pas.
 
-Lors d'une installation, `publish_colliders` publie six `BodyBox` fixes par abri dans `MarsTerrain`. Cette copie de collision est mise à jour seulement lorsque des bâtiments sont installés. Chaque requête convertit la pose fixe en carte active en f64 ; balayage SAT continu sur 15 axes, glissement et supports triangulaires utilisent le moteur existant. Les objets éloignés sont exclus par une borne conservative utilisant leurs dimensions. Le rebasage ne réinstalle ni ne déplace un bâtiment. P5 devra appeler la même installation et publication après un placement admis, plutôt que réécrire l'abri. P5 fournit maintenant les règles d’admission, la récupération/inventaire et le placement confirmé ; voir [CONSTRUCTION](CONSTRUCTION.md). La sauvegarde disque reste à P6.
+Lors d'une installation, `publish_colliders` publie six `BodyBox` fixes par abri dans `MarsTerrain`. Cette copie de collision est mise à jour seulement lorsque des bâtiments sont installés. Chaque requête convertit la pose fixe en carte active en f64 ; balayage SAT continu sur 15 axes, glissement et supports triangulaires utilisent le moteur existant. Les objets éloignés sont exclus par une borne conservative utilisant leurs dimensions. Le rebasage ne réinstalle ni ne déplace un bâtiment. P5 devra appeler la même installation et publication après un placement admis, plutôt que réécrire l'abri. P5 fournit maintenant les règles d’admission, la récupération/inventaire et le placement confirmé ; voir [CONSTRUCTION](CONSTRUCTION.md). La sauvegarde disque P6 est décrite dans [PERSISTENCE](PERSISTENCE.md).
 
 `survival::Oxygen` contient seulement la réserve, l'issue et l'identité de l'abri courant ; il interroge le service `shelter_at` depuis la pose corporelle des pieds. La consommation ignore le code de placement. Les commandes R et M utilisent le site de retour choisi à la première entrée, conservé pendant la session ; R est inactif avant un échec. Le plugin vital est ordonné après la navigation, avant Rendering/Interface ; l'ordre global Input → Simulation → Navigation → Rendering → Interface demeure inchangé.
 
@@ -53,7 +53,7 @@ Parcours de 56 s : consommation dehors, marche par la porte, recharge, sortie, m
 
 ## P5 : abris construits par le joueur
 
-[CONSTRUCTION](CONSTRUCTION.md) rend le même type constructible pour 12 alliage. La pose admise devient fixe dans Buildings via install_shelter/publish_colliders ; le service shelter_at, la définition des pièces, les contacts et les proxies P4 restent communs. La preview ne recharge pas et ne possède pas de collision. Oxygen reste indépendant du placement ; la réserve continue pendant la manipulation, et un échec annule la preview. R conserve inventaire, caisses épuisées et bâtiments de la session. Pas de sauvegarde disque.
+[CONSTRUCTION](CONSTRUCTION.md) rend le même type constructible pour 12 alliage. La pose admise devient fixe dans Buildings via install_shelter/publish_colliders ; le service shelter_at, la définition des pièces, les contacts et les proxies P4 restent communs. La preview ne recharge pas et ne possède pas de collision. Oxygen reste indépendant du placement ; la réserve continue pendant la manipulation, et un échec annule la preview. R conserve inventaire, caisses épuisées et bâtiments de la session. Sauvegarde disque disponible depuis le menu P6 ; [contrat et limites](PERSISTENCE.md).
 
 ## Terrain adaptatif
 
@@ -63,3 +63,9 @@ Le parcours mondial utilise désormais des résolutions 32/16/8 avec bords commu
 ## Caméra et ciel uniques
 
 13 octobre 2026 : les proxies locaux sont désormais rendus par la même GameCamera que les visites spatiales, sur la couche 1. [Ciel et masquage](SURFACE_SKY.md). Les poses corporelles, contacts, horloges, budgets terrain et services de jeu décrits ici restent autoritaires ; aucun objet de ciel ne fournit du support ou ne réinstalle un bâtiment/dépôt. Les nouvelles preuves sont distinctes des campagnes historiques.
+
+## Reprise P6
+
+Le chargement restaure la réserve et l’échec sans relancer automatiquement l’expédition. Le service shelter_at est recalculé depuis les poses corporelles restaurées ; R conserve les abris, le stock et les caisses. Le temps passé application fermée n’est pas consommé. [PERSISTENCE](PERSISTENCE.md).
+
+14 octobre 2026 : chaque aventure nommée possède son répertoire et sa réserve propres. B ouvre maintenant le catalogue ; il bloque le pilotage et libère le curseur, tout en laissant la survie active. Le HUD vital et celui du stock partagent la palette des menus ; navigation N et télémétrie H sont masquées par défaut en surface.

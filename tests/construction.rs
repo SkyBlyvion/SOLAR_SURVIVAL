@@ -61,6 +61,12 @@ fn press(app: &mut App, key: KeyCode) {
         .resource_mut::<ButtonInput<KeyCode>>()
         .reset_all();
 }
+fn placement(app: &mut App) {
+    press(app, KeyCode::KeyB);
+    assert!(app.world().resource::<Construction>().catalog_open);
+    press(app, KeyCode::Enter);
+    assert!(app.world().resource::<Construction>().active);
+}
 fn tick(app: &mut App, n: u32) {
     for _ in 0..n {
         app.update();
@@ -86,7 +92,7 @@ fn collect(app: &mut App, index: usize) {
 fn start_clear(app: &mut App) {
     prepare(app, 16.0, 0.0);
     app.world_mut().resource_mut::<SurfaceState>().yaw = 0.0;
-    press(app, KeyCode::KeyB);
+    placement(app);
     assert!(
         app.world()
             .resource::<Construction>()
@@ -121,7 +127,7 @@ fn harvest_range_depletion_inventory_and_session_returns() {
 #[test]
 fn rejected_cancelled_and_confirmed_placement_pay_only_once() {
     let mut app = app(60);
-    press(&mut app, KeyCode::KeyB);
+    placement(&mut app);
     press(&mut app, KeyCode::Enter);
     assert_eq!(app.world().resource::<Buildings>().shelters.len(), 1);
     assert_eq!(app.world().resource::<Construction>().alloy, 0);
@@ -349,7 +355,7 @@ fn two_player_built_instances_have_distinct_poses_and_services() {
     start_clear(&mut app);
     press(&mut app, KeyCode::Enter);
     prepare(&mut app, -16.0, 0.0);
-    press(&mut app, KeyCode::KeyB);
+    placement(&mut app);
     app.world_mut()
         .resource_mut::<ButtonInput<KeyCode>>()
         .press(KeyCode::KeyL);
@@ -399,4 +405,26 @@ fn two_player_built_instances_have_distinct_poses_and_services() {
             assert_eq!(a.orientation, b.orientation);
         }
     }
+}
+
+#[test]
+fn construction_catalog_releases_controls_consumes_oxygen_and_cancels_without_cost() {
+    let mut app = app(60);
+    app.world_mut().resource_mut::<Explorer>().captured = true;
+    press(&mut app, KeyCode::KeyB);
+    assert!(app.world().resource::<Construction>().catalog_open);
+    let feet = app.world().resource::<SurfaceState>().feet;
+    let oxygen = app.world().resource::<Oxygen>().remaining_seconds;
+    app.world_mut()
+        .resource_mut::<ButtonInput<KeyCode>>()
+        .press(KeyCode::KeyW);
+    tick(&mut app, 60);
+    assert!(!app.world().resource::<Explorer>().captured);
+    assert!(app.world().resource::<SurfaceState>().feet.distance(feet) < 1e-6);
+    assert!((app.world().resource::<Oxygen>().remaining_seconds - oxygen + 1.0).abs() < 1e-6);
+    press(&mut app, KeyCode::Escape);
+    assert!(!app.world().resource::<Construction>().catalog_open);
+    assert!(!app.world().resource::<Construction>().active);
+    assert_eq!(app.world().resource::<Construction>().alloy, 0);
+    assert_eq!(app.world().resource::<Buildings>().shelters.len(), 1);
 }

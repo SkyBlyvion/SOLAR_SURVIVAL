@@ -1,0 +1,3 @@
+    Blocking waiting for file lock on build directory
+    Checking solar_survival v0.2.0 (/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL)
+    Finished `dev` profile [optimized] target(s) in 5.00s

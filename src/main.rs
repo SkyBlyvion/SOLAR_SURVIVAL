@@ -12,6 +12,10 @@ fn main() {
         .is_some_and(|p| p.variant == "half_resolution")
     {
         (720, 450)
+    } else if config.persistence_validation_dir.is_some()
+        && std::env::var_os("SOLAR_P6_SMALL_WINDOW").is_some()
+    {
+        (1280, 720)
     } else {
         (1440, 900)
     };
@@ -29,7 +33,9 @@ fn main() {
                     ..default()
                 })
                 .set(AssetPlugin {
-                    file_path: concat!(env!("CARGO_MANIFEST_DIR"), "/assets").into(),
+                    file_path: solar_survival::config::asset_directory()
+                        .to_string_lossy()
+                        .into_owned(),
                     ..default()
                 }),
         )

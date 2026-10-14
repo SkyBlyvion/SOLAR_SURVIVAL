@@ -1,0 +1,58 @@
+    Checking solar_survival v0.2.0 (/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL)
+error: very complex type used. Consider factoring parts into `type` definitions
+  --> src/ui/construction.rs:92:15
+   |
+92 |     mut root: Single<(Entity, &mut Node), (With<Root>, Without<CatalogRoot>)>,
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#type_complexity
+   = note: `-D clippy::type-complexity` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::type_complexity)]`
+
+error: very complex type used. Consider factoring parts into `type` definitions
+  --> src/ui/construction.rs:93:18
+   |
+93 |     mut catalog: Single<(Entity, &mut Node), (With<CatalogRoot>, Without<Root>)>,
+   |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#type_complexity
+
+error: very complex type used. Consider factoring parts into `type` definitions
+  --> src/ui/construction.rs:94:17
+   |
+94 |     mut recipe: Single<(&mut Text, &mut TextColor), (With<RecipeText>, Without<Label>)>,
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#type_complexity
+
+error: very complex type used. Consider factoring parts into `type` definitions
+   --> src/ui/mod.rs:150:15
+    |
+150 |     mut root: Single<&mut Node, (With<HudRoot>, Without<NavigationPanel>, Without<DebugPanel>)>,
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#type_complexity
+
+error: very complex type used. Consider factoring parts into `type` definitions
+   --> src/ui/mod.rs:151:21
+    |
+151 |       mut navigation: Single<
+    |  _____________________^
+152 | |         &mut Node,
+153 | |         (With<NavigationPanel>, Without<HudRoot>, Without<DebugPanel>),
+154 | |     >,
+    | |_____^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#type_complexity
+
+error: very complex type used. Consider factoring parts into `type` definitions
+   --> src/ui/mod.rs:155:16
+    |
+155 |     mut debug: Single<&mut Node, (With<DebugPanel>, Without<HudRoot>, Without<NavigationPanel>)>,
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#type_complexity
+
+error: could not compile `solar_survival` (lib) due to 6 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `solar_survival` (lib test) due to 6 previous errors

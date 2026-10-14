@@ -1,0 +1,7 @@
+{
+  "extraction": "/tmp/solar-survival-p6-t4qow3dp",
+  "binary": "/tmp/solar-survival-p6-t4qow3dp/solar-survival-ubuntu-p6/solar_survival",
+  "archive": "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/dist/solar-survival-ubuntu-p6.tar.gz",
+  "archive_sha256": "7e45180dbc37a4b2986f42d2d6ff832f03fe0f3a46e597813fa794f99c9bae5f",
+  "binary_sha256": "b965795d38b4932c52ededaaafc51f48a2c878965a8ee50f29348c92a721b520"
+}

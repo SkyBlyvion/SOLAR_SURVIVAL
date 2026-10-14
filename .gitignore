@@ -1,2 +1,5 @@
 /target/
 *.log
+/saves/
+/dist/
+__pycache__/

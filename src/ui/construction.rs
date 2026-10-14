@@ -1,4 +1,5 @@
 //! Inventaire et commandes P5 visibles même lorsque H masque la télémétrie.
+use super::theme;
 use crate::{
     GameSet,
     construction::{Construction, SHELTER_COST},
@@ -8,6 +9,12 @@ use crate::{
     ui::menu::MenuState,
 };
 use bevy::prelude::*;
+#[derive(Component)]
+struct CatalogRoot;
+#[derive(Component)]
+struct RecipeText;
+#[derive(Component)]
+struct BuildAction(bool);
 #[derive(Component)]
 struct Root;
 #[derive(Component)]
@@ -19,38 +26,61 @@ impl Plugin for ConstructionHudPlugin {
             return;
         }
         app.add_systems(Startup, setup)
+            .add_systems(
+                Update,
+                interact
+                    .after(crate::ui::menu::MenuInputSet)
+                    .before(crate::camera::controls)
+                    .in_set(GameSet::Input),
+            )
             .add_systems(Update, refresh.in_set(GameSet::Interface));
     }
 }
 fn setup(mut commands: Commands, assets: Res<AssetServer>) {
+    let font = assets.load("fonts/DejaVuSans.ttf");
+    commands.spawn((CatalogRoot,GlobalZIndex(30),Node {position_type:PositionType::Absolute,left:px(24),top:px(136),width:percent(44),max_width:px(440),padding:UiRect::all(px(24)),flex_direction:FlexDirection::Column,row_gap:px(16),display:Display::None,border:UiRect::left(px(2)),..default()},BackgroundColor(theme::PANEL),BorderColor::all(theme::ACCENT)))
+        .with_children(|root| {
+            root.spawn((Text::new("CONSTRUCTION / ABRIS"),super::font(12.0,&font),TextColor(theme::ACCENT)));
+            root.spawn((Text::new("Abri à oxygène"),super::font(24.0,&font),TextColor(theme::TEXT)));
+            root.spawn((Text::new("Recharge la combinaison lorsque vous entrez.\nEmprise au sol : 6,3 × 6,3 m."),super::font(14.0,&font),TextColor(theme::MUTED)));
+            root.spawn((RecipeText,Text::new(""),super::font(16.0,&font),TextColor(theme::TEXT)));
+            for (begin,title) in [(true,"Prévisualiser · Entrée"),(false,"Fermer · B / Échap")] {
+                root.spawn((Button,BuildAction(begin),Node {width:percent(100),padding:UiRect::all(px(14)),..default()},BackgroundColor(theme::BUTTON)))
+                    .with_child((Text::new(title),super::font(16.0,&font),TextColor(theme::TEXT)));
+            }
+            root.spawn((Text::new("La prévisualisation est gratuite.\nLes ressources sont dépensées à la confirmation.\nL’oxygène continue de se consommer."),super::font(12.0,&font),TextColor(theme::MUTED)));
+        });
+
     commands
         .spawn((
             Root,
             Node {
                 position_type: PositionType::Absolute,
-                bottom: px(100),
-                left: px(270),
-                right: px(360),
+                bottom: px(92),
+                left: px(24),
+                width: percent(45),
+                max_width: px(520),
                 padding: UiRect::all(px(14)),
-                border_radius: BorderRadius::all(px(8)),
+                border_radius: BorderRadius::ZERO,
                 display: Display::None,
                 ..default()
             },
-            BackgroundColor(Color::srgba(0.025, 0.04, 0.065, 0.93)),
+            BackgroundColor(theme::PANEL),
         ))
         .with_child((
             Label,
             Text::new("RÉCUPÉRATION"),
             TextFont {
                 font: assets.load("fonts/DejaVuSans.ttf").into(),
-                font_size: FontSize::Px(16.0),
+                font_size: FontSize::Px(14.0),
                 ..default()
             },
-            TextColor(Color::WHITE),
+            TextColor(theme::TEXT),
         ));
 }
 #[expect(
     clippy::too_many_arguments,
+    clippy::type_complexity,
     reason = "HUD d'inventaire et d'admission ECS."
 )]
 fn refresh(
@@ -60,13 +90,42 @@ fn refresh(
     menu: Res<MenuState>,
     terrain: Res<MarsTerrain>,
     state: Res<SurfaceState>,
-    mut root: Single<(Entity, &mut Node), With<Root>>,
+    mut root: Single<(Entity, &mut Node), (With<Root>, Without<CatalogRoot>)>,
+    mut catalog: Single<(Entity, &mut Node), (With<CatalogRoot>, Without<Root>)>,
+    mut recipe: Single<(&mut Text, &mut TextColor), (With<RecipeText>, Without<Label>)>,
     mut label: Single<(&mut Text, &mut TextColor), With<Label>>,
     camera: Single<Entity, With<crate::camera::GameCamera>>,
     mut commands: Commands,
 ) {
     let active = pilot.mode == MovementMode::Surface && !oxygen.failed && !menu.is_open();
-    root.1.display = if active { Display::Flex } else { Display::None };
+    catalog.1.display = if active && c.catalog_open {
+        Display::Flex
+    } else {
+        Display::None
+    };
+    if active && c.catalog_open {
+        commands.entity(catalog.0).insert(UiTargetCamera(*camera));
+        let available = c.alloy >= SHELTER_COST;
+        **recipe.0 = format!(
+            "Coût : {SHELTER_COST} alliage · En stock : {}\n{}",
+            c.alloy,
+            if available {
+                "Ressources disponibles"
+            } else {
+                "Ressources insuffisantes pour construire"
+            }
+        );
+        recipe.1.0 = if available {
+            theme::SAFE
+        } else {
+            theme::DANGER
+        };
+    }
+    root.1.display = if active && !c.catalog_open {
+        Display::Flex
+    } else {
+        Display::None
+    };
     if !active {
         return;
     }
@@ -78,9 +137,9 @@ fn refresh(
             Err(reason) => reason,
         };
         label.1.0 = if p.verdict.is_ok() {
-            Color::srgb(0.45, 1.0, 0.65)
+            theme::SAFE
         } else {
-            Color::srgb(1.0, 0.48, 0.32)
+            theme::DANGER
         };
         **label.0 = format!(
             "{header}\n{} : {status}\nFlèches : déplacer · J/L : orienter · souris : viser\nX / B / Échap : annuler · entrez ensuite par l’ouverture pour recharger",
@@ -91,7 +150,7 @@ fn refresh(
             }
         );
     } else {
-        label.1.0 = Color::WHITE;
+        label.1.0 = theme::TEXT;
         let feet = terrain.body_relative(state.feet);
         let instruction = if c.nearby(feet).is_some() {
             "E : récupérer 6 alliage".into()
@@ -122,9 +181,30 @@ fn refresh(
                     )
                 })
         };
-        **label.0 = format!(
-            "{header}\n{instruction}\nB : placer un abri · {}",
-            c.message
-        );
+        **label.0 = format!("{header}\n{instruction}\nB : construction · {}", c.message);
+    }
+}
+
+fn interact(
+    menu: Res<MenuState>,
+    mut c: ResMut<Construction>,
+    mut buttons: Query<(&Interaction, &BuildAction, &mut BackgroundColor), Changed<Interaction>>,
+) {
+    if menu.is_open() || !c.catalog_open {
+        return;
+    }
+    for (interaction, action, mut color) in &mut buttons {
+        color.0 = match interaction {
+            Interaction::Hovered => theme::HOVER,
+            Interaction::Pressed => theme::ACTIVE,
+            Interaction::None => theme::BUTTON,
+        };
+        if *interaction == Interaction::Pressed {
+            if action.0 {
+                c.place_requested = true;
+            } else {
+                c.close_requested = true;
+            }
+        }
     }
 }

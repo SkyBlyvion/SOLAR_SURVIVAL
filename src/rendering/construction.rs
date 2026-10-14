@@ -87,7 +87,10 @@ fn sync(
     let eye = terrain.body_relative(state.eye(&terrain));
     let feet = terrain.body_relative(state.feet);
     cache.deposits.retain(|&index, entity| {
-        let d = &c.deposits[index];
+        let Some(d) = c.deposits.get(index) else {
+            commands.entity(*entity).despawn();
+            return false;
+        };
         if surface && d.remaining > 0 && d.position_m.distance(feet) < 120.0 {
             return true;
         }
@@ -257,5 +260,10 @@ mod tests {
         app.world_mut().resource_mut::<Explorer>().mode = MovementMode::Surface;
         app.update();
         assert_eq!(app.world().resource::<Cache>().deposits.len(), 7);
+        // Une sauvegarde antérieure à l'arrivée remplace les huit dépôts par zéro.
+        app.world_mut().insert_resource(Construction::default());
+        app.update();
+        assert!(app.world().resource::<Cache>().deposits.is_empty());
+        assert!(app.world().resource::<Cache>().preview.is_empty());
     }
 }

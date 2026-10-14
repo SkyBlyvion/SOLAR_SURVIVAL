@@ -501,6 +501,7 @@ mod tests {
         let mut app = App::new();
         app.add_plugins(MinimalPlugins)
             .insert_resource(GameConfig {
+                persistence_validation_dir: None,
                 construction_validation_dir: None,
                 survival_validation_dir: None,
                 start_jd: J2000,

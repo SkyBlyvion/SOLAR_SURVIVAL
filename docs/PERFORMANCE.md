@@ -1,3 +1,11 @@
+# P6 : profils et interface — portée des vérifications
+
+14 octobre 2026. Les profils conservent seulement des noms en mémoire lors de la navigation ; seule l’aventure active possède terrain, objets et ressources de jeu chargés. La liste de profils est paginée selon la hauteur de fenêtre. Les panneaux de construction partagent le cube et les six pièces déjà utilisés pour le placement, sans nouveau mesh par frame. Les dossiers d’aventures n’ajoutent pas de planètes/terrains résidents.
+
+Les diagnostics P6 avec captures vérifient les fonctionnalités et la lisibilité, **pas des performances**. Les réglages 75°/MSAA off préparés pendant le scénario distinguent les images des baselines précédentes ; aucun gain FPS n’est tiré de leur HUD. Windows/cible et RAM/VRAM exhaustive restent non validés. [Contrat](PERSISTENCE.md), [résultats](VALIDATION.md).
+
+---
+
 # Performance actuelle : caméra unique et ciel — 13 octobre 2026
 
 Deux versions release comparées sur le même poste Ubuntu/i7-6700K/GTX 1060 3 Go/NVK/Mesa immediate, **1440×900, MSAA ×4**, terrain mondial adaptatif, même calendrier/site/parcours et fenêtres : deux essais sans recorder et un avec avant changement, deux sans recorder/un avec/un diagnostic no_sky après. Tous les sept essais terminent code 0 sans ERROR/WARN/panic. Pas de compilation, autre jeu GPU ou capture pendant les fenêtres. Concordances vraies [avant](sky-validation/before/concordance.json) et [après](sky-validation/after/concordance.json). Les hashes après incluent aussi les shaders WGSL. [Données détaillées et transactions](sky-validation/comparison.json), [contexte matériel](sky-validation/host.json).
