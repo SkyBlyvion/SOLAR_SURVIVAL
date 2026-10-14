@@ -1,0 +1,10 @@
+{
+  "archive": "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/dist/solar-survival-ubuntu-p7.tar.gz",
+  "bytes": 36875096,
+  "sha256": "104d0b884fe6a41b169a3ddd477c4e5951928c45507143cbd4f12cbed219898d",
+  "binary_sha256": "96ef1731fdc29a540ca31858b8e7cd876b2fa31f8142bac8ec84533d45d813ea",
+  "manifest_files_verified": 747,
+  "extracted": "/tmp/solar-survival-p7-package-check/solar-survival-ubuntu-p7",
+  "launch_verified": false,
+  "limitations": "Extraction et empreintes v\u00e9rifi\u00e9es ; parcours graphique de cette archive non relanc\u00e9 \u00e0 la demande utilisateur."
+}

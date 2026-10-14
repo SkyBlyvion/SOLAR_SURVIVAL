@@ -12,9 +12,9 @@ Prototype d'exploration 3D de notre système solaire, fondation d'un jeu de surv
 
 **Survie P4 :** une combinaison de 180 s d’oxygène et un abri de recharge accessible à six mètres devant l’arrivée. Entrez par la porte pour recharger ; à zéro, **R** relance une expédition à l’abri. [Règles et architecture](docs/SURVIVAL.md).
 
-**Après le MVP : P7, qualité visuelle et textures.** Prochaine passe : matériaux martiens de proximité et cartes Terre/Mars sourcées NASA/JPL, puis relief/horizons, progression de base et exploration. Ces travaux sont planifiés, pas encore implémentés. [Direction visuelle et sources](docs/ART_DIRECTION.md). La validation native Windows reste ouverte.
+**P7, qualité visuelle et textures :** sol martien détaillé, panneaux industriels partagés, caisses marquées et plaque O₂ ; cartes pour les huit planètes : Blue Marble, Viking/USGS, Voyager et représentations NASA/JPL/VTAD. Les sources artistiques sont identifiées dans les crédits. Les textures utilisent des niveaux précalculés et occupent 40,2 Mio de données GPU, sous le budget de 128 Mio. Relief/horizons P8, progression de base P9 et exploration P10 restent prévus. [Direction visuelle et sources](docs/ART_DIRECTION.md). Les derniers contrôles graphiques/performance après extension aux six autres planètes et le lancement de l’archive restent ouverts ; [état précis](docs/VALIDATION.md). La validation native Windows reste ouverte.
 
-**Cible de performance :** machines modestes, RTX 4050 **6 Go au mieux**. P7 prévoit des textures modestes et partagées, avec budgets mémoire et mesures ; objectif 1080p/60 FPS sur la cible à vérifier. Le CPU indiqué « i5 12700K » reste à confirmer. [Contraintes détaillées](docs/ART_DIRECTION.md).
+**Cible de performance :** machines modestes, RTX 4050 **6 Go au mieux**. P7 utilise des textures modestes et partagées, avec budgets mémoire et mesures ; objectif 1080p/60 FPS sur la cible à vérifier. Le CPU indiqué « i5 12700K » reste à confirmer. [Contraintes détaillées](docs/ART_DIRECTION.md).
 
 La suite du développement suit [la roadmap](docs/ROADMAP.md). Le [prompt du prochain chat](docs/NEXT_CHAT.md) est actualisé à chaque fin de chat de développement avec l'état réel et l'objectif suivant.
 
@@ -114,7 +114,7 @@ Les vitesses disponibles sont 5 m/s, 250 m/s, 20 km/s, 20 000 km/s, 2 millions k
 - Catalogue embarqué NASA/JPL, indépendant de toute API ou connexion pendant le jeu.
 - Terre et Lune positionnées autour du barycentre Terre–Lune fourni par JPL.
 - Soleil émissif avec halo, étoiles, rotation, faces diurnes/nocturnes suivant la direction physique du Soleil.
-- Matériaux procéduraux artistiques : continents et nuages, relief visuel martien, bandes des géantes, anneaux de Saturne.
+- Cartes sourcées NASA/JPL/VTAD pour les huit planètes en visite spatiale ; Soleil/Lune et anneaux restent procéduraux ou artistiques. Sol martien de proximité et matériaux industriels, partagés avec mipmaps et filtrage anisotrope.
 - Navigation libre en `f64`, visite instantanée, origine flottante, repères et conversion locale contrôlée.
 - Garde sphérique avec intersection balayée contre le passage à travers les corps à haute vitesse.
 - Deux meshes de sphère partagés pour le LOD ; étoiles regroupées dans un mesh ; pas de création de mesh par frame.
@@ -134,7 +134,7 @@ src/config/validation.rs scénarios graphiques optionnels espace et surface
 src/config/profiling.rs mesures opt-in CPU/GPU et variantes de comparaison
 src/lib.rs            ordre des systèmes Input → Simulation → Navigation → Rendu → UI
 src/universe/         catalogue, unités SI, calculs orbitaux, horloge, repères f64
-src/rendering/        proxies astronomiques, ciel local et meshes de terrain en mètres
+src/rendering/        proxies astronomiques, ciel local, textures partagées et sol triplanaire métrique
 src/camera/           entrées et orchestration de navigation
 src/player/           état d'exploration, repère suivi et contrôleur FPS
 src/physics/          garde spatiale, gravité radiale et contacts cinématiques f64
@@ -245,7 +245,7 @@ Le [contrat P3.1](docs/CUBE_SPHERE.md) et sa démonstration optionnelle vérifie
 
 Les données et conventions sont détaillées dans [docs/ASTRONOMY.md](docs/ASTRONOMY.md). Ce modèle képlérien n'est pas une éphéméride scientifique : pas de N-corps, perturbations lunaires, précession exacte, retards lumineux ou éclipses. La phase et l'orientation lunaires sont conventionnelles, explicitement non observées. La période lunaire et ses dimensions sont réelles.
 
-Le rendu compresse chaque profondeur selon `d_render = 10 000 × d / (d + 10⁸)` et applique le même facteur au rayon du corps. L'angle apparent d'une sphère est conservé ; la profondeur GPU est un proxy. Les occultations entre sphères volumineuses et les anneaux ne sont pas exactes après compression. L'éclairage est directionnel par corps et artistiquement exposé, sans photométrie en inverse carré ni ombres entre corps. Les continents, étoiles, cratères visuels et nuages ne sont pas une cartographie réelle. Les axes ont une inclinaison indicative avec longitude de pôle conventionnelle ; les objets utilisent des rayons moyens sphériques sans aplatissement.
+Le rendu compresse chaque profondeur selon `d_render = 10 000 × d / (d + 10⁸)` et applique le même facteur au rayon du corps. L'angle apparent d'une sphère est conservé ; la profondeur GPU est un proxy. Les occultations entre sphères volumineuses et les anneaux ne sont pas exactes après compression. L'éclairage est directionnel par corps et artistiquement exposé, sans photométrie en inverse carré ni ombres entre corps. Les huit planètes portent des cartes sourcées pour le rendu orbital ; certaines sont des illustrations explicitement créditées. Elles ne fournissent pas une localisation IAU exacte ni un détail de sol. Le Soleil, la Lune et les étoiles restent procéduraux ou artistiques. Les axes ont une inclinaison indicative avec longitude de pôle conventionnelle ; les objets utilisent des rayons moyens sphériques sans aplatissement.
 
 En mode espace, la garde de navigation maintient au moins 1 km d'altitude et borne les voyages à 10¹⁶ mètres du Soleil. Elle ne simule pas de contacts physiques, et peut expulser la caméra si une planète mobile la rattrape. Une planète lointaine peut être subpixel : les marqueurs et visites permettent de la retrouver. Le GPU doit supporter les fonctionnalités 3D de Bevy/wgpu. 60 FPS est un objectif à mesurer sur le matériel cible, pas une garantie.
 
@@ -312,3 +312,22 @@ Diagnostic après compilation : `python3 scripts/validate_construction.py --outp
 Le catalogue de construction en jeu s’ouvre avec B, présente l’abri, son coût et le stock. Choisir Prévisualiser, puis placer/orienter et confirmer. Le catalogue libère la souris ; l’oxygène continue. HUD et menus utilisent les mêmes couleurs et échelles de texte. La navigation N et la télémétrie H sont séparées des instruments vitaux.
 
 Après un build natif, `python3 scripts/package_release.py --output dist/solar-survival-ubuntu` produit le binaire, les assets, licences, manifeste et lanceur dans une archive Linux. Extraire, puis lancer `lancer.sh` ; sous Windows natif, le même script produit zip/exe/lancer.cmd. [Contrat des profils, chemins et limites](docs/PERSISTENCE.md), [validations réellement exécutées](docs/VALIDATION.md). Windows 11 reste à vérifier sur un hôte Windows.
+
+
+## Production visuelle P7
+
+Chef de projet et orchestrateur : **SkyBlyvion**. Sol artistique ImageGen, panneaux
+industriels à échelle métrique, caisses lisibles, plaque O₂ et cartes orbitales pour
+les huit planètes. Aucun agrandissement inutile des cartes NASA natives.
+[Crédits, conditions et transformations](assets/textures/CREDITS.md),
+[empreintes et occupation des 13 textures](assets/textures/manifest.json).
+Les niveaux de détail sont préparés hors jeu, le sol reste ancré dans les axes
+corporels de Mars aux rebasages et les assets sont partagés entre instances.
+Aucune collision, sauvegarde P6, horloge ou donnée physique changée.
+
+Préparation facultative des exports par les outils de production Python avec
+Pillow/NumPy : `python3 scripts/prepare_p7_textures.py`. Ils ne sont pas requis
+pour jouer ou compiler Rust, les exports sont versionnés. Après compilation,
+`validate_sky.py --p7` inspecte Terre/Mars/sol et `--planets` les autres globes,
+coutures/pôles et crédits ; ajouter un dossier `--output` neuf et les options
+locales X11/Mesa seulement sur le poste concerné. [Validations](docs/VALIDATION.md).

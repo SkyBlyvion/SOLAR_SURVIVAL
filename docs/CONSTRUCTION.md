@@ -67,3 +67,7 @@ P6 restaure le stock, l’épuisement des dépôts et les identités/poses corpo
 ## Profils et interface P6
 
 Chaque aventure nommée possède ses propres caisses, stock et abris. Une nouvelle aventure ne reprend aucun objet de la précédente. Le catalogue B et les instructions de placement utilisent la palette commune du HUD ; l’état de disponibilité ne remplace pas l’admission finale et aucun coût n’est dépensé pendant la consultation/prévisualisation. [PERSISTENCE](PERSISTENCE.md).
+
+## Rendu P7
+
+Les six colliders du même OxygenShelter, porte et service restent identiques. Sept proxies visuels par abri avec plaque O₂ sans collider ; cinq meshes partagés (cube et quatre UV métriques). Quatre matériaux d’abri partagés et caisses texturées. Maximum 32 abris : 224 proxies d’abris + 8 caisses + 6 pièces de preview = 238. Ni handles ni proxies ajoutés aux sauvegardes.

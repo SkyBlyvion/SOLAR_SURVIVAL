@@ -1,0 +1,15 @@
+Mercure manquants : lignes 0 499 bandes [5290, 0, 0, 0, 0, 0, 0, 1944]
+Traceback (most recent call last):
+  File "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/scripts/prepare_p7_textures.py", line 125, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/scripts/prepare_p7_textures.py", line 119, in main
+    records.extend(prepare(export))
+                   ^^^^^^^^^^^^^^^
+  File "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/scripts/prepare_orbital_textures.py", line 73, in prepare
+    records=[export('mercury',mercury_map(),False)]
+                              ^^^^^^^^^^^^^
+  File "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/scripts/prepare_orbital_textures.py", line 68, in mercury_map
+    assert covered.all(), f'Mercure : {np.count_nonzero(~covered)} pixels sans couverture'
+           ^^^^^^^^^^^^^
+AssertionError: Mercure : 7234 pixels sans couverture

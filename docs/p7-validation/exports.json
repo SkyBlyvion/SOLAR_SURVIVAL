@@ -1,0 +1,103 @@
+{
+  "pillow": "12.3.0",
+  "numpy": "2.3.5",
+  "manifest": {
+    "textures": [
+      {
+        "file": "earth.p7tex",
+        "width": 2048,
+        "height": 1024,
+        "mip_levels": 12,
+        "format": "Rgba8UnormSrgb",
+        "repeat": false,
+        "gpu_bytes": 11184812,
+        "sha256": "10c0867ef7a8e34c4b756f61a618885ffd211c665f59a07946e040a4358ccba6"
+      },
+      {
+        "file": "mars.p7tex",
+        "width": 1440,
+        "height": 720,
+        "mip_levels": 11,
+        "format": "Rgba8UnormSrgb",
+        "repeat": false,
+        "gpu_bytes": 5529400,
+        "sha256": "7389f56d31bc0f80412793933fb4176196f30eefaaabac26f7680f2fb26763da"
+      },
+      {
+        "file": "regolith.p7tex",
+        "width": 1024,
+        "height": 1024,
+        "mip_levels": 11,
+        "format": "Rgba8UnormSrgb",
+        "repeat": true,
+        "gpu_bytes": 5592404,
+        "sha256": "9c6d322d48862cf5d21a8fe3f88169dd7342751a2d343ca9327eb3fa3b7d95c3"
+      },
+      {
+        "file": "wall.p7tex",
+        "width": 512,
+        "height": 512,
+        "mip_levels": 10,
+        "format": "Rgba8UnormSrgb",
+        "repeat": true,
+        "gpu_bytes": 1398100,
+        "sha256": "ea5b459d15b958d689f1682dd157d06867c05b6c8430ca3b8d3c29dcb0a28cb0"
+      },
+      {
+        "file": "roof.p7tex",
+        "width": 512,
+        "height": 512,
+        "mip_levels": 10,
+        "format": "Rgba8UnormSrgb",
+        "repeat": true,
+        "gpu_bytes": 1398100,
+        "sha256": "5f93e1fe2a208da462fe041e38a54339755994b439c0cedbe8321ab7e548ed36"
+      },
+      {
+        "file": "crate.p7tex",
+        "width": 512,
+        "height": 512,
+        "mip_levels": 10,
+        "format": "Rgba8UnormSrgb",
+        "repeat": false,
+        "gpu_bytes": 1398100,
+        "sha256": "b10a76d81ac948c8e614ab21767f2cd3ef456e453239ed5452350687c44a896d"
+      },
+      {
+        "file": "oxygen-sign.p7tex",
+        "width": 512,
+        "height": 128,
+        "mip_levels": 10,
+        "format": "Rgba8UnormSrgb",
+        "repeat": false,
+        "gpu_bytes": 349532,
+        "sha256": "0931e9d57bac679d85dc29222f52009cf113657290d963551706753eaa7bc1d6"
+      }
+    ],
+    "total_gpu_bytes": 26850448,
+    "budget_gpu_bytes": 134217728,
+    "masters": {
+      "art/p7-masters/earth-january.jpg": {
+        "sha256": "99f5faad74efe985fbf1714c8be7296ca9999759a1215b65f99b7f1df278dde5",
+        "dimensions": [
+          5400,
+          2700
+        ]
+      },
+      "art/p7-masters/mars.jpg": {
+        "sha256": "12ec6bf02ebd42a246edc778cb2ce8c595b4d9f0892badf0bfff8abb2303c780",
+        "dimensions": [
+          1440,
+          720
+        ]
+      },
+      "art/p7-masters/regolith-generated.png": {
+        "sha256": "471604ebaeb1acaa76fadb702c669afeb655b2882ac2ca583c39847293a91200",
+        "dimensions": [
+          1254,
+          1254
+        ]
+      }
+    }
+  }
+}

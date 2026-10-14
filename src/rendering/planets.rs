@@ -18,11 +18,15 @@ pub struct PlanetUniform {
     pub sun: Vec4,
     pub color_kind: Vec4,
     pub parameters: Vec4,
+    pub body_from_world: Mat4,
 }
 #[derive(Asset, TypePath, AsBindGroup, Debug, Clone)]
 pub struct PlanetMaterial {
     #[uniform(0)]
     pub data: PlanetUniform,
+    #[texture(1)]
+    #[sampler(2)]
+    pub map: Option<Handle<Image>>,
 }
 impl Material for PlanetMaterial {
     fn fragment_shader() -> ShaderRef {
@@ -46,6 +50,7 @@ pub fn spawn(
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<PlanetMaterial>>,
     mut standard: ResMut<Assets<StandardMaterial>>,
+    textures: Res<super::textures::P7Textures>,
 ) {
     let near = meshes.add(
         Sphere::new(1.0)
@@ -69,7 +74,24 @@ pub fn spawn(
                     body.color[2],
                     body.id.0 as f32,
                 ),
-                parameters: Vec4::new((body.generation.seed % 4096) as f32, 0.0, 0.0, 0.0),
+                parameters: Vec4::new(
+                    (body.generation.seed % 4096) as f32,
+                    f32::from((1..=8).contains(&body.id.0)),
+                    0.0,
+                    0.0,
+                ),
+                body_from_world: Mat4::IDENTITY,
+            },
+            map: match body.id {
+                BodyId(1) => Some(textures.mercury.clone()),
+                BodyId(2) => Some(textures.venus.clone()),
+                BodyId(3) => Some(textures.earth.clone()),
+                BodyId(4) => Some(textures.mars.clone()),
+                BodyId(5) => Some(textures.jupiter.clone()),
+                BodyId(6) => Some(textures.saturn.clone()),
+                BodyId(7) => Some(textures.uranus.clone()),
+                BodyId(8) => Some(textures.neptune.clone()),
+                _ => None,
             },
         });
         commands.spawn((
@@ -191,6 +213,7 @@ pub fn sync(
             if let Some(mut material) = material.and_then(|handle| materials.get_mut(&handle.0)) {
                 let sun = (-position.0).normalize_or_zero().as_vec3();
                 material.data.sun = sun.extend(0.0);
+                material.data.body_from_world = Mat4::from_quat(transform.rotation.inverse());
             }
         }
     }

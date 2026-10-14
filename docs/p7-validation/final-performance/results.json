@@ -1,0 +1,11 @@
+[
+  {
+    "run": "run-adaptive-1",
+    "seconds": 26.461873779000598,
+    "exit_code": 101,
+    "focused_window": "0x4400004",
+    "diagnostics": [
+      "thread 'Compute Task Pool (3)' (102362) panicked at src/config/construction_validation.rs:188:17:"
+    ]
+  }
+]

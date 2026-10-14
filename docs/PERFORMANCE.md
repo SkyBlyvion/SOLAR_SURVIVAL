@@ -1,3 +1,25 @@
+# Mesures P7 — 14 octobre 2026
+
+Les 13 textures des huit planètes et de la surface occupent **40,168 Mio** de texels RGBA8 sRGB/mipmaps contre un plafond de **128 Mio** (134 217 728 octets). Ces 128 Mio concernent les nouvelles textures partagées en mémoire GPU, pas le disque ni la VRAM totale du jeu. Une image 1024² RGBA8 occupe 4 Mio au niveau principal et environ 5,33 Mio avec tous ses mips ; un PNG léger peut demander autant de mémoire une fois décodé. Le plafond laisse une marge aux meshes, ombres, buffers et au reste du jeu sur une cible de 6 Go, sans garantir les FPS. Les descripteurs réels des 13 GpuImage confirment 42 118 856 octets. Alignement du pilote, copies/staging/pics et VRAM totale exclus : compteurs DRM absents sur NVK. La sonde Vulkan externe décrit le processus observateur, pas celui du jeu ; heapUsage zéro n’est pas une mesure du jeu.
+
+Poste : Core i7-6700K, 32 Go, GTX 1060 3 Go/NVK, 1440×900, MSAA4, Mesa immediate local, même scénario P5, sans captures, runs GPU recorder séparés. Premier périmètre Terre/Mars + surface final albedo :
+
+| Phase | Avant moyenne / p95 ms | Après moyenne / p95 ms |
+|---|---:|---:|
+| Abri au repos | 30,332 / 32,976 | 33,323 / 34,098 |
+| Placement | 35,427 / 38,421 | 38,328 / 41,375 |
+| Streaming | 29,295 / 32,204 | 31,980 / 33,725 |
+
+[Avant](p7-validation/before-p5/summary.csv), [après albedo](p7-validation/after-p5-albedo/summary.csv). GPU main opaque abri : 8,886 → 10,527 ms ; ces spans ne sont pas le temps GPU complet. Les spans CPU et autres GPU restent dans les CSV. Deux références initiales sans recorder ; une répétition finale albedo sans recorder et un run GPU. Les essais bump/branche textureGrad n’ont pas apporté le gain attendu : shader final à trois échantillons albedo, aucun bump. Conserver after-p5/after-p5-optimized comme essais, pas résultat final.
+
+Mémoire processus : baseline HWM 252 952 Kio ; premier lancement final à 13 textures HWM 277 708 Kio, arrêté avant la fin. Ce dernier pic partiel ne clôt pas la comparaison ; RSS inclut tout le processus et ne mesure pas isolément les copies textures. CPU préparation des 13 payloads : 23,410–23,626 ms au lancement ; pas un temps de chargement complet du jeu.
+
+Les essais finaux à 13 textures échouent lors de marches dépendantes du focus/capture, dans un contexte de conflit avec le travail utilisateur sur le même bureau, confirmé par lui. Pas de mesure finale exploitable exportée. L’essai d’écran virtuel échoue avant présentation, sans DRI3 ; abandonné à la demande utilisateur, aucune adaptation du jeu conservée. Ne plus lancer --focus-x11 pendant qu’il travaille. Reprendre les derniers tests dans un créneau compatible, sans prétendre avoir validé le plafond VRAM total, le staging ou 1080p/60 FPS sur RTX 4050/Windows.
+
+---
+
+# Historique — cadrage initial et mesures antérieures
+
 # Cible P7 et contrainte de performance — 14 octobre 2026
 
 La RTX 4050 **6 Go** est le haut de la cible utilisateur, pas une configuration minimale exigeante. CPU annoncé « i5 12700K », modèle exact à confirmer (12700K correspond officiellement à un i7) ; RAM/puissance GPU/pilote à relever. Objectif de travail **1080p/60 FPS sur la cible**, pas une mesure acquise. Le jeu doit conserver une qualité réduite viable sur des configurations plus faibles ; seuil minimal à établir avec des essais réels.

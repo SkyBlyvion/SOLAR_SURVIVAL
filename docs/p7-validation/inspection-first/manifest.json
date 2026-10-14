@@ -1,0 +1,81 @@
+[
+  {
+    "board": "docs/p7-validation/inspection-first/sky-00.jpg",
+    "captures": [
+      "docs/p7-validation/sky-albedo/captures/sky-00.png",
+      "docs/p7-validation/sky-albedo/captures/sky-01.png",
+      "docs/p7-validation/sky-albedo/captures/sky-02.png",
+      "docs/p7-validation/sky-albedo/captures/sky-03.png"
+    ]
+  },
+  {
+    "board": "docs/p7-validation/inspection-first/sky-01.jpg",
+    "captures": [
+      "docs/p7-validation/sky-albedo/captures/sky-04.png",
+      "docs/p7-validation/sky-albedo/captures/sky-05.png",
+      "docs/p7-validation/sky-albedo/captures/sky-06.png",
+      "docs/p7-validation/sky-albedo/captures/sky-07.png"
+    ]
+  },
+  {
+    "board": "docs/p7-validation/inspection-first/sky-02.jpg",
+    "captures": [
+      "docs/p7-validation/sky-albedo/captures/sky-08.png",
+      "docs/p7-validation/sky-albedo/captures/sky-09.png",
+      "docs/p7-validation/sky-albedo/captures/sky-10.png",
+      "docs/p7-validation/sky-albedo/captures/sky-11.png"
+    ]
+  },
+  {
+    "board": "docs/p7-validation/inspection-first/sky-03.jpg",
+    "captures": [
+      "docs/p7-validation/sky-albedo/captures/sky-12.png",
+      "docs/p7-validation/sky-albedo/captures/sky-13.png",
+      "docs/p7-validation/sky-albedo/captures/sky-14.png",
+      "docs/p7-validation/sky-albedo/captures/sky-15.png"
+    ]
+  },
+  {
+    "board": "docs/p7-validation/inspection-first/sky-04.jpg",
+    "captures": [
+      "docs/p7-validation/sky-albedo/captures/sky-16.png",
+      "docs/p7-validation/sky-albedo/captures/sky-17.png",
+      "docs/p7-validation/sky-albedo/captures/sky-18.png",
+      "docs/p7-validation/sky-albedo/captures/sky-19.png"
+    ]
+  },
+  {
+    "board": "docs/p7-validation/inspection-first/sky-05.jpg",
+    "captures": [
+      "docs/p7-validation/sky-albedo/captures/sky-20.png",
+      "docs/p7-validation/sky-albedo/captures/sky-21.png",
+      "docs/p7-validation/sky-albedo/captures/sky-22.png",
+      "docs/p7-validation/sky-albedo/captures/sky-23.png"
+    ]
+  },
+  {
+    "board": "docs/p7-validation/inspection-first/sky-06.jpg",
+    "captures": [
+      "docs/p7-validation/sky-albedo/captures/sky-24.png",
+      "docs/p7-validation/sky-albedo/captures/sky-25.png",
+      "docs/p7-validation/sky-albedo/captures/sky-26.png",
+      "docs/p7-validation/sky-albedo/captures/sky-27.png"
+    ]
+  },
+  {
+    "board": "docs/p7-validation/inspection-first/sky-07.jpg",
+    "captures": [
+      "docs/p7-validation/sky-albedo/captures/sky-28.png",
+      "docs/p7-validation/sky-albedo/captures/sky-29.png",
+      "docs/p7-validation/sky-albedo/captures/sky-30.png",
+      "docs/p7-validation/sky-albedo/captures/sky-31.png"
+    ]
+  },
+  {
+    "board": "docs/p7-validation/inspection-first/sky-08.jpg",
+    "captures": [
+      "docs/p7-validation/sky-albedo/captures/sky-32.png",
+      "docs/p7-validation/sky-albedo/captures/sky-33.png"
+    ]
+  }
+]

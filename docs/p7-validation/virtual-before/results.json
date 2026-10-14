@@ -1,0 +1,13 @@
+[
+  {
+    "run": "run-adaptive-1",
+    "seconds": 0.42726930000026186,
+    "exit_code": 0,
+    "focused_window": null,
+    "diagnostics": [
+      "2026-10-14T09:44:59.416168Z  WARN winit::platform_impl::linux::x11::xdisplay: error setting XSETTINGS; Xft options won't reload automatically",
+      "2026-10-14T09:44:59.606393Z  WARN winit::platform_impl::linux::x11::util::randr: XRandR reported that the display's 0mm in size, which is certifiably insane",
+      "thread 'Compute Task Pool (0)' (106715) panicked at /home/cfa_m2_cs/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/bevy_render-0.19.1/src/view/window/mod.rs:502:13:"
+    ]
+  }
+]

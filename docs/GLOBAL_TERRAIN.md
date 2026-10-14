@@ -111,3 +111,14 @@ Le fournisseur expose aussi les extrema exacts sous un carré de construction (d
 ## Caméra et ciel uniques
 
 13 octobre 2026 : les proxies locaux sont désormais rendus par la même GameCamera que les visites spatiales, sur la couche 1. [Ciel et masquage](SURFACE_SKY.md). Les poses corporelles, contacts, horloges, budgets terrain et services de jeu décrits ici restent autoritaires ; aucun objet de ciel ne fournit du support ou ne réinstalle un bâtiment/dépôt. Les nouvelles preuves sont distinctes des campagnes historiques.
+
+
+## P7 : détail de surface indépendant du LOD
+
+Les meshes reçoivent désormais UV0/UV1 pour trois coordonnées de texture corporelles,
+calculées après réduction de l'origine en f64. Les patches partagés gardent leur
+phase au rebasage et les bords/coins partagent le même échantillonnage périodique,
+indépendamment des axes des faces. Aucun sommet/indice/normal physique ou contact
+changé ; maximum conservateur ajouté 16 octets UV par sommet (226 512 octets pour
+14 157 sommets), distinct du budget des images. Le matériau et l'image de sol sont
+partagés. [Architecture et limites](ART_DIRECTION.md). Relief et horizons restent P8.

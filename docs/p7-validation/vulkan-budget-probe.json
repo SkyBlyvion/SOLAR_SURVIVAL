@@ -1,0 +1,26 @@
+{
+  "device": "NVIDIA GeForce GTX 1060 3GB (NVK GP106)",
+  "heaps": [
+    {
+      "index": 0,
+      "size_bytes": 3221225472,
+      "device_local": true,
+      "budget_bytes": 1914699776,
+      "usage_bytes": 0
+    },
+    {
+      "index": 1,
+      "size_bytes": 268435456,
+      "device_local": true,
+      "budget_bytes": 241172480,
+      "usage_bytes": 0
+    },
+    {
+      "index": 2,
+      "size_bytes": 25172115456,
+      "device_local": false,
+      "budget_bytes": 16201547776,
+      "usage_bytes": 0
+    }
+  ]
+}

@@ -24,7 +24,7 @@ def main():
     args=parser.parse_args()
     out=args.output.resolve(); out.mkdir()
     binary=(args.binary or ROOT/'target/release'/('solar_survival.exe' if os.name=='nt' else 'solar_survival')).resolve()
-    paths=sorted([*ROOT.glob('src/**/*.rs'),*ROOT.glob('tests/**/*.rs'),*ROOT.glob('assets/shaders/*'),ROOT/'Cargo.toml',ROOT/'Cargo.lock'])
+    paths=sorted([*ROOT.glob('src/**/*.rs'),*ROOT.glob('tests/**/*.rs'),*[p for p in ROOT.glob('assets/**/*') if p.is_file()],ROOT/'Cargo.toml',ROOT/'Cargo.lock'])
     meta=dict(binary_sha256=sha(binary),source_sha256={str(p.relative_to(ROOT)):sha(p) for p in paths},binary=str(binary),display=os.environ.get('DISPLAY'))
     (out/'environment.json').write_text(json.dumps(meta,indent=2)+'\n')
     env={k:v for k,v in os.environ.items() if not k.startswith('SOLAR_')}

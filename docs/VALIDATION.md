@@ -1,3 +1,20 @@
+# P7 — implémentation intégrée, validation finale partielle
+
+14 octobre 2026. Départ réel `f748faf`, origin identique avant les modifications. Ubuntu 24.04.5/X11, Core i7-6700K, 32 Go, GTX 1060 3 Go/NVK/Mesa 25.2.8. Rust 1.99.0, Bevy exactement =0.19.1, Cargo inchangé. Chef de projet et orchestrateur : **SkyBlyvion**.
+
+- Six contrôles Cargo réussis sur le code des huit planètes, **134 tests**, release 178,322 s : [résultats](p7-validation/build-all-planets-final/results.json). Deux fixtures de profils P6 réellement livrés restaurent leurs stocks/abris/services ; textures/mips et stabilité de phase f64 aux raccords testées.
+- 13 images RGBA8 sRGB et mips précalculés : **42 118 856 octets = 40,168 Mio**, audit des descripteurs GPU observé au lancement final, préparation CPU 23,410–23,626 ms. VRAM totale, allocation pilote/staging non mesurés. [Sources](../assets/textures/CREDITS.md).
+- Avant extension des six autres planètes : [34 captures](p7-validation/sky-albedo/results.json), 102,403 s, code 0, aucun diagnostic, hashes inchangés ; [inspection réelle](p7-validation/inspection-first/verified.json) sur neuf planches et trois originaux. Sol/abri/porte/plaque/ciel/jour/nuit/rebasage/coutures/pôles Terre et Mars inspectés. Ne pas attribuer ces captures au rendu des six autres planètes.
+- Mesures avant/après sans captures réalisées pour le premier périmètre Terre/Mars/surface : voir [PERFORMANCE](PERFORMANCE.md). Coût visible supplémentaire d’environ 2–3 ms sur ce poste ; pas de 60 FPS validés.
+- Deux essais finaux de performance interrompus par des assertions de marche (focus/capture), conservés dans final-performance et final-performance-retry. L’utilisateur confirme travailler sur le même bureau et subir la prise de souris/focus. Campagnes arrêtées à sa demande ; pas de succès final ni de benchmark inventé.
+- Archive Ubuntu **36 875 096 octets**, extraction hors checkout et toutes les empreintes du manifeste vérifiées, même binaire release : [preuve](p7-validation/package.json). Lancement de cette archive et parcours graphique des profils avec P7 non effectués.
+
+**Restent ouverts :** inspection des six autres planètes et crédits en jeu, mesure finale comparable sans interruptions, chargement/rebasage et profils de l’archive P7, VRAM totale/staging et Windows 11 natif/RTX 4050. Aucune modification de contrôles ni écran virtuel conservé. Le test Xvfb échoue faute de DRI3/Vulkan presentation ; c’est une tentative de diagnostic, pas une régression du jeu ni une preuve GPU utile. [Passation](NEXT_CHAT.md), [notes](p7-validation/NOTES.md).
+
+---
+
+# Historique préservé — planification puis validation P6 et antérieures
+
 > **Précision matérielle — 14 octobre 2026 :** RTX 4050 **6 Go au mieux**, CPU « i5 12700K » à confirmer. P7 reçoit des budgets initiaux de textures modestes, 128 Mio de nouvelles textures résidentes et un objectif 1080p/60 FPS à vérifier sur la cible ; [contrat](ART_DIRECTION.md), [protocole](PERFORMANCE.md). Mise à jour documentaire uniquement, aucun asset/résultat de performance ajouté ; budgets non encore instrumentés.
 
 > **Planification post-MVP — 14 octobre 2026 :** le MVP fonctionnel P1–P6 est réalisé sur Ubuntu. P7 visuel/textures est désormais l’objectif suivant ; [cadrage et sources](ART_DIRECTION.md), [roadmap prolongée](ROADMAP.md). Cette passe ne modifie que la documentation : aucun nouveau rendu, asset, test Cargo ou lancement graphique. Les résultats ci-dessous restent ceux du jeu `6898bdb`. La validation Windows native demeure ouverte et transversale.

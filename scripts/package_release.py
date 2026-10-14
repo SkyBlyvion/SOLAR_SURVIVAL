@@ -63,7 +63,7 @@ def main():
         'Plusieurs aventures : saves/Nom/session.solar dans le dossier de travail.\n'
         'SOLAR_SAVE_ROOT permet de choisir un dossier parent ailleurs. Quitter ne sauvegarde pas automatiquement.\n'
         'La copie précédente est conservée en .bak ; deux instances simultanées ne sont pas prises en charge.\n'
-        'Conserver assets à côté du programme. NASA/JPL : données du catalogue.\n'
+        'Conserver assets à côté du programme. Crédits des textures : assets/textures/CREDITS.md.\nNASA/JPL : cartes orbitales et données du catalogue.\n'
         'Police DejaVu : licence dans assets/fonts. Jeu MIT ; Bevy MIT/Apache-2.0.\n', encoding='utf-8')
     metadata = dict(platform=system, binary_sha256=hashlib.sha256(binary.read_bytes()).hexdigest(),
                     files={str(p.relative_to(out)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(out.rglob('*')) if p.is_file()})

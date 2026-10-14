@@ -36,7 +36,11 @@ impl Plugin for ConstructionRenderingPlugin {
             .add_systems(Update, sync.in_set(GameSet::Rendering));
     }
 }
-fn setup(mut commands: Commands, mut materials: ResMut<Assets<StandardMaterial>>) {
+fn setup(
+    mut commands: Commands,
+    mut materials: ResMut<Assets<StandardMaterial>>,
+    textures: Option<Res<super::textures::P7Textures>>,
+) {
     let ghost = |color: Color| StandardMaterial {
         base_color: color,
         alpha_mode: AlphaMode::Blend,
@@ -48,9 +52,10 @@ fn setup(mut commands: Commands, mut materials: ResMut<Assets<StandardMaterial>>
         allowed: materials.add(ghost(Color::srgba(0.2, 1.0, 0.5, 0.48))),
         denied: materials.add(ghost(Color::srgba(1.0, 0.15, 0.08, 0.48))),
         salvage: materials.add(StandardMaterial {
-            base_color: Color::srgb(0.85, 0.57, 0.12),
-            emissive: LinearRgba::new(0.1, 0.06, 0.005, 1.0),
-            perceptual_roughness: 0.7,
+            base_color: Color::WHITE,
+            base_color_texture: textures.as_ref().map(|t| t.crate_map.clone()),
+            perceptual_roughness: 0.85,
+            reflectance: 0.15,
             ..default()
         }),
     });
@@ -196,7 +201,7 @@ mod tests {
             });
         app.world_mut().resource_mut::<Explorer>().mode = MovementMode::Surface;
         app.update();
-        assert_eq!(app.world().resource::<Assets<Mesh>>().len(), 1);
+        assert_eq!(app.world().resource::<Assets<Mesh>>().len(), 5);
         assert_eq!(app.world().resource::<Cache>().deposits.len(), 8);
         let preview = app.world().resource::<Cache>().preview.clone();
         let deposits = app.world().resource::<Cache>().deposits.clone();
@@ -247,7 +252,7 @@ mod tests {
         app.update();
         assert!(app.world().resource::<Cache>().deposits.is_empty());
         assert!(app.world().resource::<Cache>().preview.is_empty());
-        assert_eq!(app.world().resource::<Assets<Mesh>>().len(), 1);
+        assert_eq!(app.world().resource::<Assets<Mesh>>().len(), 5);
         assert_eq!(
             app.world()
                 .resource::<Construction>()

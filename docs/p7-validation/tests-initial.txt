@@ -1,0 +1,70 @@
+   Compiling solar_survival v0.2.0 (/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL)
+error[E0599]: no variant, associated function, or constant named `MinusU` found for enum `PatchEdge` in the current scope
+   --> src/rendering/ground.rs:63:28
+    |
+ 63 |                 PatchEdge::MinusU,
+    |                            ^^^^^^ variant, associated function, or constant not found in `PatchEdge`
+    |
+   ::: src/planets/cube_sphere.rs:101:1
+    |
+101 | pub enum PatchEdge {
+    | ------------------ variant, associated function, or constant `MinusU` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `PlusU` found for enum `PatchEdge` in the current scope
+   --> src/rendering/ground.rs:64:28
+    |
+ 64 |                 PatchEdge::PlusU,
+    |                            ^^^^^ variant, associated function, or constant not found in `PatchEdge`
+    |
+   ::: src/planets/cube_sphere.rs:101:1
+    |
+101 | pub enum PatchEdge {
+    | ------------------ variant, associated function, or constant `PlusU` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `MinusV` found for enum `PatchEdge` in the current scope
+   --> src/rendering/ground.rs:65:28
+    |
+ 65 |                 PatchEdge::MinusV,
+    |                            ^^^^^^ variant, associated function, or constant not found in `PatchEdge`
+    |
+   ::: src/planets/cube_sphere.rs:101:1
+    |
+101 | pub enum PatchEdge {
+    | ------------------ variant, associated function, or constant `MinusV` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `PlusV` found for enum `PatchEdge` in the current scope
+   --> src/rendering/ground.rs:66:28
+    |
+ 66 |                 PatchEdge::PlusV,
+    |                            ^^^^^ variant, associated function, or constant not found in `PatchEdge`
+    |
+   ::: src/planets/cube_sphere.rs:101:1
+    |
+101 | pub enum PatchEdge {
+    | ------------------ variant, associated function, or constant `PlusV` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `PlusU` found for enum `PatchEdge` in the current scope
+   --> src/rendering/ground.rs:71:46
+    |
+ 71 |                     x: if edge == PatchEdge::PlusU { 32767 } else { 0 },
+    |                                              ^^^^^ variant, associated function, or constant not found in `PatchEdge`
+    |
+   ::: src/planets/cube_sphere.rs:101:1
+    |
+101 | pub enum PatchEdge {
+    | ------------------ variant, associated function, or constant `PlusU` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `PlusV` found for enum `PatchEdge` in the current scope
+   --> src/rendering/ground.rs:72:46
+    |
+ 72 |                     y: if edge == PatchEdge::PlusV { 32767 } else { 0 },
+    |                                              ^^^^^ variant, associated function, or constant not found in `PatchEdge`
+    |
+   ::: src/planets/cube_sphere.rs:101:1
+    |
+101 | pub enum PatchEdge {
+    | ------------------ variant, associated function, or constant `PlusV` not found for this enum
+
+For more information about this error, try `rustc --explain E0599`.
+error: could not compile `solar_survival` (lib test) due to 6 previous errors
+warning: build failed, waiting for other jobs to finish...

@@ -19,6 +19,9 @@ pub(super) struct BuildingAssets {
     pub(super) cube: Handle<Mesh>,
     wall: Handle<StandardMaterial>,
     roof: Handle<StandardMaterial>,
+    door: Handle<StandardMaterial>,
+    sign: Handle<StandardMaterial>,
+    parts: [Handle<Mesh>; 6],
 }
 #[derive(Resource, Default)]
 struct BuildingCache(HashMap<BuildingId, Vec<Entity>>);
@@ -37,20 +40,111 @@ pub(super) fn setup(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
+    textures: Option<Res<super::textures::P7Textures>>,
 ) {
+    let parts = OxygenShelter::parts();
+    let side = meshes.add(panel_mesh(parts[0].0, parts[0].1));
+    let back = meshes.add(panel_mesh(parts[2].0, parts[2].1));
+    let front = meshes.add(panel_mesh(parts[3].0, parts[3].1));
+    let roof = meshes.add(panel_mesh(parts[5].0, parts[5].1));
     commands.insert_resource(BuildingAssets {
-        cube: meshes.add(Cuboid::new(1.0, 1.0, 1.0)),
+        cube: meshes.add(readable_cube()),
         wall: materials.add(StandardMaterial {
-            base_color: Color::srgb(0.14, 0.52, 0.58),
-            perceptual_roughness: 0.8,
+            base_color: Color::WHITE,
+            base_color_texture: textures.as_ref().map(|t| t.wall.clone()),
+            perceptual_roughness: 0.88,
+            reflectance: 0.15,
             ..default()
         }),
         roof: materials.add(StandardMaterial {
-            base_color: Color::srgb(0.8, 0.86, 0.88),
-            perceptual_roughness: 0.8,
+            base_color: Color::WHITE,
+            base_color_texture: textures.as_ref().map(|t| t.roof.clone()),
+            perceptual_roughness: 0.72,
+            reflectance: 0.2,
             ..default()
         }),
+        door: materials.add(StandardMaterial {
+            base_color: Color::srgb(0.25, 0.65, 0.65),
+            base_color_texture: textures.as_ref().map(|t| t.wall.clone()),
+            perceptual_roughness: 0.88,
+            reflectance: 0.15,
+            ..default()
+        }),
+        sign: materials.add(StandardMaterial {
+            base_color_texture: textures.as_ref().map(|t| t.sign.clone()),
+            unlit: true,
+            ..default()
+        }),
+        parts: [side.clone(), side, back, front.clone(), front, roof],
     });
+}
+/// Cuboid Bevy : UV latérales historiques tournées. Marquages lisibles sur chaque face.
+fn readable_cube() -> Mesh {
+    use bevy::mesh::VertexAttributeValues;
+    let mut mesh = Mesh::from(Cuboid::new(1.0, 1.0, 1.0));
+    let VertexAttributeValues::Float32x3(positions) =
+        mesh.attribute(Mesh::ATTRIBUTE_POSITION).unwrap()
+    else {
+        unreachable!()
+    };
+    let VertexAttributeValues::Float32x3(normals) = mesh.attribute(Mesh::ATTRIBUTE_NORMAL).unwrap()
+    else {
+        unreachable!()
+    };
+    let uv: Vec<_> = positions
+        .iter()
+        .zip(normals)
+        .map(|(p, n)| {
+            if n[0].abs() > 0.5 {
+                [0.5 - p[2] * n[0], 0.5 - p[1]]
+            } else if n[2].abs() > 0.5 {
+                [0.5 + p[0] * n[2], 0.5 - p[1]]
+            } else {
+                [0.5 + p[0], 0.5 + p[2] * n[1]]
+            }
+        })
+        .collect();
+    mesh.insert_attribute(Mesh::ATTRIBUTE_UV_0, uv);
+    mesh
+}
+/// UV d'un panneau d'un mètre, avant l'échelle du proxy ; géométrie solide inchangée.
+fn panel_mesh(center: bevy::math::DVec3, size: bevy::math::DVec3) -> Mesh {
+    use bevy::mesh::VertexAttributeValues;
+    let mut mesh = Mesh::from(Cuboid::new(1.0, 1.0, 1.0));
+    let VertexAttributeValues::Float32x3(positions) =
+        mesh.attribute(Mesh::ATTRIBUTE_POSITION).unwrap()
+    else {
+        unreachable!()
+    };
+    let VertexAttributeValues::Float32x3(normals) = mesh.attribute(Mesh::ATTRIBUTE_NORMAL).unwrap()
+    else {
+        unreachable!()
+    };
+    let uvs: Vec<_> = positions
+        .iter()
+        .zip(normals)
+        .map(|(p, n)| {
+            let p = Vec3::from_array(*p).as_dvec3() * size + center;
+            if n[0].abs() > 0.5 {
+                [p.z as f32, -p.y as f32]
+            } else if n[1].abs() > 0.5 {
+                [p.x as f32, p.z as f32]
+            } else {
+                [p.x as f32, -p.y as f32]
+            }
+        })
+        .collect();
+    mesh.insert_attribute(Mesh::ATTRIBUTE_UV_0, uvs);
+    mesh
+}
+/// Plaque de présentation au-dessus de la porte ; aucun collider/service supplémentaire.
+fn visual_part(index: usize) -> (bevy::math::DVec3, bevy::math::DVec3) {
+    use bevy::math::DVec3;
+    if index == 6 {
+        (DVec3::new(0.0, 2.95, 3.16), DVec3::new(2.4, 0.6, 0.04))
+    } else {
+        OxygenShelter::parts()[index]
+    }
 }
 fn stream(
     mut commands: Commands,
@@ -83,14 +177,22 @@ fn stream(
             continue;
         }
         cache.0.entry(b.id).or_insert_with(|| {
-            (0..OxygenShelter::parts().len())
+            (0..7)
                 .map(|index| {
                     commands
                         .spawn((
                             ShelterPart { id: b.id, index },
-                            Mesh3d(assets.cube.clone()),
+                            Mesh3d(if index == 6 {
+                                assets.cube.clone()
+                            } else {
+                                assets.parts[index].clone()
+                            }),
                             MeshMaterial3d(if index == 5 {
                                 assets.roof.clone()
+                            } else if index == 6 {
+                                assets.sign.clone()
+                            } else if index == 3 || index == 4 {
+                                assets.door.clone()
                             } else {
                                 assets.wall.clone()
                             }),
@@ -113,7 +215,7 @@ fn sync(
     let inverse = terrain.orientation.inverse();
     for (part, mut proxy) in &mut query {
         let b = buildings.shelters.iter().find(|b| b.id == part.id).unwrap();
-        let (center, size) = OxygenShelter::parts()[part.index];
+        let (center, size) = visual_part(part.index);
         proxy.translation =
             local_to_render(inverse * ((b.position_m - eye) + b.orientation * center))
                 .expect("Bâtiment chargé localement");
@@ -150,8 +252,8 @@ mod tests {
         app.world_mut().resource_mut::<Explorer>().mode = MovementMode::Surface;
         app.update();
         let first = app.world().resource::<BuildingCache>().0.clone();
-        assert_eq!(first.values().next().unwrap().len(), 6);
-        assert_eq!(app.world().resource::<Assets<Mesh>>().len(), 1);
+        assert_eq!(first.values().next().unwrap().len(), 7);
+        assert_eq!(app.world().resource::<Assets<Mesh>>().len(), 5);
         app.world_mut().resource_mut::<SurfaceState>().feet.x = 64.1;
         app.world_mut()
             .resource_scope(|world, mut t: Mut<MarsTerrain>| {
@@ -168,14 +270,14 @@ mod tests {
             .query::<(&ShelterPart, &Transform)>()
             .iter(app.world())
         {
-            let (center, _) = OxygenShelter::parts()[part.index];
+            let (center, _) = visual_part(part.index);
             let restored = eye + q * proxy.translation.as_dvec3();
             assert!(restored.distance(b.position_m + b.orientation * center) < 5e-6);
         }
         app.world_mut().resource_mut::<Explorer>().mode = MovementMode::Space;
         app.update();
         assert!(app.world().resource::<BuildingCache>().0.is_empty());
-        assert_eq!(app.world().resource::<Assets<Mesh>>().len(), 1);
+        assert_eq!(app.world().resource::<Assets<Mesh>>().len(), 5);
         assert_eq!(
             app.world().resource::<Buildings>().shelters[0].position_m,
             b.position_m

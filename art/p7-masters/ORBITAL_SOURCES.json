@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-14",
+  "sources": {
+    "mercury": {
+      "page": "https://science.nasa.gov/resource/mercury-3d-model/",
+      "url": "https://assets.science.nasa.gov/content/dam/science/psd/solar/2023/09/m/Mercury_1_4878.glb?emrc=6acf41e0cd50a",
+      "glb_sha256": "0222fa976a5bb3ae3222eeddaaa7150656837a97c515f065eb855e0b1dd2ab94"
+    },
+    "venus": {
+      "page": "https://science.nasa.gov/resource/venus-3d-model/",
+      "url": "https://assets.science.nasa.gov/content/dam/science/psd/solar/2023/09/v/Venus_1_12103.glb?emrc=6acf41e2055ea",
+      "glb_sha256": "6aa26809feeb74fee371c43e9904112a76ebb3df15696e6e75297c0fce063bf9"
+    },
+    "uranus": {
+      "page": "https://science.nasa.gov/resource/uranus-3d-model/",
+      "url": "https://assets.science.nasa.gov/content/dam/science/psd/solar/2023/09/u/Uranus_1_51118.glb?emrc=6acf41e381292",
+      "glb_sha256": "9c56f96bbfa82d923479c3dd83a00c35238a36addcfbcc61916f1377fe586bd5"
+    },
+    "jupiter": {
+      "page": "https://science.nasa.gov/3d-resources/jupiter/",
+      "url": "https://assets.science.nasa.gov/content/dam/science/cds/3d/resources/image/jupiter/Jupiter.jpg",
+      "sha256": "ac2d387f8ea56a59f45dea37993c779a730f49d7d9fdbc8d36c307a351b1f1a1"
+    },
+    "saturn": {
+      "page": "https://science.nasa.gov/3d-resources/saturn/",
+      "url": "https://assets.science.nasa.gov/content/dam/science/cds/3d/resources/image/saturn/Saturn.jpg",
+      "sha256": "d959a239e3d87630daf08e2a688dcbf315fe01b1fd474e55522770108f40aca7"
+    },
+    "neptune": {
+      "page": "https://science.nasa.gov/3d-resources/neptune/",
+      "url": "https://assets.science.nasa.gov/content/dam/science/cds/3d/resources/image/neptune/Neptune.jpg",
+      "sha256": "e9bb2b7bcfb98d3f1adc6f2e20e833a00c11e9677238d8a00ae7431214ca70aa"
+    }
+  }
+}

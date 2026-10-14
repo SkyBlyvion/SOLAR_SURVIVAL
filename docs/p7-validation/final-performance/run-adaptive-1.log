@@ -1,0 +1,34 @@
+2026-10-14T09:24:17.776075Z  INFO bevy_render::renderer: AdapterInfo { name: "NVIDIA GeForce GTX 1060 3GB (NVK GP106)", vendor: 4318, device: 7170, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "NVK", driver_info: "Mesa 25.2.8-0ubuntu0.24.04.4", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: false }
+2026-10-14T09:24:17.898335Z  INFO bevy_pbr::cluster: GPU clustering is supported on this device.
+2026-10-14T09:24:17.898390Z  INFO bevy_render::batching::gpu_preprocessing: GPU preprocessing is fully supported on this device.
+2026-10-14T09:24:17.899102Z  INFO bevy_winit::system: Creating new window Solar Survival · 0.2 · Mars (63v0)
+2026-10-14T09:24:17.899428Z  INFO winit::platform_impl::linux::x11::window: Guessed window scale factor: 1
+2026-10-14T09:24:17.925558Z  INFO solar_survival::rendering::textures: P7 textures CPU préparées : 13 images, 42118856 octets, 23.410 ms ; données transférées au renderer, staging/pics pilote exclus
+2026-10-14T09:24:17.950301Z  INFO solar_survival::config::construction_validation: P5 phase 0 t=0.000 alloy=0 active=false preview=None feet=DVec3(0.0, 0.0, 0.0) O2=180.000
+2026-10-14T09:24:17.952595Z DEBUG solar_survival::rendering::terrain: GLOBAL meshes sync CPU 0.531 ms, uploads 13, LOD ([6, 5, 2], 9009, 16328)
+2026-10-14T09:24:18.080984Z  INFO solar_survival::rendering::textures: P7 GPU résident : 13 textures RGBA8 sRGB avec mipmaps, 42118856 octets / 134217728 ; allocation pilote totale/staging exclus
+2026-10-14T09:24:19.973663Z  INFO solar_survival::config::construction_validation: P5 phase 1 t=2.025 alloy=0 active=false preview=None feet=DVec3(0.0, 0.0019999374278592144, 0.0) O2=178.012
+2026-10-14T09:24:21.981577Z  INFO solar_survival::config::construction_validation: P5 phase 2 t=4.033 alloy=0 active=true preview=Some(Err("Alliage insuffisant : 12 requis")) feet=DVec3(0.0, 0.0019999374278592144, 0.0) O2=176.009
+2026-10-14T09:24:23.982879Z  INFO solar_survival::config::construction_validation: P5 phase 3 t=6.034 alloy=0 active=true preview=Some(Err("Alliage insuffisant : 12 requis")) feet=DVec3(0.0, 0.0019999374278592144, 0.0) O2=174.003
+2026-10-14T09:24:25.468299Z  INFO solar_survival::config::construction_validation: P5 phase 4 t=7.519 alloy=0 active=false preview=None feet=DVec3(6.712499999991298, 0.0019931773986222034, 0.0) O2=172.510
+2026-10-14T09:24:26.177600Z  INFO solar_survival::config::construction_validation: P5 phase 5 t=8.229 alloy=6 active=false preview=None feet=DVec3(6.712499999991298, 0.0019931773986222034, 0.0) O2=171.804
+2026-10-14T09:24:27.156979Z  INFO solar_survival::config::construction_validation: P5 phase 6 t=9.208 alloy=6 active=false preview=None feet=DVec3(6.712499999985625, 0.0019910123033196397, -4.424999999997518) O2=170.824
+2026-10-14T09:24:27.972743Z  INFO solar_survival::config::construction_validation: P5 phase 7 t=10.024 alloy=12 active=false preview=None feet=DVec3(6.712499999985625, 0.0019910123033196397, -4.424999999997518) O2=170.006
+2026-10-14T09:24:29.969327Z  INFO solar_survival::config::construction_validation: P5 phase 8 t=12.020 alloy=12 active=true preview=Some(Err("Volume occupé : joueur, abri, obstacle ou caisse")) feet=DVec3(6.712499999985625, 0.0019910123033196397, -4.424999999997518) O2=168.020
+2026-10-14T09:24:32.964478Z  INFO solar_survival::config::construction_validation: P5 phase 9 t=15.015 alloy=12 active=true preview=Some(Ok(())) feet=DVec3(6.712499999985625, 0.0019910123033196397, -4.424999999997518) O2=165.022
+2026-10-14T09:24:33.982177Z  INFO solar_survival::config::construction_validation: P5 phase 10 t=16.033 alloy=12 active=true preview=Some(Ok(())) feet=DVec3(6.712499999985625, 0.0019910123033196397, -4.424999999997518) O2=164.014
+2026-10-14T09:24:35.966737Z  INFO solar_survival::config::construction_validation: P5 phase 11 t=18.018 alloy=12 active=false preview=None feet=DVec3(6.712499999985625, 0.0019910123033196397, -4.424999999997518) O2=162.017
+2026-10-14T09:24:38.955341Z  INFO solar_survival::config::construction_validation: P5 phase 12 t=21.006 alloy=12 active=true preview=Some(Ok(())) feet=DVec3(6.712499999985625, 0.0019910123033196397, -4.424999999997518) O2=159.030
+2026-10-14T09:24:39.976457Z  INFO solar_survival::config::construction_validation: P5 phase 13 t=22.028 alloy=12 active=true preview=Some(Ok(())) feet=DVec3(6.712499999985625, 0.0019910123033196397, -4.424999999997518) O2=158.006
+2026-10-14T09:24:40.956941Z  INFO solar_survival::config::construction_validation: P5 phase 14 t=23.008 alloy=0 active=false preview=None feet=DVec3(6.712499999985625, 0.0019910123033196397, -4.424999999997518) O2=157.025
+2026-10-14T09:24:41.963863Z  INFO solar_survival::config::construction_validation: P5 phase 15 t=24.015 alloy=0 active=false preview=None feet=DVec3(6.712499999985625, 0.0019910123033196397, -4.424999999997518) O2=156.019
+2026-10-14T09:24:42.951809Z  INFO solar_survival::config::construction_validation: P5 phase 16 t=25.003 alloy=0 active=false preview=None feet=DVec3(19.154703185427934, 0.0018964603130655901, -18.79625520692207) O2=59.012
+2026-10-14T09:24:43.971606Z  INFO solar_survival::config::construction_validation: P5 phase 17 t=26.023 alloy=0 active=false preview=None feet=DVec3(19.154703185427934, 0.0018964603130655901, -18.79625520692207) O2=57.995
+
+thread 'Compute Task Pool (3)' (102362) panicked at src/config/construction_validation.rs:188:17:
+assertion `left == right` failed
+  left: None
+ right: Some(BuildingId(2))
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+Encountered a panic in system `<Enable the debug feature to see the name>`!
+Encountered a panic in system `<Enable the debug feature to see the name>`!

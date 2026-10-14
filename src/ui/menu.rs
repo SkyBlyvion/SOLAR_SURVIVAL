@@ -223,7 +223,7 @@ fn setup(mut commands: Commands, assets: Res<AssetServer>) {
                             }
                             Screen::Credits=>{
                                 heading(panel,"Crédits",&font);
-                                description(panel,"Solar Survival · Rust / Bevy · licence MIT\n\nMoteur : Bevy (MIT / Apache-2.0)\nDonnées astronomiques : NASA / JPL\nPolice : DejaVu Sans\n\nDéveloppement assisté par OpenAI Codex.\nTextures, ciel et terrain de présentation artistiques.",&font);
+                                description(panel,"Solar Survival · Rust / Bevy · licence MIT\n\nChef de projet et orchestrateur : SkyBlyvion\n\nMoteur : Bevy (MIT / Apache-2.0)\nPlanètes : NASA / JPL-Caltech / VTAD\nTerre : NASA Earth Observatory / Blue Marble\nNeptune : Don Davis & JPL/Caltech\nPolice : DejaVu Sans\n\nDéveloppement assisté par OpenAI Codex.\nSol : ImageGen, interprétation artistique.\nSources et conditions : assets/textures/CREDITS.md",&font);
                                 button(panel,MenuAction::Back,&font);
                             }
                             Screen::Playing=>unreachable!(),

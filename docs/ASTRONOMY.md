@@ -134,3 +134,17 @@ Aucun paramètre astronomique nouveau. Les caisses sont des objets artistiques d
 ## LOD adaptatif du terrain mondial
 
 Aucun paramètre astronomique nouveau : le même rayon moyen et les mêmes sommets corporels f64 décrivent la sphère. 32/16/8 cellules intérieures, seuils de distance/hystérésis, bord commun 32 et index local ±72 m sont des choix numériques. La zone proche conserve les triangles fins et les mêmes contacts. Poses/origine flottante, horloges, transport minimal, forces omises et visites translatoires restent inchangés. Il n’y a ni relief mesuré ni orientation IAU supplémentaire. [GLOBAL_TERRAIN](GLOBAL_TERRAIN.md).
+
+
+## Rendu texturé P7 — 14 octobre 2026
+
+Les huit planètes utilisent des cartes locales NASA/JPL/VTAD ou des illustrations
+publiées comme telles. Aucun rayon, masse, période, orbite ou orientation IAU ajouté.
+La normale rendue est ramenée vers le corps par l'inverse de la même rotation du
+catalogue, puis échantillonnée en longitude/colatitude : nord +Y, zéro +X, est −Z.
+Ce choix de méridien est une convention visuelle, pas une orientation géographique
+exacte. Les surfaces des géantes représentent leur atmosphère visible, pas un sol.
+Sources, projection, nature artistique/observationnelle et transformations dans
+[les crédits](../assets/textures/CREDITS.md). Soleil et Lune restent procéduraux.
+Le détail de sol martien triplanaire est artistique et métrique ; il ne change ni
+support, ni relief physique, ni site de jeu et ne fournit pas de données de rover.

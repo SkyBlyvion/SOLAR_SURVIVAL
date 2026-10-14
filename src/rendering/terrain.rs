@@ -1,4 +1,8 @@
 //! Rendu local en mètres, visible par la caméra de jeu en mode surface.
+use super::{
+    ground::{self, GroundMaterial, GroundTexture},
+    textures::P7Textures,
+};
 use crate::planets::{PatchKey, globe_terrain::SurfacePatch};
 use crate::{
     GameSet,
@@ -34,7 +38,7 @@ struct GlobeVisual {
 struct SurfaceSun;
 #[derive(Resource)]
 struct TerrainAssets {
-    material: Handle<StandardMaterial>,
+    material: Handle<GroundMaterial>,
 }
 #[derive(Resource, Default)]
 struct TileCache {
@@ -57,6 +61,9 @@ fn setup(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
+    mut ground_materials: ResMut<Assets<GroundMaterial>>,
+    textures: Res<P7Textures>,
+    config: Res<crate::config::GameConfig>,
 ) {
     commands.spawn((
         SurfaceSun,
@@ -72,6 +79,7 @@ fn setup(
     let rock = materials.add(StandardMaterial {
         base_color: Color::srgb(0.19, 0.12, 0.08),
         perceptual_roughness: 1.0,
+        base_color_texture: Some(textures.ground.clone()),
         ..default()
     });
     for i in 0..3 {
@@ -88,12 +96,21 @@ fn setup(
         ));
     }
     commands.insert_resource(TerrainAssets {
-        material: materials.add(StandardMaterial {
-            base_color: Color::srgb(0.55, 0.24, 0.115),
-            // Sol poussiéreux artistique : pas de bande spéculaire à angle rasant.
-            reflectance: 0.0,
-            perceptual_roughness: 1.0,
-            ..default()
+        material: ground_materials.add(GroundMaterial {
+            base: StandardMaterial {
+                base_color: Color::WHITE,
+                unlit: config
+                    .profile
+                    .as_ref()
+                    .is_some_and(|p| p.variant == "surface_unlit"),
+                // Sol poussiéreux artistique : pas de bande spéculaire à angle rasant.
+                reflectance: 0.0,
+                perceptual_roughness: 1.0,
+                ..default()
+            },
+            extension: GroundTexture {
+                albedo: textures.ground.clone(),
+            },
         }),
     });
 }
@@ -127,14 +144,27 @@ fn tile_mesh(terrain: &MarsTerrain, key: (i32, i32)) -> Mesh {
             }
         }
     }
-    Mesh::new(
+    let mut mesh = Mesh::new(
         PrimitiveTopology::TriangleList,
         RenderAssetUsages::RENDER_WORLD,
     )
     .with_inserted_attribute(Mesh::ATTRIBUTE_POSITION, positions)
     .with_inserted_attribute(Mesh::ATTRIBUTE_NORMAL, normals)
     .with_inserted_attribute(Mesh::ATTRIBUTE_COLOR, colors)
-    .with_inserted_indices(Indices::U32(indices))
+    .with_inserted_indices(Indices::U32(indices));
+    ground::coordinates(
+        &mut mesh,
+        (0..=CELLS).flat_map(|z| {
+            (0..=CELLS).map(move |x| {
+                terrain.body_relative(terrain.vertex(
+                    key.0 * CELLS as i32 + x as i32,
+                    key.1 * CELLS as i32 + z as i32,
+                ))
+            })
+        }),
+        terrain.body_relative(origin),
+    );
+    mesh
 }
 /// Deux proxies utilisant exactement les indices physiques et le même tableau local.
 fn cube_mesh(terrain: &MarsTerrain, patch: usize) -> Mesh {
@@ -157,14 +187,22 @@ fn cube_mesh(terrain: &MarsTerrain, patch: usize) -> Mesh {
         [0.68, 0.8, 1.0, 1.0]
     };
     let colors = vec![color; positions.len()];
-    Mesh::new(
+    let mut mesh = Mesh::new(
         PrimitiveTopology::TriangleList,
         RenderAssetUsages::default(),
     )
     .with_inserted_attribute(Mesh::ATTRIBUTE_POSITION, positions)
     .with_inserted_attribute(Mesh::ATTRIBUTE_NORMAL, normals)
     .with_inserted_attribute(Mesh::ATTRIBUTE_COLOR, colors)
-    .with_inserted_indices(Indices::U32(cube.pair.indices[patch].clone()))
+    .with_inserted_indices(Indices::U32(cube.pair.indices[patch].clone()));
+    ground::coordinates(
+        &mut mesh,
+        cube.local_positions
+            .iter()
+            .map(|&p| terrain.body_relative(p)),
+        terrain.body_relative(DVec3::ZERO),
+    );
+    mesh
 }
 fn globe_mesh(patch: &SurfacePatch) -> (Mesh, GlobeVisual) {
     let up = patch.key.center_direction().unwrap();
@@ -189,6 +227,7 @@ fn globe_mesh(patch: &SurfacePatch) -> (Mesh, GlobeVisual) {
     .with_inserted_attribute(Mesh::ATTRIBUTE_POSITION, positions)
     .with_inserted_attribute(Mesh::ATTRIBUTE_NORMAL, normals)
     .with_inserted_indices(Indices::U32(patch.indices.clone()));
+    ground::coordinates(&mut mesh, patch.positions_m.iter().copied(), origin);
     if std::env::var("SOLAR_LOD_DEBUG").as_deref() == Ok("1") {
         let color = match patch.segments {
             32 => [0.6, 1.0, 0.6, 1.0],

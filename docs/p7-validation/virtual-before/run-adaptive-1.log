@@ -1,0 +1,17 @@
+2026-10-14T09:44:59.416168Z  WARN winit::platform_impl::linux::x11::xdisplay: error setting XSETTINGS; Xft options won't reload automatically
+2026-10-14T09:44:59.478222Z  INFO bevy_render::renderer: AdapterInfo { name: "NVIDIA GeForce GTX 1060 3GB (NVK GP106)", vendor: 4318, device: 7170, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "NVK", driver_info: "Mesa 25.2.8-0ubuntu0.24.04.4", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: false }
+2026-10-14T09:44:59.605816Z  INFO bevy_pbr::cluster: GPU clustering is supported on this device.
+2026-10-14T09:44:59.605860Z  INFO bevy_render::batching::gpu_preprocessing: GPU preprocessing is fully supported on this device.
+2026-10-14T09:44:59.606242Z  INFO bevy_winit::system: Creating new window Solar Survival · 0.2 · Mars (63v0)
+2026-10-14T09:44:59.606393Z  WARN winit::platform_impl::linux::x11::util::randr: XRandR reported that the display's 0mm in size, which is certifiably insane
+2026-10-14T09:44:59.606451Z  INFO winit::platform_impl::linux::x11::window: Guessed window scale factor: 1
+2026-10-14T09:44:59.630103Z  INFO solar_survival::config::construction_validation: P5 phase 0 t=0.000 alloy=0 active=false preview=None feet=DVec3(0.0, 0.0, 0.0) O2=180.000
+2026-10-14T09:44:59.632626Z DEBUG solar_survival::rendering::terrain: GLOBAL meshes sync CPU 0.641 ms, uploads 13, LOD ([6, 5, 2], 9009, 16328)
+vulkan: No DRI3 support detected - required for presentation
+Note: you can probably enable DRI3 in your Xorg config
+
+thread 'Compute Task Pool (0)' (106715) panicked at /home/cfa_m2_cs/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/bevy_render-0.19.1/src/view/window/mod.rs:502:13:
+internal error: entered unreachable code: Fallback system failed to choose present mode. This is a bug. Mode: AutoVsync, Options: []
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+Encountered a panic in system `<Enable the debug feature to see the name>`!
+Encountered a panic in system `<Enable the debug feature to see the name>`!

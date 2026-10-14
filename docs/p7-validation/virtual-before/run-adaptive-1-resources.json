@@ -1,0 +1,21 @@
+{
+  "samples": [
+    {
+      "seconds": 0.00015700100084359292,
+      "rss_kib": 3920,
+      "hwm_kib": 3920,
+      "drm": {}
+    },
+    {
+      "seconds": 0.2518884050004999,
+      "rss_kib": 190368,
+      "hwm_kib": 190368,
+      "drm": {}
+    }
+  ],
+  "peak_rss_kib": 190368,
+  "process_hwm_kib": 190368,
+  "drm_available": false,
+  "interval_seconds": 0.25,
+  "limitations": "RSS processus pas allocation textures seule. HWM noyau et \u00e9chantillonnage. VRAM/staging absents si pilote non instrument\u00e9. Linux uniquement."
+}

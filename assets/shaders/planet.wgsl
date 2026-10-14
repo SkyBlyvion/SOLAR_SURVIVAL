@@ -4,8 +4,11 @@ struct PlanetUniform {
     sun: vec4<f32>,
     color_kind: vec4<f32>,
     parameters: vec4<f32>,
+    body_from_world: mat4x4<f32>,
 }
 @group(#{MATERIAL_BIND_GROUP}) @binding(0) var<uniform> planet: PlanetUniform;
+@group(#{MATERIAL_BIND_GROUP}) @binding(1) var planet_map: texture_2d<f32>;
+@group(#{MATERIAL_BIND_GROUP}) @binding(2) var planet_sampler: sampler;
 
 fn hash(p: vec3<f32>) -> f32 {
     return fract(sin(dot(p,vec3<f32>(127.1,311.7,74.7))) * 43758.5453);
@@ -28,24 +31,29 @@ fn fragment(mesh: VertexOutput) -> @location(0) vec4<f32> {
     let longitude = mesh.uv.x * 6.2831853;
     let latitude = (mesh.uv.y-0.5) * 3.1415926;
     let p = vec3<f32>(cos(latitude)*cos(longitude),sin(latitude),cos(latitude)*sin(longitude));
-    let detail = fbm(p*5.0+vec3<f32>(planet.parameters.x*0.013));
+    var detail = 0.0;
+    let mapped = planet.parameters.y > 0.5;
+    if !mapped { detail = fbm(p*5.0+vec3<f32>(planet.parameters.x*0.013)); }
     var color = planet.color_kind.rgb * (0.65+detail*0.65);
     if kind == 0u {
         return vec4<f32>(vec3<f32>(8.0,3.8,0.8)*(0.75+detail*0.5),1.0);
     }
-    if kind == 3u {
-        let continents = fbm(p*3.0+vec3<f32>(12.0,6.0,1.0));
-        let land = smoothstep(0.50,0.54,continents);
-        color = mix(vec3<f32>(0.012,0.07,0.25),mix(vec3<f32>(0.05,0.18,0.06),vec3<f32>(0.35,0.28,0.12),detail),land);
-        let cloud = smoothstep(0.61,0.76,fbm(p*11.0+vec3<f32>(5.0)));
-        color = mix(color,vec3<f32>(0.8,0.88,0.95),cloud*0.85);
-        color = mix(color,vec3<f32>(0.8,0.9,1.0),smoothstep(0.88,0.96,abs(p.y)));
+    if mapped {
+        // Cartes équirectangulaires : nord +Y, longitude est vers -Z, zéro +X.
+        // La rotation du catalogue reste conventionnelle, sans orientation IAU.
+        let body_normal = normalize((planet.body_from_world * vec4<f32>(normalize(mesh.world_normal),0.0)).xyz);
+        let uv = vec2<f32>(0.5 + atan2(-body_normal.z,body_normal.x)/6.283185307,
+            acos(clamp(body_normal.y,-1.0,1.0))/3.141592654);
+        // Dérivées analytiques : éviter une bande floue au saut de longitude ±pi.
+        let dx = dpdx(body_normal);
+        let dy = dpdy(body_normal);
+        let longitude_scale = 1.0 / max(dot(body_normal.xz,body_normal.xz),0.000001) / 6.283185307;
+        let latitude_scale = -1.0 / max(sqrt(1.0-body_normal.y*body_normal.y),0.00001) / 3.141592654;
+        let duv_dx = vec2<f32>((body_normal.z*dx.x-body_normal.x*dx.z)*longitude_scale,dx.y*latitude_scale);
+        let duv_dy = vec2<f32>((body_normal.z*dy.x-body_normal.x*dy.z)*longitude_scale,dy.y*latitude_scale);
+        color = textureSampleGrad(planet_map,planet_sampler,uv,duv_dx,duv_dy).rgb;
     }
-    if kind == 4u {
-        color = mix(vec3<f32>(0.22,0.055,0.018),vec3<f32>(0.72,0.30,0.10),detail);
-        color = mix(color,vec3<f32>(0.78,0.79,0.74),smoothstep(0.94,0.98,abs(p.y)));
-    }
-    if kind >= 5u && kind <= 8u {
+    if !mapped && kind >= 5u && kind <= 8u {
         let band = sin(p.y*70.0+detail*2.0)*0.5+0.5;
         color = planet.color_kind.rgb*(0.55+band*0.55);
         if kind == 5u {

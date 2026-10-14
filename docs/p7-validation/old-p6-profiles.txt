@@ -1,0 +1,9 @@
+   Compiling solar_survival v0.2.0 (/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL)
+    Finished `test` profile [optimized] target(s) in 1.29s
+     Running tests/p7_profile_compatibility.rs (target/debug/deps/p7_profile_compatibility-a1695c9901ff1913)
+
+running 1 test
+test delivered_p6_adventures_restore_without_migration_and_keep_shelter_services ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+

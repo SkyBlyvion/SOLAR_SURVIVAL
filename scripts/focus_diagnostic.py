@@ -8,6 +8,10 @@ import time
 
 def run_focused(command, env, log, timeout):
     process = subprocess.Popen(command, env=env, stdout=log, stderr=subprocess.STDOUT)
+    monitor = None
+    if env.get('SOLAR_RESOURCE_SAMPLES'):
+        from resource_monitor import ResourceMonitor
+        monitor = ResourceMonitor(process.pid, env['SOLAR_RESOURCE_SAMPLES'])
     start = time.monotonic()
     focused = None
     if os.environ.get('DISPLAY'):
@@ -48,4 +52,6 @@ def run_focused(command, env, log, timeout):
         code = process.wait(timeout=max(1,timeout-(time.monotonic()-start)))
     except subprocess.TimeoutExpired:
         process.kill();process.wait();raise
+    finally:
+        if monitor: monitor.finish()
     return code, focused

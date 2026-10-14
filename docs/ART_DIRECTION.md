@@ -1,8 +1,8 @@
 # Après le MVP : direction visuelle et textures
 
-14 octobre 2026. **Cadrage de P7, pas une fonctionnalité déjà implémentée.** Demande utilisateur : poursuivre après P1–P6, améliorer la qualité et remplacer les surfaces provisoires par des textures sur mesure ou des ressources NASA/JPL. [Ordre des travaux](ROADMAP.md), [état livré](VALIDATION.md).
+14 octobre 2026. **Contrat de P7 ; intégration du 14 octobre décrite à la fin de ce document.** Demande utilisateur : poursuivre après P1–P6, améliorer la qualité et remplacer les surfaces provisoires par des textures sur mesure ou des ressources NASA/JPL. [Ordre des travaux](ROADMAP.md), [état livré](VALIDATION.md).
 
-## État observé
+## État observé avant P7
 
 Au HEAD 6898bdb, `assets/` contient deux shaders et la police, aucune bibliothèque de textures de surface. `planet.wgsl` dessine les continents, bandes et couleurs par bruit procédural ; `rendering/terrain.rs` utilise un matériau presque uni. Abris/caisses/obstacles sont des volumes simples avec couleurs unies. Le panorama stellaire est artistique. Le terrain mondial est une sphère sans relief, avec LOD de résolution 32/16/8 ; la brume de surface est limitée à 40–60 m. Ces limites expliquent une partie de l'apparence actuelle, même après la refonte UI.
 
@@ -58,7 +58,7 @@ Budgets initiaux choisis pour P7, révisables seulement avec des mesures documen
 | Éclairage et shaders | Réutiliser la lumière/caméra existantes ; aucun ray tracing ni effet coûteux requis ; limiter les couches de mélange et mesurer leur coût GPU |
 | Chargement | Réutilisation entre patches et bâtiments, pas de duplication par instance ; libération des assets spécifiques devenus inutiles ; ni téléchargement ni traitement des sources maîtres en jeu |
 
-Ce sont des **budgets de production**, pas des limites déjà contrôlées dans le code. Le total VRAM du jeu inclut aussi meshes, buffers, profondeur, rendu HDR/MSAA et pilote ; ne pas confondre le poids du PNG/JPEG sur disque avec l'occupation une fois chargé. Garder une marge sur les 6 Go et relever consommation réelle/pics quand l'outil et le pilote le permettent. Aucune baisse de poids de fichier ne suffit à démontrer un gain GPU.
+Ces **budgets de production** sont désormais contrôlés pour les treize textures P7 ; allocations du pilote et VRAM totale restent distinctes. Le total VRAM du jeu inclut aussi meshes, buffers, profondeur, rendu HDR/MSAA et pilote ; ne pas confondre le poids du PNG/JPEG sur disque avec l'occupation une fois chargé. Garder une marge sur les 6 Go et relever consommation réelle/pics quand l'outil et le pilote le permettent. Aucune baisse de poids de fichier ne suffit à démontrer un gain GPU.
 
 Les photos de rovers déterminent la palette et les détails à reproduire, pas la résolution des fichiers distribués. Fournir des exports plus petits pour le réglage réduit si nécessaire, avec filtrage/niveaux de texture adaptés et sans scintillement gênant. Les profils qualité sont à implémenter selon les besoins observés ; ne pas les déclarer disponibles maintenant. La GTX 1060 3 Go reste utile pour détecter tôt les excès, sans extrapoler ses FPS vers la RTX 4050.
 
@@ -74,3 +74,77 @@ Comparer avant/après sans captures, à résolution/MSAA/site/visée identiques 
 6. Tests adaptés aux matériaux/chargement/f64, régressions survie/construction/profils, contrôles Cargo et archive hors checkout avec crédits. L'approbation esthétique de l'utilisateur reste distincte des vérifications techniques.
 
 Le relief mondial, les grands horizons et le streaming asynchrone sont prévus en P8. Une extension de sauvegarde ultérieure devra préserver les aventures P6 via une migration explicite ; aucun nouveau contenu ne doit rendre silencieusement les profils existants illisibles.
+
+
+## Intégration P7 — 14 octobre 2026
+
+Terre : Blue Marble janvier 2004, 2048×1024. Mars : carte NASA Viking/USGS/JPL,
+1440×720 conservée sans agrandissement. Les six autres planètes ont ensuite été texturées à la demande utilisateur ; Soleil/Lune restent procéduraux.
+[Sources, conventions, conditions et conversions réellement intégrées](../assets/textures/CREDITS.md),
+[dimensions, mipmaps et SHA-256](../assets/textures/manifest.json).
+
+Sol : albédo artistique ImageGen à 1024², poussière et fragments, période 4 m,
+alpha opaque. Aucun microrelief ni normal supplémentaire dans le shader final ;
+les sommets et les contacts ne sont pas modifiés. Une seule carte et trois échantillonnages
+triplanaires, mélange suivant la normale corporelle géométrique (poids puissance 4).
+Les essais de microrelief et de branches sont conservés dans les preuves, puis
+écartés faute de bénéfice suffisant dans les mesures.
+Couleur RGB sRGB, alpha linéaire, rugosité 1/reflectance 0 conservées pour le sol mat.
+Panneaux industriels wall/roof 512² dessinés, UV métriques 1 m, matériaux mats
+partagés ; jambages teal et plaque O₂ unlit identifient le service jour/nuit.
+Caisses 512² avec ALLIAGE/06/E. Le même OxygenShelter conserve ses six solides,
+sa porte de 2,4 m et son service ; une plaque de rendu s'ajoute au-dessus de la porte.
+Le fantôme conserve les six volumes transparents vert/rouge et les règles P5.
+Les trois obstacles de test restent des boîtes, avec matériau de regolith ; pas de
+nouvelle géométrie de rocher, ombre, lumière ou relief mondial.
+
+`rendering/textures.rs` charge une seule fois au PreStartup les exports P7TX
+préparés par `scripts/prepare_p7_textures.py`, sans dépendance Rust nouvelle.
+Format étroit RGBA8 avec mipmaps précalculés en lumière linéaire. Les données
+CPU passent au renderer avec RenderAssetUsages::RENDER_WORLD ; pas de copie
+persistante de l'albédo par instance. Filtrage trilinear/aniso ×8. Au renderer,
+les treize GpuImage doivent exister ; leur format, dimensions/niveaux et total
+sont vérifiés contre le budget **128 Mio**. Occupation image utile réelle :
+**42 118 856 octets = 40,168 Mio**. Ce total exclut alignement/allocation pilote,
+meshes, ciel existant, buffers HDR/MSAA, profondeur et staging transitoire.
+
+`rendering/ground.rs` prépare les coordonnées seulement lors d'une construction
+ou d'un changement de mesh. Avec p/O corporels en mètres f64 et période L=4 m :
+C=(p−O+O mod L)/L. Le modulo s'applique à l'origine, jamais aux sommets séparément.
+UV0 transporte X/Y et UV1 Z ; les valeurs bornées sont converties vers f32.
+Deux origines donnent des coordonnées différant d'un nombre entier de périodes,
+donc même échantillonnage aux raccords de faces/coins. Les meshes communs ne
+changent pas au rebasage ordinaire ; la rotation et la visée ne modifient pas C.
+Normales radiales/LOD et triangles physiques demeurent leurs propriétaires P3.
+
+Les quatre meshes UV industriels et le cube de marquage sont partagés, cinq
+handles indépendants du nombre d'abris. Six pièces et une plaque par abri local
+(120 m), six pièces de fantôme et huit caisses au maximum. Plafond conservateur
+à 32 abris : 238 proxies bâtiment/preview/caisses ; normalement au plus 49 avec
+les cinq abris financés par les ressources initiales. Un retour/rebasage conserve
+les entités communes. Les assets P7 restent partagés en session, même dans les
+visites spatiales : petit budget constant, aucun streaming d'image par frame.
+
+Les cartes orbitales utilisent la normale transformée vers le corps, pas les UV
+historiques de la sphère. Nord +Y, zéro +X, est −Z ; matrice inverse de rotation
+commune au catalogue. Dérivées analytiques de longitude/latitude pour le filtrage
+à la couture. Phase/pôle conventionnels, pas de localisation IAU exacte.
+
+Les validations et limites finales sont dans [VALIDATION](VALIDATION.md) et
+[PERFORMANCE](PERFORMANCE.md). La première passe a montré une plaque inversée :
+UV du cube corrigées par face avant les campagnes finales. Les preuves initiales
+sont conservées. L'approbation esthétique utilisateur reste séparée de l'inspection.
+
+
+### Extension aux huit planètes
+
+Demande explicite reçue pendant la passe : texturer aussi les autres planètes,
+puis créditer le chef de projet et orchestrateur **SkyBlyvion**. Mercure : atlas
+VTAD reprojeté offline en 1024×512 ; Vénus : nuages VTAD 1440×720, pas la surface
+radar Magellan ; Jupiter : Voyager 720×360 ; Saturne : illustration JPL 720×360 ;
+Uranus : brume VTAD 1024×512 ; Neptune : illustration Don Davis/JPL 720×360.
+Les sources fictionnelles sont identifiées, sans revendication de couleurs naturelles.
+Le choix de petites résolutions natives évite les agrandissements inutiles.
+[Crédits complets et transformations](../assets/textures/CREDITS.md).
+Toutes les cartes partagent le même chemin orbital ; seules Soleil/Lune restent
+procédurales. Aucun mesh de modèle NASA ni nouvelle donnée physique intégré.
