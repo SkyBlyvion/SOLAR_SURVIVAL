@@ -1,14 +1,26 @@
-# Prochain chat Solar Survival — P6, profils et interface
+# Prochain chat Solar Survival — P7, qualité visuelle et textures
 
-**Étape réelle : P6.** Aventures multiples nommées, sauvegarde/chargement, refonte des menus/HUD et catalogue de construction implémentés et validés sur Ubuntu. La distribution Windows native reste à terminer. Mise à jour : **14 octobre 2026**.
+**MVP fonctionnel P1–P6 réalisé sur Ubuntu. Prochaine étape : P7, qualité visuelle et textures.** Les aventures multiples, sauvegardes, menus/HUD et catalogue de construction sont livrés dans `6898bdb`, poussé sur GitHub via l’authentification Git de VS Code. La distribution Windows native reste une validation transversale ouverte. Mise à jour : **14 octobre 2026**.
 
 ## Prompt autonome de reprise
 
-Nous poursuivons Solar Survival dans `/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL`. Lis AGENTS.md, README.md, docs/ASTRONOMY.md, docs/CUBE_SPHERE.md, docs/GLOBAL_TERRAIN.md, docs/SURVIVAL.md, docs/CONSTRUCTION.md, docs/PERSISTENCE.md, docs/SURFACE_SKY.md, docs/VALIDATION.md, docs/ROADMAP.md, docs/PERFORMANCE.md et cette passation. Examine l’état Git et le code avant toute action. Préserve les changements utilisateur et toutes les preuves historiques.
+Nous poursuivons Solar Survival dans `/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL`. Lis AGENTS.md, README.md, docs/ASTRONOMY.md, docs/CUBE_SPHERE.md, docs/GLOBAL_TERRAIN.md, docs/SURVIVAL.md, docs/CONSTRUCTION.md, docs/PERSISTENCE.md, docs/ART_DIRECTION.md, docs/SURFACE_SKY.md, docs/VALIDATION.md, docs/ROADMAP.md, docs/PERFORMANCE.md et cette passation. Examine l’état Git et le code avant toute action. Préserve les changements utilisateur et toutes les preuves historiques.
 
 La passe commence à HEAD `22efa72` : P4 `94036f8`, P5 `ebddd90`, LOD `43f163b`, caméra unique/ciel `22efa72` existaient déjà. L’utilisateur avait remplacé NEXT_CHAT par une ancienne reprise P4, puis rappelé explicitement que nous étions en **P6**. Ne pas repartir en P4/P5 ni présenter leur revalidation comme du développement neuf. Les reprises reçues et essais sont conservés dans docs/p5-recheck-2026-10-13, docs/p6-validation et docs/p6-profiles-validation. Le premier P6 à fichier unique était insuffisant : l’utilisateur exige **plusieurs aventures, chacune dans un répertoire nommé à la création**. Le contrat courant est celui de PERSISTENCE, pas celui des preuves intermédiaires.
 
 L’utilisateur veut un travail conventionnel, fonctionnel et soigné, avec un menu principal lisible, un menu de construction en jeu et des HUD harmonisés. Pas d’innovation gratuite ni d’architecture vide. Il a autorisé le commit et le push GitHub du travail terminé sans nouvelle demande ; vérifier HEAD/origin réels à la reprise. Les contrôles finaux et captures sont détaillés ci-dessous ; ne pas les inventer ni rejouer automatiquement toutes les anciennes campagnes.
+
+## Objectif immédiat : P7
+
+L’utilisateur considère le MVP terminé et demande la suite : améliorer le jeu et remplacer les apparences provisoires par des textures faites sur mesure ou NASA/JPL. La roadmap est prolongée par P7 visuel, P8 relief/horizons, P9 base/énergie/progression et P10 exploration/objectifs. P8–P10 restent prévus, pas implémentés ; ne pas reprendre P4/P5/P6 comme une nouvelle étape ni inventer leur absence. Windows reste à traiter sur un hôte natif, sans bloquer P7 Ubuntu.
+
+**Développer P7 dans le vrai jeu** : sol martien poussière/roche à échelle humaine, matériaux cohérents du même abri et des caisses, cartes sourcées Terre/Mars pour les visites spatiales. Le code actuel n’a pas de bibliothèque de textures de surface dans assets : planètes procédurales dans planet.wgsl, sol presque uni et boîtes colorées. Les sources candidates et critères complets sont dans ART_DIRECTION.md ; leur consultation n’est pas une intégration déjà réalisée. Aucun nouvel asset n’a été téléchargé lors de la planification.
+
+Choisir les fichiers officiels, relever dimensions/projection/orientation/crédits/conditions/empreintes, préparer exports adaptés hors exécution, puis intégrer et juger sur captures. Cartes planétaires pour les vues orbitales ; matériaux proches sur mesure guidés par les rovers pour le sol. Pas de prétention de détail centimétrique à partir d’une mosaïque à centaines de mètres/pixel, ni de couleurs rehaussées présentées comme naturelles. Une carte authentique ne change pas automatiquement les axes/phase conventionnels du catalogue en repère IAU exact.
+
+Garder f64/origine flottante, détails fixes dans le corps aux rebasages/frontières, textures et matériaux partagés, aucune génération par frame. Même OxygenShelter, porte/contact/service et sauvegardes P6 conservés. Résolutions/filtrage/niveaux de texture et budgets choisis selon l’écran et les mesures, sans « 8K partout ». Les normales/rugosités dessinées ou dérivées de photos sont artistiques. Ne pas ajouter une dépendance ou changer Bevy pour un format sans besoin concret.
+
+P7 fini seulement avec amélioration visible espace/surface/abri/placement, jour/nuit et rebasage/chargement inspectés, tests adaptés, mesures avant/après comparables sans captures, archive avec crédits et profils existants utilisables. Le relief mondial et les horizons lointains sont en P8 : les textures seules ne les produisent pas. Traiter les retours esthétiques utilisateur avec résultats à l’écran plutôt que promettre une qualité déjà approuvée.
 
 ## Fonctionnalité actuelle
 
@@ -42,10 +54,12 @@ Archive finale : `dist/solar-survival-ubuntu-p6-profils.tar.gz`, **23 393 264 oc
 
 ## Suite et contraintes permanentes
 
-Terminer les critères P6 de distribution **sur un hôte Windows 11 natif** : build/test/package, extraction hors checkout, profils multiples/écriture/remplacement/secours/reprise après fermeture, options/contacts/recharge. Relever CPU exact/RAM/pilote/résolution/réglages de la cible RTX 4050/Core i5. Sans cet hôte, conserver explicitement la limite ; ne pas présenter des instructions PowerShell comme un résultat Windows. Traiter ensuite les retours utilisateur concrets sur le jeu et son interface, sans ajouter une phase arbitraire à la place.
+En parallèle de P7, terminer les critères de distribution **sur un hôte Windows 11 natif** : build/test/package, extraction hors checkout, profils multiples/écriture/remplacement/secours/reprise après fermeture, options/contacts/recharge. Relever CPU exact/RAM/pilote/résolution/réglages de la cible RTX 4050/Core i5. Sans cet hôte, conserver explicitement la limite ; ne pas présenter des instructions PowerShell comme un résultat Windows. Cette limite ne remet pas en attente les améliorations P7 demandées ; traiter aussi les retours concrets sur le jeu et son interface.
 
 Rust stable édition 2024, Bevy **exactement =0.19.1**. SI/1:1 et positions/orientations globales f64 ; soustraction d’origine f64 avant conversion vers proxies f32. GameSet Input→Simulation→Navigation→Rendering→Interface. Orbite Time<Real>, souris sans multiplication delta. Marche4,5/course8/saut4 m/s, gravité radiale Mars, pas1/120 s, physique0,25 s max/frame. Oxygène180 s, dehors−1 s/s réel, abri+30 s/s, alerte30 s ; menu suspend, espace conserve, R après échec retrouve premier abri plein sans réinitialiser ressources/bâtiments. P/T calendrier, pas physique ni survie.
 
 Le LOD **est réellement implémenté depuis 43f163b** : résolution intérieure32/16/8 selon distance/hystérésis, bords fins communs et contacts proches fins, patches de niveau spatial15 fixes, ≤13 résidents. Pas de quadtree, relief mondial ou streaming asynchrone. Ne pas revenir à la description périmée « treize patches fixes sans LOD » ni prétendre des extensions supplémentaires. Même caméra espace/surface, ciel intégré ; limites artistiques/scientifiques dans SURFACE_SKY et PERFORMANCE. Charger ne réécrit pas ces propriétaires.
 
 Compiler puis lancer les scénarios GPU **successivement**, dossiers finaux neufs dans un parent existant. Exemple ciblé : `python3 scripts/validate_persistence.py --focus-x11 --mesa-immediate --output docs/mon-nouveau-p6`, compilation préalable. `--small-window` teste1280×720 ; `--binary/--cwd` l’archive extraite (sans --focus-x11). Mesa immediate est seulement le contournement NVK local. Captures F12 exigent un dossier créé. Adapter les tests au vrai changement, pas de répétition automatique des campagnes anciennes. Mettre README/ROADMAP/VALIDATION/documents concernés/NEXT_CHAT à jour et fournir le lien de cette passation.
+
+La planification post-MVP du 14 octobre modifie seulement README/ROADMAP/ART_DIRECTION/VALIDATION/NEXT_CHAT. Pas de nouveau build, lancement, mesure ou validation Windows à attribuer à cette mise à jour documentaire ; les 130 tests et 64 captures ci-dessus restent ceux du binaire 6898bdb.

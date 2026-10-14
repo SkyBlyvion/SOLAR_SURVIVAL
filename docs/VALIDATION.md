@@ -1,3 +1,5 @@
+> **Planification post-MVP — 14 octobre 2026 :** le MVP fonctionnel P1–P6 est réalisé sur Ubuntu. P7 visuel/textures est désormais l’objectif suivant ; [cadrage et sources](ART_DIRECTION.md), [roadmap prolongée](ROADMAP.md). Cette passe ne modifie que la documentation : aucun nouveau rendu, asset, test Cargo ou lancement graphique. Les résultats ci-dessous restent ceux du jeu `6898bdb`. La validation Windows native demeure ouverte et transversale.
+
 # Validation Solar Survival 0.2 — P6, aventures multiples et interface
 
 14 octobre 2026. Départ réel **22efa72**, P4/P5/LOD/caméra unique déjà réalisés. La reprise P4 reçue était périmée ; l’utilisateur a corrigé le cadrage, puis exigé plusieurs nouvelles aventures nommées et une interface de jeu conventionnelle. La passe à emplacement unique dans [p6-validation](p6-validation/NOTES.md) et le contrôle P5 dans [p5-recheck](p5-recheck-2026-10-13/) restent des preuves intermédiaires. Les résultats courants sont exclusivement ceux ci-dessous. [Contrat des profils](PERSISTENCE.md), [essais et limites](p6-profiles-validation/NOTES.md).

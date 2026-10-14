@@ -12,6 +12,8 @@ Prototype d'exploration 3D de notre système solaire, fondation d'un jeu de surv
 
 **Survie P4 :** une combinaison de 180 s d’oxygène et un abri de recharge accessible à six mètres devant l’arrivée. Entrez par la porte pour recharger ; à zéro, **R** relance une expédition à l’abri. [Règles et architecture](docs/SURVIVAL.md).
 
+**Après le MVP : P7, qualité visuelle et textures.** Prochaine passe : matériaux martiens de proximité et cartes Terre/Mars sourcées NASA/JPL, puis relief/horizons, progression de base et exploration. Ces travaux sont planifiés, pas encore implémentés. [Direction visuelle et sources](docs/ART_DIRECTION.md). La validation native Windows reste ouverte.
+
 La suite du développement suit [la roadmap](docs/ROADMAP.md). Le [prompt du prochain chat](docs/NEXT_CHAT.md) est actualisé à chaque fin de chat de développement avec l'état réel et l'objectif suivant.
 
 ## Démarrer sur ce poste Ubuntu
