@@ -1,3 +1,5 @@
+> **Précision matérielle — 14 octobre 2026 :** RTX 4050 **6 Go au mieux**, CPU « i5 12700K » à confirmer. P7 reçoit des budgets initiaux de textures modestes, 128 Mio de nouvelles textures résidentes et un objectif 1080p/60 FPS à vérifier sur la cible ; [contrat](ART_DIRECTION.md), [protocole](PERFORMANCE.md). Mise à jour documentaire uniquement, aucun asset/résultat de performance ajouté ; budgets non encore instrumentés.
+
 > **Planification post-MVP — 14 octobre 2026 :** le MVP fonctionnel P1–P6 est réalisé sur Ubuntu. P7 visuel/textures est désormais l’objectif suivant ; [cadrage et sources](ART_DIRECTION.md), [roadmap prolongée](ROADMAP.md). Cette passe ne modifie que la documentation : aucun nouveau rendu, asset, test Cargo ou lancement graphique. Les résultats ci-dessous restent ceux du jeu `6898bdb`. La validation Windows native demeure ouverte et transversale.
 
 # Validation Solar Survival 0.2 — P6, aventures multiples et interface

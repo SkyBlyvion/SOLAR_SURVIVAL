@@ -22,6 +22,14 @@ Garder f64/origine flottante, détails fixes dans le corps aux rebasages/fronti�
 
 P7 fini seulement avec amélioration visible espace/surface/abri/placement, jour/nuit et rebasage/chargement inspectés, tests adaptés, mesures avant/après comparables sans captures, archive avec crédits et profils existants utilisables. Le relief mondial et les horizons lointains sont en P8 : les textures seules ne les produisent pas. Traiter les retours esthétiques utilisateur avec résultats à l’écran plutôt que promettre une qualité déjà approuvée.
 
+## Contrainte prioritaire de P7 : machines modestes
+
+Le dernier message utilisateur précise **RTX 4050 6 Go au mieux**, CPU indiqué « i5 12700K ». La référence 12700K est un Core i7 ; ne pas substituer silencieusement un modèle, relever le CPU exact/RAM/puissance GPU/pilote. Objectif de travail 1080p/60 FPS sur la cible à mesurer, pas une performance validée depuis Ubuntu/GTX 1060.
+
+Budgets initiaux dans ART_DIRECTION/PERFORMANCE : textures de proximité 1 024², petits objets 512², cartes Terre/Mars 2 048×1 024 ; exception proche 2 048² seulement si justifiée. Pas de 4K/8K en P7. **128 Mio maximum de nouvelles textures résidentes**, formats GPU réels et niveaux de texture compris ; estimer puis instrumenter, suivre séparément copies CPU/staging/pics et VRAM totale avec marge sur 6 Go. Les fichiers NASA/rover servent de références/maîtres hors jeu, exports préparés à taille adaptée. Assets partagés, cartes de normales/rugosité et mélanges limités au bénéfice visible ; ray tracing/effets coûteux non requis. Les profils réduits ne sont pas encore implémentés.
+
+La fluidité est un critère de livraison P7 : avant/après comparable sans captures, frame moyenne/p95, CPU/GPU, chargement et ressources/pics ; réduire et corriger avant livraison si dépassement/saccades. Cette précision modifie seulement le cadrage documentaire, aucun résultat matériel ou test nouveau. Les 130 tests et captures restent ceux du binaire 6898bdb.
+
 ## Fonctionnalité actuelle
 
 **Nouvelle aventure** ouvre une saisie de nom obligatoire (1–40 lettres/chiffres/espaces/tirets/_), puis Créer/Entrée. Écrit `saves/Nom/session.solar`, remet joueur/site/stock/dépôts/abris/temps à zéro et démarre près de la Terre. M installe ensuite le premier site de cette aventure. Réglages d’affichage/sensibilité repris comme préférences initiales. Noms vides, chemins, noms système réservés et doublons sans distinction de casse refusés ; répertoires de profils symlink exclus.

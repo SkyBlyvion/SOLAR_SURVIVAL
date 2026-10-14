@@ -42,7 +42,7 @@ Le premier livrable de P7 est une amélioration visible dans le vrai jeu, avec c
 
 ## Matériel de développement et cible finale
 
-Le poste actuel Ubuntu avec GTX 1060 3 Go et pilote NVK est un **poste de développement**, pas la référence finale de performance. La cible annoncée par l'utilisateur le 12 octobre 2026 est une **RTX 4050 et un Intel Core i5**. Le modèle exact du processeur, la RAM, la configuration de la carte, la résolution et les réglages seront consignés au moment des essais sur cette machine.
+Le poste Ubuntu avec GTX 1060 3 Go/NVK reste le poste de développement. Précision utilisateur du **14 octobre 2026** : la **RTX 4050 6 Go est le haut de la cible**, le jeu ne doit pas exiger une machine plus puissante. Le CPU annoncé « i5 12700K » reste à confirmer, la référence 12700K étant un Core i7 ; RAM, puissance/configuration GPU, pilote et alimentation à relever. **Objectif de travail : 1080p/60 FPS sur la cible, à mesurer**. P7 commence avec textures locales 1 024²/petits objets 512² et cartes Terre/Mars 2 048×1 024, budget initial **128 Mio de nouvelles textures résidentes** avec niveaux de texture ; suivre séparément total/pics RAM/VRAM et coût des shaders. [Budgets et critères](ART_DIRECTION.md). Ces limites sont planifiées, pas encore instrumentées ni validées sur la cible.
 
 Le profilage P1 établit les coûts et un protocole transférable ; les FPS actuels ne prédisent pas ceux de la cible. Les optimisations de confort peuvent être évaluées ici, mais les décisions de qualité graphique et l'objectif de 60 FPS seront validés sur la machine cible. Des FPS faibles sur le poste actuel ne bloquent pas à eux seuls P2 ou les fonctionnalités suivantes.
 

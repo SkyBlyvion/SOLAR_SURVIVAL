@@ -14,6 +14,8 @@ Prototype d'exploration 3D de notre système solaire, fondation d'un jeu de surv
 
 **Après le MVP : P7, qualité visuelle et textures.** Prochaine passe : matériaux martiens de proximité et cartes Terre/Mars sourcées NASA/JPL, puis relief/horizons, progression de base et exploration. Ces travaux sont planifiés, pas encore implémentés. [Direction visuelle et sources](docs/ART_DIRECTION.md). La validation native Windows reste ouverte.
 
+**Cible de performance :** machines modestes, RTX 4050 **6 Go au mieux**. P7 prévoit des textures modestes et partagées, avec budgets mémoire et mesures ; objectif 1080p/60 FPS sur la cible à vérifier. Le CPU indiqué « i5 12700K » reste à confirmer. [Contraintes détaillées](docs/ART_DIRECTION.md).
+
 La suite du développement suit [la roadmap](docs/ROADMAP.md). Le [prompt du prochain chat](docs/NEXT_CHAT.md) est actualisé à chaque fin de chat de développement avec l'état réel et l'objectif suivant.
 
 ## Démarrer sur ce poste Ubuntu

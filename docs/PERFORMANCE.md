@@ -1,3 +1,13 @@
+# Cible P7 et contrainte de performance — 14 octobre 2026
+
+La RTX 4050 **6 Go** est le haut de la cible utilisateur, pas une configuration minimale exigeante. CPU annoncé « i5 12700K », modèle exact à confirmer (12700K correspond officiellement à un i7) ; RAM/puissance GPU/pilote à relever. Objectif de travail **1080p/60 FPS sur la cible**, pas une mesure acquise. Le jeu doit conserver une qualité réduite viable sur des configurations plus faibles ; seuil minimal à établir avec des essais réels.
+
+P7 part de textures locales 1 024², petits objets 512², cartes Terre/Mars 2 048×1 024 ; exception proche limitée à 2 048² et justifiée. **Budget initial de nouvelles textures résidentes : 128 Mio**, formats GPU/niveaux de texture compris ; copies CPU et pics transitoires suivis séparément. Ce budget reste à instrumenter lors de l'implémentation. [Contrat détaillé](ART_DIRECTION.md). Le poids compressé sur disque n'est pas une mesure de VRAM. Réutiliser les assets et limiter aussi le coût des shaders, des mélanges et de l'éclairage.
+
+La mise à jour est documentaire : pas de texture intégrée, nouvelle mesure, build ou validation sur RTX 4050/Windows. Les baselines datées ci-dessous restent celles du poste Ubuntu/GTX 1060. Avant/après P7 doit garder résolution/MSAA/site/visée comparables, sans captures pendant les fenêtres ; relever temps moyen/p95, CPU/GPU, chargement et ressources/pics. L'amélioration visuelle doit respecter ces contraintes, avec réduction/correction en cas de dépassement.
+
+---
+
 # P6 : profils et interface — portée des vérifications
 
 14 octobre 2026. Les profils conservent seulement des noms en mémoire lors de la navigation ; seule l’aventure active possède terrain, objets et ressources de jeu chargés. La liste de profils est paginée selon la hauteur de fenêtre. Les panneaux de construction partagent le cube et les six pièces déjà utilisés pour le placement, sans nouveau mesh par frame. Les dossiers d’aventures n’ajoutent pas de planètes/terrains résidents.

@@ -41,13 +41,36 @@ L'échantillonnage du sol doit rester fixe dans le corps martien : aucun glissem
 
 Charger et partager textures/matériaux, sans génération d'image/mesh par frame. Choisir résolution, filtrage et niveaux de texture à partir de la taille à l'écran et des mesures ; pas de « 8K partout ». Établir le budget textures CPU/GPU et les temps de chargement avant/après sur le poste actuel ; la cible RTX 4050/Core i5 reste à relever et à mesurer séparément. Ne pas annoncer un plafond VRAM universel sans mesure.
 
+## Contrainte matérielle et budgets de départ
+
+Précision utilisateur du **14 octobre 2026** : le jeu doit viser des machines modestes ; la **RTX 4050 avec 6 Go de VRAM constitue le haut de la cible**, pas un minimum à dépasser. Le CPU indiqué est « i5 12700K » ; la référence [12700K est officiellement un Core i7](https://www.intel.com/content/www/us/en/products/sku/134594/intel-core-i712700k-processor-25m-cache-up-to-5-00-ghz/specifications.html). Conserver le modèle exact à confirmer, sans supposer un autre i5. RAM, puissance/configuration GPU et alimentation restent à relever. L'objectif de travail est **1080p/60 FPS sur cette cible**, à vérifier sur le matériel ; aucune garantie ni nouvelle mesure n'est produite par ce cadrage.
+
+Budgets initiaux choisis pour P7, révisables seulement avec des mesures documentées :
+
+| Élément | Budget/choix de départ |
+|---|---|
+| Sol et matériaux proches | Textures répétables **1 024×1 024** par défaut ; petits objets **512×512** ; atlas et matériaux partagés entre instances |
+| Planètes prioritaires | Cartes Terre/Mars **2 048×1 024** au départ ; pas de chargement des maîtres scientifiques haute résolution dans le jeu |
+| Exception de résolution | **2 048×2 048 maximum** pour un matériau proche uniquement si le gain est visible et le budget respecté ; aucune texture 4K/8K prévue en P7 |
+| Nouvelles textures P7 résidentes | **128 Mio maximum estimés**, toutes cartes/niveaux de texture compris dans leur format GPU réellement chargé ; compter aussi une représentation décompressée si la compression n'est pas utilisée |
+| Pics de chargement | Suivre séparément copies CPU, staging et allocations transitoires ; le budget résident n'est pas une preuve de pic RAM/VRAM |
+| Cartes de matériau | Couleur de base ; ajouter normales et rugosité seulement si utiles à l'écran ; paramètres constants ou regroupés quand ils suffisent |
+| Éclairage et shaders | Réutiliser la lumière/caméra existantes ; aucun ray tracing ni effet coûteux requis ; limiter les couches de mélange et mesurer leur coût GPU |
+| Chargement | Réutilisation entre patches et bâtiments, pas de duplication par instance ; libération des assets spécifiques devenus inutiles ; ni téléchargement ni traitement des sources maîtres en jeu |
+
+Ce sont des **budgets de production**, pas des limites déjà contrôlées dans le code. Le total VRAM du jeu inclut aussi meshes, buffers, profondeur, rendu HDR/MSAA et pilote ; ne pas confondre le poids du PNG/JPEG sur disque avec l'occupation une fois chargé. Garder une marge sur les 6 Go et relever consommation réelle/pics quand l'outil et le pilote le permettent. Aucune baisse de poids de fichier ne suffit à démontrer un gain GPU.
+
+Les photos de rovers déterminent la palette et les détails à reproduire, pas la résolution des fichiers distribués. Fournir des exports plus petits pour le réglage réduit si nécessaire, avec filtrage/niveaux de texture adaptés et sans scintillement gênant. Les profils qualité sont à implémenter selon les besoins observés ; ne pas les déclarer disponibles maintenant. La GTX 1060 3 Go reste utile pour détecter tôt les excès, sans extrapoler ses FPS vers la RTX 4050.
+
+Comparer avant/après sans captures, à résolution/MSAA/site/visée identiques : frame moyenne/p95, CPU/GPU si disponibles, temps de chargement et nombre/octets d'assets résidents. Si les textures provoquent dépassement, saccades ou coût de shader important, réduire taille/cartes/couches et corriger avant de livrer P7. L'aspect visuel doit s'améliorer dans ces contraintes ; la résolution et les effets ne servent pas de mesure de qualité.
+
 ## Critères de fin P7
 
 1. Terre et Mars portent des cartes sourcées et correctement orientées dans la convention documentée ; pas de couture ou de pôle manifestement cassé.
 2. Sol martien proche avec poussière/roche à échelle cohérente, détails de surface stables et répétition visuellement acceptable ; pas de texture qui nage au rebasage.
 3. Le même abri et les caisses ont une apparence cohérente, porte et ressources immédiatement identifiables ; placement autorisé/interdit toujours lisible.
 4. Captures comparables avant/après : espace, sol, abri extérieur/intérieur, jour/nuit, placement, rebasage et retour depuis une aventure chargée. Inspection des originaux et corrections avant de déclarer l'étape faite.
-5. Mesures sans captures aux mêmes réglages : temps de frame, chargement et budgets d'assets ; aucune régression majeure laissée sans explication ou arbitrage.
+5. Mesures sans captures aux mêmes réglages : temps de frame, chargement et budgets d'assets ; budget P7 de 128 Mio de nouvelles textures respecté, pics et régressions traités ; objectif cible 1080p/60 FPS à vérifier nativement.
 6. Tests adaptés aux matériaux/chargement/f64, régressions survie/construction/profils, contrôles Cargo et archive hors checkout avec crédits. L'approbation esthétique de l'utilisateur reste distincte des vérifications techniques.
 
 Le relief mondial, les grands horizons et le streaming asynchrone sont prévus en P8. Une extension de sauvegarde ultérieure devra préserver les aventures P6 via une migration explicite ; aucun nouveau contenu ne doit rendre silencieusement les profils existants illisibles.
