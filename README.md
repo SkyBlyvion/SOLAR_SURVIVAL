@@ -18,6 +18,11 @@ Prototype d'exploration 3D de notre système solaire, fondation d'un jeu de surv
 
 **Cible de performance :** machines modestes, RTX 4050 **6 Go au mieux**. P7 utilise des textures modestes et partagées, avec budgets mémoire et mesures ; objectif 1080p/60 FPS sur la cible à vérifier. Le CPU indiqué « i5 12700K » reste à confirmer. [Contraintes détaillées](docs/ART_DIRECTION.md).
 
+**P9 prévu, non implémenté :** panneaux solaires, batteries, générateur/réserve
+d'oxygène et récolte durable, avec **inventaire du joueur à piles/capacité finie
+et coffres de stockage**, transferts de proximité, interface et sauvegarde des
+contenus et équipements. [Périmètre et critères](docs/P9_BASE.md).
+
 La suite du développement suit [la roadmap](docs/ROADMAP.md). Le [prompt du prochain chat](docs/NEXT_CHAT.md) est actualisé à chaque fin de chat de développement avec l'état réel et l'objectif suivant.
 
 ## Démarrer sur ce poste Ubuntu

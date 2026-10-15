@@ -1,3 +1,14 @@
+# Préparation documentaire P9 — 15 octobre 2026
+
+Le périmètre [P9_BASE](P9_BASE.md), la roadmap et NEXT_CHAT ajoutent l'inventaire
+porté et les coffres de stockage à la chaîne énergie/oxygène, récolte durable,
+interface et sauvegarde. **Documentation seulement : P9 n'est pas implémenté.**
+Cohérence des références et diff vérifiés ; aucun code, asset ou format livré
+modifié, aucune nouvelle exécution Cargo ou graphique attribuée à cette préparation.
+Les validations P8 ci-dessous restent les résultats de leur campagne propre.
+
+---
+
 # P8 — relief, horizons et atmosphère, vérifiés sur Ubuntu le 15 octobre 2026
 
 Départ réel `496e26a`, propre. Demande utilisateur : P8 et météo visuelle martienne,

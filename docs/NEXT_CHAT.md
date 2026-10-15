@@ -1,4 +1,4 @@
-# Prochain chat Solar Survival — P9, base et progression
+# Prochain chat Solar Survival — P9, base, inventaire et stockage
 
 Mise à jour : **15 octobre 2026**. **P1–P8 réalisés sur Ubuntu de développement.**
 P9 et P10 ne sont pas implémentés. Windows natif et matériel cible restent ouverts.
@@ -8,15 +8,14 @@ Chef de projet et orchestrateur : **SkyBlyvion**.
 
 Nous poursuivons Solar Survival dans `/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL`.
 Lire AGENTS.md, README.md, docs/ROADMAP.md, cette passation, ASTRONOMY.md,
-MARS_ENVIRONMENT.md, GLOBAL_TERRAIN.md, SURVIVAL.md, CONSTRUCTION.md,
+P9_BASE.md, MARS_ENVIRONMENT.md, GLOBAL_TERRAIN.md, SURVIVAL.md, CONSTRUCTION.md,
 PERSISTENCE.md, ART_DIRECTION.md, VALIDATION.md, PERFORMANCE.md et
 `docs/p8-validation/2026-10-15/NOTES.md`. Examiner Git avant de modifier et préserver
-les changements utilisateur et toutes les preuves historiques. Le chat P8 est
-parti de `496e26a7269dcdc5c61705ddb0e93d805ed6f6f4` propre ; ses changements sont
-regroupés dans le commit `feat: add P8 Mars relief, horizons and dynamic atmosphere`,
-créé à la demande de l’utilisateur ; aucun push effectué pendant cette clôture.
-Retrouver son identifiant avec `git log` et vérifier l’état réel au démarrage,
-sans supposer que HEAD/origin ont évolué ensemble.
+les changements utilisateur et toutes les preuves historiques. P8 est commité sur
+`main` dans **`ee87770` — `feat: add P8 Mars relief, horizons and dynamic atmosphere`**.
+La présente préparation documentaire ajoute le périmètre inventaire/stockage demandé
+par l'utilisateur ; elle ne commence pas l'implémentation P9. Vérifier l'état réel
+au démarrage et préserver ce cadrage, sans supposer que HEAD/origin sont identiques.
 
 **Décision utilisateur actuelle : aucune compatibilité avec les anciennes
 sauvegardes n'est nécessaire pour le moment.** Format courant `SOLAR_SURVIVAL 2`,
@@ -28,6 +27,8 @@ Ne pas réintroduire une obligation de migration depuis les anciennes passations
 - M ouvre Mars mondiale, six faces, contacts/poses SI f64 et origine mobile.
   P4/P5 : oxygène 180 s, recharge dans le même abri, huit caisses, stock et
   construction à 12 alliage. Menus/options/catalogue/HUD et profils indépendants.
+  L'inventaire actuel est un compteur d'alliage dans Construction : inventaire
+  multitype à piles/capacité finie et coffres de base ne sont pas encore livrés.
 - P7 : treize textures partagées, 40,168 Mio utiles GPU / budget 128 Mio ; cartes
   des huit planètes sourcées. Soleil/Lune et détails locaux artistiques. Le raccord
   de Jupiter avait été corrigé offline avant P8 ; maîtres/crédits/preuves conservés.
@@ -97,20 +98,61 @@ Archive actuelle : `dist/solar-survival-ubuntu-p8.tar.gz`, **36 907 688 octets**
 Binaire `b27bdbd4207a0685132897ddac2b11c416d1a6df91aaca7ba5f8569efd00d5c3`.
 Extraction temporaire : `/tmp/solar-survival-p8-2026-10-15/solar-survival-ubuntu-p8`.
 
-## Prochain objectif : P9
+## Prochain objectif : P9 — périmètre confirmé
 
-Examiner les propriétaires actuels bâtiments/construction/survie/persistance avant
-de choisir une première chaîne jouable **énergie → production/stockage d'oxygène →
-autonomie**. Le cycle jour/nuit et la poussière/tempête peuvent fournir une
-variation solaire utile, mais leurs constantes de présentation ne sont pas une
-puissance électrique en watts. Définir et documenter les unités/conventions du
-modèle énergétique, les coûts et règles, puis implémenter une boucle complète et
-compréhensible : récolter/fabriquer/installer/produire/consommer/voir l'état/sauver.
-La ressource doit dépasser les huit caisses initiales selon une règle durable
-vérifiable. Préserver la marche, les contacts, les profils et la précision f64 ;
-ne pas ajouter une abstraction de réseau ou des modules vides sans besoin concret.
-P10 objectifs/exploration reste ultérieur. Les retours visuels utilisateur sur P8
-peuvent naturellement réorienter le travail s'il en donne.
+Implémenter le cadrage [P9_BASE](P9_BASE.md), comprenant **panneaux solaires,
+batteries, générateur et réserve d'oxygène, récolte durable, gestion d'inventaire,
+stockage de base, interface et sauvegarde**. L'inventaire et les coffres font
+partie de P9 à la demande explicite de l'utilisateur, pas d'une étape ultérieure.
+
+Boucle complète : **explorer → récolter → transporter → déposer/reprendre →
+fabriquer/construire → produire/stocker énergie et oxygène → repartir**.
+
+Commencer par examiner les propriétaires réels dans Construction, Buildings,
+Oxygen et Session, puis choisir une première implémentation opérationnelle :
+
+- Inventaire porté avec types utiles, quantités, piles organisables et capacité
+  bornée ; dépasser le seul compteur d'alliage actuel.
+- Coffres constructibles, identités et poses corporelles f64 fixes, contenus et
+  capacités propres ; accès de proximité et interface inventaire/conteneur.
+- Transferts de quantité/pile/maximum explicites et atomiques : capacité, portée
+  et disponibilité vérifiées, refus sans perte, ni duplication ni double débit.
+  Une récolte refusée pour inventaire plein ne doit pas épuiser le dépôt.
+- Recettes reliées aux ressources réellement accessibles ; provenance des
+  matériaux explicite. Proposition initiale : payer depuis l'inventaire porté,
+  après retrait du coffre ; aucune ponction distante implicite. Revalidation à
+  confirmation et annulation sans dépense comme dans P5.
+- Équipements énergie/oxygène et ressources durables au-delà des huit caisses,
+  avec règles d'amorçage et de reprise après panne pour éviter une aventure bloquée.
+- Interface claire : capacité portée/stockée, quantités et refus de transfert,
+  production/consommation, charge de batterie, stock et service d'oxygène.
+- Sauvegarde de tous les inventaires/conteneurs, états des sources et équipements,
+  réserves/identités/poses ; deux profils indépendants après fermeture, aucun
+  handle/cache/UI transitoire sérialisé. Choisir la version du nouveau format lors
+  de l'implémentation, sans migration ancienne requise pour le moment.
+
+Définir capacités, limites de piles, recettes, puissances, débits et unités pendant
+le cadrage concret ; ne pas présenter ces valeurs comme déjà décidées. Distinguer
+stockage d'objets, énergie (W et J/Wh explicités) et réserve d'oxygène (lien à
+l'autonomie P4 documenté). Les couleurs/lux/poussières de P8 ne sont pas une
+puissance électrique : définir un modèle de gameplay utilisant les conditions
+solaires et la météo. Définir les horloges de production, menus/inventaire/espace,
+longues interruptions et absence ou présence de rattrapage hors application.
+Préserver les règles P/T et la physique en temps réel, sans changement implicite.
+
+Contrôles attendus : boucle neuve complète, capacités/piles pleines, quantités
+insuffisantes, transferts partiels explicites et répétitions, construction/refus,
+jour/nuit/tempête, arrêt/reprise énergie/O2, rebasage et conservation après M/R.
+Vérifier restauration des contenus/charges/ressources après redémarrage et refus
+sans mutation d'un fichier incohérent. Exécuter fmt/check/tests/Clippy/release,
+inspection graphique de la boucle et des écrans dans un créneau autorisé, mesures
+comparables des coûts et documentation des résultats/limites. Les vérifications
+P8 déjà acquises restent distinctes de ces futurs contrôles P9.
+
+Préserver contacts, marche, précision f64, chargement borné et séparation des
+propriétaires. Pas de modules vides ou de réseau logistique spéculatif ; créer les
+modules uniquement avec leur fonction réelle. P10 reste ultérieur. Les retours
+visuels utilisateur sur P8 peuvent réorienter le travail s'il en donne.
 
 ## Contraintes et limites permanentes
 
