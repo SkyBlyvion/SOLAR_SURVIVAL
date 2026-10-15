@@ -1,0 +1,219 @@
+{
+  "samples": [
+    {
+      "seconds": 0.0002234880012110807,
+      "rss_kib": 3944,
+      "hwm_kib": 3944,
+      "drm": {}
+    },
+    {
+      "seconds": 0.25212812600148027,
+      "rss_kib": 212944,
+      "hwm_kib": 212944,
+      "drm": {}
+    },
+    {
+      "seconds": 0.5029412350013445,
+      "rss_kib": 239924,
+      "hwm_kib": 279152,
+      "drm": {}
+    },
+    {
+      "seconds": 0.7536948970009689,
+      "rss_kib": 250944,
+      "hwm_kib": 279152,
+      "drm": {}
+    },
+    {
+      "seconds": 1.0044014129998686,
+      "rss_kib": 251388,
+      "hwm_kib": 279152,
+      "drm": {}
+    },
+    {
+      "seconds": 1.2553555509985017,
+      "rss_kib": 251404,
+      "hwm_kib": 279152,
+      "drm": {}
+    },
+    {
+      "seconds": 1.5060915860012756,
+      "rss_kib": 252180,
+      "hwm_kib": 279152,
+      "drm": {}
+    },
+    {
+      "seconds": 1.7569898059991829,
+      "rss_kib": 252184,
+      "hwm_kib": 279152,
+      "drm": {}
+    },
+    {
+      "seconds": 2.0077242170009413,
+      "rss_kib": 252204,
+      "hwm_kib": 279152,
+      "drm": {}
+    },
+    {
+      "seconds": 2.2584550110004784,
+      "rss_kib": 252340,
+      "hwm_kib": 279152,
+      "drm": {}
+    },
+    {
+      "seconds": 2.509169983000902,
+      "rss_kib": 252728,
+      "hwm_kib": 279152,
+      "drm": {}
+    },
+    {
+      "seconds": 2.760081092001201,
+      "rss_kib": 252728,
+      "hwm_kib": 279152,
+      "drm": {}
+    },
+    {
+      "seconds": 3.010897064999881,
+      "rss_kib": 253472,
+      "hwm_kib": 279152,
+      "drm": {}
+    },
+    {
+      "seconds": 3.2620586000011826,
+      "rss_kib": 253472,
+      "hwm_kib": 279152,
+      "drm": {}
+    },
+    {
+      "seconds": 3.512840295999922,
+      "rss_kib": 253472,
+      "hwm_kib": 279152,
+      "drm": {}
+    },
+    {
+      "seconds": 3.7635699630009185,
+      "rss_kib": 253472,
+      "hwm_kib": 279152,
+      "drm": {}
+    },
+    {
+      "seconds": 4.014307530000224,
+      "rss_kib": 253472,
+      "hwm_kib": 279152,
+      "drm": {}
+    },
+    {
+      "seconds": 4.265052539998578,
+      "rss_kib": 254224,
+      "hwm_kib": 279152,
+      "drm": {}
+    },
+    {
+      "seconds": 4.515899761998298,
+      "rss_kib": 254224,
+      "hwm_kib": 279152,
+      "drm": {}
+    },
+    {
+      "seconds": 4.7670089730017935,
+      "rss_kib": 254224,
+      "hwm_kib": 279152,
+      "drm": {}
+    },
+    {
+      "seconds": 5.01813220600161,
+      "rss_kib": 254288,
+      "hwm_kib": 279152,
+      "drm": {}
+    },
+    {
+      "seconds": 5.26914940899951,
+      "rss_kib": 254288,
+      "hwm_kib": 279152,
+      "drm": {}
+    },
+    {
+      "seconds": 5.51985015000173,
+      "rss_kib": 254288,
+      "hwm_kib": 279152,
+      "drm": {}
+    },
+    {
+      "seconds": 5.770550138000544,
+      "rss_kib": 254288,
+      "hwm_kib": 279152,
+      "drm": {}
+    },
+    {
+      "seconds": 6.021524579999095,
+      "rss_kib": 255032,
+      "hwm_kib": 279152,
+      "drm": {}
+    },
+    {
+      "seconds": 6.272704668001097,
+      "rss_kib": 255032,
+      "hwm_kib": 279152,
+      "drm": {}
+    },
+    {
+      "seconds": 6.5235137269992265,
+      "rss_kib": 255032,
+      "hwm_kib": 279152,
+      "drm": {}
+    },
+    {
+      "seconds": 6.774345043999347,
+      "rss_kib": 255092,
+      "hwm_kib": 279152,
+      "drm": {}
+    },
+    {
+      "seconds": 7.025142144000711,
+      "rss_kib": 255092,
+      "hwm_kib": 279152,
+      "drm": {}
+    },
+    {
+      "seconds": 7.276274022999132,
+      "rss_kib": 255096,
+      "hwm_kib": 279152,
+      "drm": {}
+    },
+    {
+      "seconds": 7.526967434001563,
+      "rss_kib": 255096,
+      "hwm_kib": 279152,
+      "drm": {}
+    },
+    {
+      "seconds": 7.778074522000679,
+      "rss_kib": 255096,
+      "hwm_kib": 279152,
+      "drm": {}
+    },
+    {
+      "seconds": 8.02949778599941,
+      "rss_kib": 255096,
+      "hwm_kib": 279152,
+      "drm": {}
+    },
+    {
+      "seconds": 8.280268884998804,
+      "rss_kib": 255096,
+      "hwm_kib": 279152,
+      "drm": {}
+    },
+    {
+      "seconds": 8.531283216998418,
+      "rss_kib": 257636,
+      "hwm_kib": 279152,
+      "drm": {}
+    }
+  ],
+  "peak_rss_kib": 257636,
+  "process_hwm_kib": 279152,
+  "drm_available": false,
+  "interval_seconds": 0.25,
+  "limitations": "RSS processus pas allocation textures seule. HWM noyau et \u00e9chantillonnage. VRAM/staging absents si pilote non instrument\u00e9. Linux uniquement."
+}

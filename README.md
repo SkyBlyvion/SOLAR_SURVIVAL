@@ -2,6 +2,8 @@
 
 Prototype d'exploration 3D de notre système solaire, fondation d'un jeu de survie spatial en première personne. **Les positions, rayons et distances physiques restent en mètres à l'échelle 1:1, en `f64`.** Bevy ne reçoit que des représentations relatives à la caméra.
 
+**P12, commandes remappables :** Options → Commandes permet de réaffecter 26 commandes, avec refus des conflits, annulation et réinitialisation. Les aides suivent les touches choisies ; positions physiques QWERTY/AZERTY. Écriture format 6, lecture 4/5 conservée. [Contrat et limites](docs/P12_CONTROLS.md). Menus720p/900p, reprise et archive contrôlés ; campagne arrêtée à la demande utilisateur. Deux rappels secondaires E/B restent à corriger ; comparaisons de performance et Windows/cible ouverts.
+
 **P11, audio et alertes :** signaux de récolte, construction, relevé/rapport,
 transfert et refus ; alertes O₂ à 30 s et 10 s, recharge et épuisement. Volume
 0–100 % et mode muet dans Options, sauvegardés au format 5. Les aventures P10
@@ -19,7 +21,7 @@ Tests sans bureau ; inspection graphique encore à faire dans un créneau autori
 
 **M ouvre un terrain martien mondial : six faces traversables, arêtes et coins continus, LOD adaptatif à trois résolutions et chargement local borné.** Les anciens parcours bornés restent des modes de régression. [Architecture et commandes](docs/GLOBAL_TERRAIN.md).
 
-**P8, relief et atmosphère martienne :** collines artistiques jouables, paysage local prolongé sur plusieurs kilomètres, ciel ocre le jour, halo bleu au lever/coucher, nuit étoilée, voiles de glace et tempêtes de poussière occasionnelles. P/T commande aussi leur évolution ; H indique la météo et la visibilité. Anciennes aventures refusées sans migration : créer une aventure au format courant 5. [Paramètres, sources et limites](docs/MARS_ENVIRONMENT.md).
+**P8, relief et atmosphère martienne :** collines artistiques jouables, paysage local prolongé sur plusieurs kilomètres, ciel ocre le jour, halo bleu au lever/coucher, nuit étoilée, voiles de glace et tempêtes de poussière occasionnelles. P/T commande aussi leur évolution ; H indique la météo et la visibilité. Anciennes aventures refusées sans migration : créer une aventure au format courant 6. [Paramètres, sources et limites](docs/MARS_ENVIRONMENT.md).
 
 **Caméra unique :** la même caméra rend les visites spatiales et la surface. Sur Mars : ciel poussiéreux, étoiles discrètes la nuit, Soleil et astres calculés depuis le catalogue, masqués par le terrain et les abris. Le ciel et le sol restent des présentations artistiques ; [architecture, ressources et limites](docs/SURFACE_SKY.md).
 
@@ -39,7 +41,7 @@ O₂. **I** ouvre l'inventaire ; **E** accède au coffre proche. Choisir une pil
 transférer une quantité, une pile ou le maximum ; regrouper/déplacer les piles.
 **B** propose les six recettes, payées depuis le porté. L'abri puise dans une
 réserve finie ; équipements et abris à moins de 40 m du premier abri partagent la
-base. Soleil et poussière règlent la puissance, en secondes réelles. **Format courant 5
+base. Soleil et poussière règlent la puissance, en secondes réelles. **Format courant 6
 avec P11**, lecture P10 format 4 conservée. 147 tests et parcours fonctionnels Ubuntu validés pour P9 ;
 comparaison de performance reportée à la demande utilisateur, sans nouveaux tests
 prenant le focus pendant son travail. [Règles, recettes et limites](docs/P9_BASE.md).

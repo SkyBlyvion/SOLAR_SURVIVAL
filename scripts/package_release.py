@@ -53,17 +53,18 @@ def main():
     else:
         (out/'lancer.cmd').write_bytes(b'@echo off\r\ncd /d "%~dp0"\r\nsolar_survival.exe\r\n')
     (out / 'LIRE-MOI.txt').write_text(
-        'Solar Survival 0.2 · P11 audio et alertes\n\n'
+        'Solar Survival 0.2 · P12 commandes remappables\n\n'
         'Ubuntu : lancer ./solar_survival depuis ce dossier. Pilote Vulkan/X11 et bibliothèque libasound.so.2 requis.\n'
         'Windows 11 : lancer solar_survival.exe depuis ce dossier. Pilote graphique récent requis.\n'
         'Les résultats Ubuntu ne valent pas validation Windows.\n\n'
         'Nouvelle aventure, saisir un nom, Créer ; puis M : Mars. Clic droit, WASD/ZQSD, Shift, Espace.\n'
         'P8 : relief artistique, paysage lointain, ciel jour/nuit, halo bleu, voiles de glace et tempêtes.\n'
         'P/T : figer ou accélérer le calendrier et la météo ; H : télémétrie atmosphérique.\n'
-        'Sauvegardes écrites au format 5 ; lecture P10 format 4 conservée, formats 1/2/3 refusés.\n'
+        'Sauvegardes écrites au format 6 ; lecture des formats 4/5 conservée, formats 1/2/3 refusés.\n'
         'P9 : I inventaire/coffre, transferts et rangement ; sources ocre/cyan renouvelables derrière l’arrivée.\n'
         'P9 : panneaux, batterie et générateur/réserve O2 ; base collective à 40 m du premier abri.\n'
         'P10 : trois balises progressives ; F à 3 m pour relever, puis F dans le premier abri pour la récompense.\n'
+        'P12 : Options / Commandes, 26 touches remappables ; conflits refusés, aides actualisées.\n'
         'P11 : Options, volume 0/25/50/75/100 % et muet ; alertes O2 à 30 s et 10 s, sons des actions.\n'
         'P10 : données non rapportées perdues si O2 épuisé ou sortie spatiale ; découvertes conservées.\n'
         'E : récolter / coffre ; B : catalogue, puis Prévisualiser ; flèches et J/L ; Entrée confirmer, X annuler.\n'

@@ -198,7 +198,7 @@ fn setup(mut commands: Commands, assets: Res<AssetServer>) {
 )]
 fn input(
     mut commands: Commands,
-    keys: Res<ButtonInput<KeyCode>>,
+    keys: Res<crate::controls::GameplayKeys>,
     menu: Res<MenuState>,
     pilot: Res<Explorer>,
     state: Res<SurfaceState>,
@@ -495,7 +495,7 @@ fn refresh(
     }
     for (label, mut text) in &mut actions {
         **text = match label.0 {
-            Action::Close => "Fermer · I / Échap".into(),
+            Action::Close => "Fermer · <key:KeyI> / Échap".into(),
             Action::Sort => "Regrouper".into(),
             Action::Swap => "Déplacer la pile".into(),
             Action::Quantity => format!("Quantité : {} (1/5/20)", screen.quantity),
@@ -516,6 +516,8 @@ mod tests {
         let mut app = App::new();
         app.add_plugins(MinimalPlugins)
             .init_resource::<ButtonInput<KeyCode>>()
+            .init_resource::<crate::controls::GameplayKeys>()
+            .init_resource::<crate::controls::HeldInMenu>()
             .init_resource::<SolarSystem>()
             .init_resource::<MarsTerrain>()
             .init_resource::<Explorer>()
@@ -525,7 +527,7 @@ mod tests {
             .init_resource::<Buildings>()
             .init_resource::<InventoryScreen>()
             .init_resource::<MenuState>()
-            .add_systems(Update, input);
+            .add_systems(Update, (crate::controls::translate, input).chain());
         app.world_mut().resource_mut::<MenuState>().play();
         app.world_mut().resource_mut::<Explorer>().mode = MovementMode::Surface;
         app.world_mut()

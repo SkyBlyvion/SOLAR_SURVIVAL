@@ -241,6 +241,7 @@ impl Session {
             || self.settings.sensitivity_index >= 4
             || self.settings.fov_index >= 4
             || self.settings.msaa_index >= 3
+            || !self.settings.bindings.valid()
             || self.settings.volume_index >= 5
         {
             return fail();
@@ -370,7 +371,7 @@ impl Session {
         Ok(())
     }
     pub fn encode(&self) -> String {
-        let mut text = String::from("SOLAR_SURVIVAL 5\n");
+        let mut text = String::from("SOLAR_SURVIVAL 6\n");
         writeln!(
             text,
             "clock {} {} {}",
@@ -528,6 +529,11 @@ impl Session {
             self.settings.volume_index, self.settings.muted
         )
         .unwrap();
+        write!(text, "bindings {}", crate::controls::ACTIONS.len()).unwrap();
+        for id in self.settings.bindings.ids() {
+            write!(text, " {id}").unwrap();
+        }
+        text.push('\n');
         let sum = checksum(text.as_bytes());
         writeln!(text, "checksum {sum:016x}").unwrap();
         text
@@ -545,7 +551,7 @@ impl Session {
         let mut r = Reader(payload.split_whitespace());
         r.tag("SOLAR_SURVIVAL")?;
         let version = r.num::<u32>()?;
-        if !matches!(version, 4 | 5) {
+        if !matches!(version, 4..=6) {
             return Err("Version de sauvegarde incompatible".into());
         }
         r.tag("clock")?;
@@ -712,10 +718,21 @@ impl Session {
             discovered: [r.num()?, r.num()?, r.num()?],
             ..default()
         };
-        if version == 5 {
+        if version >= 5 {
             r.tag("audio")?;
             settings.volume_index = r.num()?;
             settings.muted = r.num()?;
+        }
+        if version >= 6 {
+            r.tag("bindings")?;
+            let count = r.num::<usize>()?;
+            if count != crate::controls::ACTIONS.len() {
+                return Err("Nombre de commandes incompatible".into());
+            }
+            let ids = (0..count)
+                .map(|_| r.num::<usize>())
+                .collect::<Result<Vec<_>>>()?;
+            settings.bindings = crate::controls::Bindings::from_ids(&ids)?;
         }
         if r.0.next().is_some() {
             return Err("Données supplémentaires inattendues".into());
@@ -918,6 +935,7 @@ impl Session {
         world.insert_resource(self.expedition);
         world.insert_resource(crate::ui::inventory::InventoryScreen::default());
         world.insert_resource(self.settings);
+        world.insert_resource(crate::controls::GameplayKeys::default());
         world.insert_resource(RenderOrigin(origin));
         crate::audio::reset(world);
         world.insert_resource(NavigationRequest::default());
@@ -1436,7 +1454,7 @@ mod tests {
             .volume_index = 4;
         source.world_mut().resource_mut::<PlayerSettings>().muted = true;
         let text = capture(&source);
-        assert!(text.starts_with("SOLAR_SURVIVAL 5\n"));
+        assert!(text.starts_with("SOLAR_SURVIVAL 6\n"));
         let mut target = app(true);
         Session::decode(&text)
             .unwrap()
@@ -1446,9 +1464,19 @@ mod tests {
         assert_eq!(target.world().resource::<PlayerSettings>().volume_index, 4);
         assert!(target.world().resource::<PlayerSettings>().muted);
         // Même schéma P10, sans la nouvelle ligne audio, checksum recalculé.
+        let without_bindings = text
+            .lines()
+            .filter(|l| !l.starts_with("bindings "))
+            .collect::<Vec<_>>()
+            .join("\n")
+            + "\n";
+        let v5 = resign(&without_bindings.replace("SOLAR_SURVIVAL 6", "SOLAR_SURVIVAL 5"));
+        let old_five = Session::decode(&v5).unwrap();
+        assert_eq!(old_five.settings.bindings, default());
+        assert_eq!(old_five.settings.volume_index, 4);
         let old = resign(
-            &text
-                .replace("SOLAR_SURVIVAL 5", "SOLAR_SURVIVAL 4")
+            &without_bindings
+                .replace("SOLAR_SURVIVAL 6", "SOLAR_SURVIVAL 4")
                 .replace("audio 4 true\n", ""),
         );
         let legacy = Session::decode(&old).unwrap();
@@ -1465,6 +1493,54 @@ mod tests {
             assert_eq!(capture(&target), after);
         }
     }
+    #[test]
+    fn remapping_roundtrip_and_invalid_bindings_refuse_without_mutation() {
+        let mut source = built();
+        source
+            .world_mut()
+            .resource_mut::<PlayerSettings>()
+            .bindings
+            .assign(0, KeyCode::KeyC)
+            .unwrap();
+        source
+            .world_mut()
+            .resource_mut::<PlayerSettings>()
+            .bindings
+            .assign(8, KeyCode::KeyV)
+            .unwrap();
+        let text = capture(&source);
+        let mut target = app(true);
+        Session::decode(&text)
+            .unwrap()
+            .restore(target.world_mut())
+            .unwrap();
+        assert_eq!(capture(&target), text);
+        let bindings_line = text.lines().find(|l| l.starts_with("bindings ")).unwrap();
+        let mut ids = source
+            .world()
+            .resource::<PlayerSettings>()
+            .bindings
+            .ids()
+            .collect::<Vec<_>>();
+        ids[0] = ids[1];
+        let duplicate = format!(
+            "bindings {} {}",
+            ids.len(),
+            ids.iter()
+                .map(usize::to_string)
+                .collect::<Vec<_>>()
+                .join(" ")
+        );
+        for invalid in [
+            "bindings 999".to_owned(),
+            "bindings 26 999".to_owned(),
+            duplicate,
+        ] {
+            assert!(Session::decode(&resign(&text.replace(bindings_line, &invalid))).is_err());
+            assert_eq!(capture(&target), text);
+        }
+    }
+
     #[test]
     fn complete_session_roundtrip_after_construction_airborne_rebase_and_settings() {
         let mut source = built();
@@ -1642,8 +1718,8 @@ mod tests {
         assert!(load(target.world_mut(), &folder.file()).is_err());
         for text in [
             String::from("incomplet"),
-            before.replace("SOLAR_SURVIVAL 5", "SOLAR_SURVIVAL 3"),
-            resign(&before.replace("SOLAR_SURVIVAL 5", "SOLAR_SURVIVAL 3")),
+            before.replace("SOLAR_SURVIVAL 6", "SOLAR_SURVIVAL 3"),
+            resign(&before.replace("SOLAR_SURVIVAL 6", "SOLAR_SURVIVAL 3")),
             resign(&before.replace("buildings 2 2", "buildings 999999999 2")),
             resign(&before.replace("oxygen ", "oxygen NaN ")),
             "x".repeat(MAX_BYTES as usize + 1),

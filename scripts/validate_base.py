@@ -42,9 +42,7 @@ def main():
         started = time.monotonic()
         with (out/(stage+'.txt')).open('w') as log:
             if args.focus_x11:
-                if args.cwd:
-                    raise SystemExit('--cwd ne se combine pas avec --focus-x11')
-                code, focused = run_focused([str(binary)], env, log, 170)
+                code, focused = run_focused([str(binary)], env, log, 170, cwd=args.cwd)
             else:
                 code = subprocess.run([str(binary)], cwd=args.cwd or ROOT, env=env, stdout=log, stderr=subprocess.STDOUT, timeout=170).returncode
                 focused = None

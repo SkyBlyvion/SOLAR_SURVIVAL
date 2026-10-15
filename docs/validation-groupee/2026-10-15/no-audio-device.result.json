@@ -1,0 +1,14 @@
+{
+  "mode": "cases",
+  "height": 900,
+  "exit_code": 0,
+  "seconds": 57.15301281500069,
+  "focused_window": "0x4200004",
+  "binary_sha256": "5936d0706dd2b37f8f41eded2498e08aef932c2f7744ddd0764a7c72c1d6ae7c",
+  "binary_unchanged": true,
+  "captures": 15,
+  "diagnostics": [
+    "2026-10-15T13:28:12.713952Z  WARN bevy_audio::audio_output: No audio device found."
+  ],
+  "done": true
+}

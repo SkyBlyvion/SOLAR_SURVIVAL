@@ -1,3 +1,41 @@
+# P12 et campagne groupée — 15 octobre 2026 — arrêt demandé
+
+**165 tests CPU/ECS**, fmt/check all-targets, Clippy -D warnings et release
+réussis avant la campagne ; Bevy exactement0.19.1, aucune dépendance ajoutée.
+26 commandes remappables, conflits/annulation/reset, aides et profils6/lecture4/5.
+[Notes P12](p12-validation/2026-10-15/NOTES.md), [contrat](P12_CONTROLS.md).
+
+Campagne Ubuntu explicitement autorisée, puis **arrêt des revalidations demandé
+par l’utilisateur**. Aucun nouveau lancement après cette instruction ; ne pas
+relancer automatiquement pour compléter les cases. Une seule passe graphique des
+trois expéditions au sol,268,660s,code0,21captures ; jamais répétée. Menu/commandes,
+cas ciblés et audio à720p :60,415s,code0,22captures. Données en cours et remappage
+restaurés dans un second processus puis rapport unique. Backend sonore réel
+(pic2 AudioSink) et absence de périphérique (pic5 lecteurs/0sink,57,153s,code0,
+avertissement attendu) contrôlés. Sortie numérique du seul jeu enregistrée :
+13,78s,22050Hz,crête0,0982,aucun échantillon écrêté ; confort subjectif non établi.
+
+Archive803 fichiers/11WAV extraite hors checkout et vérifiée. Depuis CWD extérieur :
+parcours base/profils116,403s+26,472s,deux codes0,36captures inspectées sur quatre
+planches ; essai natif XTest F9/Entrée/V/F5/clic droit/Échap,sortie0,stock/progression/
+touches inchangés après rapport déjà payé. Les cas ciblés préparent leurs poses et
+peuvent réinstaller les obstacles de diagnostic ; ne pas les présenter comme des
+trajets humains.101captures produites au total, inspection ciblée, pas101 vues
+individuellement approuvées. Sources de jeu/assets/Cargo.lock inchangés pendant
+la campagne. Aucune validation native Windows ni matériel RTX4050.
+
+**Restant ouvert :** références P8 en échec avant export (8,608s puis26,424s),
+aucune comparaison de performance valide ; scénario64 équipements/audio actif-muet
+non exécuté ; VRAM/staging, confort sonore et certaines variantes. Deux aides
+secondaires de construction affichent encore E/B par défaut. Aucun jeu, benchmark
+ou enregistrement laissé actif. La clôture après l’arrêt est documentaire.
+
+[Preuves et limites détaillées](validation-groupee/2026-10-15/NOTES.md),
+[index des résultats](validation-groupee/2026-10-15/summary.json),
+[checklist persistante](TESTS_A_REALISER.md).
+
+---
+
 # P11 — audio intégré, 159 tests sans bureau — 15 octobre 2026
 
 Périmètre demandé par SkyBlyvion : audio et alertes de jeu. Onze signaux originaux,

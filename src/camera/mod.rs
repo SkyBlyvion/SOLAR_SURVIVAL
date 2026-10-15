@@ -31,6 +31,7 @@ pub struct NavigationRequest {
 pub struct ExplorationPlugin;
 impl Plugin for ExplorationPlugin {
     fn build(&self, app: &mut App) {
+        crate::controls::install(app);
         app.init_resource::<Explorer>()
             .init_resource::<SurfaceState>()
             .init_resource::<MarsTerrain>()
@@ -101,7 +102,7 @@ pub(crate) fn controls(
     oxygen: Option<Res<crate::survival::Oxygen>>,
     construction: Option<Res<crate::construction::Construction>>,
     inventory: Option<Res<crate::ui::inventory::InventoryScreen>>,
-    keys: Res<ButtonInput<KeyCode>>,
+    keys: Res<crate::controls::GameplayKeys>,
     mouse: Res<ButtonInput<MouseButton>>,
     motion: Res<AccumulatedMouseMotion>,
     scroll: Res<AccumulatedMouseScroll>,
@@ -214,7 +215,7 @@ pub(crate) fn controls(
 )]
 pub(crate) fn navigate(
     time: Res<Time<Real>>,
-    keys: Res<ButtonInput<KeyCode>>,
+    keys: Res<crate::controls::GameplayKeys>,
     solar: Res<SolarSystem>,
     clock: Res<SimulationClock>,
     mut pilot: ResMut<Explorer>,
@@ -483,6 +484,41 @@ mod tests {
         assert!(pilot.captured);
         assert_eq!(pilot.anchor, Some(BodyId::EARTH));
         pilot.local_m.distance(start)
+    }
+
+    #[test]
+    fn remapped_keys_drive_real_navigation_and_orbit_controls() {
+        let mut a = app(60);
+        let mut settings = crate::ui::menu::PlayerSettings::default();
+        settings.bindings.assign(0, KeyCode::KeyC).unwrap();
+        settings.bindings.assign(14, KeyCode::KeyQ).unwrap();
+        settings.bindings.assign(20, KeyCode::KeyV).unwrap();
+        a.insert_resource(settings);
+        a.world_mut().resource_mut::<Explorer>().captured = true;
+        let start = a.world().resource::<Explorer>().local_m;
+        press(&mut a, KeyCode::KeyW);
+        assert_eq!(a.world().resource::<Explorer>().local_m, start);
+        press(&mut a, KeyCode::KeyC);
+        assert!(a.world().resource::<Explorer>().local_m.distance(start) > 0.0);
+        let paused = a.world().resource::<SimulationClock>().paused;
+        press(&mut a, KeyCode::KeyP);
+        assert_eq!(a.world().resource::<SimulationClock>().paused, paused);
+        press(&mut a, KeyCode::KeyV);
+        assert_eq!(a.world().resource::<SimulationClock>().paused, !paused);
+        press(&mut a, KeyCode::KeyM);
+        assert_eq!(a.world().resource::<Explorer>().mode, MovementMode::Space);
+        press(&mut a, KeyCode::KeyQ);
+        assert_eq!(a.world().resource::<Explorer>().mode, MovementMode::Surface);
+        a.world_mut().resource_mut::<Explorer>().captured = true;
+        let start = a.world().resource::<SurfaceState>().feet;
+        a.world_mut()
+            .resource_mut::<ButtonInput<KeyCode>>()
+            .press(KeyCode::KeyC);
+        for _ in 0..60 {
+            a.update();
+            a.world_mut().resource_mut::<ButtonInput<KeyCode>>().clear();
+        }
+        assert!(a.world().resource::<SurfaceState>().feet.distance(start) > 1.0);
     }
 
     #[test]
@@ -1030,6 +1066,7 @@ mod tests {
         app.add_systems(
             Update,
             crate::config::validation::p2_input
+                .before(crate::controls::translate)
                 .before(controls)
                 .in_set(GameSet::Input),
         );

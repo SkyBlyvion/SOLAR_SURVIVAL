@@ -1,3 +1,5 @@
+> Depuis P12 : écriture **SOLAR_SURVIVAL 6**, lecture **4/5/6** ; commandes par aventure, valeurs par défaut pour4/5. Formats1/2/3 refusés sans suppression. [Contrat courant](P12_CONTROLS.md). Les formats cités dans les sections historiques ci-dessous décrivent leurs livraisons propres.
+
 # P11 — audio et alertes de jeu
 
 15 octobre 2026. Périmètre choisi par SkyBlyvion après P10 : **audio et alertes de

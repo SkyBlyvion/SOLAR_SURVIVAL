@@ -1,0 +1,169 @@
+{
+  "capture_count": 36,
+  "sheets": [
+    {
+      "path": "docs/validation-groupee/2026-10-15/archive-p9-inspection/sheet-00.jpg",
+      "captures": [
+        {
+          "path": "docs/validation-groupee/2026-10-15/archive-p9-regression/save/stage-00.png",
+          "sha256": "b9e8973f97e0e9ef11d11811d78bb91c9f9d743f65cd4cf6b35fb9b33d6ba992"
+        },
+        {
+          "path": "docs/validation-groupee/2026-10-15/archive-p9-regression/save/stage-08.png",
+          "sha256": "ff4c72c0d32df2a143dd220392ce431711e9686a1377858ed22b93d8521b7133"
+        },
+        {
+          "path": "docs/validation-groupee/2026-10-15/archive-p9-regression/save/stage-10.png",
+          "sha256": "90db9f6e930d5cc80e78674023e24417988e6a90aec10cbb1094cc2ed1f2bb35"
+        },
+        {
+          "path": "docs/validation-groupee/2026-10-15/archive-p9-regression/save/stage-12.png",
+          "sha256": "996535250b17eaf4fb54ef5312fa7e6bc5f8f172ce3eb6426942237de50c1448"
+        },
+        {
+          "path": "docs/validation-groupee/2026-10-15/archive-p9-regression/save/stage-14.png",
+          "sha256": "46bf41716dc0a58cdaffd23b3f1c3691da780817ebe0e7e676e7b3e013f53a05"
+        },
+        {
+          "path": "docs/validation-groupee/2026-10-15/archive-p9-regression/save/stage-15.png",
+          "sha256": "6a22a3c0c3638806e6ddb453249fcd08693d576941f6270d48e3553c50b4933f"
+        },
+        {
+          "path": "docs/validation-groupee/2026-10-15/archive-p9-regression/save/stage-17.png",
+          "sha256": "dce95dc02dc03e92d40512c7013150c0e5394f7bbbb55ba99a448ba8aa820b34"
+        },
+        {
+          "path": "docs/validation-groupee/2026-10-15/archive-p9-regression/save/stage-18.png",
+          "sha256": "a5538ee04d076a32ed3ee5f5622fb441477f1e8b8d4eda0b2158e30e8b59277b"
+        },
+        {
+          "path": "docs/validation-groupee/2026-10-15/archive-p9-regression/save/stage-19.png",
+          "sha256": "dd9b0419e88de035a7631577d6a289a9295d5b58a058704b1f21695feb38b955"
+        }
+      ]
+    },
+    {
+      "path": "docs/validation-groupee/2026-10-15/archive-p9-inspection/sheet-01.jpg",
+      "captures": [
+        {
+          "path": "docs/validation-groupee/2026-10-15/archive-p9-regression/save/stage-20.png",
+          "sha256": "ea5c8a49c2f775d7475fc1177a6a1eb8b506672b2f2ca4547a588f74bbd3251a"
+        },
+        {
+          "path": "docs/validation-groupee/2026-10-15/archive-p9-regression/save/stage-21.png",
+          "sha256": "405e26e5fb78505d8999521d7a5f59fbc9875270a7575cde8519a39c5686dfdd"
+        },
+        {
+          "path": "docs/validation-groupee/2026-10-15/archive-p9-regression/save/stage-25.png",
+          "sha256": "85d02e586849938cd71ed17962cecfc92a6622f754f15627025ebc71091047a9"
+        },
+        {
+          "path": "docs/validation-groupee/2026-10-15/archive-p9-regression/save/stage-29.png",
+          "sha256": "6d5cc20c65af2abba8c73f6c351217bc176c951526cdb4d984021f2ca30cc723"
+        },
+        {
+          "path": "docs/validation-groupee/2026-10-15/archive-p9-regression/save/stage-34.png",
+          "sha256": "21c7e873362071ade0e6b6e5f01a2ec806b57efb3b60c1db8edbf1b7636fa757"
+        },
+        {
+          "path": "docs/validation-groupee/2026-10-15/archive-p9-regression/save/stage-39.png",
+          "sha256": "aa7e81522f3ee7eeb8985033fb5452f67b63157620efad5c4214e7ba79bbae8d"
+        },
+        {
+          "path": "docs/validation-groupee/2026-10-15/archive-p9-regression/save/stage-44.png",
+          "sha256": "8d93112cf536c40d68ca9746495bcea6867ddfd85cbb7abeec1288c3deb5f81a"
+        },
+        {
+          "path": "docs/validation-groupee/2026-10-15/archive-p9-regression/save/stage-46.png",
+          "sha256": "745715d977d9e6ef1726f9fb4c73da4b85ef7edce9725ff20408c48ab6d67906"
+        },
+        {
+          "path": "docs/validation-groupee/2026-10-15/archive-p9-regression/save/stage-47.png",
+          "sha256": "c74248f32b36c9011fa88c41df8d486fa295e7650446f9fc30a142fae771ad00"
+        }
+      ]
+    },
+    {
+      "path": "docs/validation-groupee/2026-10-15/archive-p9-inspection/sheet-02.jpg",
+      "captures": [
+        {
+          "path": "docs/validation-groupee/2026-10-15/archive-p9-regression/save/stage-49.png",
+          "sha256": "4d6aa011cde915c91c3d3f79a7c2de8ce595d0925450b21200cf56875e9085f9"
+        },
+        {
+          "path": "docs/validation-groupee/2026-10-15/archive-p9-regression/save/stage-50.png",
+          "sha256": "830f2301cf563149d6ff4bb267d13a7ef612e49a89260143db9f269d7f35adcc"
+        },
+        {
+          "path": "docs/validation-groupee/2026-10-15/archive-p9-regression/save/stage-51.png",
+          "sha256": "bb93092d843b998b9d33cde8d726ea7387df041874558962864a7799f384a246"
+        },
+        {
+          "path": "docs/validation-groupee/2026-10-15/archive-p9-regression/save/stage-52.png",
+          "sha256": "487f9acc9a9804ffacc9566fa8369b811171348c54fa821d0bcf77f3bbc63c4e"
+        },
+        {
+          "path": "docs/validation-groupee/2026-10-15/archive-p9-regression/save/stage-53.png",
+          "sha256": "05fcf58e54fc37cec9f1501863808ad796b8a153769b47530141d95d5d3d61a7"
+        },
+        {
+          "path": "docs/validation-groupee/2026-10-15/archive-p9-regression/save/stage-54.png",
+          "sha256": "151ac0dc991c4e3cf2e74edc1bc41bb9666a9fe81d10e4df10b447ab6c1d98da"
+        },
+        {
+          "path": "docs/validation-groupee/2026-10-15/archive-p9-regression/save/stage-55.png",
+          "sha256": "1cc7885970c72cc0f234be8a7e88aa2122b95b416bf888fe115e8695ce587f02"
+        },
+        {
+          "path": "docs/validation-groupee/2026-10-15/archive-p9-regression/save/stage-56.png",
+          "sha256": "7a1795f012a527206a0d9cb007074a0f8edd96d0e5ed705e4f57140a659b8bb3"
+        },
+        {
+          "path": "docs/validation-groupee/2026-10-15/archive-p9-regression/save/stage-57.png",
+          "sha256": "7e0e99173051ccfe0fe88ef16cfb5b0ee5dab7a9912725072d3e31b76c7f032c"
+        }
+      ]
+    },
+    {
+      "path": "docs/validation-groupee/2026-10-15/archive-p9-inspection/sheet-03.jpg",
+      "captures": [
+        {
+          "path": "docs/validation-groupee/2026-10-15/archive-p9-regression/load/stage-00.png",
+          "sha256": "1cc7885970c72cc0f234be8a7e88aa2122b95b416bf888fe115e8695ce587f02"
+        },
+        {
+          "path": "docs/validation-groupee/2026-10-15/archive-p9-regression/load/stage-03.png",
+          "sha256": "d2fb06a51fcf4e0edf95bb96379b2ae7d676ad0c670399ed90d455c54ee97e93"
+        },
+        {
+          "path": "docs/validation-groupee/2026-10-15/archive-p9-regression/load/stage-05.png",
+          "sha256": "23313072ec5da962d55ee4bcb82fe2bc4f23eff72dc8ab6624a2c8f96c837556"
+        },
+        {
+          "path": "docs/validation-groupee/2026-10-15/archive-p9-regression/load/stage-07.png",
+          "sha256": "dc76ad23676c2ab62f569966a3845ebcbac32a8fad0fec1cf35ea1406192cd5b"
+        },
+        {
+          "path": "docs/validation-groupee/2026-10-15/archive-p9-regression/load/stage-08.png",
+          "sha256": "54454fa4959a51195b18afb5892f1beb845a4c17ac9c1fcce554f653508dbe25"
+        },
+        {
+          "path": "docs/validation-groupee/2026-10-15/archive-p9-regression/load/stage-09.png",
+          "sha256": "0fd77c24620ba4761c789bc1ab90ee0f4e5258e8566d43e4b17e0b8ea36c1fb9"
+        },
+        {
+          "path": "docs/validation-groupee/2026-10-15/archive-p9-regression/load/stage-10.png",
+          "sha256": "a8cb36a6a1477319a1f2379094200b32cde2338a11a3e2a9e3bf002ef1ad8ce3"
+        },
+        {
+          "path": "docs/validation-groupee/2026-10-15/archive-p9-regression/load/stage-11.png",
+          "sha256": "ba548f5e2bee564d27c2bc1cc366e5408661d166204360e67613edb4564fe265"
+        },
+        {
+          "path": "docs/validation-groupee/2026-10-15/archive-p9-regression/load/stage-12.png",
+          "sha256": "971dee6a688db89a2dba33382ece4fd3a15bbf35ba01580aab30c8d8fd9e6fe1"
+        }
+      ]
+    }
+  ]
+}

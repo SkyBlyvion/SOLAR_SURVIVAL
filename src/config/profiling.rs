@@ -250,7 +250,7 @@ fn prepare(
     mut pilot: ResMut<Explorer>,
     mut surface: ResMut<SurfaceState>,
     mut terrain: ResMut<MarsTerrain>,
-    mut keys: ResMut<ButtonInput<KeyCode>>,
+    mut keys: ResMut<crate::controls::GameplayKeys>,
     mut request: ResMut<NavigationRequest>,
     mut clock: ResMut<SimulationClock>,
 ) {

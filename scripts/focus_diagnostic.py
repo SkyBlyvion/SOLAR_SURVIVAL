@@ -6,8 +6,8 @@ import subprocess
 import time
 
 
-def run_focused(command, env, log, timeout):
-    process = subprocess.Popen(command, env=env, stdout=log, stderr=subprocess.STDOUT)
+def run_focused(command, env, log, timeout, cwd=None):
+    process = subprocess.Popen(command, cwd=cwd, env=env, stdout=log, stderr=subprocess.STDOUT)
     monitor = None
     if env.get('SOLAR_RESOURCE_SAMPLES'):
         from resource_monitor import ResourceMonitor
@@ -25,7 +25,7 @@ def run_focused(command, env, log, timeout):
         try:
             while process.poll() is None and time.monotonic()-start < 5:
                 tree = subprocess.check_output(['xwininfo','-root','-tree'],text=True)
-                found = re.search(r'(0x[0-9a-f]+) "Solar Survival · 0.2 · Mars": \("solar_survival"',tree)
+                found = re.search(r'(0x[0-9a-f]+) "Solar Survival · 0.2 · Mars": \("(?:solar_survival|grouped_validation)"',tree)
                 if found and time.monotonic()-start >= 2.0:
                     focused = found.group(1)
                     class ClientData(ctypes.Union):

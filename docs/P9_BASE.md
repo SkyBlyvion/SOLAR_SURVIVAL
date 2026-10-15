@@ -1,3 +1,5 @@
+> Depuis P12 : écriture **SOLAR_SURVIVAL 6**, lecture **4/5/6** ; commandes par aventure, valeurs par défaut pour4/5. Formats1/2/3 refusés sans suppression. [Contrat courant](P12_CONTROLS.md). Les formats cités dans les sections historiques ci-dessous décrivent leurs livraisons propres.
+
 > P11 : écriture au format **5**, lecture P10/**4** conservée ; volume/muet et alertes. [Contrat courant audio](P11_AUDIO.md).
 
 > P10 utilise désormais le format 4 et ajoute les objectifs, sans migration des anciens profils. Les mentions de format 3 ci-dessous décrivent la livraison P9. [Contrat courant P10](P10_EXPLORATION.md).

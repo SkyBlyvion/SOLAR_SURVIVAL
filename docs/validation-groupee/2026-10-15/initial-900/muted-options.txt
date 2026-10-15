@@ -1,0 +1,23 @@
+Vec2(423.0, 16.0) EXPLORATION / SURVIE
+Vec2(423.0, 87.0) MARS
+SURVIE EN SURFACE
+Vec2(423.0, 51.0) Explorez le système solaire.
+Récoltez des ressources sur Mars.
+Construisez vos abris et surveillez votre oxygène.
+Vec2(423.0, 34.0) Chaque aventure conserve son monde,
+son inventaire et ses constructions.
+Vec2(560.0, 29.0) Options
+Vec2(560.0, 34.0) Cliquez pour changer une valeur.
+Ces réglages sont inclus dans les sauvegardes.
+Vec2(202.0, 21.0) Sensibilité souris : ×1.0
+Vec2(258.0, 21.0) Champ de vision vertical : 65°
+Vec2(215.0, 21.0) Anticrénelage MSAA : ×4
+Vec2(158.0, 21.0) Affichage : fenêtré
+Vec2(186.0, 21.0) Volume sonore : 50 %
+Vec2(93.0, 21.0) Son : muet
+Vec2(295.0, 21.0) Commandes / changer les touches
+Vec2(258.0, 21.0) Rétablir les valeurs par défaut
+Vec2(57.0, 21.0) Retour
+Vec2(560.0, 32.0) Aventure active : Grouped Pending
+Nouvelle aventure : Grouped Pending
+Vec2(560.0, 24.0) SOLAR SURVIVAL

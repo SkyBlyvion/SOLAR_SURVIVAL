@@ -313,7 +313,7 @@ impl Plugin for ConstructionPlugin {
 )]
 pub(crate) fn update(
     mut commands: Commands,
-    keys: Res<ButtonInput<KeyCode>>,
+    keys: Res<crate::controls::GameplayKeys>,
     time: Res<Time<Real>>,
     menu: Option<Res<MenuState>>,
     pilot: Res<Explorer>,

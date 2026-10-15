@@ -1,0 +1,26 @@
+SOLAR_SURVIVAL 6
+clock 2451545 0 false
+pilot space 3 15396158.329543028 5408192.149448227 15196518.67267479 -0.11272954736771298 0.3828060339915827 0.04712561568175921 0.9157132552477991 3 3
+terrain true false 1343881220 0 0 0 1
+obstacles false
+home false 0 0 0 1
+buildings 0 0
+facilities 0
+base false 0 720 0
+inventory false 0
+slots 8
+slot 2 0
+slot 2 0
+slot 2 0
+slot 2 0
+slot 2 0
+slot 2 0
+slot 2 0
+slot 2 0
+oxygen 180 false
+surface 0 0 0 0 0 0 false 0 0 0 0 0 1 0
+settings 1 1 2 false
+expedition 0 false false false false
+audio 2 false
+bindings 26 22 18 0 3 26 27 28 4 5 8 1 23 9 11 12 6 14 20 17 19 15 7 13 29 30 31
+checksum 985ef2bb70338783

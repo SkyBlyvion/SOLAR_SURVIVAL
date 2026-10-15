@@ -1,0 +1,26 @@
+Vec2(423.0, 16.0) EXPLORATION / SURVIE
+Vec2(423.0, 87.0) MARS
+SURVIE EN SURFACE
+Vec2(423.0, 51.0) Explorez le système solaire.
+Récoltez des ressources sur Mars.
+Construisez vos abris et surveillez votre oxygène.
+Vec2(423.0, 34.0) Chaque aventure conserve son monde,
+son inventaire et ses constructions.
+Vec2(560.0, 29.0) Commandes
+Vec2(560.0, 51.0) Positions physiques · QWERTY / AZERTY
+Cliquez une commande, puis pressez sa nouvelle touche.
+Échap annule la saisie. Les conflits sont refusés.
+Vec2(560.0, 34.0) Fixes : clic droit, molette, Échap, Entrée, flèches,
+0–9, +/−, F5/F9 et F12. Maj/Ctrl/Alt : deux côtés liés.
+Vec2(103.0, 21.0) Avancer : …
+Vec2(92.0, 21.0) Reculer : S
+Vec2(181.0, 21.0) Aller à gauche : A / Q
+Vec2(140.0, 21.0) Aller à droite : D
+Vec2(212.0, 21.0) Sauter / monter : Espace
+Vec2(195.0, 21.0) Descendre en vol : Ctrl
+Vec2(98.0, 21.0) ‹ Précédent
+Vec2(115.0, 21.0) Suivant ›  1/5
+Vec2(205.0, 21.0) Rétablir les commandes
+Vec2(57.0, 21.0) Retour
+Vec2(560.0, 16.0) Déjà utilisée : Reculer · réessayez ou Échap
+Vec2(560.0, 24.0) SOLAR SURVIVAL

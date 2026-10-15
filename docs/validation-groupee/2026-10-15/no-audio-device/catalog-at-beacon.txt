@@ -1,0 +1,20 @@
+Vec2(61.0, 15.0) ◇ Saturne
+Vec2(390.0, 15.0) CONSTRUCTION / BASE
+Vec2(104.0, 16.0) Abri · 12 Alliage
+Vec2(108.0, 16.0) Coffre · 6 Alliage
+Vec2(246.0, 16.0) Panneau solaire · 8 Alliage + 4 Circuit
+Vec2(195.0, 16.0) Batterie · 8 Alliage + 4 Circuit
+Vec2(245.0, 16.0) Générateur O₂ · 12 Alliage + 6 Circuit
+Vec2(150.0, 16.0) Réservoir O₂ · 6 Alliage
+Vec2(169.0, 20.0) Prévisualiser · Entrée
+Vec2(148.0, 20.0) Fermer · B / Échap
+Vec2(390.0, 44.0) La prévisualisation est gratuite.
+Les ressources sont dépensées à la confirmation.
+L’oxygène continue de se consommer.
+Vec2(390.0, 77.0) Abri — 12 Alliage
+Recharge depuis la réserve de base à moins de 40 m du premier abri.
+Porté : 0 alliage / 0 circuits · 0/8 piles
+Vec2(834.0, 32.0) W / Z/A / Q/S/D : marcher · Maj : courir · Espace : sauter · E : récolte / coffre · F : relevé / rapport · I : inventaire · B : construction
+Clic droit : piloter · Échap : curseur / menu · M / , : espace · N : navigation · H : télémétrie
+Vec2(392.0, 36.0) O₂  02:56 / 03:00
+Abri 1 · 120 m · derrière · entrez par la porte

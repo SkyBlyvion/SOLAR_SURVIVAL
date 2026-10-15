@@ -1,0 +1,15 @@
+Vec2(810.0, 32.0) C/A / Q/S/D : marcher · Maj : courir · Espace : sauter · E : récolte / coffre · V : relevé / rapport · I : inventaire · B : construction
+Clic droit : piloter · Échap : curseur / menu · M / , : espace · N : navigation · H : télémétrie
+Vec2(392.0, 135.0) EXPÉDITION 2 / 3 · Station Horizon
+Rejoindre la balise · 240 m · droite 57°
+V : relever à 3 m
+Récompense : 12 alliage + 6 circuits
+Base · 0 m · devant
+Retour marche ≳ 0 s + marge 20 s
+Rapport validé · récompense reçue · nouvelle balise débloquée
+Vec2(392.0, 36.0) O₂  02:44 / 03:00
+Abri 1 · recharge +30 s/s · base 700/720 s
+Vec2(487.0, 68.0) PORTÉ 2/8 piles · 8 alliage / 4 circuits · I : inventaire
+Caisse dorée · 8 m · à droite · E à moins de 2,5 m
+Sources durables cyan/ocre : derrière l’arrivée à 12–16 m
+B : construction · Session chargée · inventaire et bâtiments restaurés

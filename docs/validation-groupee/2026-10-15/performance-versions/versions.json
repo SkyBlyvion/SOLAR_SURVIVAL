@@ -1,0 +1,22 @@
+{
+  "p8": {
+    "binary": "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/dist/solar-survival-ubuntu-p8/solar_survival",
+    "sha256": "b27bdbd4207a0685132897ddac2b11c416d1a6df91aaca7ba5f8569efd00d5c3"
+  },
+  "p9": {
+    "binary": "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/dist/solar-survival-ubuntu-p9/solar_survival",
+    "sha256": "b8436414b812a9e453c1c8346dfe54b99db24577c65be2d3bd240f102d125499"
+  },
+  "p10": {
+    "binary": "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/dist/solar-survival-ubuntu-p10/solar_survival",
+    "sha256": "f27d64e774b7926ae9952628c1527b2b20fbdda4cbc4994418a60f0af729f78d"
+  },
+  "p11": {
+    "binary": "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/dist/solar-survival-ubuntu-p11/solar_survival",
+    "sha256": "9fccb1e750171d7b95db90fd2a50ac041310ea8dad48e854d574eb17f7b25cf3"
+  },
+  "p12": {
+    "binary": "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/dist/solar-survival-ubuntu-p12/solar_survival",
+    "sha256": "36bb3f85c1c764c9ade64ec15285569ab3f41cc1b12d6288d69bd4b669c7fbba"
+  }
+}

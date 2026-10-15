@@ -1,0 +1,9 @@
+{
+  "binary": "/tmp/solar-survival-p12-2026-10-15-_wxmv8s5/solar-survival-ubuntu-p12/solar_survival",
+  "binary_sha256": "36bb3f85c1c764c9ade64ec15285569ab3f41cc1b12d6288d69bd4b669c7fbba",
+  "cwd": "/tmp/solar-survival-p12-2026-10-15-_wxmv8s5",
+  "scope": "Native XTest keyboard and right mouse button on the test game only. No walking or expedition pass.",
+  "exit_code": 0,
+  "same_progress_bindings_inventory": true,
+  "captures": 5
+}

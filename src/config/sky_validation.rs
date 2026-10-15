@@ -31,6 +31,7 @@ pub(super) fn install(app: &mut App) {
         Update,
         input
             .before(crate::ui::menu::MenuInputSet)
+            .before(crate::controls::translate)
             .before(camera::controls)
             .in_set(GameSet::Input),
     )

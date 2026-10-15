@@ -101,7 +101,7 @@ fn setup(mut commands: Commands, solar: Res<SolarSystem>, assets: Res<AssetServe
                 panel.spawn((Button, Action::Select(body.id), Node { padding: UiRect::axes(px(12),px(4)), border_radius: BorderRadius::ZERO, ..default() }, BackgroundColor(theme::BUTTON)))
                     .with_child((Text::new(format!("{}   {}",body.id.0,body.name)),font(13.0, &ui_font),TextColor(theme::TEXT)));
             }
-            for (action,label) in [(Action::Center,"F   Centrer (espace)"),(Action::Visit,"G   Visiter"),(Action::Overview,"O   Vue du système"),(Action::Surface,"M   Surface Mars / retour"),(Action::Menu,"Échap   Menu principal")] {
+            for (action,label) in [(Action::Center,"<key:KeyF>   Centrer (espace)"),(Action::Visit,"<key:KeyG>   Visiter"),(Action::Overview,"<key:KeyO>   Vue du système"),(Action::Surface,"<key:KeyM>   Surface Mars / retour"),(Action::Menu,"Échap   Menu principal")] {
                 panel.spawn((Button,action,Node { padding: UiRect::axes(px(12),px(6)), border_radius: BorderRadius::ZERO, ..default() }, BackgroundColor(theme::BUTTON)))
                     .with_child((Text::new(label),font(13.0, &ui_font),TextColor(theme::TEXT)));
             }
@@ -112,7 +112,7 @@ fn setup(mut commands: Commands, solar: Res<SolarSystem>, assets: Res<AssetServe
                 panel.spawn((TargetText,Text::new("Terre"),font(15.0, &ui_font),TextColor(theme::ACCENT)));
             });
         root.spawn((Node { position_type: PositionType::Absolute, bottom: px(24), left: px(24), right: px(24), padding: UiRect::all(px(14)), border_radius: BorderRadius::ZERO, ..default() }, BackgroundColor(theme::PANEL)))
-            .with_child((HelpText,Text::new("Clic droit : piloter  ·  Échap : curseur  ·  WASD / ZQSD : vol  ·  Espace : saut / monter  ·  Ctrl : descendre en vol  ·  Shift : course / ×10\nMolette / Pg↑ Pg↓ : vitesse  ·  Tab / 0–9 : cible  ·  F : centrer  ·  G : visite spatiale  ·  M : surface Mars / retour  ·  U : repère solaire  ·  T : temps ×1/10/100/1000  ·  P : pause  ·  H : télémétrie · N : navigation"),font(13.0, &ui_font),TextColor(theme::MUTED)));
+            .with_child((HelpText,Text::new("Clic droit : piloter  ·  Échap : curseur  ·  <key:KeyW>/<key:KeyA>/<key:KeyS>/<key:KeyD> : vol  ·  <key:Space> : saut / monter  ·  <key:ControlLeft> : descendre en vol  ·  <key:ShiftLeft> : course / ×10\nMolette / <key:PageUp> <key:PageDown> : vitesse  ·  <key:Tab> / 0–9 : cible  ·  <key:KeyF> : centrer  ·  <key:KeyG> : visite spatiale  ·  <key:KeyM> : surface Mars / retour  ·  <key:KeyU> : repère solaire  ·  <key:KeyT> : temps ×1/10/100/1000  ·  <key:KeyP> : pause  ·  <key:KeyH> : télémétrie · <key:KeyN> : navigation"),font(13.0, &ui_font),TextColor(theme::MUTED)));
         for body in &solar.bodies {
             root.spawn((Marker(body.id), Node { position_type: PositionType::Absolute, display: Display::None, ..default() }, Text::new(format!("◇ {}",body.name)),font(12.0, &ui_font),TextColor(Color::srgb(0.48,0.70,0.79))));
         }
@@ -152,7 +152,7 @@ fn buttons(
     reason = "Filtres ECS disjoints des panneaux du HUD."
 )]
 fn toggle(
-    keys: Res<ButtonInput<KeyCode>>,
+    keys: Res<crate::controls::GameplayKeys>,
     menu: Res<menu::MenuState>,
     mut state: ResMut<HudState>,
     mut root: Single<&mut Node, (With<HudRoot>, Without<NavigationPanel>, Without<DebugPanel>)>,
@@ -309,7 +309,11 @@ fn refresh(
         if clock.paused { "(pause)" } else { "" },
         movement,
         format_distance(pilot.speed()),
-        if pilot.boosted { " (Shift)" } else { "" },
+        if pilot.boosted {
+            " (<key:ShiftLeft>)"
+        } else {
+            ""
+        },
         format_distance(pilot.local_m.length()),
         nearest.name,
         if pilot.captured {
@@ -333,7 +337,7 @@ fn refresh(
             | crate::universe::celestial_body::SurfaceKind::IceGiant =>
                 "Enveloppe géante · sans sol ordinaire",
             crate::universe::celestial_body::SurfaceKind::Plasma => "Étoile · plasma",
-            _ if body.id == BodyId::MARS => "M : surface Mars / retour spatial",
+            _ if body.id == BodyId::MARS => "<key:KeyM> : surface Mars / retour spatial",
             _ => "Surface solide · visite spatiale",
         }
     );
@@ -434,8 +438,8 @@ fn help(
     }
     *previous = Some(pilot.mode);
     ***text = if pilot.mode == MovementMode::Surface {
-        "WASD / ZQSD : marcher · Shift : courir · Espace : sauter · E : récolte / coffre · F : relevé / rapport · I : inventaire · B : construction\nClic droit : piloter · Échap : curseur / menu · M : espace · N : navigation · H : télémétrie".into()
+        "<key:KeyW>/<key:KeyA>/<key:KeyS>/<key:KeyD> : marcher · <key:ShiftLeft> : courir · <key:Space> : sauter · <key:KeyE> : récolte / coffre · <key:KeyF> : relevé / rapport · <key:KeyI> : inventaire · <key:KeyB> : construction\nClic droit : piloter · Échap : curseur / menu · <key:KeyM> : espace · <key:KeyN> : navigation · <key:KeyH> : télémétrie".into()
     } else {
-        "Clic droit : piloter · Échap : curseur · WASD / ZQSD : vol · Espace / Ctrl : monter / descendre · Shift : ×10\nMolette / Pg↑ Pg↓ : vitesse · Tab / 0–9 : cible · F : centrer · G : visiter · M : surface Mars · O : système · U : repère solaire · T / P : temps · H : télémétrie · N : navigation".into()
+        "Clic droit : piloter · Échap : curseur · <key:KeyW>/<key:KeyA>/<key:KeyS>/<key:KeyD> : vol · <key:Space> / <key:ControlLeft> : monter / descendre · <key:ShiftLeft> : ×10\nMolette / <key:PageUp> <key:PageDown> : vitesse · <key:Tab> / 0–9 : cible · <key:KeyF> : centrer · <key:KeyG> : visiter · <key:KeyM> : surface Mars · <key:KeyO> : système · <key:KeyU> : repère solaire · <key:KeyT> / <key:KeyP> : temps · <key:KeyH> : télémétrie · <key:KeyN> : navigation".into()
     };
 }

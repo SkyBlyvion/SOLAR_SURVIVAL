@@ -121,7 +121,7 @@ fn refresh(
     bar.1.0 = color;
     if oxygen.failed {
         **text.0 =
-            "OXYGÈNE ÉPUISÉ — Expédition terminée\nR : repartir à l'abri avec une réserve pleine"
+            "OXYGÈNE ÉPUISÉ — Expédition terminée\n<key:KeyR> : repartir à l'abri avec une réserve pleine"
                 .into();
         return;
     }

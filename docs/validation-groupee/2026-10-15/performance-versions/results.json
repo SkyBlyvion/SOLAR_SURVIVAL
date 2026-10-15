@@ -1,0 +1,13 @@
+{
+  "p8-1": {
+    "run": {
+      "exit_code": 101,
+      "seconds": 8.607519665001746,
+      "focused_window": "0x4200004",
+      "complete": false,
+      "diagnostics": [
+        "thread 'Compute Task Pool (3)' (213459) panicked at src/config/construction_validation.rs:143:17:"
+      ]
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "record_command": [
+    "pw-record",
+    "--target",
+    "0",
+    "-P",
+    "{\"node.name\":\"solar-p12-capture\",\"media.name\":\"Solar Validation\"}",
+    "--rate",
+    "22050",
+    "--channels",
+    "2",
+    "--format",
+    "s16",
+    "docs/validation-groupee/2026-10-15/audio-game-only.wav"
+  ],
+  "links": [
+    {
+      "command": [
+        "pw-link",
+        "alsa_playback.grouped_validation:output_FL",
+        "solar-p12-capture:input_FL"
+      ],
+      "code": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "pw-link",
+        "alsa_playback.grouped_validation:output_FR",
+        "solar-p12-capture:input_FR"
+      ],
+      "code": 0,
+      "stderr": ""
+    }
+  ],
+  "exit_code": 1,
+  "scope": "Only grouped_validation output ports. No microphone or desktop sink monitor."
+}

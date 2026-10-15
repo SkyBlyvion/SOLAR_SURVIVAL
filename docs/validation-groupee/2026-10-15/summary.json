@@ -1,0 +1,110 @@
+{
+  "ui-cases-720.result": {
+    "mode": "menus",
+    "height": 720,
+    "exit_code": 0,
+    "seconds": 60.415117306001775,
+    "focused_window": "0x4200004",
+    "binary_sha256": "5936d0706dd2b37f8f41eded2498e08aef932c2f7744ddd0764a7c72c1d6ae7c",
+    "binary_unchanged": true,
+    "captures": 22,
+    "diagnostics": [],
+    "done": true
+  },
+  "initial-900.result": {
+    "mode": "full",
+    "height": 900,
+    "exit_code": 0,
+    "seconds": 268.66042120699785,
+    "focused_window": null,
+    "binary_sha256": "4b53a489772e8c33ffd04d5355ffded6e73eb97f30e90b7e531e74813486514f",
+    "binary_unchanged": true,
+    "captures": 21,
+    "diagnostics": [],
+    "done": true
+  },
+  "no-audio-device.result": {
+    "mode": "cases",
+    "height": 900,
+    "exit_code": 0,
+    "seconds": 57.15301281500069,
+    "focused_window": "0x4200004",
+    "binary_sha256": "5936d0706dd2b37f8f41eded2498e08aef932c2f7744ddd0764a7c72c1d6ae7c",
+    "binary_unchanged": true,
+    "captures": 15,
+    "diagnostics": [
+      "2026-10-15T13:28:12.713952Z  WARN bevy_audio::audio_output: No audio device found."
+    ],
+    "done": true
+  },
+  "restart-load.result": {
+    "mode": "load",
+    "height": 720,
+    "exit_code": 0,
+    "seconds": 8.500140157000715,
+    "focused_window": "0x4200004",
+    "binary_sha256": "5936d0706dd2b37f8f41eded2498e08aef932c2f7744ddd0764a7c72c1d6ae7c",
+    "binary_unchanged": true,
+    "captures": 2,
+    "diagnostics": [],
+    "done": true
+  },
+  "archive-p9": [
+    {
+      "stage": "save",
+      "exit_code": 0,
+      "seconds": 116.40282605399989,
+      "focused_window": "0x4200004",
+      "captures": 27,
+      "diagnostics": [],
+      "completion": [
+        "P9 save termin\u00e9 : r\u00e9colte, renouvellement, coffre/transferts, quatre \u00e9quipements, production/recharge, menu/rebasage/nuit et profils"
+      ]
+    },
+    {
+      "stage": "load",
+      "exit_code": 0,
+      "seconds": 26.47170988200014,
+      "focused_window": "0x4200004",
+      "captures": 9,
+      "diagnostics": [],
+      "completion": [
+        "P9 load termin\u00e9 : deux profils, contenus/charges/renouvellement, refus transactionnel, R et M"
+      ]
+    }
+  ],
+  "native-input": {
+    "binary": "/tmp/solar-survival-p12-2026-10-15-_wxmv8s5/solar-survival-ubuntu-p12/solar_survival",
+    "binary_sha256": "36bb3f85c1c764c9ade64ec15285569ab3f41cc1b12d6288d69bd4b669c7fbba",
+    "cwd": "/tmp/solar-survival-p12-2026-10-15-_wxmv8s5",
+    "scope": "Native XTest keyboard and right mouse button on the test game only. No walking or expedition pass.",
+    "exit_code": 0,
+    "same_progress_bindings_inventory": true,
+    "captures": 5
+  },
+  "audio-analysis": {
+    "file": "docs/validation-groupee/2026-10-15/audio-game-only.wav",
+    "channels": 2,
+    "sample_rate_hz": 22050,
+    "sample_width_bytes": 2,
+    "duration_s": 13.78,
+    "peak_linear": 0.09820556640625,
+    "rms_linear": 0.013283116533983919,
+    "clipped_samples": 0,
+    "non_silent_blocks_20ms": 129,
+    "first_signal_s": 0.52,
+    "last_signal_s": 12.0,
+    "scope": "Digital recording of game output only; does not establish subjective comfort or acoustic speaker output.",
+    "capture_exit_note": "pw-record intentionally interrupted with SIGINT (exit 1); WAV is finalized and readable. No capture process remains."
+  },
+  "status": "Validations arr\u00eat\u00e9es \u00e0 la demande utilisateur ; ne pas les relancer automatiquement.",
+  "expedition": "Une seule passe des trois trajets au sol. Aucune r\u00e9p\u00e9tition apr\u00e8s la consigne utilisateur.",
+  "remaining": [
+    "Comparaisons de performance incompl\u00e8tes (deux r\u00e9f\u00e9rences P8 en \u00e9chec : 8.608 s puis 26.424 s)",
+    "Charge 64 \u00e9quipements/audio actif-muet non ex\u00e9cut\u00e9e",
+    "Windows natif et cible RTX4050 indisponibles",
+    "Confort sonore subjectif non \u00e9tabli",
+    "Quelques variantes de la checklist non ex\u00e9cut\u00e9es",
+    "Deux aides secondaires conservent E/B au lieu de leur affectation dans src/ui/construction.rs:220/226"
+  ]
+}

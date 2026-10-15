@@ -5,6 +5,7 @@ pub mod buildings;
 pub mod camera;
 pub mod config;
 pub mod construction;
+pub mod controls;
 pub mod expedition;
 pub mod inventory;
 pub mod persistence;

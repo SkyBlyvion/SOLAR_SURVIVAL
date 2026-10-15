@@ -51,7 +51,7 @@ fn setup(mut commands: Commands, assets: Res<AssetServer>) {
             }
 
             root.spawn((RecipeText,Text::new(""),super::font(16.0,&font),TextColor(theme::TEXT)));
-            for (begin,title) in [(true,"Prévisualiser · Entrée"),(false,"Fermer · B / Échap")] {
+            for (begin,title) in [(true,"Prévisualiser · Entrée"),(false,"Fermer · <key:KeyB> / Échap")] {
                 root.spawn((Button,BuildAction(begin),Node {width:percent(100),padding:UiRect::all(px(14)),..default()},BackgroundColor(theme::BUTTON)))
                     .with_child((Text::new(title),super::font(16.0,&font),TextColor(theme::TEXT)));
             }
@@ -146,7 +146,7 @@ fn refresh(
     }
     commands.entity(root.0).insert(UiTargetCamera(*camera));
     let header = format!(
-        "PORTÉ {}/8 piles · {} alliage / {} circuits · I : inventaire",
+        "PORTÉ {}/8 piles · {} alliage / {} circuits · <key:KeyI> : inventaire",
         c.inventory.used(),
         c.inventory.count(crate::inventory::Item::Alloy),
         c.inventory.count(crate::inventory::Item::Circuit)
@@ -162,7 +162,7 @@ fn refresh(
             theme::DANGER
         };
         **label.0 = format!(
-            "{header}\n{} : {status}\nFlèches : déplacer · J/L : orienter · souris : viser\nX / B / Échap : annuler · recettes payées uniquement depuis le porté",
+            "{header}\n{} : {status}\nFlèches : déplacer · <key:KeyJ>/<key:KeyL> : orienter · souris : viser\n<key:KeyX> / <key:KeyB> / Échap : annuler · recettes payées uniquement depuis le porté",
             if p.verdict.is_ok() {
                 "VERT"
             } else {
@@ -182,19 +182,19 @@ fn refresh(
             )
         }) {
             format!(
-                "E / I : ouvrir le coffre {} · {}/16 piles",
+                "<key:KeyE> / <key:KeyI> : ouvrir le coffre {} · {}/16 piles",
                 f.id.0,
                 f.inventory.used()
             )
         } else if let Some(i) = base.nearby(feet) {
             let source = &base.sources[i];
             format!(
-                "E : {} +6 · renouvellement {:.0} s",
+                "<key:KeyE> : {} +6 · renouvellement {:.0} s",
                 source.item.name(),
                 source.cooldown_s
             )
         } else if c.nearby(feet).is_some() {
-            "E : récupérer 6 alliage".into()
+            "<key:KeyE> : récupérer 6 alliage".into()
         } else {
             c.deposits
                 .iter()

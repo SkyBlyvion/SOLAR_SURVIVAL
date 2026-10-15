@@ -1,3 +1,5 @@
+> Depuis P12 : écriture **SOLAR_SURVIVAL 6**, lecture **4/5/6** ; commandes par aventure, valeurs par défaut pour4/5. Formats1/2/3 refusés sans suppression. [Contrat courant](P12_CONTROLS.md). Les formats cités dans les sections historiques ci-dessous décrivent leurs livraisons propres.
+
 > P11 : écriture **SOLAR_SURVIVAL 5**, volume et mode muet par aventure. Lecture du
 > format P10 **4 conservée** avec volume 50 %/son activé, sans réécriture au simple
 > chargement ; prochaine écriture en 5 (F5 ou sauvegarde avant changement d’aventure). Formats 1/2/3 toujours refusés.

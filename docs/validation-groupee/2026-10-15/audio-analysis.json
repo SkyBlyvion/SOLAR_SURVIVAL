@@ -1,0 +1,15 @@
+{
+  "file": "docs/validation-groupee/2026-10-15/audio-game-only.wav",
+  "channels": 2,
+  "sample_rate_hz": 22050,
+  "sample_width_bytes": 2,
+  "duration_s": 13.78,
+  "peak_linear": 0.09820556640625,
+  "rms_linear": 0.013283116533983919,
+  "clipped_samples": 0,
+  "non_silent_blocks_20ms": 129,
+  "first_signal_s": 0.52,
+  "last_signal_s": 12.0,
+  "scope": "Digital recording of game output only; does not establish subjective comfort or acoustic speaker output.",
+  "capture_exit_note": "pw-record intentionally interrupted with SIGINT (exit 1); WAV is finalized and readable. No capture process remains."
+}

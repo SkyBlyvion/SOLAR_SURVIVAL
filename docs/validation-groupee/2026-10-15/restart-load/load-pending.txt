@@ -1,0 +1,16 @@
+Vec2(61.0, 15.0) ◇ Saturne
+Vec2(810.0, 32.0) C/A / Q/S/D : marcher · Maj : courir · Espace : sauter · E : récolte / coffre · V : relevé / rapport · I : inventaire · B : construction
+Clic droit : piloter · Échap : curseur / menu · M / , : espace · N : navigation · H : télémétrie
+Vec2(321.0, 118.0) EXPÉDITION 1 / 3 · Relais Aurore
+Retour au premier abri · 120 m · gauche 143°
+V : transmettre dans le premier abri
+Récompense : 8 alliage + 4 circuits
+Base · 120 m · gauche 143°
+Retour marche ≳ 27 s + marge 20 s
+Données perdues si échec ou sortie spatiale.
+Vec2(392.0, 36.0) O₂  02:57 / 03:00
+Abri 1 · 120 m · derrière · entrez par la porte
+Vec2(487.0, 68.0) PORTÉ 0/8 piles · 0 alliage / 0 circuits · I : inventaire
+Caisse dorée · 106 m · derrière · E à moins de 2,5 m
+Sources durables cyan/ocre : derrière l’arrivée à 12–16 m
+B : construction · Session chargée · inventaire et bâtiments restaurés

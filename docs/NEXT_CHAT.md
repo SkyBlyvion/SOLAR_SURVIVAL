@@ -1,130 +1,115 @@
-# Prochain chat Solar Survival — P11 audio intégré, campagne groupée reportée
+# Prochain chat Solar Survival — P12 intégré, validations arrêtées
 
 Mise à jour : **15 octobre 2026**. Chef de projet : **SkyBlyvion**.
-P1–P9 livrés sur Ubuntu ; P10 intégré, validation graphique ouverte. P11 ajoute
-l'audio et les alertes à la demande explicite de l'utilisateur. Les résultats
-finaux des contrôles sans bureau sont dans VALIDATION et les notes P11.
 
-## Consigne utilisateur prioritaire
+## Consignes utilisateur prioritaires
 
-**Ne lancer automatiquement aucun test ouvrant une fenêtre, prenant le focus
-ou capturant la souris.** Les campagnes P9/P10 sont reportées à la demande
-utilisateur ; l’écoute P11 rejoint cette même campagne, sans sortie sonore
-automatique pendant le travail courant. Référence persistante :
-[TESTS_A_REALISER.md](TESTS_A_REALISER.md). Aucun écran virtuel, réactivation du
-focus ou modification silencieuse de la capture du gameplay. Les contrôles
-ordinaires CPU/ECS/compilation restent autorisés sans redemander de permission.
-Les tests P11 n'installent aucun backend audio matériel ; décoder un WAV ne le joue
-pas. Une entité Window en test MinimalPlugins n'ouvre pas de fenêtre OS.
+**Ne plus lancer de tests, de benchmark ou de campagne pour compléter les cases.**
+L’utilisateur avait autorisé la main sur le poste et toutes les validations en
+attente, puis a précisé « ne refais pas la passe d’expédition, c’est trop long »,
+et enfin « arrête de revalider […] les mêmes tests ». Cette dernière consigne
+arrête les validations. La passe graphique unique des trois trajets a réussi et
+n’a pas été répétée. Les résultats ouverts ne donnent aucune autorisation de
+relance. Aucun jeu, benchmark ou enregistrement n’est laissé actif.
 
 ## Prompt autonome
 
 Nous poursuivons Solar Survival dans `/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL`.
 Lire AGENTS.md, README.md, ROADMAP.md, cette passation, ASTRONOMY.md,
-TESTS_A_REALISER.md, P11_AUDIO.md, P10_EXPLORATION.md, P9_BASE.md, PERSISTENCE.md,
-et les derniers résultats de VALIDATION.md/PERFORMANCE.md et
-`docs/p11-validation/2026-10-15/NOTES.md`. Pour terrain/rendu, lire aussi
-MARS_ENVIRONMENT.md/GLOBAL_TERRAIN.md ; pour survie/construction, leurs contrats.
-Examiner Git avant toute modification. HEAD au départ P11 : `fec803a` (P9 fini),
-avec les modifications P10 **déjà présentes et non commitées**. Elles ont été
-conservées ; P11 est ajouté au même workspace. Aucun commit demandé ni créé.
-Ne pas assimiler le diff contre HEAD à du code entièrement écrit pendant P11.
+TESTS_A_REALISER.md, P12_CONTROLS.md, P11_AUDIO.md, PERSISTENCE.md et les premières
+sections de VALIDATION.md/PERFORMANCE.md ; détails dans
+`docs/p12-validation/2026-10-15/NOTES.md` et
+`docs/validation-groupee/2026-10-15/NOTES.md`.
+Examiner Git : départ de ce chat propre à `ecc711c` (P11), P12 et la campagne sont
+maintenant présents dans le workspace **non commité**. Aucun commit demandé/créé.
+Préserver les changements et preuves ; ne pas attribuer les anciens travaux à P12.
 
-**Objectif suivant : traiter les retours P11 et tenir à jour la checklist des
-tests différés ; exécuter la campagne groupée seulement lorsque l'utilisateur
-la demandera.** Corriger et rejouer les cas concernés, conserver preuves et limites.
-Si l'utilisateur souhaite poursuivre le code, cadrer la suite avec lui : **P12
-n'est pas défini**. Ne pas inventer une étape livrée ni considérer écoute ou
-performance validées par des tests ECS. Le sans-focus n'empêche pas les corrections
-et contrôles utiles sans bureau. Ne pas imposer une relance P9 en préalable.
+**Objectif suivant : suivre la nouvelle demande de SkyBlyvion, sans relancer de
+validation par défaut. P13 n’est pas défini.** Si une prochaine demande porte
+sur les commandes, deux aides secondaires restent à corriger : dans
+`src/ui/construction.rs`, distance de caisse (~ligne220, « E à moins… ») et rappel
+de catalogue (~ligne226, « B : construction ») n’utilisent pas encore les marqueurs
+de touches. Cette limite est documentée ; elle n’a pas été modifiée après l’arrêt.
+Ne pas transformer cette passation en ordre de relancer une campagne ou un trajet.
 
-## État réel P11
+## État réel P12
 
-- `audio.rs` : onze signaux originaux, événements après résultats des commandes :
-  récolte/transfert, construction, relevé/rapport, refus, menu/options et opérations
-  de profil. Aucun succès sonore déduit d'un texte/UI ou d'un proxy de rendu.
-- Observation O₂ après Navigation : à ≤30 s toutes les5s actives, ≤10s toutes les
-  1,5s actives ; changement de seuil immédiat, début de recharge effective et
-  passage à l'épuisement. Un seul rappel par frame longue ; P/T ne multiplie pas
-  le rythme. Menu/espace suspendent, I/B laissent la survie active. R ne rejoue
-  pas une recharge de base et un échec chargé n'est pas une nouvelle mort.
-- Options volume0/25/50/75/100 %, défaut50 %, muet conservant la sélection ;
-  Reset50 %/activé. Sons en cours coupés à zéro/muet ; pas de rattrapage à la
-  réactivation. Les messages et le HUD O₂ restent indépendants de l'audio.
-- Onze WAV PCM mono16bits/22050Hz, **187020octets** de fichiers, générés offline
-  par `scripts/prepare_p11_audio.py`, sans échantillons tiers ; licence MIT,
-  crédits et manifeste dans `assets/audio/`. Chargés une fois, non spatialisés,
-  présentés comme signaux de combinaison/interface. Pas de musique/voix/ambiance/
-  pas ou propagation martienne. Aucun asset GPU ou mesh ajouté.
-- Huit voix maximum, onze demandes uniques, espacement150ms/motif, priorités
-  échec→critique→faible→actions→UI avec préemption. DESPAWN + expiration2s même
-  sans sink ; clip encore non chargé ignoré. Transitoires supprimés au chargement.
-- Bevy reste **exactement =0.19.1**, fonctionnalités `bevy_audio`/`wav` ajoutées.
-  Cargo.lock inclut bevy_audio0.19.1,rodio0.22.2,cpal0.17.3,hound3.5.1 et backends
-  natifs ; aucune dépendance audio directe supplémentaire ni changement de physique.
-  Les diagnostics/profilers existants désactivent AudioPlugin et le mixage P11.
-- **Écriture SOLAR_SURVIVAL5, lecture4 conservée.** Nouvelle ligne audio validée
-  (index0–4, booléen), paramètres par aventure. Charger P10/4 utilise50 %/activé,
-  sans réécrire le fichier ; prochaine écriture (F5 ou changement d’aventure) écrit5, avec le secours habituel.
-  Formats1/2/3 toujours refusés, jamais supprimés. Ancien binaire P10 ne lit pas5.
+- `controls.rs` : 26 commandes physiques, table de touches admissibles/ids disque
+  explicites, conflits refusés sans mutation, modificateurs gauche/droite liés.
+  Menus, chiffres0–9, flèches, Entrée/Échap, F5/F9/F12, molette et souris fixes.
+- Options → Commandes : cinq pages, six lignes maximum, saisie/annulation/reset,
+  nom de la commande en conflit. QWERTY/AZERTY indiqués pour les positions qui
+  diffèrent. Pas de combos, manette ou remappage de souris ajouté.
+- `GameplayKeys` traduit une fois les entrées brutes après le menu, avant
+  inventaire/caméra. Navigation espace/surface, construction, inventaire,
+  expéditions et HUD utilisent cette vue. Touches maintenues dans un menu
+  bloquées jusqu’au relâchement. Champs de nom et menus restent sur le brut.
+- Aides par marqueurs `<key:KeyF>` et petit cache des modèles statiques, nettoyé
+  des entités retirées après Interface. Deux rappels E/B encore fixes, ci-dessus.
+- **Écriture format6 ; lecture4/5/6.** Affectations dans PlayerSettings par
+  aventure ;4/5 utilisent les commandes par défaut. Ancien binaire P10/P11 ne lit
+  pas6. Formats1/2/3 toujours refusés sans supprimer les fichiers. Validation du
+  nombre, des ids et de l’unicité avant publication ; checksum/secours conservés.
+- Aucun ajout de dépendance, de physique ou d’astronomie. Bevy exactement0.19.1,
+  Rust stable2024, Cargo.lock inchangé ; main.rs inchangé.
 
-## Compilation audio sur ce poste
+## Résultats acquis et limites
 
-Ubuntu requiert désormais **pkg-config et libasound2-dev pour compiler**, plus
-`libasound.so.2` et une sortie audio configurée pour jouer. Installation standard
-à faire par un utilisateur habilité : `sudo apt install pkg-config libasound2-dev`.
-Pendant P11, sudo demandait un mot de passe : aucune installation système faite.
-Les paquets Ubuntu ont été téléchargés/extraits localement sous
-`/tmp/solar-p11-build-deps/root` ; `source /tmp/solar-p11-build-deps/env.sh` règle
-PKG_CONFIG, LD_LIBRARY_PATH et les chemins du sysroot pour Cargo. Ce dossier
-**temporaire peut disparaître** ; les notes P11 donnent le procédé de reprise.
-Ne pas introduire ces chemins dans la logique portable ou le lanceur de livraison.
-La bibliothèque runtime standard est déjà installée. Aucun contournement du
-contrôle de sudo ni mot de passe enregistré. Windows utilise son backend CPAL.
-Sans périphérique à l'initialisation, Bevy avertit puis continue silencieusement ;
-reconnexion à chaud non implémentée. Ce comportement reste à essayer réellement.
+**165 tests CPU/ECS**, fmt/check all-targets, Clippy -D warnings, release et
+compilation release du diagnostic réussis **avant l’arrêt**. Aucun nouveau test
+relancé après. Les erreurs intermédiaires de compilation/fixtures/Clippy ont été
+corrigées et leurs journaux conservés.
 
-## État P10/P9 conservé
+- Une seule passe graphique au sol des trois expéditions avec C/V :268,660s,
+  code0,21captures,36alliage/18circuits. Entrées ECS et visée automatique ; pas
+  une partie humaine. Rebasages/patches et recharge contrôlés.
+- Options/commandes720p/900p, conflits/pages, aides, inventaire/catalogue et cas
+  ciblés : sortie0. Sites futurs/hors portée, murs/autre abri, rapport sans O₂
+  de base, sorties, épuisement/R, jour/crépuscules/nuit/tempête contrôlés selon
+  les assertions. Les cas préparés réinstallent aussi les obstacles du site ;
+  ne pas les confondre avec les trajets non repositionnés.
+- Deux processus : données en cours et C/V restaurés, rapport unique après retour
+  préparé à l’abri. Archive803 fichiers/11WAV vérifiée et lancée hors checkout/CWD
+  extérieur ; P9 base/profils116,403s+26,472s,deux codes0,36captures inspectées.
+  Entrées natives XTest sur l’archive,sortie0,progression/stock/touches conservés
+  après rapport déjà payé. Pas de nouveau trajet d’expédition.
+- Backend audio réel avec AudioSink ; onze motifs demandés, faible5,020s et
+  critique1,507s. Sortie du jeu seule enregistrée (pas de microphone/autres apps),
+  13,78s,22050Hz,crête0,0982,aucun échantillon écrêté. pw-record interrompu
+  volontairement par SIGINT/code1,WAV lisible ; aucune écoute subjective validée.
+- Absence de périphérique limitée à l’environnement ALSA du seul processus :
+  avertissement attendu,57,153s,code0,pic5 lecteurs/0sink,expiration sans accumulation.
+-101captures produites, inspection ciblée et quatre planches P9 ; pas101 vues
+  individuellement approuvées. Aucun aval esthétique/sonore de l’utilisateur.
+- **Performances non comparées** : deux références P8 en échec avant export,
+  8,608s puis26,424s. La seconde passe la collecte et échoue au placement ; cause
+  complète non établie. Le scénario64 équipements/audio activé-muet est préparé
+  mais non exécuté. VRAM totale/staging, Windows11 natif, RTX4050/CPU cible exact
+  et1080p60 restent ouverts. Ne pas relancer ces essais sans nouvelle demande.
 
-P10 : trois missions120/240/360m, F à3m puis F dans le premier abri, récompenses
-uniques8+4/12+6/16+8 alliage/circuits, lot entier ou refus intact. Échec/sorties
-M/G/O/U perdent les données non rapportées, découvertes gardées. R ne paie rien.
-HUD cap horizontal/distance/base et estimation minimale retour÷4,5m/s+20s, sans
-itinéraire garanti. Deux cubes/balise débloquée dans600m, six proxies, trois
-matériaux constants ; poses corporellesf64. Trois vrais trajets ECS existants,
-visée automatiquement orientée, sans périphérique OS ; pas une partie humaine.
+Archive : `dist/solar-survival-ubuntu-p12.tar.gz`,SHA256
+`1506af817db4cc20f41e8b34b040c0dfab9e41ca98fa4e6adcfc5262ef5d65c5`.
+Binaire `36bb3f85c1c764c9ade64ec15285569ab3f41cc1b12d6288d69bd4b669c7fbba`.
+Sources de jeu/assets/lock inchangés durant les essais ; preuves dans le JSON de
+concordance. Les dernières mises à jour après l’arrêt sont documentaires.
 
-P9 : porté8/coffre16/pile20, alliage/circuits, six recettes, lots6/30s actives,
-base collective40m ; panneau160W de gameplay, batterie4,8MJ, générateur40W→4sO₂/s,
-réserve720s+3600s/réservoir, combinaison180s/recharge30s/s. R est un secours
-illimité sans remplir la base. Aucun câble/démantèlement ou avant-poste autonome.
-Terrain≤13patches, LOD32/16/8, rebasage64m, relief et couronne P8 inchangés.
-P9+P10≤312 proxies hors terrain/ciel/obstacles. Ces bornes ne mesurent pas VRAM/GPU.
+## Contexte permanent et compilation
 
-## Vérifications et limites
+P9 : porté8/coffre16/pile20, six recettes, base collective40m ; temps réel pour
+production/renouvellement, P/T pour conditions. P10 : trois missions120/240/360m,
+F de base pour relevé/rapport, récompenses uniques, perte des données en cours
+sur échec/sortie. P11 : onze WAV originaux187020octets,huit voix maximum, alertes
+O₂30s/10s,volume/muet. Profils6 actuels, lecture4/5 conservée.
 
-**159 tests CPU/ECS réussis**, fmt/check all-targets, Clippy -D warnings et release
-réussis. Archive Ubuntu P11 préparée, extraite hors checkout :803 fichiers et
-onze WAV vérifiés, dépendances runtime résolues, **sans lancement ni écoute**.
-Voir les commandes/codes finaux dans `docs/p11-validation/2026-10-15/checks.json`,
-le journal release, VALIDATION et les notes P11. Les tests nouveaux vérifient le
-vrai décodage Bevy, plafonds/priorités/expiration sans périphérique, muet et
-suppression menu/espace/restauration, seuils/temps, options et compatibilité4/5.
-Les tests de construction et des trois expéditions capturent aussi les événements
-réels et vérifient absence de doubles succès. Pas d'AudioOutput installé en test.
+Ubuntu de compilation : pkg-config/libasound2-dev absents ; sysroot local P11
+sous `/tmp/solar-p11-build-deps`, `source /tmp/solar-p11-build-deps/env.sh` pour
+Cargo si un prochain travail le requiert. Temporaire, peut disparaître ; procédé
+reproductible dans les notes P11. Aucune installation système faite. Runtime ALSA
+standard installé ; aucun chemin temporaire distribué. Windows utilise CPAL natif.
 
-**Aucune écoute, fenêtre de jeu, capture, GPU ou benchmark P11 exécuté.** Confort,
-distinction des motifs, vrai périphérique Ubuntu, boutons Options à720p/900p,
-archive lancée et coût audio réel restent ouverts dans AUD-01–07/PERF-05. Les
-mesures P8→P9/P9→P10 et les autres cas antérieurs restent ouverts. Ne pas utiliser
-un profiler silencieux comme preuve du coût audio actif. Aucune approbation
-esthétique/sonore donnée par l'utilisateur.
-
-Contraintes permanentes : Rust stable2024, Bevy=0.19.1, SI/f64/DVec3/DQuat,
-origine soustraite avant f32, proxies en lecture ; Input→Simulation→Navigation→
-Rendering→Interface, Time<Real> et souris sans facteur delta time. Visites
-spatiales translatoires, surface tournante et forces d'inertie omises conservées.
-Poste Ubuntu/X11,i7-6700K/32Go/GTX1060 3Go NVK. **Windows11 natif, RTX4050 6Go au
-mieux, CPU exact («i5 12700K» à confirmer),1080p60 et VRAM/staging non validés.**
-Fin du prochain chat : actualiser roadmap, validations/limites et cette passation,
-puis fournir son lien. Préserver le sans-focus et tous les changements utilisateur.
+SI/f64/DVec3/DQuat, soustraction de l’origine avant f32, proxies en lecture.
+Input→Simulation→Navigation→Rendering→Interface ; Time<Real> orbital indépendant,
+souris sans facteur delta time. Visites spatiales translatoires, surface tournante
+et forces d’inertie omises conservées. Ubuntu/X11,i7-6700K/32Go/GTX1060 3Go NVK.
+En fin de prochain chat de développement : actualiser roadmap, validations/limites
+et cette passation, puis fournir son lien. Respecter en priorité l’arrêt des tests.

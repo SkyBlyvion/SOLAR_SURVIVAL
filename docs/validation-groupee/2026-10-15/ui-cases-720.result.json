@@ -1,0 +1,12 @@
+{
+  "mode": "menus",
+  "height": 720,
+  "exit_code": 0,
+  "seconds": 60.415117306001775,
+  "focused_window": "0x4200004",
+  "binary_sha256": "5936d0706dd2b37f8f41eded2498e08aef932c2f7744ddd0764a7c72c1d6ae7c",
+  "binary_unchanged": true,
+  "captures": 22,
+  "diagnostics": [],
+  "done": true
+}

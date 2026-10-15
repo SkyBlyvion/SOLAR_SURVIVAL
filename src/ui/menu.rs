@@ -25,12 +25,16 @@ enum Screen {
     Profiles,
     Options,
     Credits,
+    Bindings,
     Playing,
 }
 #[derive(Resource, Default)]
 pub struct MenuState {
     screen: Screen,
     started: bool,
+    binding_page: usize,
+    rebinding: Option<usize>,
+    binding_status: String,
 }
 impl MenuState {
     pub fn is_open(&self) -> bool {
@@ -39,6 +43,8 @@ impl MenuState {
     pub(crate) fn loaded(&mut self) {
         self.started = true;
         self.screen = Screen::Main;
+        self.rebinding = None;
+        self.binding_status.clear();
     }
     pub fn started(&self) -> bool {
         self.started
@@ -51,7 +57,10 @@ impl MenuState {
         self.screen = Screen::Playing;
     }
     fn back(&mut self) {
-        self.screen = if self.screen == Screen::Main && self.started {
+        self.rebinding = None;
+        self.screen = if self.screen == Screen::Bindings {
+            Screen::Options
+        } else if self.screen == Screen::Main && self.started {
             Screen::Playing
         } else {
             Screen::Main
@@ -66,6 +75,7 @@ pub struct PlayerSettings {
     pub(crate) fullscreen: bool,
     pub(crate) volume_index: usize,
     pub(crate) muted: bool,
+    pub bindings: crate::controls::Bindings,
 }
 impl Default for PlayerSettings {
     fn default() -> Self {
@@ -76,6 +86,7 @@ impl Default for PlayerSettings {
             fullscreen: false,
             volume_index: 2,
             muted: false,
+            bindings: default(),
         }
     }
 }
@@ -128,6 +139,11 @@ enum MenuAction {
     Volume,
     Mute,
     Reset,
+    Controls,
+    Bind(usize),
+    BindPrevious,
+    BindNext,
+    BindReset,
     Save,
     Load,
     Quit,
@@ -147,6 +163,7 @@ impl Plugin for MenuPlugin {
                 Screen::Main
             },
             started: automated,
+            ..default()
         })
         .init_resource::<PlayerSettings>()
         .add_message::<KeyboardInput>()
@@ -206,7 +223,7 @@ fn setup(mut commands: Commands, assets: Res<AssetServer>) {
         root.spawn(Node {width:percent(48),max_width:px(560),flex_direction:FlexDirection::Column,row_gap:px(24),..default()})
             .with_children(|left| {
                 left.spawn((Brand,Text::new("SOLAR\nSURVIVAL"),super::font(48.0,&font),TextColor(theme::TEXT)));
-                for screen in [Screen::Main,Screen::NewAdventure,Screen::Profiles,Screen::Options,Screen::Credits] {
+                for screen in [Screen::Main,Screen::NewAdventure,Screen::Profiles,Screen::Options,Screen::Bindings,Screen::Credits] {
                     left.spawn((Panel(screen),Node {flex_direction:FlexDirection::Column,row_gap:px(8),..default()})).with_children(|panel| {
                         match screen {
                             Screen::Main=>{
@@ -231,8 +248,18 @@ fn setup(mut commands: Commands, assets: Res<AssetServer>) {
                             }
                             Screen::Options=>{
                                 heading(panel,"Options",&font);
-                                for action in [MenuAction::Sensitivity,MenuAction::Fov,MenuAction::Msaa,MenuAction::Fullscreen,MenuAction::Volume,MenuAction::Mute,MenuAction::Reset,MenuAction::Back] {button(panel,action,&font);}
+                                for action in [MenuAction::Sensitivity,MenuAction::Fov,MenuAction::Msaa,MenuAction::Fullscreen,MenuAction::Volume,MenuAction::Mute,MenuAction::Controls,MenuAction::Reset,MenuAction::Back] {button(panel,action,&font);}
                                 description(panel,"Cliquez pour changer une valeur.\nCes réglages sont inclus dans les sauvegardes.",&font);
+                            }
+                            Screen::Bindings=>{
+                                heading(panel,"Commandes",&font);
+                                description(panel,"Positions physiques · QWERTY / AZERTY\nCliquez une commande, puis pressez sa nouvelle touche.\nÉchap annule la saisie. Les conflits sont refusés.",&font);
+                                for row in 0..crate::controls::PAGE_SIZE { button(panel,MenuAction::Bind(row),&font); }
+                                panel.spawn(Node {column_gap:px(8),..default()}).with_children(|row| {
+                                    button(row,MenuAction::BindPrevious,&font);button(row,MenuAction::BindNext,&font);
+                                });
+                                button(panel,MenuAction::BindReset,&font);button(panel,MenuAction::Back,&font);
+                                description(panel,"Fixes : clic droit, molette, Échap, Entrée, flèches,\n0–9, +/−, F5/F9 et F12. Maj/Ctrl/Alt : deux côtés liés.",&font);
                             }
                             Screen::Credits=>{
                                 heading(panel,"Crédits",&font);
@@ -341,6 +368,36 @@ fn action(
         }
         MenuAction::Options => state.screen = Screen::Options,
         MenuAction::Credits => state.screen = Screen::Credits,
+        MenuAction::Controls => {
+            state.screen = Screen::Bindings;
+            state.binding_status = "Choisissez une commande à modifier".into();
+        }
+        MenuAction::Bind(row) => {
+            let i = state.binding_page * crate::controls::PAGE_SIZE + row;
+            if i < crate::controls::ACTIONS.len() {
+                state.rebinding = Some(i);
+                state.binding_status = format!(
+                    "{} : pressez une touche · Échap pour annuler",
+                    crate::controls::ACTIONS[i].1
+                );
+            }
+        }
+        MenuAction::BindPrevious => {
+            state.binding_page = state.binding_page.saturating_sub(1);
+            state.rebinding = None;
+            state.binding_status.clear();
+        }
+        MenuAction::BindNext => {
+            state.binding_page = (state.binding_page + 1)
+                .min((crate::controls::ACTIONS.len() - 1) / crate::controls::PAGE_SIZE);
+            state.rebinding = None;
+            state.binding_status.clear();
+        }
+        MenuAction::BindReset => {
+            settings.bindings = default();
+            state.rebinding = None;
+            state.binding_status = "Commandes par défaut rétablies".into();
+        }
         MenuAction::Back => state.back(),
         MenuAction::Sensitivity => {
             settings.sensitivity_index = (settings.sensitivity_index + 1) % 4
@@ -370,6 +427,33 @@ fn input(
     >,
     mut exit: MessageWriter<AppExit>,
 ) {
+    if let Some(i) = state.rebinding {
+        if keys.just_pressed(KeyCode::Escape) {
+            state.rebinding = None;
+            state.binding_status = "Modification annulée".into();
+        } else {
+            let mut pressed: Vec<_> = keys.get_just_pressed().copied().collect();
+            pressed.sort_by_key(|k| format!("{k:?}"));
+            if let Some(key) = pressed.first() {
+                match settings.bindings.assign(i, *key) {
+                    Ok(()) => {
+                        state.rebinding = None;
+                        state.binding_status = format!(
+                            "{} : {}",
+                            crate::controls::ACTIONS[i].1,
+                            settings.bindings.label(crate::controls::ACTIONS[i].0)
+                        );
+                        commands.trigger(crate::audio::SoundCue::Ui);
+                    }
+                    Err(message) => {
+                        state.binding_status = format!("{message} · réessayez ou Échap");
+                        commands.trigger(crate::audio::SoundCue::Refused);
+                    }
+                }
+            }
+        }
+        return;
+    }
     if keys.just_pressed(KeyCode::Escape)
         && !construction.is_some_and(|c| c.active || c.catalog_open)
         && !inventory.is_some_and(|s| s.open)
@@ -419,7 +503,12 @@ fn input(
             | MenuAction::Fullscreen
             | MenuAction::Volume
             | MenuAction::Mute
-            | MenuAction::Reset => Screen::Options,
+            | MenuAction::Reset
+            | MenuAction::Controls => Screen::Options,
+            MenuAction::Bind(_)
+            | MenuAction::BindPrevious
+            | MenuAction::BindNext
+            | MenuAction::BindReset => Screen::Bindings,
             MenuAction::Create => Screen::NewAdventure,
             MenuAction::Choose(_)
             | MenuAction::OpenSelected
@@ -526,6 +615,10 @@ fn display(
     }
     let c = persistence.as_deref();
     for mut text in &mut statuses {
+        if state.screen == Screen::Bindings {
+            **text = state.binding_status.clone();
+            continue;
+        }
         **text = c.map_or_else(
             || "".into(),
             |c| {
@@ -550,14 +643,17 @@ fn display(
         node.padding = UiRect::axes(
             px(18),
             px(
-                if state.screen == Screen::Options && window.height() < 800.0 {
+                if matches!(state.screen, Screen::Options | Screen::Bindings)
+                    && window.height() < 800.0
+                {
                     8.0
                 } else {
                     13.0
                 },
             ),
         );
-        node.display = if (*a == MenuAction::Play && !state.started)
+        node.display = if matches!(a, MenuAction::Bind(row) if state.binding_page * crate::controls::PAGE_SIZE + row >= crate::controls::ACTIONS.len())
+            || (*a == MenuAction::Play && !state.started)
             || (*a == MenuAction::Save && c.is_none_or(|c| c.active_profile.is_none()))
         {
             Display::None
@@ -590,6 +686,31 @@ fn display(
             MenuAction::Previous => "↑ Précédente".into(),
             MenuAction::Next => "↓ Suivante".into(),
             MenuAction::Options => "Options".into(),
+            MenuAction::Controls => "Commandes / changer les touches".into(),
+            MenuAction::Bind(row) => {
+                let i = state.binding_page * crate::controls::PAGE_SIZE + row;
+                crate::controls::ACTIONS
+                    .get(i)
+                    .map_or(String::new(), |(key, name)| {
+                        format!(
+                            "{name} : {}",
+                            if state.rebinding == Some(i) {
+                                "…".into()
+                            } else {
+                                settings.bindings.label(*key)
+                            }
+                        )
+                    })
+            }
+            MenuAction::BindPrevious => "‹ Précédent".into(),
+            MenuAction::BindNext => format!(
+                "Suivant ›  {}/{}",
+                state.binding_page + 1,
+                crate::controls::ACTIONS
+                    .len()
+                    .div_ceil(crate::controls::PAGE_SIZE)
+            ),
+            MenuAction::BindReset => "Rétablir les commandes".into(),
             MenuAction::Credits => "Crédits".into(),
             MenuAction::Save => "Sauvegarder l’aventure · F5".into(),
             MenuAction::Load => "Charger une aventure · F9".into(),
@@ -657,6 +778,7 @@ mod tests {
             .insert_resource(MenuState {
                 screen: Screen::Main,
                 started: true,
+                ..default()
             })
             .init_resource::<PlayerSettings>()
             .add_message::<KeyboardInput>()
@@ -714,6 +836,47 @@ mod tests {
             .id();
         app.update();
         app.world_mut().despawn(entity);
+    }
+
+    #[test]
+    fn rebind_capture_refuses_conflicts_cancels_pages_and_keeps_menu_keys() {
+        let mut a = app();
+        click(&mut a, MenuAction::Options);
+        click(&mut a, MenuAction::Controls);
+        click(&mut a, MenuAction::Bind(0));
+        press(&mut a, KeyCode::KeyS);
+        assert_eq!(
+            a.world().resource::<PlayerSettings>().bindings.key(0),
+            KeyCode::KeyW
+        );
+        assert!(
+            a.world()
+                .resource::<MenuState>()
+                .binding_status
+                .contains("Reculer")
+        );
+        press(&mut a, KeyCode::F5);
+        assert!(a.world().resource::<MenuState>().rebinding.is_some());
+        press(&mut a, KeyCode::KeyC);
+        assert_eq!(
+            a.world().resource::<PlayerSettings>().bindings.key(0),
+            KeyCode::KeyC
+        );
+        assert!(!a.world().resource::<Explorer>().captured);
+        click(&mut a, MenuAction::Bind(1));
+        press(&mut a, KeyCode::Escape);
+        assert_eq!(a.world().resource::<MenuState>().screen, Screen::Bindings);
+        assert!(a.world().resource::<MenuState>().rebinding.is_none());
+        for _ in 0..10 {
+            click(&mut a, MenuAction::BindNext);
+        }
+        assert_eq!(a.world().resource::<MenuState>().binding_page, 4);
+        click(&mut a, MenuAction::BindReset);
+        assert_eq!(a.world().resource::<PlayerSettings>().bindings, default());
+        press(&mut a, KeyCode::Escape);
+        assert_eq!(a.world().resource::<MenuState>().screen, Screen::Options);
+        press(&mut a, KeyCode::Escape);
+        assert_eq!(a.world().resource::<MenuState>().screen, Screen::Main);
     }
 
     #[test]

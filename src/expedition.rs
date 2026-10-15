@@ -142,7 +142,7 @@ impl Plugin for ExpeditionPlugin {
 )]
 fn update(
     mut commands: Commands,
-    keys: Res<ButtonInput<KeyCode>>,
+    keys: Res<crate::controls::GameplayKeys>,
     menu: Option<Res<MenuState>>,
     pilot: Res<Explorer>,
     state: Res<SurfaceState>,

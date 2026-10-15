@@ -1,0 +1,15 @@
+Vec2(810.0, 32.0) C/A / Q/S/D : marcher · Maj : courir · Espace : sauter · E : récolte / coffre · V : relevé / rapport · I : inventaire · B : construction
+Clic droit : piloter · Échap : curseur / menu · M / , : espace · N : navigation · H : télémétrie
+Vec2(297.0, 118.0) EXPÉDITION 3 / 3 · Sonde Lointaine
+Rejoindre la balise · 0 m · devant
+V : relever à 3 m
+Récompense : 16 alliage + 8 circuits
+Base · 360 m · derrière
+Retour marche ≳ 80 s + marge 20 s
+Approchez la balise active à moins de 3 m
+Vec2(392.0, 36.0) O₂  02:11 / 03:00
+Abri 1 · 360 m · derrière · entrez par la porte
+Vec2(487.0, 68.0) PORTÉ 2/8 piles · 20 alliage / 10 circuits · I : inventaire
+Caisse dorée · 345 m · derrière · E à moins de 2,5 m
+Sources durables cyan/ocre : derrière l’arrivée à 12–16 m
+B : construction · Session chargée · inventaire et bâtiments restaurés

@@ -120,7 +120,7 @@ fn refresh(
         let (alloy, circuits) = REWARDS[e.completed];
         let target = e.target(&buildings).unwrap();
         format!(
-            "EXPÉDITION {} / 3 · {}\n{} · {:.0} m · {}\nF : {}\nRécompense : {alloy} alliage + {circuits} circuits",
+            "EXPÉDITION {} / 3 · {}\n{} · {:.0} m · {}\n<key:KeyF> : {}\nRécompense : {alloy} alliage + {circuits} circuits",
             e.completed + 1,
             SITE_NAMES[e.completed],
             if e.carrying {

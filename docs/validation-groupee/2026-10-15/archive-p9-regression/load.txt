@@ -1,0 +1,31 @@
+2026-10-15T13:32:24.193405Z  INFO bevy_render::renderer: AdapterInfo { name: "NVIDIA GeForce GTX 1060 3GB (NVK GP106)", vendor: 4318, device: 7170, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "NVK", driver_info: "Mesa 25.2.8-0ubuntu0.24.04.4", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: false }
+2026-10-15T13:32:24.345832Z  INFO bevy_pbr::cluster: GPU clustering is supported on this device.
+2026-10-15T13:32:24.345872Z  INFO bevy_render::batching::gpu_preprocessing: GPU preprocessing is fully supported on this device.
+2026-10-15T13:32:24.346332Z  INFO bevy_winit::system: Creating new window Solar Survival · 0.2 · Mars (63v0)
+2026-10-15T13:32:24.346678Z  INFO winit::platform_impl::linux::x11::window: Guessed window scale factor: 1
+2026-10-15T13:32:24.376182Z  INFO solar_survival::rendering::textures: P7 textures CPU préparées : 13 images, 42118856 octets, 24.487 ms ; données transférées au renderer, staging/pics pilote exclus
+2026-10-15T13:32:24.403599Z  INFO solar_survival::config::base_validation: P9 phase 0 t=0.000 équipements=0 O2=720.000 énergie=0.000
+2026-10-15T13:32:24.558092Z  INFO solar_survival::rendering::textures: P7 GPU résident : 13 textures RGBA8 sRGB avec mipmaps, 42118856 octets / 134217728 ; allocation pilote totale/staging exclus
+2026-10-15T13:32:25.449521Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/validation-groupee/2026-10-15/archive-p9-regression/load/stage-00.png
+2026-10-15T13:32:26.403649Z  INFO solar_survival::config::base_validation: P9 phase 1 t=2.002 équipements=5 O2=679.988 énergie=2794.012
+2026-10-15T13:32:28.428689Z  INFO solar_survival::config::base_validation: P9 phase 2 t=4.027 équipements=5 O2=675.986 énergie=2712.956
+2026-10-15T13:32:30.424224Z  INFO solar_survival::config::base_validation: P9 phase 3 t=6.023 équipements=5 O2=683.966 énergie=2633.163
+2026-10-15T13:32:31.465557Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/validation-groupee/2026-10-15/archive-p9-regression/load/stage-03.png
+2026-10-15T13:32:32.429507Z  INFO solar_survival::config::base_validation: P9 phase 4 t=8.028 équipements=5 O2=691.988 énergie=2552.943
+2026-10-15T13:32:34.420137Z  INFO solar_survival::config::base_validation: P9 phase 5 t=10.018 équipements=0 O2=720.000 énergie=0.000
+2026-10-15T13:32:35.428504Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/validation-groupee/2026-10-15/archive-p9-regression/load/stage-05.png
+2026-10-15T13:32:36.425997Z  INFO solar_survival::config::base_validation: P9 phase 6 t=12.024 équipements=0 O2=720.000 énergie=0.000
+2026-10-15T13:32:38.414990Z  INFO solar_survival::config::base_validation: P9 phase 7 t=14.014 équipements=5 O2=699.953 énergie=2473.295
+2026-10-15T13:32:39.449570Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/validation-groupee/2026-10-15/archive-p9-regression/load/stage-07.png
+2026-10-15T13:32:40.408140Z  INFO solar_survival::config::base_validation: P9 phase 8 t=16.007 équipements=5 O2=699.953 énergie=2473.295
+2026-10-15T13:32:41.454497Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/validation-groupee/2026-10-15/archive-p9-regression/load/stage-08.png
+2026-10-15T13:32:42.402744Z  INFO solar_survival::config::base_validation: P9 phase 9 t=18.001 équipements=5 O2=707.928 énergie=2393.545
+2026-10-15T13:32:43.444902Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/validation-groupee/2026-10-15/archive-p9-regression/load/stage-09.png
+2026-10-15T13:32:44.419332Z  INFO solar_survival::config::base_validation: P9 phase 10 t=20.018 équipements=5 O2=707.928 énergie=2393.545
+2026-10-15T13:32:45.442389Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/validation-groupee/2026-10-15/archive-p9-regression/load/stage-10.png
+2026-10-15T13:32:46.429653Z  INFO solar_survival::config::base_validation: P9 phase 11 t=22.028 équipements=5 O2=715.941 énergie=2313.414
+2026-10-15T13:32:47.420790Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/validation-groupee/2026-10-15/archive-p9-regression/load/stage-11.png
+2026-10-15T13:32:48.418780Z  INFO solar_survival::config::base_validation: P9 phase 12 t=24.017 équipements=5 O2=723.898 énergie=2233.842
+2026-10-15T13:32:49.406581Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/validation-groupee/2026-10-15/archive-p9-regression/load/stage-12.png
+2026-10-15T13:32:50.427469Z  INFO solar_survival::config::base_validation: P9 phase 13 t=26.026 équipements=5 O2=731.935 énergie=2153.468
+2026-10-15T13:32:50.427499Z  INFO solar_survival::config::base_validation: P9 load terminé : deux profils, contenus/charges/renouvellement, refus transactionnel, R et M

@@ -1,0 +1,9 @@
+{
+  "archive": "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/dist/solar-survival-ubuntu-p12.tar.gz",
+  "archive_sha256": "1506af817db4cc20f41e8b34b040c0dfab9e41ca98fa4e6adcfc5262ef5d65c5",
+  "extracted": "/tmp/solar-survival-p12-2026-10-15-_wxmv8s5/solar-survival-ubuntu-p12",
+  "files_verified": 803,
+  "binary_sha256": "36bb3f85c1c764c9ade64ec15285569ab3f41cc1b12d6288d69bd4b669c7fbba",
+  "same_binary_as_release": true,
+  "audio_files": 11
+}

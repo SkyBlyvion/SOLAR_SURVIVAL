@@ -49,6 +49,7 @@ impl Plugin for ValidationPlugin {
         app.add_systems(
             Update,
             p2_input
+                .before(crate::controls::translate)
                 .before(crate::camera::controls)
                 .in_set(GameSet::Input),
         )

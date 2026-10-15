@@ -1,3 +1,25 @@
+# P12 — comparaisons non terminées, validations arrêtées — 15 octobre 2026
+
+Deux références P8 du parcours court P5 échouent avant export :8,608s puis26,424s,
+code101. Le second diagnostic passe la collecte puis échoue au placement ; la
+cause complète n’est pas établie. **Aucune comparaison P8→P9/P9→P10/P10→P11/P11→P12
+valide** ne résulte de ces essais. Ne pas convertir les captures de validation,
+le temps des tests CPU ou les plafonds de ressources en mesures de performance.
+
+Le scénario64 équipements et audio activé/muet est préparé et compilé mais
+**n’a pas été exécuté**. Un vrai backend audio et une capture numérique isolée du
+jeu ont fonctionné ; ceci n’établit pas son coût CPU/GPU. RSS échantillonnée pendant
+les parcours, VRAM totale/staging non mesurés. Windows/cible/1080p60 toujours ouverts.
+
+L’utilisateur demande l’arrêt des revalidations et interdit de répéter la passe
+d’expédition déjà réussie. **Aucune relance automatique**. Les échecs et mesures
+manquantes restent dans la checklist sans imposer une nouvelle campagne.
+[Notes/preuves](validation-groupee/2026-10-15/NOTES.md),
+[premier échec](validation-groupee/2026-10-15/performance-versions/results.json),
+[second échec](validation-groupee/2026-10-15/p8-focus-diagnostic/comparison.json).
+
+---
+
 # P11 — audio borné, coût réel non mesuré — 15 octobre 2026
 
 Onze WAV partagés, **187 020 octets** de fichiers ; huit voix maximum, onze demandes

@@ -1,0 +1,13 @@
+Vec2(810.0, 32.0) C/A / Q/S/D : marcher · Maj : courir · Espace : sauter · E : récolte / coffre · V : relevé / rapport · I : inventaire · B : construction
+Clic droit : piloter · Échap : curseur / menu · M / , : espace · N : navigation · H : télémétrie
+Vec2(392.0, 101.0) 3 / 3 RAPPORTS VALIDÉS
+Exploration libre · récompenses reçues
+Base · 0 m · devant
+Retour marche ≳ 0 s + marge 20 s
+Trois rapports validés · récompense reçue · exploration libre
+Vec2(392.0, 36.0) O₂  01:42 / 03:00
+Abri 1 · recharge +30 s/s · base 601/720 s
+Vec2(487.0, 68.0) PORTÉ 3/8 piles · 36 alliage / 18 circuits · I : inventaire
+Caisse dorée · 8 m · à droite · E à moins de 2,5 m
+Sources durables cyan/ocre : derrière l’arrivée à 12–16 m
+B : construction · Session chargée · inventaire et bâtiments restaurés

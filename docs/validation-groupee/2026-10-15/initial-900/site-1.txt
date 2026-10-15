@@ -1,0 +1,16 @@
+Vec2(61.0, 15.0) ◇ Saturne
+Vec2(810.0, 32.0) C/A / Q/S/D : marcher · Maj : courir · Espace : sauter · E : récolte / coffre · V : relevé / rapport · I : inventaire · B : construction
+Clic droit : piloter · Échap : curseur / menu · M / , : espace · N : navigation · H : télémétrie
+Vec2(297.0, 118.0) EXPÉDITION 2 / 3 · Station Horizon
+Rejoindre la balise · 0 m · devant
+V : relever à 3 m
+Récompense : 12 alliage + 6 circuits
+Base · 240 m · derrière
+Retour marche ≳ 53 s + marge 20 s
+Approchez la balise active à moins de 3 m
+Vec2(392.0, 36.0) O₂  02:29 / 03:00
+Abri 1 · 240 m · derrière · entrez par la porte
+Vec2(487.0, 68.0) PORTÉ 2/8 piles · 8 alliage / 4 circuits · I : inventaire
+Caisse dorée · 226 m · derrière · E à moins de 2,5 m
+Sources durables cyan/ocre : derrière l’arrivée à 12–16 m
+B : construction · Session chargée · inventaire et bâtiments restaurés

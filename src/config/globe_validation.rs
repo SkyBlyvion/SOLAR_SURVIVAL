@@ -25,7 +25,10 @@ pub(super) fn install(app: &mut App) {
     app.init_resource::<Progress>()
         .add_systems(
             Update,
-            input.before(camera::controls).in_set(GameSet::Input),
+            input
+                .before(crate::controls::translate)
+                .before(camera::controls)
+                .in_set(GameSet::Input),
         )
         .add_systems(Update, capture.after(GameSet::Interface));
 }

@@ -1,0 +1,42 @@
+Vec2(61.0, 15.0) ◇ Saturne
+Vec2(1084.0, 47.0) Solaire 0.0 W · Consommation 0.0 W · Batterie 0.0/0 Wh · O₂ 720/720 s
+Générateur : non installé
+Sélectionnez une pile ; quantité exacte, pile ou maximum admissible.
+Vec2(531.0, 18.0) PORTÉ · 0/8 piles · 20 objets/pile
+Vec2(531.0, 18.0) COFFRE · approchez à 2,5 m pour y accéder
+Vec2(1084.0, 17.0) INVENTAIRE / BASE   ·   O₂ actif · ↑↓ : quantité 1–20
+Vec2(834.0, 32.0) W / Z/A / Q/S/D : marcher · Maj : courir · Espace : sauter · E : récolte / coffre · F : relevé / rapport · I : inventaire · B : construction
+Clic droit : piloter · Échap : curseur / menu · M / , : espace · N : navigation · H : télémétrie
+Vec2(124.0, 15.0) Quantité : 1 (1/5/20)
+Vec2(115.0, 15.0) Transférer quantité
+Vec2(86.0, 15.0) Transférer pile
+Vec2(128.0, 15.0) Maximum admissible
+Vec2(63.0, 15.0) Regrouper
+Vec2(94.0, 15.0) Déplacer la pile
+Vec2(106.0, 15.0) Fermer · I / Échap
+Vec2(392.0, 36.0) O₂  02:57 / 03:00
+Abri 1 · 120 m · derrière · entrez par la porte
+Vec2(48.0, 22.0) ▶ 01  —
+Vec2(35.0, 22.0) 02  —
+Vec2(35.0, 22.0) 03  —
+Vec2(35.0, 22.0) 04  —
+Vec2(35.0, 22.0) 05  —
+Vec2(35.0, 22.0) 06  —
+Vec2(35.0, 22.0) 07  —
+Vec2(35.0, 22.0) 08  —
+Vec2(35.0, 22.0) 01  —
+Vec2(35.0, 22.0) 02  —
+Vec2(35.0, 22.0) 03  —
+Vec2(35.0, 22.0) 04  —
+Vec2(35.0, 22.0) 05  —
+Vec2(35.0, 22.0) 06  —
+Vec2(35.0, 22.0) 07  —
+Vec2(35.0, 22.0) 08  —
+Vec2(35.0, 22.0) 09  —
+Vec2(35.0, 22.0) 10  —
+Vec2(35.0, 22.0) 11  —
+Vec2(35.0, 22.0) 12  —
+Vec2(35.0, 22.0) 13  —
+Vec2(35.0, 22.0) 14  —
+Vec2(35.0, 22.0) 15  —
+Vec2(35.0, 22.0) 16  —
