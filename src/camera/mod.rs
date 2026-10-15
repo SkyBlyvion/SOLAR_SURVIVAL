@@ -100,6 +100,7 @@ pub(crate) fn controls(
     settings: Option<Res<crate::ui::menu::PlayerSettings>>,
     oxygen: Option<Res<crate::survival::Oxygen>>,
     construction: Option<Res<crate::construction::Construction>>,
+    inventory: Option<Res<crate::ui::inventory::InventoryScreen>>,
     keys: Res<ButtonInput<KeyCode>>,
     mouse: Res<ButtonInput<MouseButton>>,
     motion: Res<AccumulatedMouseMotion>,
@@ -111,7 +112,10 @@ pub(crate) fn controls(
     mut surface: ResMut<SurfaceState>,
 ) {
     let (window, mut cursor) = window.into_inner();
-    if menu.is_some_and(|m| m.is_open()) || construction.is_some_and(|c| c.catalog_open) {
+    if menu.is_some_and(|m| m.is_open())
+        || construction.is_some_and(|c| c.catalog_open)
+        || inventory.is_some_and(|s| s.open)
+    {
         pilot.captured = false;
         pilot.boosted = false;
         cursor.visible = true;

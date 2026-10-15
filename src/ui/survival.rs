@@ -86,6 +86,7 @@ fn refresh(
     state: Res<SurfaceState>,
     terrain: Res<MarsTerrain>,
     buildings: Res<Buildings>,
+    base: Res<crate::base::Base>,
     menu: Res<MenuState>,
     mut root: Single<(Entity, &mut Node), With<OxygenRoot>>,
     mut text: Single<(&mut Text, &mut TextColor), With<OxygenText>>,
@@ -126,7 +127,17 @@ fn refresh(
     }
     let seconds = oxygen.remaining_seconds.ceil() as u64;
     let status = if let Some(id) = oxygen.shelter {
-        format!("Abri {} · recharge active (+30 s/s)", id.0)
+        format!(
+            "Abri {} · {} · base {:.0}/{:.0} s",
+            id.0,
+            if crate::base::Base::connected(&buildings, id) && base.oxygen_s > 0.0 {
+                "recharge +30 s/s"
+            } else {
+                "O₂ indisponible"
+            },
+            base.oxygen_s,
+            crate::base::Base::oxygen_capacity(&buildings)
+        )
     } else {
         let feet = terrain.body_relative(state.feet);
         buildings

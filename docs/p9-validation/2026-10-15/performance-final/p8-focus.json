@@ -1,0 +1,82 @@
+[
+  {
+    "seconds": 0.5360260990019015,
+    "game_focused": true,
+    "focused_window": "0x4400004"
+  },
+  {
+    "seconds": 1.046904786999221,
+    "game_focused": true,
+    "focused_window": "0x4400004"
+  },
+  {
+    "seconds": 1.5644635690005089,
+    "game_focused": true,
+    "focused_window": "0x4400004"
+  },
+  {
+    "seconds": 2.0744880800011742,
+    "game_focused": true,
+    "focused_window": "0x4400004"
+  },
+  {
+    "seconds": 2.5938115009994362,
+    "game_focused": true,
+    "focused_window": "0x4400004"
+  },
+  {
+    "seconds": 3.1107232149988704,
+    "game_focused": false,
+    "focused_window": "0x360177f"
+  },
+  {
+    "seconds": 3.6337033700001484,
+    "game_focused": false,
+    "focused_window": "0x360177f"
+  },
+  {
+    "seconds": 4.169770168999094,
+    "game_focused": false,
+    "focused_window": "0x360177f"
+  },
+  {
+    "seconds": 4.6799844359993585,
+    "game_focused": false,
+    "focused_window": "0x360177f"
+  },
+  {
+    "seconds": 5.188261915998737,
+    "game_focused": false,
+    "focused_window": "0x360177f"
+  },
+  {
+    "seconds": 5.7072791360005795,
+    "game_focused": false,
+    "focused_window": "0x2800004"
+  },
+  {
+    "seconds": 6.2116970749993925,
+    "game_focused": false,
+    "focused_window": "0x2800004"
+  },
+  {
+    "seconds": 6.717657019999024,
+    "game_focused": false,
+    "focused_window": "0x2800004"
+  },
+  {
+    "seconds": 7.239163483998709,
+    "game_focused": false,
+    "focused_window": "0x2800004"
+  },
+  {
+    "seconds": 7.7637328390010225,
+    "game_focused": false,
+    "focused_window": "0x2800004"
+  },
+  {
+    "seconds": 8.28380782000022,
+    "game_focused": false,
+    "focused_window": "0x2800004"
+  }
+]

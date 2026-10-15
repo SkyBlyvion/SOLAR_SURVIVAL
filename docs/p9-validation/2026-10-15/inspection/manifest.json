@@ -1,0 +1,169 @@
+{
+  "capture_count": 36,
+  "sheets": [
+    {
+      "path": "docs/p9-validation/2026-10-15/inspection/sheet-00.jpg",
+      "captures": [
+        {
+          "path": "docs/p9-validation/2026-10-15/packaged-final/save/stage-00.png",
+          "sha256": "880c835438b005c19863528ccb15ebca7468fb65e7dd108088dd0746de86f73c"
+        },
+        {
+          "path": "docs/p9-validation/2026-10-15/packaged-final/save/stage-08.png",
+          "sha256": "95420ae49d52670a735942418d818ece84be83c49f642c0c091fcdbece5a41da"
+        },
+        {
+          "path": "docs/p9-validation/2026-10-15/packaged-final/save/stage-10.png",
+          "sha256": "d3a15329e8285dabdd9a3d1285ef8740e60009eb8997822d4af6ec0df23c311f"
+        },
+        {
+          "path": "docs/p9-validation/2026-10-15/packaged-final/save/stage-12.png",
+          "sha256": "a534a730dac1edcd6c3937c596095f4aa688b93977860be3dedd27f0d051a4e2"
+        },
+        {
+          "path": "docs/p9-validation/2026-10-15/packaged-final/save/stage-14.png",
+          "sha256": "a321c6d8207ea4b3c250c18bf1616aeee149e1710e8b8c6a2f88c31ce32c90a5"
+        },
+        {
+          "path": "docs/p9-validation/2026-10-15/packaged-final/save/stage-15.png",
+          "sha256": "a0fdc18524f5bb778e6ade47e8d2e44d5987f9b2fa4ac7f766688c9c3042e9e8"
+        },
+        {
+          "path": "docs/p9-validation/2026-10-15/packaged-final/save/stage-17.png",
+          "sha256": "0fedd037413a52f71cddf970ec5a4ceed461e88fc7437e18f1b8c104f8f23d22"
+        },
+        {
+          "path": "docs/p9-validation/2026-10-15/packaged-final/save/stage-18.png",
+          "sha256": "6b13d599e95a3dfb94c423a3b9d34cfdda26a135530d7a0f139d8b574f64a46d"
+        },
+        {
+          "path": "docs/p9-validation/2026-10-15/packaged-final/save/stage-19.png",
+          "sha256": "10598b3127c9fe6bcbaeef808fe57d66503283535f41963871efceec2bb6b86e"
+        }
+      ]
+    },
+    {
+      "path": "docs/p9-validation/2026-10-15/inspection/sheet-01.jpg",
+      "captures": [
+        {
+          "path": "docs/p9-validation/2026-10-15/packaged-final/save/stage-20.png",
+          "sha256": "fd9f647029df0aae7a264657c03095eb793044de75c6c146ae06f471e812f41e"
+        },
+        {
+          "path": "docs/p9-validation/2026-10-15/packaged-final/save/stage-21.png",
+          "sha256": "f12a412b3d37a7fa553cbe31aaf5da77dee60465507d5b9ea45980b41b96d0e3"
+        },
+        {
+          "path": "docs/p9-validation/2026-10-15/packaged-final/save/stage-25.png",
+          "sha256": "3b2b43132be114e45a8fb2d97d27596345fde3537f07fa40e47d66607e1d1c15"
+        },
+        {
+          "path": "docs/p9-validation/2026-10-15/packaged-final/save/stage-29.png",
+          "sha256": "076b0a3e17731c91fa161a00bfce1de088d85a5afd59d905e62f28f1e522b1c8"
+        },
+        {
+          "path": "docs/p9-validation/2026-10-15/packaged-final/save/stage-34.png",
+          "sha256": "a4098d69a6d736078529273a6d3c3eb9ee1dde5e11ede1221931bb7cc7a4bfe0"
+        },
+        {
+          "path": "docs/p9-validation/2026-10-15/packaged-final/save/stage-39.png",
+          "sha256": "618f8dc73236111337bf2c152334f1bc6c36e09763a0eeab50732ff82fd263e8"
+        },
+        {
+          "path": "docs/p9-validation/2026-10-15/packaged-final/save/stage-44.png",
+          "sha256": "57b89d879c933984f6435936cacc740e50a14eebf3ae768671d517f82dc6e29e"
+        },
+        {
+          "path": "docs/p9-validation/2026-10-15/packaged-final/save/stage-46.png",
+          "sha256": "6302b9b7bd7518f4c02c3dc7db53705451ab4caff7bd6f631aa40a0044e68c2b"
+        },
+        {
+          "path": "docs/p9-validation/2026-10-15/packaged-final/save/stage-47.png",
+          "sha256": "c74248f32b36c9011fa88c41df8d486fa295e7650446f9fc30a142fae771ad00"
+        }
+      ]
+    },
+    {
+      "path": "docs/p9-validation/2026-10-15/inspection/sheet-02.jpg",
+      "captures": [
+        {
+          "path": "docs/p9-validation/2026-10-15/packaged-final/save/stage-49.png",
+          "sha256": "1058c6a8c2fe15ecb552381e0e307e9744fdd7534c739ec3de82bc30899e262f"
+        },
+        {
+          "path": "docs/p9-validation/2026-10-15/packaged-final/save/stage-50.png",
+          "sha256": "57d0f6e56a7530fe2e80c0c7a0b7b98eab21dbbad209aef46e48b7deb296c2dd"
+        },
+        {
+          "path": "docs/p9-validation/2026-10-15/packaged-final/save/stage-51.png",
+          "sha256": "07d367c70fe45e03d47f72166c0e0df3f7b7f4cd6477011fa97beffc515a288d"
+        },
+        {
+          "path": "docs/p9-validation/2026-10-15/packaged-final/save/stage-52.png",
+          "sha256": "1ef8be43c6c6b5977e450a08c57348c4227a91f181871d5fb2f3148259728982"
+        },
+        {
+          "path": "docs/p9-validation/2026-10-15/packaged-final/save/stage-53.png",
+          "sha256": "1147f214ba4e7bbe71c3f92b0a1cbe2f6b2186340380c066cc6fe3adf9c0447d"
+        },
+        {
+          "path": "docs/p9-validation/2026-10-15/packaged-final/save/stage-54.png",
+          "sha256": "4713bf8ff874ad776a71ef0d8bfce79c228375526ce825ecb4cd083a1fbade50"
+        },
+        {
+          "path": "docs/p9-validation/2026-10-15/packaged-final/save/stage-55.png",
+          "sha256": "1cc7885970c72cc0f234be8a7e88aa2122b95b416bf888fe115e8695ce587f02"
+        },
+        {
+          "path": "docs/p9-validation/2026-10-15/packaged-final/save/stage-56.png",
+          "sha256": "8f84b77531328ddb7110ff05343edf19f0a9c808e539c05e438c9087397aa117"
+        },
+        {
+          "path": "docs/p9-validation/2026-10-15/packaged-final/save/stage-57.png",
+          "sha256": "35520678e81ef3693b6d4d5e611c1d758d9c2c6610ca039d63e3d0894ebe82af"
+        }
+      ]
+    },
+    {
+      "path": "docs/p9-validation/2026-10-15/inspection/sheet-03.jpg",
+      "captures": [
+        {
+          "path": "docs/p9-validation/2026-10-15/packaged-final/load/stage-00.png",
+          "sha256": "1cc7885970c72cc0f234be8a7e88aa2122b95b416bf888fe115e8695ce587f02"
+        },
+        {
+          "path": "docs/p9-validation/2026-10-15/packaged-final/load/stage-03.png",
+          "sha256": "d2a11724e001c2ec7a6792dc7fa0105e0117a1661f6d3ae4cd62f72dd9f303f3"
+        },
+        {
+          "path": "docs/p9-validation/2026-10-15/packaged-final/load/stage-05.png",
+          "sha256": "ca393f6fa0ad8838ae9f0b9d91b8d3236193305cdf4297f4f4b749869a652dc5"
+        },
+        {
+          "path": "docs/p9-validation/2026-10-15/packaged-final/load/stage-07.png",
+          "sha256": "65157fd4bc383af363b25c97ac0882619b634bff634013f901e7ec5cbc33aa3f"
+        },
+        {
+          "path": "docs/p9-validation/2026-10-15/packaged-final/load/stage-08.png",
+          "sha256": "cf61eae54db193786bbc94012ef923d4c144f3512b9d79853c0f2f9b319d16e3"
+        },
+        {
+          "path": "docs/p9-validation/2026-10-15/packaged-final/load/stage-09.png",
+          "sha256": "9acfdb3a3b48abd09cbf413a605b728143ccecded84a2fba7588abe2f9ebf5bd"
+        },
+        {
+          "path": "docs/p9-validation/2026-10-15/packaged-final/load/stage-10.png",
+          "sha256": "710deb1972ceb0442ee4c808481db92378f5d203bb2cbfb5c91d445a16a1354e"
+        },
+        {
+          "path": "docs/p9-validation/2026-10-15/packaged-final/load/stage-11.png",
+          "sha256": "f6bc2d8a4ef0e298a653f2544a6b1080e2ae458c89bbb3a2799efeb4cf23caf5"
+        },
+        {
+          "path": "docs/p9-validation/2026-10-15/packaged-final/load/stage-12.png",
+          "sha256": "fb03d45609b666c2545e2413faf0488306b89cabfd8779077a02fb33fa89d122"
+        }
+      ]
+    }
+  ]
+}

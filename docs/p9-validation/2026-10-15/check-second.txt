@@ -1,0 +1,24 @@
+    Checking solar_survival v0.2.0 (/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL)
+error[E0603]: struct `MenuInputSet` is private
+   --> examples/p9_validation.rs:19:16
+    |
+ 19 |     ui::menu::{MenuInputSet, MenuState},
+    |                ^^^^^^^^^^^^ private struct
+    |
+note: the struct `MenuInputSet` is defined here
+   --> src/ui/menu.rs:125:1
+    |
+125 | pub(crate) struct MenuInputSet;
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `DQuat`
+ --> examples/p9_validation.rs:4:12
+  |
+4 |     math::{DQuat, DVec3},
+  |            ^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+For more information about this error, try `rustc --explain E0603`.
+warning: `solar_survival` (example "p9_validation") generated 1 warning
+error: could not compile `solar_survival` (example "p9_validation") due to 1 previous error; 1 warning emitted

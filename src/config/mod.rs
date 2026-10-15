@@ -1,5 +1,6 @@
 use crate::universe::{MAX_JD, MIN_JD};
 use bevy::prelude::*;
+mod base_validation;
 mod construction_validation;
 mod cube_validation;
 mod globe_validation;

@@ -4,7 +4,7 @@ Prototype d'exploration 3D de notre système solaire, fondation d'un jeu de surv
 
 **M ouvre un terrain martien mondial : six faces traversables, arêtes et coins continus, LOD adaptatif à trois résolutions et chargement local borné.** Les anciens parcours bornés restent des modes de régression. [Architecture et commandes](docs/GLOBAL_TERRAIN.md).
 
-**P8, relief et atmosphère martienne :** collines artistiques jouables, paysage local prolongé sur plusieurs kilomètres, ciel ocre le jour, halo bleu au lever/coucher, nuit étoilée, voiles de glace et tempêtes de poussière occasionnelles. P/T commande aussi leur évolution ; H indique la météo et la visibilité. Anciennes aventures refusées sans migration : créer une aventure au format 2. [Paramètres, sources et limites](docs/MARS_ENVIRONMENT.md).
+**P8, relief et atmosphère martienne :** collines artistiques jouables, paysage local prolongé sur plusieurs kilomètres, ciel ocre le jour, halo bleu au lever/coucher, nuit étoilée, voiles de glace et tempêtes de poussière occasionnelles. P/T commande aussi leur évolution ; H indique la météo et la visibilité. Anciennes aventures refusées sans migration : créer une aventure au format 3. [Paramètres, sources et limites](docs/MARS_ENVIRONMENT.md).
 
 **Caméra unique :** la même caméra rend les visites spatiales et la surface. Sur Mars : ciel poussiéreux, étoiles discrètes la nuit, Soleil et astres calculés depuis le catalogue, masqués par le terrain et les abris. Le ciel et le sol restent des présentations artistiques ; [architecture, ressources et limites](docs/SURFACE_SKY.md).
 
@@ -14,14 +14,20 @@ Prototype d'exploration 3D de notre système solaire, fondation d'un jeu de surv
 
 **Survie P4 :** une combinaison de 180 s d’oxygène et un abri de recharge accessible à six mètres devant l’arrivée. Entrez par la porte pour recharger ; à zéro, **R** relance une expédition à l’abri. [Règles et architecture](docs/SURVIVAL.md).
 
-**P7, qualité visuelle et textures :** sol martien détaillé, panneaux industriels partagés, caisses marquées et plaque O₂ ; cartes pour les huit planètes : Blue Marble, Viking/USGS, Voyager et représentations NASA/JPL/VTAD. Les sources artistiques sont identifiées dans les crédits. Les textures utilisent des niveaux précalculés et occupent 40,2 Mio de données GPU, sous le budget de 128 Mio. Le relief/horizon et la météo P8 sont implémentés ; progression de base P9 et exploration P10 restent prévus. [Direction visuelle et sources](docs/ART_DIRECTION.md). P7 est vérifié sur Ubuntu depuis le 15 octobre 2026 : cartes des huit planètes inspectées, profils/archive contrôlés et mesures conservées ; [preuves et limites](docs/VALIDATION.md). La validation native Windows reste ouverte.
+**P7, qualité visuelle et textures :** sol martien détaillé, panneaux industriels partagés, caisses marquées et plaque O₂ ; cartes pour les huit planètes : Blue Marble, Viking/USGS, Voyager et représentations NASA/JPL/VTAD. Les sources artistiques sont identifiées dans les crédits. Les textures utilisent des niveaux précalculés et occupent 40,2 Mio de données GPU, sous le budget de 128 Mio. Le relief/horizon et la météo P8 sont implémentés ; progression de base P9 est intégrée ; exploration P10 reste prévue. [Direction visuelle et sources](docs/ART_DIRECTION.md). P7 est vérifié sur Ubuntu depuis le 15 octobre 2026 : cartes des huit planètes inspectées, profils/archive contrôlés et mesures conservées ; [preuves et limites](docs/VALIDATION.md). La validation native Windows reste ouverte.
 
 **Cible de performance :** machines modestes, RTX 4050 **6 Go au mieux**. P7 utilise des textures modestes et partagées, avec budgets mémoire et mesures ; objectif 1080p/60 FPS sur la cible à vérifier. Le CPU indiqué « i5 12700K » reste à confirmer. [Contraintes détaillées](docs/ART_DIRECTION.md).
 
-**P9 prévu, non implémenté :** panneaux solaires, batteries, générateur/réserve
-d'oxygène et récolte durable, avec **inventaire du joueur à piles/capacité finie
-et coffres de stockage**, transferts de proximité, interface et sauvegarde des
-contenus et équipements. [Périmètre et critères](docs/P9_BASE.md).
+**P9, base et stockage :** inventaire porté de 8 piles, coffres de 16 piles,
+alliage/circuits renouvelables, panneaux solaires, batteries et production/réserve
+O₂. **I** ouvre l'inventaire ; **E** accède au coffre proche. Choisir une pile et
+transférer une quantité, une pile ou le maximum ; regrouper/déplacer les piles.
+**B** propose les six recettes, payées depuis le porté. L'abri puise dans une
+réserve finie ; équipements et abris à moins de 40 m du premier abri partagent la
+base. Soleil et poussière règlent la puissance, en secondes réelles. **Format 3
+uniquement**, sans migration. 147 tests et parcours fonctionnels Ubuntu validés ;
+comparaison de performance reportée à la demande utilisateur, sans nouveaux tests
+prenant le focus pendant son travail. [Règles, recettes et limites](docs/P9_BASE.md).
 
 La suite du développement suit [la roadmap](docs/ROADMAP.md). Le [prompt du prochain chat](docs/NEXT_CHAT.md) est actualisé à chaque fin de chat de développement avec l'état réel et l'objectif suivant.
 
@@ -106,8 +112,10 @@ Les touches de déplacement désignent des positions physiques : WASD sur QWERTY
 | T | Temps orbital ×1 / ×10 / ×100 / ×1000 |
 | P | Pause des orbites et des rotations |
 | H / N | Télémétrie / navigation ; les HUD vitaux restent visibles |
-| E | En surface : récupérer une caisse dorée à moins de 2,5 m |
-| B | Ouvrir le catalogue de construction ; choisir Prévisualiser pour placer un abri |
+| E | Récolter une caisse/source renouvelable ou ouvrir un coffre à moins de 2,5 m |
+| I | Inventaire porté et coffre proche ; sélectionner/transférer/ranger les piles |
+| ↑ / ↓ dans I | Quantité exacte de transfert entre 1 et 20 |
+| B | Ouvrir le catalogue de construction ; choisir une recette puis Prévisualiser |
 | Flèches, J/L | Pendant le placement : déplacer / tourner la prévisualisation |
 | Entrée, X / Échap | Pendant le placement : confirmer / annuler sans dépense |
 | F5 / F9 | Dans le menu principal : sauvegarder le profil actif / choisir une aventure |
@@ -155,7 +163,10 @@ src/rendering/atmosphere.rs météo visuelle déterministe, sources NASA et para
 src/config/cube_validation.rs parcours graphique borné de franchissement
 examples/cube_seam.rs diagnostic graphique borné, indépendant du terrain jouable
 src/buildings/        abris instanciables, identités et poses corporelles f64
-src/construction.rs   récupération, inventaire, admission et transaction de placement
+src/construction.rs   porté, récupération, admission et transaction de placement
+src/inventory.rs      piles bornées et transactions atomiques
+src/base.rs           équipements, récoltes durables et réserves J/O₂
+src/ui/inventory.rs   inventaire/conteneur et commandes de proximité
 src/rendering/construction.rs fantôme et caisses locaux, cube partagé
 src/ui/construction.rs stock, commandes et motifs de refus
 src/config/construction_validation.rs parcours graphique ciblé P5
@@ -364,7 +375,7 @@ tempêtes diminuent la visibilité et la lumière. P/T fige ou accélère aussi 
 évolution ; H affiche les informations atmosphériques. Ce sont des représentations
 artistiques sourcées, sans simulation climatique ni pression locale de survie.
 
-**Créer une nouvelle aventure : format 2 uniquement**, sans migration des profils
+**Créer une nouvelle aventure : format 3 uniquement**, sans migration des profils
 anciens. 139 tests et les contrôles Cargo passent ; ciel, profils après redémarrage
 et archive Ubuntu inspectés. Surcoût mesuré 1,6–1,9 ms/frame face à P7 sur le poste de
 développement ; Windows natif et objectif cible1080p60 restent à vérifier.

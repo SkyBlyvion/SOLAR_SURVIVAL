@@ -108,11 +108,29 @@ fn harvest_range_depletion_inventory_and_session_returns() {
     let mut app = app(60);
     assert_eq!(app.world().resource::<Construction>().deposits.len(), 8);
     press(&mut app, KeyCode::KeyE);
-    assert_eq!(app.world().resource::<Construction>().alloy, 0);
+    assert_eq!(
+        app.world()
+            .resource::<Construction>()
+            .inventory
+            .count(solar_survival::inventory::Item::Alloy),
+        0
+    );
     collect(&mut app, 4);
-    assert_eq!(app.world().resource::<Construction>().alloy, 6);
+    assert_eq!(
+        app.world()
+            .resource::<Construction>()
+            .inventory
+            .count(solar_survival::inventory::Item::Alloy),
+        6
+    );
     press(&mut app, KeyCode::KeyE);
-    assert_eq!(app.world().resource::<Construction>().alloy, 6);
+    assert_eq!(
+        app.world()
+            .resource::<Construction>()
+            .inventory
+            .count(solar_survival::inventory::Item::Alloy),
+        6
+    );
     for exit in [KeyCode::KeyM, KeyCode::KeyG, KeyCode::KeyO, KeyCode::KeyU] {
         press(&mut app, exit);
         press(&mut app, KeyCode::KeyM);
@@ -121,7 +139,13 @@ fn harvest_range_depletion_inventory_and_session_returns() {
             app.world().resource::<Construction>().deposits[4].remaining,
             0
         );
-        assert_eq!(app.world().resource::<Construction>().alloy, 6);
+        assert_eq!(
+            app.world()
+                .resource::<Construction>()
+                .inventory
+                .count(solar_survival::inventory::Item::Alloy),
+            6
+        );
     }
 }
 #[test]
@@ -130,7 +154,13 @@ fn rejected_cancelled_and_confirmed_placement_pay_only_once() {
     placement(&mut app);
     press(&mut app, KeyCode::Enter);
     assert_eq!(app.world().resource::<Buildings>().shelters.len(), 1);
-    assert_eq!(app.world().resource::<Construction>().alloy, 0);
+    assert_eq!(
+        app.world()
+            .resource::<Construction>()
+            .inventory
+            .count(solar_survival::inventory::Item::Alloy),
+        0
+    );
     press(&mut app, KeyCode::KeyX);
     collect(&mut app, 4);
     collect(&mut app, 5);
@@ -140,11 +170,23 @@ fn rejected_cancelled_and_confirmed_placement_pay_only_once() {
     assert!((app.world().resource::<Oxygen>().remaining_seconds - oxygen + 1.0).abs() < 1e-6);
     press(&mut app, KeyCode::Escape);
     assert!(!app.world().resource::<Construction>().active);
-    assert_eq!(app.world().resource::<Construction>().alloy, SHELTER_COST);
+    assert_eq!(
+        app.world()
+            .resource::<Construction>()
+            .inventory
+            .count(solar_survival::inventory::Item::Alloy),
+        SHELTER_COST
+    );
     start_clear(&mut app);
     press(&mut app, KeyCode::Enter);
     assert_eq!(app.world().resource::<Buildings>().shelters.len(), 2);
-    assert_eq!(app.world().resource::<Construction>().alloy, 0);
+    assert_eq!(
+        app.world()
+            .resource::<Construction>()
+            .inventory
+            .count(solar_survival::inventory::Item::Alloy),
+        0
+    );
     assert_eq!(
         app.world().resource::<MarsTerrain>().building_solids.len(),
         12
@@ -163,25 +205,39 @@ fn placement_blocks_player_obstacle_building_deposit_and_uncovered_terrain() {
     let buildings = app.world().resource::<Buildings>();
     let mut c = Construction::default();
     c.seed_site(t);
-    c.alloy = 12;
+    c.inventory = {
+        let mut inventory = solar_survival::inventory::Inventory::default();
+        inventory
+            .add(solar_survival::inventory::Item::Alloy, 12)
+            .unwrap();
+        inventory
+    };
     for (distance, lateral) in [(4.0, 0.0), (6.0, 0.0), (12.0, 0.0), (6.0, 8.0)] {
         c.distance_m = distance;
         c.lateral_m = lateral;
         assert!(
-            c.candidate(t, state, buildings).verdict.is_err(),
+            c.candidate(t, state, buildings, &solar_survival::base::Base::default())
+                .verdict
+                .is_err(),
             "{distance} {lateral} candidate {:?}",
-            c.candidate(t, state, buildings)
+            c.candidate(t, state, buildings, &solar_survival::base::Base::default())
         );
     }
     c.distance_m = 9.0;
     c.lateral_m = 16.0;
-    assert!(c.candidate(t, state, buildings).verdict.is_ok());
+    assert!(
+        c.candidate(t, state, buildings, &solar_survival::base::Base::default())
+            .verdict
+            .is_ok()
+    );
     let far = SurfaceState {
         feet: DVec3::new(64.0, 0.0, 0.0),
         ..default()
     };
     assert_eq!(
-        c.candidate(t, &far, buildings).verdict.unwrap_err(),
+        c.candidate(t, &far, buildings, &solar_survival::base::Base::default())
+            .verdict
+            .unwrap_err(),
         "Terrain hors de la couverture locale"
     );
 }
@@ -193,16 +249,27 @@ fn admission_covers_full_triangles_and_rejects_historical_rough_ground() {
     let mut t = MarsTerrain::from_world(&mut world);
     t.set_site(DVec3::Y);
     let mut c = Construction::default();
-    c.alloy = 12;
+    c.inventory = {
+        let mut inventory = solar_survival::inventory::Inventory::default();
+        inventory
+            .add(solar_survival::inventory::Item::Alloy, 12)
+            .unwrap();
+        inventory
+    };
     c.lateral_m = 16.0;
     let state = SurfaceState {
         feet: DVec3::new(-16.0, 0.0, 9.0),
         ..default()
     };
     assert_eq!(
-        c.candidate(&t, &state, &Buildings::default())
-            .verdict
-            .unwrap_err(),
+        c.candidate(
+            &t,
+            &state,
+            &Buildings::default(),
+            &solar_survival::base::Base::default()
+        )
+        .verdict
+        .unwrap_err(),
         "Terrain trop irrégulier (variation > 0,4 m)"
     );
     t.globe_enabled = true;
@@ -318,16 +385,34 @@ fn stale_preview_is_revalidated_before_payment_and_failure_cancels() {
     collect(&mut app, 4);
     collect(&mut app, 5);
     start_clear(&mut app);
-    app.world_mut().resource_mut::<Construction>().alloy = 6;
+    app.world_mut().resource_mut::<Construction>().inventory = {
+        let mut inventory = solar_survival::inventory::Inventory::default();
+        inventory
+            .add(solar_survival::inventory::Item::Alloy, 6)
+            .unwrap();
+        inventory
+    };
     press(&mut app, KeyCode::Enter);
     assert_eq!(app.world().resource::<Buildings>().shelters.len(), 1);
-    assert_eq!(app.world().resource::<Construction>().alloy, 6);
+    assert_eq!(
+        app.world()
+            .resource::<Construction>()
+            .inventory
+            .count(solar_survival::inventory::Item::Alloy),
+        6
+    );
     app.world_mut().resource_mut::<Oxygen>().remaining_seconds = 0.001;
     app.update();
     assert!(app.world().resource::<Oxygen>().failed);
     assert!(!app.world().resource::<Construction>().active);
     press(&mut app, KeyCode::KeyR);
-    assert_eq!(app.world().resource::<Construction>().alloy, 6);
+    assert_eq!(
+        app.world()
+            .resource::<Construction>()
+            .inventory
+            .count(solar_survival::inventory::Item::Alloy),
+        6
+    );
 }
 #[test]
 fn salvage_cannot_be_collected_through_a_solid_wall() {
@@ -342,7 +427,13 @@ fn salvage_cannot_be_collected_through_a_solid_wall() {
         });
     prepare(&mut app, 6.0, 0.0);
     press(&mut app, KeyCode::KeyE);
-    assert_eq!(app.world().resource::<Construction>().alloy, 0);
+    assert_eq!(
+        app.world()
+            .resource::<Construction>()
+            .inventory
+            .count(solar_survival::inventory::Item::Alloy),
+        0
+    );
     assert_eq!(
         app.world().resource::<Construction>().deposits[4].remaining,
         6
@@ -375,7 +466,13 @@ fn two_player_built_instances_have_distinct_poses_and_services() {
             .is_ok()
     );
     press(&mut app, KeyCode::Enter);
-    assert_eq!(app.world().resource::<Construction>().alloy, 0);
+    assert_eq!(
+        app.world()
+            .resource::<Construction>()
+            .inventory
+            .count(solar_survival::inventory::Item::Alloy),
+        0
+    );
     let all = app.world().resource::<Buildings>().shelters.clone();
     assert_eq!(all.len(), 3);
     assert_ne!(all[1].id, all[2].id);
@@ -427,6 +524,12 @@ fn construction_catalog_releases_controls_consumes_oxygen_and_cancels_without_co
     press(&mut app, KeyCode::Escape);
     assert!(!app.world().resource::<Construction>().catalog_open);
     assert!(!app.world().resource::<Construction>().active);
-    assert_eq!(app.world().resource::<Construction>().alloy, 0);
+    assert_eq!(
+        app.world()
+            .resource::<Construction>()
+            .inventory
+            .count(solar_survival::inventory::Item::Alloy),
+        0
+    );
     assert_eq!(app.world().resource::<Buildings>().shelters.len(), 1);
 }

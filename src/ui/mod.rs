@@ -15,6 +15,7 @@ use bevy::{
     window::PrimaryWindow,
 };
 mod construction;
+pub mod inventory;
 pub mod menu;
 mod survival;
 mod theme;
@@ -60,6 +61,7 @@ impl Plugin for HudPlugin {
             menu::MenuPlugin,
             survival::SurvivalHudPlugin,
             construction::ConstructionHudPlugin,
+            inventory::InventoryHudPlugin,
         ))
         .add_plugins(FrameTimeDiagnosticsPlugin::default())
         .add_systems(Startup, setup)
@@ -430,7 +432,7 @@ fn help(
     }
     *previous = Some(pilot.mode);
     ***text = if pilot.mode == MovementMode::Surface {
-        "WASD / ZQSD : marcher · Shift : courir · Espace : sauter · E : récolter · B : construction\nClic droit : piloter · Échap : curseur / menu · M : espace · N : navigation · H : télémétrie".into()
+        "WASD / ZQSD : marcher · Shift : courir · Espace : sauter · E : récolte / coffre · I : inventaire · B : construction\nClic droit : piloter · Échap : curseur / menu · M : espace · N : navigation · H : télémétrie".into()
     } else {
         "Clic droit : piloter · Échap : curseur · WASD / ZQSD : vol · Espace / Ctrl : monter / descendre · Shift : ×10\nMolette / Pg↑ Pg↓ : vitesse · Tab / 0–9 : cible · F : centrer · G : visiter · M : surface Mars · O : système · U : repère solaire · T / P : temps · H : télémétrie · N : navigation".into()
     };

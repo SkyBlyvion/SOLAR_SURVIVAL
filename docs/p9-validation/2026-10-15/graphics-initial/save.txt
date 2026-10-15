@@ -1,0 +1,96 @@
+2026-10-15T08:30:30.336673Z  INFO bevy_render::renderer: AdapterInfo { name: "NVIDIA GeForce GTX 1060 3GB (NVK GP106)", vendor: 4318, device: 7170, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "NVK", driver_info: "Mesa 25.2.8-0ubuntu0.24.04.4", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: false }
+2026-10-15T08:30:30.453000Z  INFO bevy_pbr::cluster: GPU clustering is supported on this device.
+2026-10-15T08:30:30.453278Z  INFO bevy_render::batching::gpu_preprocessing: GPU preprocessing is fully supported on this device.
+2026-10-15T08:30:30.453671Z  INFO bevy_winit::system: Creating new window Solar Survival · 0.2 · Mars (63v0)
+2026-10-15T08:30:30.454053Z  INFO winit::platform_impl::linux::x11::window: Guessed window scale factor: 1
+2026-10-15T08:30:30.476352Z  INFO solar_survival::rendering::textures: P7 textures CPU préparées : 13 images, 42118856 octets, 19.900 ms ; données transférées au renderer, staging/pics pilote exclus
+2026-10-15T08:30:30.505310Z  INFO solar_survival::config::base_validation: P9 phase 0 t=0.000 équipements=0 O2=720.000 énergie=0.000
+2026-10-15T08:30:30.678232Z  INFO solar_survival::rendering::textures: P7 GPU résident : 13 textures RGBA8 sRGB avec mipmaps, 42118856 octets / 134217728 ; allocation pilote totale/staging exclus
+2026-10-15T08:30:31.567329Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p9-validation/2026-10-15/graphics-initial/save/stage-00.png
+2026-10-15T08:30:32.515353Z  INFO solar_survival::config::base_validation: P9 phase 1 t=2.012 équipements=0 O2=720.000 énergie=0.000
+2026-10-15T08:30:34.514313Z  INFO solar_survival::config::base_validation: P9 phase 2 t=4.010 équipements=0 O2=720.000 énergie=0.000
+2026-10-15T08:30:36.528081Z  INFO solar_survival::config::base_validation: P9 phase 3 t=6.024 équipements=0 O2=720.000 énergie=0.000
+2026-10-15T08:30:38.517139Z  INFO solar_survival::config::base_validation: P9 phase 4 t=8.013 équipements=0 O2=720.000 énergie=0.000
+2026-10-15T08:30:40.527272Z  INFO solar_survival::config::base_validation: P9 phase 5 t=10.023 équipements=0 O2=720.000 énergie=0.000
+2026-10-15T08:30:42.506278Z  INFO solar_survival::config::base_validation: P9 phase 6 t=12.002 équipements=0 O2=720.000 énergie=0.000
+2026-10-15T08:30:44.510042Z  INFO solar_survival::config::base_validation: P9 phase 7 t=14.006 équipements=0 O2=720.000 énergie=0.000
+2026-10-15T08:30:46.525503Z  INFO solar_survival::config::base_validation: P9 phase 8 t=16.022 équipements=0 O2=720.000 énergie=0.000
+2026-10-15T08:30:47.565398Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p9-validation/2026-10-15/graphics-initial/save/stage-08.png
+2026-10-15T08:30:48.526470Z  INFO solar_survival::config::base_validation: P9 phase 9 t=18.023 équipements=0 O2=720.000 énergie=0.000
+2026-10-15T08:30:50.509421Z  INFO solar_survival::config::base_validation: P9 phase 10 t=20.005 équipements=0 O2=720.000 énergie=0.000
+2026-10-15T08:30:51.549812Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p9-validation/2026-10-15/graphics-initial/save/stage-10.png
+2026-10-15T08:30:52.531393Z  INFO solar_survival::config::base_validation: P9 phase 11 t=22.028 équipements=0 O2=720.000 énergie=0.000
+2026-10-15T08:30:54.508604Z  INFO solar_survival::config::base_validation: P9 phase 12 t=24.005 équipements=0 O2=720.000 énergie=0.000
+2026-10-15T08:30:55.554396Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p9-validation/2026-10-15/graphics-initial/save/stage-12.png
+2026-10-15T08:30:56.524169Z  INFO solar_survival::config::base_validation: P9 phase 13 t=26.020 équipements=0 O2=720.000 énergie=0.000
+2026-10-15T08:30:58.508797Z  INFO solar_survival::config::base_validation: P9 phase 14 t=28.005 équipements=0 O2=720.000 énergie=0.000
+2026-10-15T08:30:59.525684Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p9-validation/2026-10-15/graphics-initial/save/stage-14.png
+2026-10-15T08:31:00.509496Z  INFO solar_survival::config::base_validation: P9 phase 15 t=30.006 équipements=1 O2=720.000 énergie=0.000
+2026-10-15T08:31:01.556622Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p9-validation/2026-10-15/graphics-initial/save/stage-15.png
+2026-10-15T08:31:02.518886Z  INFO solar_survival::config::base_validation: P9 phase 16 t=32.015 équipements=1 O2=720.000 énergie=0.000
+2026-10-15T08:31:04.530667Z  INFO solar_survival::config::base_validation: P9 phase 17 t=34.027 équipements=1 O2=720.000 énergie=0.000
+2026-10-15T08:31:05.540260Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p9-validation/2026-10-15/graphics-initial/save/stage-17.png
+2026-10-15T08:31:06.527315Z  INFO solar_survival::config::base_validation: P9 phase 18 t=36.023 équipements=1 O2=720.000 énergie=0.000
+2026-10-15T08:31:07.549993Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p9-validation/2026-10-15/graphics-initial/save/stage-18.png
+2026-10-15T08:31:08.526098Z  INFO solar_survival::config::base_validation: P9 phase 19 t=38.022 équipements=1 O2=720.000 énergie=0.000
+2026-10-15T08:31:09.567936Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p9-validation/2026-10-15/graphics-initial/save/stage-19.png
+2026-10-15T08:31:10.523749Z  INFO solar_survival::config::base_validation: P9 phase 20 t=40.020 équipements=1 O2=720.000 énergie=0.000
+2026-10-15T08:31:11.568507Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p9-validation/2026-10-15/graphics-initial/save/stage-20.png
+2026-10-15T08:31:12.519220Z  INFO solar_survival::config::base_validation: P9 phase 21 t=42.015 équipements=1 O2=720.000 énergie=0.000
+2026-10-15T08:31:13.548190Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p9-validation/2026-10-15/graphics-initial/save/stage-21.png
+2026-10-15T08:31:14.505845Z  INFO solar_survival::config::base_validation: P9 phase 22 t=44.002 équipements=1 O2=720.000 énergie=0.000
+2026-10-15T08:31:16.517706Z  INFO solar_survival::config::base_validation: P9 phase 23 t=46.014 équipements=1 O2=720.000 énergie=0.000
+2026-10-15T08:31:18.521391Z  INFO solar_survival::config::base_validation: P9 phase 24 t=48.018 équipements=1 O2=720.000 énergie=0.000
+2026-10-15T08:31:20.533353Z  INFO solar_survival::config::base_validation: P9 phase 25 t=50.029 équipements=1 O2=720.000 énergie=0.000
+2026-10-15T08:31:21.558906Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p9-validation/2026-10-15/graphics-initial/save/stage-25.png
+2026-10-15T08:31:22.531874Z  INFO solar_survival::config::base_validation: P9 phase 26 t=52.028 équipements=1 O2=720.000 énergie=0.000
+2026-10-15T08:31:24.508637Z  INFO solar_survival::config::base_validation: P9 phase 27 t=54.005 équipements=1 O2=720.000 énergie=0.000
+2026-10-15T08:31:26.525646Z  INFO solar_survival::config::base_validation: P9 phase 28 t=56.022 équipements=1 O2=720.000 énergie=0.000
+2026-10-15T08:31:28.508261Z  INFO solar_survival::config::base_validation: P9 phase 29 t=58.004 équipements=1 O2=720.000 énergie=0.000
+2026-10-15T08:31:29.541786Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p9-validation/2026-10-15/graphics-initial/save/stage-29.png
+2026-10-15T08:31:30.531728Z  INFO solar_survival::config::base_validation: P9 phase 30 t=60.028 équipements=2 O2=720.000 énergie=0.000
+2026-10-15T08:31:32.533180Z  INFO solar_survival::config::base_validation: P9 phase 31 t=62.029 équipements=2 O2=720.000 énergie=0.000
+2026-10-15T08:31:34.511997Z  INFO solar_survival::config::base_validation: P9 phase 32 t=64.008 équipements=2 O2=720.000 énergie=0.000
+2026-10-15T08:31:36.525949Z  INFO solar_survival::config::base_validation: P9 phase 33 t=66.022 équipements=2 O2=720.000 énergie=0.000
+2026-10-15T08:31:38.515100Z  INFO solar_survival::config::base_validation: P9 phase 34 t=68.011 équipements=2 O2=720.000 énergie=0.000
+2026-10-15T08:31:39.554243Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p9-validation/2026-10-15/graphics-initial/save/stage-34.png
+2026-10-15T08:31:40.507118Z  INFO solar_survival::config::base_validation: P9 phase 35 t=70.003 équipements=3 O2=720.000 énergie=195.711
+2026-10-15T08:31:42.516845Z  INFO solar_survival::config::base_validation: P9 phase 36 t=72.013 équipements=3 O2=720.000 énergie=396.393
+2026-10-15T08:31:44.523871Z  INFO solar_survival::config::base_validation: P9 phase 37 t=74.020 équipements=3 O2=720.000 énergie=596.768
+2026-10-15T08:31:46.520354Z  INFO solar_survival::config::base_validation: P9 phase 38 t=76.016 équipements=3 O2=720.000 énergie=796.172
+2026-10-15T08:31:48.522870Z  INFO solar_survival::config::base_validation: P9 phase 39 t=78.019 équipements=3 O2=720.000 énergie=995.490
+2026-10-15T08:31:49.554836Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p9-validation/2026-10-15/graphics-initial/save/stage-39.png
+2026-10-15T08:31:50.528211Z  INFO solar_survival::config::base_validation: P9 phase 40 t=80.023 équipements=4 O2=720.000 énergie=1196.167
+2026-10-15T08:31:52.526962Z  INFO solar_survival::config::base_validation: P9 phase 41 t=82.023 équipements=4 O2=720.000 énergie=1396.027
+2026-10-15T08:31:54.514137Z  INFO solar_survival::config::base_validation: P9 phase 42 t=84.010 équipements=4 O2=720.000 énergie=1594.447
+2026-10-15T08:31:56.529069Z  INFO solar_survival::config::base_validation: P9 phase 43 t=86.025 équipements=4 O2=720.000 énergie=1795.684
+2026-10-15T08:31:58.514717Z  INFO solar_survival::config::base_validation: P9 phase 44 t=88.011 équipements=4 O2=720.000 énergie=1993.782
+2026-10-15T08:31:59.564159Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p9-validation/2026-10-15/graphics-initial/save/stage-44.png
+2026-10-15T08:32:00.526083Z  INFO solar_survival::config::base_validation: P9 phase 45 t=90.022 équipements=5 O2=727.917 énergie=2115.737
+2026-10-15T08:32:02.518337Z  INFO solar_survival::config::base_validation: P9 phase 46 t=92.015 équipements=5 O2=735.890 énergie=2235.066
+2026-10-15T08:32:03.557317Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p9-validation/2026-10-15/graphics-initial/save/stage-46.png
+2026-10-15T08:32:04.509601Z  INFO solar_survival::config::base_validation: P9 phase 47 t=94.006 équipements=5 O2=684.104 énergie=2354.303
+2026-10-15T08:32:05.541608Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p9-validation/2026-10-15/graphics-initial/save/stage-47.png
+2026-10-15T08:32:06.528823Z  INFO solar_survival::config::base_validation: P9 phase 48 t=96.025 équipements=5 O2=684.104 énergie=2354.303
+2026-10-15T08:32:08.524075Z  INFO solar_survival::config::base_validation: P9 phase 49 t=98.020 équipements=5 O2=632.185 énergie=2473.846
+2026-10-15T08:32:09.548246Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p9-validation/2026-10-15/graphics-initial/save/stage-49.png
+2026-10-15T08:32:10.505175Z  INFO solar_survival::config::base_validation: P9 phase 50 t=100.001 équipements=5 O2=640.113 énergie=2592.495
+2026-10-15T08:32:11.523037Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p9-validation/2026-10-15/graphics-initial/save/stage-50.png
+2026-10-15T08:32:12.505834Z  INFO solar_survival::config::base_validation: P9 phase 51 t=102.002 équipements=5 O2=648.114 énergie=2712.236
+2026-10-15T08:32:12.509597Z DEBUG solar_survival::player::surface: GLOBAL rebasage CPU 3.719 ms, patches 13, constructions 18, LOD ([7, 5, 1], 9893, 18096), changements 0, géométrie 3.095 ms, index 0.577 ms
+2026-10-15T08:32:13.559329Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p9-validation/2026-10-15/graphics-initial/save/stage-51.png
+2026-10-15T08:32:14.513999Z  INFO solar_survival::config::base_validation: P9 phase 52 t=104.010 équipements=5 O2=656.157 énergie=2832.613
+2026-10-15T08:32:14.518584Z DEBUG solar_survival::player::surface: GLOBAL rebasage CPU 4.543 ms, patches 13, constructions 23, LOD ([6, 6, 1], 9217, 16744), changements 0, géométrie 3.829 ms, index 0.658 ms
+2026-10-15T08:32:15.539293Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p9-validation/2026-10-15/graphics-initial/save/stage-52.png
+2026-10-15T08:32:16.506025Z  INFO solar_survival::config::base_validation: P9 phase 53 t=106.002 équipements=5 O2=664.111 énergie=2951.656
+2026-10-15T08:32:17.551030Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p9-validation/2026-10-15/graphics-initial/save/stage-53.png
+2026-10-15T08:32:18.513314Z  INFO solar_survival::config::base_validation: P9 phase 54 t=108.009 équipements=5 O2=672.144 énergie=2871.322
+2026-10-15T08:32:19.536617Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p9-validation/2026-10-15/graphics-initial/save/stage-54.png
+2026-10-15T08:32:20.532283Z  INFO solar_survival::config::base_validation: P9 phase 55 t=110.028 équipements=5 O2=680.219 énergie=2790.576
+2026-10-15T08:32:21.539899Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p9-validation/2026-10-15/graphics-initial/save/stage-55.png
+2026-10-15T08:32:22.526987Z  INFO solar_survival::config::base_validation: P9 phase 56 t=112.023 équipements=5 O2=680.219 énergie=2790.576
+2026-10-15T08:32:23.573723Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p9-validation/2026-10-15/graphics-initial/save/stage-56.png
+2026-10-15T08:32:24.521429Z  INFO solar_survival::config::base_validation: P9 phase 57 t=114.018 équipements=0 O2=720.000 énergie=0.000
+2026-10-15T08:32:25.533929Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p9-validation/2026-10-15/graphics-initial/save/stage-57.png
+2026-10-15T08:32:26.514255Z  INFO solar_survival::config::base_validation: P9 phase 58 t=116.010 équipements=0 O2=720.000 énergie=0.000
+2026-10-15T08:32:26.514293Z  INFO solar_survival::config::base_validation: P9 save terminé : récolte, renouvellement, coffre/transferts, quatre équipements, production/recharge, menu/rebasage/nuit et profils

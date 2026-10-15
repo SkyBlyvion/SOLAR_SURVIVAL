@@ -1,3 +1,5 @@
+> P9 utilise désormais le format 3, sans migration. Les mentions de format 2 dans ce bilan décrivent la livraison P8. [Contrat courant](P9_BASE.md).
+
 # P8 — relief, horizon et atmosphère martienne
 
 15 octobre 2026. Périmètre étendu à la demande de SkyBlyvion : relief jouable et

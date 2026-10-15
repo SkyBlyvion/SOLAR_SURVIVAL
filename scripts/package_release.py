@@ -53,15 +53,17 @@ def main():
     else:
         (out/'lancer.cmd').write_bytes(b'@echo off\r\ncd /d "%~dp0"\r\nsolar_survival.exe\r\n')
     (out / 'LIRE-MOI.txt').write_text(
-        'Solar Survival 0.2 · P8 relief, horizons et atmosphère martienne\n\n'
+        'Solar Survival 0.2 · P9 base, inventaire et stockage\n\n'
         'Ubuntu : lancer ./solar_survival depuis ce dossier. Pilote Vulkan/X11 requis.\n'
         'Windows 11 : lancer solar_survival.exe depuis ce dossier. Pilote graphique récent requis.\n'
         'Les résultats Ubuntu ne valent pas validation Windows.\n\n'
         'Nouvelle aventure, saisir un nom, Créer ; puis M : Mars. Clic droit, WASD/ZQSD, Shift, Espace.\n'
         'P8 : relief artistique, paysage lointain, ciel jour/nuit, halo bleu, voiles de glace et tempêtes.\n'
         'P/T : figer ou accélérer le calendrier et la météo ; H : télémétrie atmosphérique.\n'
-        'Sauvegardes au format 2 seulement ; anciennes aventures incompatibles, sans migration.\n'
-        'E : récolter ; B : catalogue, puis Prévisualiser ; flèches et J/L ; Entrée confirmer, X annuler.\n'
+        'Sauvegardes au format 3 seulement ; anciennes aventures incompatibles, sans migration.\n'
+        'P9 : I inventaire/coffre, transferts et rangement ; sources ocre/cyan renouvelables derrière l’arrivée.\n'
+        'P9 : panneaux, batterie et générateur/réserve O2 ; base collective à 40 m du premier abri.\n'
+        'E : récolter / coffre ; B : catalogue, puis Prévisualiser ; flèches et J/L ; Entrée confirmer, X annuler.\n'
         'Menu : Nouvelle aventure avec nom, Charger/F9 pour choisir, Sauvegarder/F5 pour le profil actif.\n'
         'Plusieurs aventures : saves/Nom/session.solar dans le dossier de travail.\n'
         'SOLAR_SAVE_ROOT permet de choisir un dossier parent ailleurs. Quitter ne sauvegarde pas automatiquement.\n'

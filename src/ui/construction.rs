@@ -2,7 +2,8 @@
 use super::theme;
 use crate::{
     GameSet,
-    construction::{Construction, SHELTER_COST},
+    base::BuildKind,
+    construction::Construction,
     planets::terrain::MarsTerrain,
     player::{Explorer, MovementMode, surface::SurfaceState},
     survival::Oxygen,
@@ -15,6 +16,8 @@ struct CatalogRoot;
 struct RecipeText;
 #[derive(Component)]
 struct BuildAction(bool);
+#[derive(Component)]
+struct SelectRecipe(BuildKind);
 #[derive(Component)]
 struct Root;
 #[derive(Component)]
@@ -30,6 +33,7 @@ impl Plugin for ConstructionHudPlugin {
                 Update,
                 interact
                     .after(crate::ui::menu::MenuInputSet)
+                    .after(super::inventory::InventoryInputSet)
                     .before(crate::camera::controls)
                     .in_set(GameSet::Input),
             )
@@ -38,11 +42,14 @@ impl Plugin for ConstructionHudPlugin {
 }
 fn setup(mut commands: Commands, assets: Res<AssetServer>) {
     let font = assets.load("fonts/DejaVuSans.ttf");
-    commands.spawn((CatalogRoot,GlobalZIndex(30),Node {position_type:PositionType::Absolute,left:px(24),top:px(136),width:percent(44),max_width:px(440),padding:UiRect::all(px(24)),flex_direction:FlexDirection::Column,row_gap:px(16),display:Display::None,border:UiRect::left(px(2)),..default()},BackgroundColor(theme::PANEL),BorderColor::all(theme::ACCENT)))
+    commands.spawn((CatalogRoot,GlobalZIndex(30),Node {position_type:PositionType::Absolute,left:px(24),top:px(136),width:percent(44),max_width:px(440),padding:UiRect::all(px(24)),flex_direction:FlexDirection::Column,row_gap:px(9),display:Display::None,border:UiRect::left(px(2)),..default()},BackgroundColor(theme::PANEL),BorderColor::all(theme::ACCENT)))
         .with_children(|root| {
-            root.spawn((Text::new("CONSTRUCTION / ABRIS"),super::font(12.0,&font),TextColor(theme::ACCENT)));
-            root.spawn((Text::new("Abri à oxygène"),super::font(24.0,&font),TextColor(theme::TEXT)));
-            root.spawn((Text::new("Recharge la combinaison lorsque vous entrez.\nEmprise au sol : 6,3 × 6,3 m."),super::font(14.0,&font),TextColor(theme::MUTED)));
+            root.spawn((Text::new("CONSTRUCTION / BASE"),super::font(12.0,&font),TextColor(theme::ACCENT)));
+            for kind in BuildKind::ALL {
+                root.spawn((Button,SelectRecipe(kind),Node {width:percent(100),padding:UiRect::all(px(7)),..default()},BackgroundColor(theme::BUTTON)))
+                    .with_child((Text::new(format!("{} · {}",kind.name(),kind.recipe_label())),super::font(13.0,&font),TextColor(theme::TEXT)));
+            }
+
             root.spawn((RecipeText,Text::new(""),super::font(16.0,&font),TextColor(theme::TEXT)));
             for (begin,title) in [(true,"Prévisualiser · Entrée"),(false,"Fermer · B / Échap")] {
                 root.spawn((Button,BuildAction(begin),Node {width:percent(100),padding:UiRect::all(px(14)),..default()},BackgroundColor(theme::BUTTON)))
@@ -90,6 +97,9 @@ fn refresh(
     menu: Res<MenuState>,
     terrain: Res<MarsTerrain>,
     state: Res<SurfaceState>,
+    base: Res<crate::base::Base>,
+    buildings: Res<crate::buildings::Buildings>,
+    screen: Res<crate::ui::inventory::InventoryScreen>,
     mut root: Single<(Entity, &mut Node), (With<Root>, Without<CatalogRoot>)>,
     mut catalog: Single<(Entity, &mut Node), (With<CatalogRoot>, Without<Root>)>,
     mut recipe: Single<(&mut Text, &mut TextColor), (With<RecipeText>, Without<Label>)>,
@@ -97,7 +107,8 @@ fn refresh(
     camera: Single<Entity, With<crate::camera::GameCamera>>,
     mut commands: Commands,
 ) {
-    let active = pilot.mode == MovementMode::Surface && !oxygen.failed && !menu.is_open();
+    let active =
+        pilot.mode == MovementMode::Surface && !oxygen.failed && !menu.is_open() && !screen.open;
     catalog.1.display = if active && c.catalog_open {
         Display::Flex
     } else {
@@ -105,15 +116,19 @@ fn refresh(
     };
     if active && c.catalog_open {
         commands.entity(catalog.0).insert(UiTargetCamera(*camera));
-        let available = c.alloy >= SHELTER_COST;
+        let available = c
+            .kind
+            .recipe()
+            .iter()
+            .all(|(i, n)| c.inventory.count(*i) >= *n);
         **recipe.0 = format!(
-            "Coût : {SHELTER_COST} alliage · En stock : {}\n{}",
-            c.alloy,
-            if available {
-                "Ressources disponibles"
-            } else {
-                "Ressources insuffisantes pour construire"
-            }
+            "{} — {}\n{}\nPorté : {} alliage / {} circuits · {}/8 piles",
+            c.kind.name(),
+            c.kind.recipe_label(),
+            c.kind.description(),
+            c.inventory.count(crate::inventory::Item::Alloy),
+            c.inventory.count(crate::inventory::Item::Circuit),
+            c.inventory.used()
         );
         recipe.1.0 = if available {
             theme::SAFE
@@ -130,7 +145,12 @@ fn refresh(
         return;
     }
     commands.entity(root.0).insert(UiTargetCamera(*camera));
-    let header = format!("ALLIAGE  {}  ·  Abri : {SHELTER_COST} unités", c.alloy);
+    let header = format!(
+        "PORTÉ {}/8 piles · {} alliage / {} circuits · I : inventaire",
+        c.inventory.used(),
+        c.inventory.count(crate::inventory::Item::Alloy),
+        c.inventory.count(crate::inventory::Item::Circuit)
+    );
     if let Some(p) = c.preview.as_ref().filter(|_| c.active) {
         let status = match p.verdict {
             Ok(()) => "AUTORISÉ · Entrée : construire",
@@ -142,7 +162,7 @@ fn refresh(
             theme::DANGER
         };
         **label.0 = format!(
-            "{header}\n{} : {status}\nFlèches : déplacer · J/L : orienter · souris : viser\nX / B / Échap : annuler · entrez ensuite par l’ouverture pour recharger",
+            "{header}\n{} : {status}\nFlèches : déplacer · J/L : orienter · souris : viser\nX / B / Échap : annuler · recettes payées uniquement depuis le porté",
             if p.verdict.is_ok() {
                 "VERT"
             } else {
@@ -152,7 +172,28 @@ fn refresh(
     } else {
         label.1.0 = theme::TEXT;
         let feet = terrain.body_relative(state.feet);
-        let instruction = if c.nearby(feet).is_some() {
+        let instruction = if let Some(f) = buildings.facilities.iter().find(|f| {
+            crate::base::chest_access(
+                &buildings,
+                f.id,
+                feet,
+                terrain.body_relative(state.eye(&terrain)),
+                &terrain,
+            )
+        }) {
+            format!(
+                "E / I : ouvrir le coffre {} · {}/16 piles",
+                f.id.0,
+                f.inventory.used()
+            )
+        } else if let Some(i) = base.nearby(feet) {
+            let source = &base.sources[i];
+            format!(
+                "E : {} +6 · renouvellement {:.0} s",
+                source.item.name(),
+                source.cooldown_s
+            )
+        } else if c.nearby(feet).is_some() {
             "E : récupérer 6 alliage".into()
         } else {
             c.deposits
@@ -181,17 +222,41 @@ fn refresh(
                     )
                 })
         };
-        **label.0 = format!("{header}\n{instruction}\nB : construction · {}", c.message);
+        **label.0 = format!(
+            "{header}\n{instruction}\nSources durables cyan/ocre : derrière l’arrivée à 12–16 m\nB : construction · {}",
+            c.message
+        );
     }
 }
 
+#[expect(
+    clippy::type_complexity,
+    reason = "Boutons de recette et confirmation disjoints."
+)]
 fn interact(
     menu: Res<MenuState>,
     mut c: ResMut<Construction>,
-    mut buttons: Query<(&Interaction, &BuildAction, &mut BackgroundColor), Changed<Interaction>>,
+    mut buttons: Query<
+        (&Interaction, &BuildAction, &mut BackgroundColor),
+        (Changed<Interaction>, Without<SelectRecipe>),
+    >,
+    mut recipes: Query<
+        (&Interaction, &SelectRecipe, &mut BackgroundColor),
+        (Changed<Interaction>, Without<BuildAction>),
+    >,
 ) {
     if menu.is_open() || !c.catalog_open {
         return;
+    }
+    for (interaction, recipe, mut color) in &mut recipes {
+        color.0 = if *interaction == Interaction::None {
+            theme::BUTTON
+        } else {
+            theme::HOVER
+        };
+        if *interaction == Interaction::Pressed {
+            c.kind = recipe.0;
+        }
     }
     for (interaction, action, mut color) in &mut buttons {
         color.0 = match interaction {

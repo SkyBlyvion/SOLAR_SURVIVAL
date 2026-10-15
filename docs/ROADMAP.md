@@ -2,7 +2,7 @@
 
 Le projet avance par étapes vérifiables vers une boucle de survie sur Mars, en préservant l'exploration spatiale et l'échelle physique 1:1. Cette roadmap est la référence pour choisir le travail du prochain chat. Les dates de livraison dépendront des résultats ; les étapes futures ne sont pas des fonctionnalités déjà réalisées.
 
-Dernière mise à jour : 15 octobre 2026. Objectif **Mars traversable sur ses six faces avec chargement dynamique réalisé sur Ubuntu**. **P4, première boucle de survie jouable, terminé sur Ubuntu**. **P5, ressources et construction du même abri, réalisé sur Ubuntu**. **Phase moteur planétaire terminée sur Ubuntu** : LOD de résolution 32/16/8, index local, régressions/inspection et comparaisons CPU/GPU réalisés. **Caméra de jeu unique et ciel astronomique léger réalisés sur Ubuntu**, avec reprise visuelle après retour utilisateur. **Le MVP fonctionnel P1–P6 est réalisé sur Ubuntu** : plusieurs aventures nommées, répertoires indépendants, menu principal, catalogue de construction et HUD communs. La validation native Windows 11 reste ouverte comme travail transversal de distribution. **P7, qualité visuelle et textures, est clôturé sur Ubuntu le 15 octobre 2026**, avec huit planètes, matériaux locaux, profils/archive et mesures contrôlés. P8 est réalisé et vérifié sur Ubuntu : relief mondial artistique, paysage lointain et atmosphère dynamique demandée par l’utilisateur. La prochaine étape est P9, base et progression de survie, avec gestion d’inventaire et stockage ajoutés au périmètre utilisateur le 15 octobre. À la demande explicite de l’utilisateur, le cadrage d’une chaîne fixe P3.5 est remplacé par cette fonctionnalité complète. P3.1 à P3.4 restent les fondations et régressions. La passation détaillée est dans [NEXT_CHAT](NEXT_CHAT.md), les résultats dans [VALIDATION](VALIDATION.md).
+Dernière mise à jour : 15 octobre 2026. Objectif **Mars traversable sur ses six faces avec chargement dynamique réalisé sur Ubuntu**. **P4, première boucle de survie jouable, terminé sur Ubuntu**. **P5, ressources et construction du même abri, réalisé sur Ubuntu**. **Phase moteur planétaire terminée sur Ubuntu** : LOD de résolution 32/16/8, index local, régressions/inspection et comparaisons CPU/GPU réalisés. **Caméra de jeu unique et ciel astronomique léger réalisés sur Ubuntu**, avec reprise visuelle après retour utilisateur. **Le MVP fonctionnel P1–P6 est réalisé sur Ubuntu** : plusieurs aventures nommées, répertoires indépendants, menu principal, catalogue de construction et HUD communs. La validation native Windows 11 reste ouverte comme travail transversal de distribution. **P7, qualité visuelle et textures, est clôturé sur Ubuntu le 15 octobre 2026**, avec huit planètes, matériaux locaux, profils/archive et mesures contrôlés. P8 est réalisé et vérifié sur Ubuntu : relief mondial artistique, paysage lointain et atmosphère dynamique demandée par l’utilisateur. P9, base et progression de survie avec inventaire et stockage, est livré et validé fonctionnellement sur Ubuntu le 15 octobre ; sa comparaison de performance est reportée à la demande utilisateur pour ne plus interrompre son travail. À la demande explicite de l’utilisateur, le cadrage d’une chaîne fixe P3.5 est remplacé par cette fonctionnalité complète. P3.1 à P3.4 restent les fondations et régressions. La passation détaillée est dans [NEXT_CHAT](NEXT_CHAT.md), les résultats dans [VALIDATION](VALIDATION.md).
 
 ## Fondations réalisées
 
@@ -33,7 +33,7 @@ Les étapes suivantes décrivent l’ordre de travail retenu pour la reprise ; l
 |---|---|---|---|
 | **P7 Qualité visuelle et textures** | **Réalisé et vérifié sur Ubuntu, 15 octobre 2026** | Première scène martienne aboutie : sol poussière/roche, abri et caisses avec matériaux cohérents ; cartes sourcées des huit planètes pour les vues spatiales | Détails à échelle métrique, textures stables aux rebasages/raccords, portes/ressources lisibles, jour/nuit/placement inspectés, crédits et conversion reproductible, budget textures et mesures avant/après, gameplay/profils conservés |
 | **P8 Relief, horizons et atmosphère** | **Réalisé et vérifié sur Ubuntu, 15 octobre 2026** | Relief artistique jouable, paysage à plusieurs kilomètres ; ciel ocre/halo bleu/nuit étoilée, voiles de glace et poussière/tempêtes dynamiques | Terrain/contacts communs, raccords/LOD/rebasages, construction/survie et nouveaux profils vérifiés ; cache borné, mesures CPU/GPU et inspection. Sources et conventions distinguées. Format 2, sans migration des anciennes aventures, à la demande utilisateur du 15 octobre |
-| **P9 Base, inventaire et progression de survie** | Cadré, non implémenté ; inventaire/stockage demandés le 15 octobre | Panneaux solaires, batteries, production/réserve d’oxygène, récolte durable, inventaire porté et coffres de base, interface et sauvegarde ; [cadrage](P9_BASE.md) | Boucle récolter→transporter→stocker/transférer→construire→produire→recharger ; piles/capacités bornées, transferts sans perte/duplication, accès local, recettes et coûts explicites, effet jour/nuit/tempête, réserves et contenus persistés par profil ; pas de migration ancienne requise pour le moment |
+| **P9 Base, inventaire et progression de survie** | Livré et validé fonctionnellement sur Ubuntu ; mesures de performance reportées à la demande utilisateur | Panneaux solaires, batteries, production/réserve d’oxygène, récolte durable, inventaire porté et coffres de base, interface et sauvegarde ; [cadrage](P9_BASE.md) | Boucle récolter→transporter→stocker/transférer→construire→produire→recharger ; piles/capacités bornées, transferts sans perte/duplication, accès local, recettes et coûts explicites, effet jour/nuit/tempête, réserves et contenus persistés par profil ; pas de migration ancienne requise pour le moment |
 | **P10 Exploration et objectifs** | Prévu, périmètre à préciser | Raisons concrètes de partir de la base et d’y revenir : balises, sites à découvrir et objectifs progressifs | Un parcours complet avec risque/récompense et navigation lisible, découvertes/progression persistées, sans dépendre d’une téléportation spatiale pour l’expédition locale |
 
 **Transversal à chaque étape :** ergonomie et retours utilisateur, sons utiles/retours d’action puis ambiance, remappage/accessibilité selon les besoins, stabilité et temps de chargement, compatibilité des sauvegardes et distribution Ubuntu/Windows. La première passe audio sera une fonctionnalité concrète avec ressources et réglages, pas l’activation d’une dépendance sans contenu. Relever et tester la cible RTX 4050/Core i5 avant d’annoncer une qualité ou 60 FPS.
@@ -320,7 +320,7 @@ Sol artistique à période de 4 m fixé au corps, abri/panneaux/caisses partagé
 
 Reprise des contrôles ouverts à eeaff80, avec créneau de focus autorisé. Galerie des six autres planètes/crédits inspectée ; couture Jupiter réellement détectée puis corrigée dans l’export offline (maître inchangé). Nouvelle archive finale extraite et lancée : 25 vues sans erreur, 747 fichiers/empreintes vérifiés. Profils P7 à720p dans deux processus, construction/placement/contact/recharge et rebasage contrôlés ; 98 captures inspectées sur26planches pendant cette reprise, en plus des34vues conservées du14. Les134tests/sixcontrôles antérieurs portent toujours sur les mêmes Rust/shaders/Cargo ; deux tests textures reréussis après retouche.
 
-Référence P6 actuelle + deux P7 sans captures + un GPU séparé : surcoût moyen observé environ2,4ms sur le poste GTX1060. Budget textures utile40,168Mio/128Mio. L’échec initial à captures reste conservé ; relance avec focus observé réussie. Aucun écran virtuel ni contrôle spécial ajouté. [Bilan exact](p7-validation/2026-10-15/NOTES.md).
+Référence P6 actuelle + deux P7 sans captures + un GPU séparé : surcoût moyen observé environ2,4ms sur le poste GTX1060. Budget textures utile40,168 Mio/128Mio. L’échec initial à captures reste conservé ; relance avec focus observé réussie. Aucun écran virtuel ni contrôle spécial ajouté. [Bilan exact](p7-validation/2026-10-15/NOTES.md).
 
 **État de passation avant P8, remplacé par la livraison ci-dessous :** relief et horizons étaient à réaliser. La décision utilisateur du 15 octobre dispense de préserver la compatibilité des anciennes aventures. Windows natif, RTX4050/CPU exact, objectif1080p60 et VRAM totale/staging restent ouverts en transversal. Ne pas présenter l’approbation esthétique utilisateur comme acquise.
 
@@ -373,3 +373,39 @@ conteneur/profil. Capacités, coûts, unités et règles temporelles seront fix�
 vérifiés pendant l'implémentation. P9 reste **non implémenté** ; cette préparation
 modifie uniquement la documentation. Les résultats P8 et limites Windows/matériel
 restent inchangés ; pas de migration des anciennes sauvegardes requise pour le moment.
+
+
+## P9 livré, validations de bureau interrompues à la demande utilisateur — 15 octobre 2026
+
+Inventaire porté à huit piles et coffres à seize piles, vingt objets/pile, alliage
+et circuits. Quantité exacte, pile, maximum admissible, rangement et échange ;
+transferts de proximité atomiques et recettes payées uniquement depuis le porté.
+Quatre sources durables se renouvellent après30 s actives ; caisses historiques
+finies conservées. Six recettes, identités/poses corporelles communes dans Buildings.
+Panneaux, batteries, générateur/réserve O₂ et service de la base à40 m du premier
+abri, en secondes réelles ; bilan et horloges explicités dans [P9_BASE](P9_BASE.md).
+Format3 sans migration, inventaires organisés et réserves sauvegardés par profil.
+
+| Critère P9 | Résultat réel |
+|---|---|
+| Boucle depuis une partie neuve | Caisses + circuits renouvelés → coffre/transferts → quatre équipements payés → production/recharge, deux processus de l’archive codes 0 |
+| Capacités et transactions | Refus sans mutation, inventaire plein, maximum partiel, répétitions, dépenses uniques et vraie UI testés |
+| Énergie et oxygène | Jour/nuit, poussière/tempête, arrêt/reprise, réserve pleine, budgets bornés et longue frame testés ; nuit/production/recharge observées |
+| Poses, contacts et transitions | Géométrie/contact communs, admission, f64/rebasage, stockage distant fermé, menu, M et R conservés |
+| Sauvegarde | Deux profils après fermeture, deux coffres/ordre/charges/délais en tests ; fichier incohérent refusé sans mutation |
+| Compilation, images et coûts | fmt/check,147 tests,Clippy/release réussis ;40 captures finales inspectées, archive hors checkout vérifiée ; **comparaison performance reportée**, aucun gain ou surcoût annoncé |
+
+Deux essais de référence P8 échouent pendant la marche dépendante du focus ; le
+second trace effectivement sa perte. Ils sont conservés comme essais incomplets.
+L’utilisateur demande alors d’arrêter les tests qui prennent la main/focus et de
+poursuivre le jeu sans gêner son autre travail. **Ne lancer automatiquement aucune
+fenêtre de test ou campagne avec focus dans les prochains chats.** Les tests sans
+bureau restent possibles lorsque nécessaires ; un créneau graphique explicite
+sera requis pour les mesures reportées. Pas d’écran virtuel ni modification de
+la capture du gameplay. Les lanceurs P9 comportent une garde explicite.
+
+Bilan/preuves : [VALIDATION](VALIDATION.md), [notes P9](p9-validation/2026-10-15/NOTES.md).
+Boîtiers simples, bus collectif sans câbles/démantèlement, pas de chimie ni de
+rattrapage hors application. Windows 11/RTX4050/1080p60 restent ouverts. P10 reste
+l’étape suivante à cadrer pour l’exploration/objectifs, sans remettre les campagnes
+de bureau en préalable au travail de code.

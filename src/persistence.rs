@@ -2,9 +2,11 @@
 pub mod profiles;
 use crate::{
     GameSet,
+    base::{Base, BuildKind, Facility, MAX_FACILITIES, Renewable},
     buildings::{BuildingId, Buildings, OxygenShelter},
     camera::{GameCamera, NavigationRequest},
     construction::{Construction, MAX_SHELTERS, Salvage},
+    inventory::{CARRIED_SLOTS, CHEST_SLOTS, Inventory, Item, Stack},
     physics::surface::{HALF_WIDTH_M, STEP_SECONDS, SolidBox},
     planets::{globe_terrain::GlobeTerrain, terrain::MarsTerrain},
     player::{Explorer, MovementMode, surface::SurfaceState},
@@ -27,7 +29,7 @@ use std::{
     str::FromStr,
 };
 
-const MAX_BYTES: u64 = 65_536;
+const MAX_BYTES: u64 = 262_144;
 type Result<T> = std::result::Result<T, String>;
 
 #[derive(Clone)]
@@ -140,6 +142,7 @@ pub struct Session {
     buildings: Buildings,
     construction: Construction,
     oxygen: Oxygen,
+    base: Base,
     settings: PlayerSettings,
 }
 impl Session {
@@ -167,6 +170,7 @@ impl Session {
             buildings: Buildings::default(),
             construction: Construction::default(),
             oxygen: Oxygen::default(),
+            base: Base::default(),
             settings: world.resource::<PlayerSettings>().clone(),
         };
         s.validate()?;
@@ -189,6 +193,7 @@ impl Session {
             buildings: world.resource::<Buildings>().clone(),
             construction: world.resource::<Construction>().clone(),
             oxygen: world.resource::<Oxygen>().clone(),
+            base: world.resource::<Base>().clone(),
             settings: world.resource::<PlayerSettings>().clone(),
         };
         s.validate()?;
@@ -245,15 +250,58 @@ impl Session {
                 return fail();
             }
         }
-        if self.buildings.next_id != self.buildings.shelters.len() as u64
-            || self
-                .buildings
-                .shelters
-                .iter()
-                .enumerate()
-                .any(|(i, b)| b.id.0 != i as u64 + 1)
+        if self.buildings.facilities.len() > MAX_FACILITIES
+            || !self.construction.inventory.valid(CARRIED_SLOTS)
         {
             return fail();
+        }
+        for f in &self.buildings.facilities {
+            if f.kind == BuildKind::Shelter
+                || f.id.0 == 0
+                || f.id.0 > self.buildings.next_id
+                || !ids.insert(f.id)
+                || !pose(f.position_m, f.orientation)
+                || !f.inventory.valid(if f.kind == BuildKind::Chest {
+                    CHEST_SLOTS
+                } else {
+                    0
+                })
+                || !matches!(f.kind, BuildKind::Chest)
+                    && self.buildings.shelters.first().is_none_or(|b| {
+                        b.position_m.distance(f.position_m) > crate::base::BASE_RANGE_M + 1e-7
+                    })
+            {
+                return fail();
+            }
+        }
+        if self.buildings.next_id != ids.len() as u64
+            || (1..=self.buildings.next_id).any(|i| !ids.contains(&BuildingId(i)))
+        {
+            return fail();
+        }
+        if !self.base.energy_j.is_finite()
+            || !(0.0..=Base::energy_capacity(&self.buildings)).contains(&self.base.energy_j)
+            || !(0.0..=Base::oxygen_capacity(&self.buildings)).contains(&self.base.oxygen_s)
+            || self.base.initialized != self.ready
+            || self.base.sources.len() != if self.ready { 4 } else { 0 }
+        {
+            return fail();
+        }
+        for (index, source) in self.base.sources.iter().enumerate() {
+            if source.id != index as u64 + 1
+                || source.item
+                    != if index % 2 == 0 {
+                        Item::Alloy
+                    } else {
+                        Item::Circuit
+                    }
+                || !pose(source.position_m, source.orientation)
+                || ![0, 6].contains(&source.remaining)
+                || !(0.0..=crate::base::RENEW_SECONDS).contains(&source.cooldown_s)
+                || (source.remaining == 0) != (source.cooldown_s > 0.0)
+            {
+                return fail();
+            }
         }
         if let Some(q) = self.buildings.home_orientation {
             if !quaternion(q)
@@ -268,24 +316,16 @@ impl Session {
             {
                 return fail();
             }
-            let mut remaining = 0u64;
             for d in &self.construction.deposits {
                 if !pose(d.position_m, d.orientation) || ![0, 6].contains(&d.remaining) {
                     return fail();
                 }
-                remaining += u64::from(d.remaining);
-            }
-            if u64::from(self.construction.alloy)
-                + remaining
-                + 12 * (self.buildings.shelters.len() as u64 - 1)
-                != 48
-            {
-                return fail();
             }
         } else if !self.buildings.shelters.is_empty()
             || !self.construction.deposits.is_empty()
             || self.construction.initialized
-            || self.construction.alloy != 0
+            || self.construction.inventory.used() != 0
+            || !self.buildings.facilities.is_empty()
             || self.pilot.mode == MovementMode::Surface
         {
             return fail();
@@ -311,7 +351,7 @@ impl Session {
         Ok(())
     }
     pub fn encode(&self) -> String {
-        let mut text = String::from("SOLAR_SURVIVAL 2\n");
+        let mut text = String::from("SOLAR_SURVIVAL 3\n");
         writeln!(
             text,
             "clock {} {} {}",
@@ -373,14 +413,49 @@ impl Session {
             )
             .unwrap();
         }
+        writeln!(text, "facilities {}", self.buildings.facilities.len()).unwrap();
+        for f in &self.buildings.facilities {
+            writeln!(
+                text,
+                "facility {} {} {} {}",
+                f.id.0,
+                f.kind.code(),
+                v(f.position_m),
+                q(f.orientation)
+            )
+            .unwrap();
+            write_inventory(&mut text, &f.inventory);
+        }
         writeln!(
             text,
-            "inventory {} {} {}",
+            "base {} {} {} {}",
+            self.base.initialized,
+            self.base.energy_j,
+            self.base.oxygen_s,
+            self.base.sources.len()
+        )
+        .unwrap();
+        for s in &self.base.sources {
+            writeln!(
+                text,
+                "source {} {} {} {} {} {}",
+                s.id,
+                s.item.code(),
+                v(s.position_m),
+                q(s.orientation),
+                s.remaining,
+                s.cooldown_s
+            )
+            .unwrap();
+        }
+        writeln!(
+            text,
+            "inventory {} {}",
             self.construction.initialized,
-            self.construction.alloy,
             self.construction.deposits.len()
         )
         .unwrap();
+        write_inventory(&mut text, &self.construction.inventory);
         for d in &self.construction.deposits {
             writeln!(
                 text,
@@ -434,7 +509,7 @@ impl Session {
         }
         let mut r = Reader(payload.split_whitespace());
         r.tag("SOLAR_SURVIVAL")?;
-        if r.num::<u32>()? != 2 {
+        if r.num::<u32>()? != 3 {
             return Err("Version de sauvegarde incompatible".into());
         }
         r.tag("clock")?;
@@ -502,18 +577,64 @@ impl Session {
                 orientation: r.quat()?,
             });
         }
+        r.tag("facilities")?;
+        let n = r.count(MAX_FACILITIES)?;
+        let mut facilities = Vec::with_capacity(n);
+        for _ in 0..n {
+            r.tag("facility")?;
+            let id = BuildingId(r.num()?);
+            let kind = BuildKind::from_code(r.num()?).ok_or("Type d'équipement inconnu")?;
+            let position_m = r.vec()?;
+            let orientation = r.quat()?;
+            let inventory = read_inventory(
+                &mut r,
+                if kind == BuildKind::Chest {
+                    CHEST_SLOTS
+                } else {
+                    0
+                },
+            )?;
+            facilities.push(Facility {
+                id,
+                kind,
+                position_m,
+                orientation,
+                inventory,
+            });
+        }
         let buildings = Buildings {
             shelters,
+            facilities,
             next_id,
             home_orientation: has_home.then_some(home),
         };
-        r.tag("inventory")?;
-        let mut construction = Construction {
+        r.tag("base")?;
+        let mut base = Base {
             initialized: r.num()?,
-            alloy: r.num()?,
+            energy_j: r.num()?,
+            oxygen_s: r.num()?,
             ..default()
         };
+        let n = r.count(4)?;
+        for _ in 0..n {
+            r.tag("source")?;
+            base.sources.push(Renewable {
+                id: r.num()?,
+                item: Item::from_code(r.num()?).ok_or("Ressource inconnue")?,
+                position_m: r.vec()?,
+                orientation: r.quat()?,
+                remaining: r.num()?,
+                cooldown_s: r.num()?,
+            });
+        }
+        r.tag("inventory")?;
+        let initialized = r.num()?;
         let n = r.count(8)?;
+        let mut construction = Construction {
+            initialized,
+            inventory: read_inventory(&mut r, CARRIED_SLOTS)?,
+            ..default()
+        };
         for _ in 0..n {
             r.tag("deposit")?;
             construction.deposits.push(Salvage {
@@ -562,6 +683,7 @@ impl Session {
             buildings,
             construction,
             oxygen,
+            base,
             settings,
         };
         s.validate()?;
@@ -602,11 +724,44 @@ impl Session {
             assert_eq!(a.orientation, b.orientation);
             assert_eq!(a.remaining, b.remaining);
         }
-        assert_eq!(self.construction.alloy, actual.construction.alloy);
+        assert_eq!(
+            self.construction
+                .inventory
+                .count(crate::inventory::Item::Alloy),
+            actual
+                .construction
+                .inventory
+                .count(crate::inventory::Item::Alloy)
+        );
         assert_eq!(
             self.oxygen.remaining_seconds,
             actual.oxygen.remaining_seconds
         );
+        assert_eq!(self.base.energy_j, actual.base.energy_j);
+        assert_eq!(self.base.oxygen_s, actual.base.oxygen_s);
+        assert_eq!(self.construction.inventory, actual.construction.inventory);
+        assert_eq!(
+            self.buildings.facilities.len(),
+            actual.buildings.facilities.len()
+        );
+        for (a, b) in self
+            .buildings
+            .facilities
+            .iter()
+            .zip(&actual.buildings.facilities)
+        {
+            assert_eq!(
+                (a.id, a.kind, a.position_m, a.orientation),
+                (b.id, b.kind, b.position_m, b.orientation)
+            );
+            assert_eq!(a.inventory, b.inventory);
+        }
+        for (a, b) in self.base.sources.iter().zip(&actual.base.sources) {
+            assert_eq!(
+                (a.id, a.remaining, a.cooldown_s),
+                (b.id, b.remaining, b.cooldown_s)
+            );
+        }
         assert_eq!(self.oxygen.failed, actual.oxygen.failed);
         assert!(self.surface.feet.distance(actual.surface.feet) < 1e-7);
         assert!(self.surface.velocity.distance(actual.surface.velocity) < 1e-7);
@@ -708,6 +863,8 @@ impl Session {
         world.insert_resource(self.buildings);
         world.insert_resource(self.construction);
         world.insert_resource(self.oxygen);
+        world.insert_resource(self.base);
+        world.insert_resource(crate::ui::inventory::InventoryScreen::default());
         world.insert_resource(self.settings);
         world.insert_resource(RenderOrigin(origin));
         world.insert_resource(NavigationRequest::default());
@@ -729,6 +886,39 @@ impl Session {
         }
         Ok(())
     }
+}
+fn write_inventory(text: &mut String, inventory: &Inventory) {
+    writeln!(text, "slots {}", inventory.slots.len()).unwrap();
+    for slot in &inventory.slots {
+        let (item, n) = slot
+            .as_ref()
+            .map_or((2, 0), |s| (s.item.code(), s.quantity));
+        writeln!(text, "slot {item} {n}").unwrap();
+    }
+}
+fn read_inventory(r: &mut Reader<'_>, capacity: usize) -> Result<Inventory> {
+    r.tag("slots")?;
+    if r.count(CHEST_SLOTS)? != capacity {
+        return Err("Capacité d'inventaire incohérente".into());
+    }
+    let mut inventory = Inventory::new(capacity);
+    for slot in &mut inventory.slots {
+        r.tag("slot")?;
+        let code = r.num()?;
+        let quantity = r.num()?;
+        *slot = if code == 2 && quantity == 0 {
+            None
+        } else {
+            Some(Stack {
+                item: Item::from_code(code).ok_or("Type d'objet inconnu")?,
+                quantity,
+            })
+        };
+    }
+    if !inventory.valid(capacity) {
+        return Err("Pile invalide".into());
+    }
+    Ok(inventory)
 }
 fn v(p: DVec3) -> String {
     format!("{} {} {}", p.x, p.y, p.z)
@@ -979,7 +1169,13 @@ mod tests {
         );
         assert!(game.world().resource::<Buildings>().shelters.is_empty());
         assert!(game.world().resource::<Construction>().deposits.is_empty());
-        assert_eq!(game.world().resource::<Construction>().alloy, 0);
+        assert_eq!(
+            game.world()
+                .resource::<Construction>()
+                .inventory
+                .count(crate::inventory::Item::Alloy),
+            0
+        );
         assert_eq!(
             game.world().resource::<Oxygen>().remaining_seconds,
             CAPACITY_SECONDS
@@ -999,7 +1195,13 @@ mod tests {
             o.failed = true;
         }
         profiles::open(game.world_mut(), "Alpha").unwrap();
-        assert_eq!(game.world().resource::<Construction>().alloy, 0);
+        assert_eq!(
+            game.world()
+                .resource::<Construction>()
+                .inventory
+                .count(crate::inventory::Item::Alloy),
+            0
+        );
         assert_eq!(game.world().resource::<Buildings>().shelters.len(), 2);
         assert_eq!(
             game.world().resource::<Buildings>().shelters[1].position_m,
@@ -1016,7 +1218,14 @@ mod tests {
             vec!["Alpha", "Bravo"]
         );
         profiles::open(fresh.world_mut(), "Bravo").unwrap();
-        assert_eq!(fresh.world().resource::<Construction>().alloy, 6);
+        assert_eq!(
+            fresh
+                .world()
+                .resource::<Construction>()
+                .inventory
+                .count(crate::inventory::Item::Alloy),
+            6
+        );
         assert_eq!(fresh.world().resource::<Buildings>().shelters.len(), 1);
         assert!(fresh.world().resource::<Oxygen>().failed);
         assert_eq!(
@@ -1043,6 +1252,100 @@ mod tests {
             Some("Bravo")
         );
         assert_eq!(capture(&fresh), before);
+    }
+    #[test]
+    fn p9_profiles_restore_organized_stacks_chests_equipment_reserves_and_renewal_transactionally()
+    {
+        let folder = Folder::new();
+        let root = folder.0.join("profiles");
+        let mut source = built();
+        source.init_resource::<SaveControl>();
+        source.world_mut().resource_mut::<SaveControl>().root = root.clone();
+        profiles::create(source.world_mut(), "Base Alpha").unwrap();
+        press(&mut source, KeyCode::KeyM);
+        let (position, orientation) = {
+            let t = source.world().resource::<MarsTerrain>();
+            (
+                t.body_relative(DVec3::new(18.0, t.height(18.0, 0.0), 0.0)),
+                t.orientation,
+            )
+        };
+        for kind in [
+            BuildKind::Chest,
+            BuildKind::Chest,
+            BuildKind::Panel,
+            BuildKind::Battery,
+            BuildKind::Generator,
+            BuildKind::Tank,
+        ] {
+            let mut b = source.world_mut().resource_mut::<Buildings>();
+            let id = b.install_facility(kind, position, orientation);
+            if kind == BuildKind::Chest {
+                let f = b.facilities.iter_mut().find(|f| f.id == id).unwrap();
+                f.inventory.add(Item::Circuit, 13).unwrap();
+                f.inventory.swap(0, 7).unwrap();
+            }
+        }
+        {
+            let mut c = source.world_mut().resource_mut::<Construction>();
+            c.inventory.add(Item::Alloy, 27).unwrap();
+            c.inventory.swap(0, 6).unwrap();
+        }
+        {
+            let mut b = source.world_mut().resource_mut::<Base>();
+            b.energy_j = 345678.0;
+            b.oxygen_s = 2345.0;
+            b.sources[0].remaining = 0;
+            b.sources[0].cooldown_s = 17.25;
+        }
+        profiles::save_current(source.world_mut()).unwrap();
+        let expected = capture(&source);
+        profiles::create(source.world_mut(), "Base Bravo").unwrap();
+        let bravo = capture(&source);
+        assert_ne!(bravo, expected);
+        let mut fresh = app(true);
+        fresh.init_resource::<SaveControl>();
+        fresh.world_mut().resource_mut::<SaveControl>().root = root;
+        profiles::open(fresh.world_mut(), "Base Alpha").unwrap();
+        assert_eq!(capture(&fresh), expected);
+        assert_eq!(
+            fresh
+                .world()
+                .resource::<MarsTerrain>()
+                .building_solids
+                .len(),
+            12
+        );
+        let good = Session::capture(fresh.world()).unwrap();
+        let mut invalid = Vec::new();
+        let mut bad = good.clone();
+        bad.construction.inventory.slots[6]
+            .as_mut()
+            .unwrap()
+            .quantity = 21;
+        invalid.push(bad);
+        let mut bad = good.clone();
+        bad.buildings.facilities[0].id = BuildingId(1);
+        invalid.push(bad);
+        let mut bad = good.clone();
+        bad.base.energy_j = crate::base::BATTERY_J + 1.0;
+        invalid.push(bad);
+        let mut bad = good.clone();
+        bad.base.oxygen_s = f64::NAN;
+        invalid.push(bad);
+        let mut bad = good.clone();
+        bad.base.sources[0].cooldown_s = 0.0;
+        invalid.push(bad);
+        let mut bad = good.clone();
+        bad.buildings.facilities[0].inventory.slots.push(None);
+        invalid.push(bad);
+        for bad in invalid {
+            assert!(Session::decode(&bad.encode()).is_err());
+            assert!(bad.restore(fresh.world_mut()).is_err());
+            assert_eq!(capture(&fresh), expected);
+        }
+        profiles::open(fresh.world_mut(), "Base Bravo").unwrap();
+        assert_eq!(capture(&fresh), bravo);
     }
     #[test]
     fn adventure_names_are_portable_and_never_escape_the_save_root() {
@@ -1160,7 +1463,14 @@ mod tests {
         assert!(target.world().resource::<Oxygen>().remaining_seconds > 89.9);
         prepare(&mut target, 8.0, 0.0);
         press(&mut target, KeyCode::KeyE);
-        assert_eq!(target.world().resource::<Construction>().alloy, 0);
+        assert_eq!(
+            target
+                .world()
+                .resource::<Construction>()
+                .inventory
+                .count(crate::inventory::Item::Alloy),
+            0
+        );
         for z in [0.0, -6.0] {
             prepare(&mut target, -8.0, z);
             press(&mut target, KeyCode::KeyE);
@@ -1173,7 +1483,14 @@ mod tests {
             target.world().resource::<Buildings>().shelters[2].id,
             BuildingId(3)
         );
-        assert_eq!(target.world().resource::<Construction>().alloy, 0);
+        assert_eq!(
+            target
+                .world()
+                .resource::<Construction>()
+                .inventory
+                .count(crate::inventory::Item::Alloy),
+            0
+        );
         for key in [KeyCode::KeyM, KeyCode::KeyG, KeyCode::KeyO, KeyCode::KeyU] {
             press(&mut target, key);
             press(&mut target, KeyCode::KeyM);
@@ -1233,8 +1550,8 @@ mod tests {
         assert!(load(target.world_mut(), &folder.file()).is_err());
         for text in [
             String::from("incomplet"),
-            before.replace("SOLAR_SURVIVAL 2", "SOLAR_SURVIVAL 1"),
-            resign(&before.replace("SOLAR_SURVIVAL 2", "SOLAR_SURVIVAL 1")),
+            before.replace("SOLAR_SURVIVAL 3", "SOLAR_SURVIVAL 2"),
+            resign(&before.replace("SOLAR_SURVIVAL 3", "SOLAR_SURVIVAL 2")),
             resign(&before.replace("buildings 2 2", "buildings 999999999 2")),
             resign(&before.replace("oxygen ", "oxygen NaN ")),
             "x".repeat(MAX_BYTES as usize + 1),

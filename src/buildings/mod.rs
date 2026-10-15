@@ -55,6 +55,7 @@ impl OxygenShelter {
 #[derive(Resource, Default, Clone)]
 pub struct Buildings {
     pub shelters: Vec<OxygenShelter>,
+    pub facilities: Vec<crate::base::Facility>,
     pub(crate) next_id: u64,
     /// Site de retour choisi une seule fois à la première arrivée en session.
     pub home_orientation: Option<DQuat>,
@@ -69,6 +70,28 @@ impl Buildings {
             id,
             position_m,
             orientation: orientation.normalize(),
+        });
+        id
+    }
+    pub fn install_facility(
+        &mut self,
+        kind: crate::base::BuildKind,
+        position_m: DVec3,
+        orientation: DQuat,
+    ) -> BuildingId {
+        assert!(kind != crate::base::BuildKind::Shelter);
+        self.next_id += 1;
+        let id = BuildingId(self.next_id);
+        self.facilities.push(crate::base::Facility {
+            id,
+            kind,
+            position_m,
+            orientation: orientation.normalize(),
+            inventory: crate::inventory::Inventory::new(if kind == crate::base::BuildKind::Chest {
+                crate::inventory::CHEST_SLOTS
+            } else {
+                0
+            }),
         });
         id
     }
@@ -87,6 +110,7 @@ impl Buildings {
             .shelters
             .iter()
             .flat_map(OxygenShelter::solids)
+            .chain(self.facilities.iter().map(crate::base::Facility::solid))
             .collect();
     }
     pub fn shelter_at(&self, feet_body: DVec3, orientation: DQuat) -> Option<BuildingId> {

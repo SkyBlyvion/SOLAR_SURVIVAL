@@ -1,3 +1,36 @@
+# P9 — mesures reportées, 15 octobre 2026
+
+P9 est fonctionnel et validé par147 tests et les parcours graphiques/profils ;
+sa comparaison de performance P8/P9 **reste à effectuer**. Deux essais de référence
+P8 sur le parcours P5 échouent avant export CSV :26,385 /8,612s, codes 101. Dans le
+second, le jeu perd le focus à partir d’environ3,11s et la première récolte n’est
+pas atteinte. Ces données ne permettent d’attribuer un coût à P9.
+[Essai1](p9-validation/2026-10-15/performance/comparison.json),
+[essai2](p9-validation/2026-10-15/performance-final/comparison.json),
+[trace de focus](p9-validation/2026-10-15/performance-final/p8-focus.json).
+
+**L’utilisateur demande l’arrêt des tests prenant la souris/le focus pendant son
+travail.** Campagnes visibles et mesures reportées ; aucun contournement par écran
+virtuel ou changement de capture des contrôles. Ne pas relancer automatiquement
+un jeu/benchmark dans le prochain chat. Des vérifications sans interaction avec
+le bureau restent possibles ; une mesure graphique nécessite un créneau explicite.
+
+Bornes structurelles P9, sans les présenter comme mesures CPU/GPU :32 abris,
+64 coffres/équipements,4 sources,8 caisses,8 piles portées/16 par coffre,20 objets/pile.
+Un cube existant partagé ; aucun mesh ni texture supplémentaire, huit matériaux
+partagés supplémentaires. Proxies locaux à120m, au plus306 avec preview, hors
+terrain/ciel/obstacles ; pas de génération par frame. Les13 textures P7 restent
+**42 118 856 octets /40,168 Mio**, confirmés au renderer dans les parcours de l’archive.
+La capacité d’une batterie4,8 MJ décrit le gameplay, pas une allocation mémoire.
+
+Poste Ubuntu i7-6700K/32 Go/GTX1060 3 Go NVK,1440×900 MSAA4. Pire cas à64 équipements,
+VRAM totale/staging, Windows natif et1080p60 sur RTX4050 restent ouverts.
+Les chiffres P8 historiques ci-dessous restent distincts de P9.
+
+---
+
+# Historique — P8
+
 # P8 — relief, horizon et météo, 15 octobre 2026
 
 Comparaison release sur le même poste Ubuntu/X11 i7-6700K / 32 Go / GTX 1060
@@ -51,7 +84,7 @@ ne sont pas extrapolés. [Architecture, paramètres artistiques et limites](MARS
 
 # P7 — mesure finale sur le poste Ubuntu, 15 octobre 2026
 
-Une référence P6 actuelle sans recorder, **deux répétitions P7 sans recorder**, puis un P7 GPU séparé, tous codes 0. Binaire P6 de l’archive profils identique à celui d’avant P7 ; sources/actifs gelés pendant chaque campagne. Même scène P5, poste i7-6700K/32Go/GTX1060 3Go NVK, 1440×900 MSAA4, LOD adaptatif, Mesa immediate local, aucune capture pendant les mesures. [Données, spans CPU/GPU et mémoire](p7-validation/2026-10-15/comparison.json).
+Une référence P6 actuelle sans recorder, **deux répétitions P7 sans recorder**, puis un P7 GPU séparé, tous codes 0. Binaire P6 de l’archive profils identique à celui d’avant P7 ; sources/actifs gelés pendant chaque campagne. Même scène P5, poste i7-6700K/32 Go/GTX1060 3 Go NVK, 1440×900 MSAA4, LOD adaptatif, Mesa immediate local, aucune capture pendant les mesures. [Données, spans CPU/GPU et mémoire](p7-validation/2026-10-15/comparison.json).
 
 | Phase | P6 moyenne / p95 ms | P7 répétition 1 moyenne / p95 ms | P7 répétition 2 moyenne / p95 ms |
 |---|---:|---:|---:|

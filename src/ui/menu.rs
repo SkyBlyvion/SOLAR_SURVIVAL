@@ -344,6 +344,7 @@ fn input(
     keys: Res<ButtonInput<KeyCode>>,
     pilot: Res<Explorer>,
     construction: Option<Res<crate::construction::Construction>>,
+    inventory: Option<Res<crate::ui::inventory::InventoryScreen>>,
     mut persistence: Option<ResMut<SaveControl>>,
     mut state: ResMut<MenuState>,
     mut settings: ResMut<PlayerSettings>,
@@ -355,6 +356,7 @@ fn input(
 ) {
     if keys.just_pressed(KeyCode::Escape)
         && !construction.is_some_and(|c| c.active || c.catalog_open)
+        && !inventory.is_some_and(|s| s.open)
     {
         if state.is_open() {
             state.back();
@@ -944,7 +946,11 @@ mod tests {
         assert!(!app.world().resource::<MenuState>().is_open());
         app.world_mut()
             .resource_mut::<crate::construction::Construction>()
-            .alloy = 12;
+            .inventory = {
+            let mut inventory = crate::inventory::Inventory::default();
+            inventory.add(crate::inventory::Item::Alloy, 12).unwrap();
+            inventory
+        };
         press(&mut app, KeyCode::KeyB);
         press(&mut app, KeyCode::Enter);
         click(&mut app, MenuAction::Play); // Bouton inactif en jeu.
@@ -959,7 +965,8 @@ mod tests {
         assert_eq!(
             app.world()
                 .resource::<crate::construction::Construction>()
-                .alloy,
+                .inventory
+                .count(crate::inventory::Item::Alloy),
             12
         );
         assert_eq!(

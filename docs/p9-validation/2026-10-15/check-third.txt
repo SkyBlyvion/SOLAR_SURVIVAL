@@ -1,0 +1,23 @@
+    Checking solar_survival v0.2.0 (/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL)
+error[E0432]: unresolved import `crate::base::InventoryScreen`
+ --> src/config/base_validation.rs:4:29
+  |
+4 |     base::{Base, BuildKind, InventoryScreen},
+  |                             ^^^^^^^^^^^^^^^ no `InventoryScreen` in `base`
+  |
+  = help: consider importing this struct instead:
+          crate::ui::inventory::InventoryScreen
+
+error[E0432]: unresolved import `crate::base::InventoryScreen`
+ --> src/construction.rs:4:43
+  |
+4 |     base::{BASE_RANGE_M, Base, BuildKind, InventoryScreen, MAX_FACILITIES},
+  |                                           ^^^^^^^^^^^^^^^ no `InventoryScreen` in `base`
+  |
+  = help: consider importing this struct instead:
+          crate::ui::inventory::InventoryScreen
+
+For more information about this error, try `rustc --explain E0432`.
+error: could not compile `solar_survival` (lib) due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `solar_survival` (lib test) due to 2 previous errors

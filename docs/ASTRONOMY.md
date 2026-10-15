@@ -150,3 +150,16 @@ Sources, projection, nature artistique/observationnelle et transformations dans
 [les crédits](../assets/textures/CREDITS.md). Soleil et Lune restent procéduraux.
 Le détail de sol martien triplanaire est artistique et métrique ; il ne change ni
 support, ni relief physique, ni site de jeu et ne fournit pas de données de rover.
+
+
+## Électricité P9 — convention de gameplay
+
+Aucun paramètre astronomique ajouté. Les panneaux emploient le catalogue et la
+rotation martienne existants, leur pose corporelle f64 et la direction du Soleil
+depuis leur position. Incidence positive ×160 W ×exp(−0,65 poussière P8)
+×(1−0,25 nuages P8) est une convention électrique de jeu. Ce ne sont ni les lux
+de présentation ni un modèle photovoltaïque mesuré. Réserves SI en J (1 Wh=3600 J),
+O₂ en secondes d'autonomie conventionnelles P4. Production/renouvellement en
+secondes réelles, P/T changeant les conditions ; menus/espace/échec suspendent
+ces services, sans rattrapage hors application. Pas d'ombre de terrain, chimie,
+pression ou réseau physique ajouté. [Règles et limites P9](P9_BASE.md).

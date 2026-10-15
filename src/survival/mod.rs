@@ -38,6 +38,7 @@ impl Oxygen {
         surface: bool,
         menu: bool,
         shelter: Option<BuildingId>,
+        reserve_seconds: &mut f64,
     ) {
         self.shelter = if surface { shelter } else { None };
         if !self.enabled || self.failed || !surface || menu {
@@ -48,9 +49,19 @@ impl Oxygen {
         } else {
             0.0
         };
-        if shelter.is_some() {
-            self.remaining_seconds =
-                (self.remaining_seconds + seconds * REFILL_PER_SECOND).min(CAPACITY_SECONDS);
+        if shelter.is_some() && *reserve_seconds > 0.0 {
+            let n = (CAPACITY_SECONDS - self.remaining_seconds)
+                .min(seconds * REFILL_PER_SECOND)
+                .min(*reserve_seconds);
+            self.remaining_seconds += n;
+            *reserve_seconds -= n;
+            // Si la base se vide pendant une longue frame, le reste du temps consomme
+            // de nouveau la combinaison ; aucune protection gratuite jusqu'à la frame suivante.
+            if *reserve_seconds == 0.0 {
+                self.remaining_seconds =
+                    (self.remaining_seconds - (seconds - n / REFILL_PER_SECOND).max(0.0)).max(0.0);
+                self.failed = self.remaining_seconds == 0.0;
+            }
         } else {
             self.remaining_seconds = (self.remaining_seconds - seconds).max(0.0);
             self.failed = self.remaining_seconds == 0.0;
@@ -79,6 +90,7 @@ impl Plugin for SurvivalPlugin {
             ..default()
         })
         .init_resource::<Buildings>()
+        .init_resource::<crate::base::Base>()
         .add_systems(
             Update,
             update
@@ -87,6 +99,10 @@ impl Plugin for SurvivalPlugin {
         );
     }
 }
+#[expect(
+    clippy::too_many_arguments,
+    reason = "Production de base puis service O2, ordre explicite."
+)]
 pub(crate) fn update(
     time: Res<Time<Real>>,
     menu: Option<Res<MenuState>>,
@@ -95,6 +111,9 @@ pub(crate) fn update(
     terrain: Res<MarsTerrain>,
     buildings: Res<Buildings>,
     mut oxygen: ResMut<Oxygen>,
+    mut base: ResMut<crate::base::Base>,
+    solar: Res<crate::universe::catalog::SolarSystem>,
+    clock: Res<crate::universe::SimulationClock>,
 ) {
     if !oxygen.enabled {
         return;
@@ -105,10 +124,25 @@ pub(crate) fn update(
     } else {
         None
     };
+    let paused = menu.is_some_and(|m| m.is_open());
+    if on_surface {
+        base.seed_site(&terrain);
+    }
+    oxygen.shelter = shelter;
+    if !on_surface || paused || oxygen.failed {
+        return;
+    }
+    base.advance(
+        time.delta_secs_f64(),
+        &buildings,
+        crate::base::Base::solar_power(&buildings, &terrain, &solar, &clock),
+    );
     oxygen.advance(
         time.delta_secs_f64(),
-        on_surface,
-        menu.is_some_and(|m| m.is_open()),
-        shelter,
+        true,
+        false,
+        shelter.filter(|id| crate::base::Base::connected(&buildings, *id)),
+        &mut base.oxygen_s,
     );
+    oxygen.shelter = shelter;
 }

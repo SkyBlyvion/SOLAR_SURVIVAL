@@ -67,22 +67,23 @@ fn tick(app: &mut App, n: u32) {
 #[test]
 fn oxygen_policy_full_delta_menu_space_saturation_and_latched_failure() {
     let mut o = Oxygen::default();
-    o.advance(12.0, true, false, None);
+    let mut reserve = solar_survival::base::BOOTSTRAP_O2;
+    o.advance(12.0, true, false, None, &mut reserve);
     assert_eq!(o.remaining_seconds, 168.0);
-    o.advance(999.0, true, true, None);
-    o.advance(999.0, false, false, None);
-    o.advance(999.0, true, true, Some(BuildingId(8)));
+    o.advance(999.0, true, true, None, &mut reserve);
+    o.advance(999.0, false, false, None, &mut reserve);
+    o.advance(999.0, true, true, Some(BuildingId(8)), &mut reserve);
     assert_eq!(o.remaining_seconds, 168.0);
-    o.advance(1.0, true, false, Some(BuildingId(8)));
+    o.advance(1.0, true, false, Some(BuildingId(8)), &mut reserve);
     assert_eq!(o.remaining_seconds, CAPACITY_SECONDS);
     for invalid in [f64::NAN, f64::INFINITY, -5.0] {
-        o.advance(invalid, true, false, None);
+        o.advance(invalid, true, false, None, &mut reserve);
     }
     assert_eq!(o.remaining_seconds, CAPACITY_SECONDS);
-    o.advance(200.0, true, false, None);
+    o.advance(200.0, true, false, None, &mut reserve);
     assert!(o.failed);
     assert_eq!(o.remaining_seconds, 0.0);
-    o.advance(10.0, true, false, Some(BuildingId(8)));
+    o.advance(10.0, true, false, Some(BuildingId(8)), &mut reserve);
     assert!(o.failed);
     assert_eq!(o.remaining_seconds, 0.0);
     o.restart();
@@ -205,7 +206,7 @@ fn home_and_oxygen_persist_through_every_space_exit_and_orbital_rotation() {
     }
 }
 #[test]
-fn second_instance_and_rebase_keep_body_poses_contacts_and_recharge() {
+fn distant_second_instance_keeps_body_contacts_after_rebase_but_needs_oxygen_service() {
     let mut app = app(60);
     let mut point = DVec3::new(50.0, 0.0, 25.0);
     let t = app.world().resource::<MarsTerrain>();
@@ -267,7 +268,8 @@ fn second_instance_and_rebase_keep_body_poses_contacts_and_recharge() {
     app.world_mut().resource_mut::<Oxygen>().remaining_seconds = 40.0;
     tick(&mut app, 1);
     assert_eq!(app.world().resource::<Oxygen>().shelter, Some(id));
-    assert!(app.world().resource::<Oxygen>().remaining_seconds > 40.0);
+    // P9 : cet abri est hors des 40 m de desserte, il ne crée pas d’oxygène gratuit.
+    assert!(app.world().resource::<Oxygen>().remaining_seconds < 40.0);
     let t = app.world().resource::<MarsTerrain>();
     for (solid, building) in t.building_solids.iter().zip(
         app.world()
@@ -311,6 +313,7 @@ fn second_instance_and_rebase_keep_body_poses_contacts_and_recharge() {
     app.world_mut().resource_mut::<Oxygen>().remaining_seconds = 40.0;
     tick(&mut app, 1);
     assert_eq!(app.world().resource::<Oxygen>().shelter, Some(first.id));
+    // Le premier abri puise toujours dans la réserve finie après rebasage.
     assert!(app.world().resource::<Oxygen>().remaining_seconds > 40.0);
     assert_eq!(
         app.world().resource::<MarsTerrain>().orientation,

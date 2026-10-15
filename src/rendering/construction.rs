@@ -2,6 +2,8 @@
 use super::buildings::BuildingAssets;
 use crate::{
     GameSet,
+    base::{Base, BuildKind},
+    buildings::Buildings,
     buildings::OxygenShelter,
     construction::Construction,
     planets::terrain::MarsTerrain,
@@ -19,11 +21,15 @@ struct Materials {
     allowed: Handle<StandardMaterial>,
     denied: Handle<StandardMaterial>,
     salvage: Handle<StandardMaterial>,
+    equipment: Vec<Handle<StandardMaterial>>,
+    sources: [Handle<StandardMaterial>; 2],
 }
 #[derive(Resource, Default)]
 struct Cache {
     preview: Vec<Entity>,
     deposits: HashMap<usize, Entity>,
+    facilities: HashMap<crate::buildings::BuildingId, Entity>,
+    sources: HashMap<u64, Entity>,
 }
 pub(super) struct ConstructionRenderingPlugin;
 impl Plugin for ConstructionRenderingPlugin {
@@ -51,6 +57,33 @@ fn setup(
     commands.insert_resource(Materials {
         allowed: materials.add(ghost(Color::srgba(0.2, 1.0, 0.5, 0.48))),
         denied: materials.add(ghost(Color::srgba(1.0, 0.15, 0.08, 0.48))),
+        equipment: [
+            Color::srgb(0.65, 0.68, 0.7),
+            Color::srgb(0.2, 0.65, 0.6),
+            Color::srgb(0.015, 0.055, 0.21),
+            Color::srgb(0.9, 0.65, 0.14),
+            Color::srgb(0.8, 0.88, 0.86),
+            Color::srgb(0.12, 0.55, 0.9),
+        ]
+        .into_iter()
+        .map(|color| {
+            materials.add(StandardMaterial {
+                base_color: color,
+                base_color_texture: textures.as_ref().map(|t| t.wall.clone()),
+                perceptual_roughness: 0.65,
+                ..default()
+            })
+        })
+        .collect(),
+        sources: [Color::srgb(0.65, 0.32, 0.12), Color::srgb(0.12, 0.8, 0.95)].map(|color| {
+            materials.add(StandardMaterial {
+                base_color: color,
+                base_color_texture: textures.as_ref().map(|t| t.wall.clone()),
+                emissive: color.to_linear() * 0.2,
+                perceptual_roughness: 0.8,
+                ..default()
+            })
+        }),
         salvage: materials.add(StandardMaterial {
             base_color: Color::WHITE,
             base_color_texture: textures.as_ref().map(|t| t.crate_map.clone()),
@@ -87,6 +120,8 @@ fn sync(
     assets: Res<BuildingAssets>,
     materials: Res<Materials>,
     mut cache: ResMut<Cache>,
+    base: Option<Res<Base>>,
+    buildings: Option<Res<Buildings>>,
 ) {
     let surface = pilot.mode == MovementMode::Surface;
     let eye = terrain.body_relative(state.eye(&terrain));
@@ -128,6 +163,95 @@ fn sync(
             ));
         }
     }
+    cache.facilities.retain(|id, entity| {
+        if surface
+            && buildings.as_ref().is_some_and(|b| {
+                b.facilities
+                    .iter()
+                    .any(|f| f.id == *id && f.position_m.distance(feet) < 120.0)
+            })
+        {
+            true
+        } else {
+            commands.entity(*entity).despawn();
+            false
+        }
+    });
+    cache.sources.retain(|id, entity| {
+        if surface
+            && base.as_ref().is_some_and(|b| {
+                b.sources
+                    .iter()
+                    .any(|s| s.id == *id && s.position_m.distance(feet) < 120.0)
+            })
+        {
+            true
+        } else {
+            commands.entity(*entity).despawn();
+            false
+        }
+    });
+    if surface {
+        if let Some(buildings) = buildings {
+            for f in buildings
+                .facilities
+                .iter()
+                .filter(|f| f.position_m.distance(feet) < 120.0)
+            {
+                let entity = *cache.facilities.entry(f.id).or_insert_with(|| {
+                    commands
+                        .spawn((
+                            Mesh3d(assets.cube.clone()),
+                            RenderLayers::layer(1),
+                            Transform::default(),
+                        ))
+                        .id()
+                });
+                commands.entity(entity).insert((
+                    proxy(
+                        &terrain,
+                        eye,
+                        f.solid().center,
+                        f.orientation,
+                        f.kind.size(),
+                    ),
+                    MeshMaterial3d(materials.equipment[f.kind.code()].clone()),
+                ));
+            }
+        }
+        if let Some(base) = base {
+            for s in base
+                .sources
+                .iter()
+                .filter(|s| s.position_m.distance(feet) < 120.0)
+            {
+                let entity = *cache.sources.entry(s.id).or_insert_with(|| {
+                    commands
+                        .spawn((
+                            Mesh3d(assets.cube.clone()),
+                            RenderLayers::layer(1),
+                            Transform::default(),
+                        ))
+                        .id()
+                });
+                commands.entity(entity).insert((
+                    proxy(
+                        &terrain,
+                        eye,
+                        s.position_m
+                            + s.orientation * DVec3::Y * if s.remaining > 0 { 0.4 } else { 0.075 },
+                        s.orientation,
+                        bevy::math::DVec3::new(
+                            0.85,
+                            if s.remaining > 0 { 0.8 } else { 0.15 },
+                            0.85,
+                        ),
+                    ),
+                    MeshMaterial3d(materials.sources[s.item.code() as usize].clone()),
+                ));
+            }
+        }
+    }
     let preview = c.preview.as_ref().filter(|_| surface && c.active);
     let Some(p) = preview else {
         for entity in cache.preview.drain(..) {
@@ -135,8 +259,14 @@ fn sync(
         }
         return;
     };
+    let part_count = if c.kind == BuildKind::Shelter { 6 } else { 1 };
+    if cache.preview.len() != part_count {
+        for entity in cache.preview.drain(..) {
+            commands.entity(entity).despawn();
+        }
+    }
     if cache.preview.is_empty() {
-        cache.preview = (0..6)
+        cache.preview = (0..part_count)
             .map(|_| {
                 commands
                     .spawn((
@@ -149,7 +279,11 @@ fn sync(
             .collect();
     }
     for (index, &entity) in cache.preview.iter().enumerate() {
-        let (center, size) = OxygenShelter::parts()[index];
+        let (center, size) = if c.kind == BuildKind::Shelter {
+            OxygenShelter::parts()[index]
+        } else {
+            (DVec3::Y * (c.kind.size().y * 0.5), c.kind.size())
+        };
         commands.entity(entity).insert((
             proxy(
                 &terrain,
@@ -194,10 +328,19 @@ mod tests {
             .resource_scope(|world, t: Mut<MarsTerrain>| {
                 let mut c = world.resource_mut::<Construction>();
                 c.seed_site(&t);
-                c.alloy = 12;
+                c.inventory = {
+                    let mut inventory = crate::inventory::Inventory::default();
+                    inventory.add(crate::inventory::Item::Alloy, 12).unwrap();
+                    inventory
+                };
                 c.active = true;
                 c.lateral_m = 16.0;
-                c.preview = Some(c.candidate(&t, &SurfaceState::default(), &Buildings::default()));
+                c.preview = Some(c.candidate(
+                    &t,
+                    &SurfaceState::default(),
+                    &Buildings::default(),
+                    &Base::default(),
+                ));
             });
         app.world_mut().resource_mut::<Explorer>().mode = MovementMode::Surface;
         app.update();

@@ -1,3 +1,5 @@
+> **Évolution P9, 15 octobre 2026 :** le [contrat courant](P9_BASE.md) remplace le stock simple et la recharge gratuite. Porté/coffres à piles, six recettes, sources durables, réserve O₂ et énergie finies, service à 40 m du premier abri ; format 3. Les sections P4/P5 ci-dessous décrivent leur fondation historique.
+
 # P4 : oxygène et abri de session
 
 13 octobre 2026. La partie normale offre une première boucle de survie sur Mars. Après création ou chargement d’une aventure puis M, l'abri turquoise est à six mètres devant le point d'arrivée ; sa porte ouverte est du côté du joueur. Marcher à l'intérieur recharge automatiquement. Le HUD vital montre la réserve, l'abri en service ou la distance/direction du plus proche. H masque la télémétrie, mais conserve l'oxygène et l'issue de l'expédition visibles.

@@ -1,3 +1,5 @@
+> **Évolution P9, 15 octobre 2026 :** le [contrat courant](P9_BASE.md) remplace le stock simple et la recharge gratuite. Porté/coffres à piles, six recettes, sources durables, réserve O₂ et énergie finies, service à 40 m du premier abri ; format 3. Les sections P4/P5 ci-dessous décrivent leur fondation historique.
+
 # P5 : récupérer, stocker, construire et utiliser
 
 13 octobre 2026. La partie normale ajoute un inventaire de session et rend constructible **le même OxygenShelter P4**. Les bâtiments et la recharge restent ceux de [SURVIVAL](SURVIVAL.md) ; aucune zone de recharge spécifique au placement n'est créée.

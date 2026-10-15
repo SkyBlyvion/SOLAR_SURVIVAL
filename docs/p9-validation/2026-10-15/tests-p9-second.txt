@@ -1,0 +1,28 @@
+   Compiling solar_survival v0.2.0 (/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL)
+    Finished `test` profile [optimized] target(s) in 1.08s
+     Running tests/p9_base.rs (target/debug/deps/p9_base-590127b3d79f590b)
+
+running 5 tests
+test bounded_stacks_atomic_exact_partial_maximum_repetition_and_organization ... ok
+test day_night_storm_blackout_restart_full_tank_and_large_delta_remain_bounded ... ok
+test renewable_harvest_full_refusal_recovery_and_wall_access ... ok
+test solar_power_uses_fixed_body_pose_and_changes_over_rotation_without_rebase_drift ... FAILED
+test fresh_bootstrap_harvest_carry_store_retrieve_build_produce_refill_and_rebase ... ok
+
+failures:
+
+---- solar_power_uses_fixed_body_pose_and_changes_over_rotation_without_rebase_drift stdout ----
+
+thread 'solar_power_uses_fixed_body_pose_and_changes_over_rotation_without_rebase_drift' (75010) panicked at tests/p9_base.rs:255:5:
+assertion `left == right` failed
+  left: 45.41301683706332
+ right: 0.0
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    solar_power_uses_fixed_body_pose_and_changes_over_rotation_without_rebase_drift
+
+test result: FAILED. 4 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `--test p9_base`

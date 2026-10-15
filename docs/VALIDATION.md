@@ -1,3 +1,49 @@
+# P9 — validation fonctionnelle Ubuntu, 15 octobre 2026
+
+P9 livré : inventaire porté, coffres, transferts/rangement, sources renouvelables,
+six recettes, panneaux/batteries/générateur/réserve O₂ et sauvegarde format3.
+[Contrat et limites](P9_BASE.md), [preuves détaillées](p9-validation/2026-10-15/NOTES.md).
+
+- Ubuntu/X11, i7-6700K,32 Go,GTX1060 3 Go/NVK Mesa 25.2.8, Rust stable1.99.0,
+  Bevy exactement0.19.1, aucune nouvelle dépendance. [Environnement](p9-validation/2026-10-15/host.json).
+- **fmt, check all-targets,147 tests,Clippy -D warnings et release réussis**.
+  [Index des contrôles](p9-validation/2026-10-15/checks.json). Transactions/capacités,
+  récoltes intactes sur refus, vraie UI, amorçage, énergie/O₂ finis, longue frame,
+  rebasage, profils et données incohérentes vérifiés ; régressions conservées.
+- Archive extraite, binaire/assets propres et **CWD extérieur au checkout** :
+  sauvegarde116,404s + chargement26,465s, deux codes 0, aucun diagnostic. Deux profils,
+  collecte et coûts réels, renouvellement attendu, coffre/transferts, équipements,
+  production/recharge, menu/rebasage/nuit, refus Broken et échec/R/M.
+  Les poses de départ, dates et réserves d’essai sont préparées explicitement.
+- **40 captures finales inspectées** :36 vues de l’archive sur quatre planches et
+  quatre vues rapprochées des équipements, même binaire, campagne118,061s code 0.
+  [Planches](p9-validation/2026-10-15/inspection/manifest.json),
+  [équipements](p9-validation/2026-10-15/equipment/results.json).
+  Inventaires et actions lisibles, états conservés ; boîtiers simples sans animation.
+  L’inspection ne constitue pas une approbation esthétique utilisateur.
+- Archive **36 994 649 octets**,747 fichiers vérifiés ; SHA256
+  `8fb7c54a2928a07ee378d24f53d8aeeaac95c071a3fc265b037bad61c72611ea`.
+  [Manifeste](p9-validation/2026-10-15/archive.json). Binaire et sources/actifs inchangés
+  pendant la campagne ; [concordance](p9-validation/2026-10-15/packaged-final/concordance.json).
+
+**Mesures de performance reportées à la demande utilisateur.** Deux références P8
+échouent avant export, codes 101 à26,385 /8,612s ; la seconde trace une perte de focus.
+Aucune comparaison P8/P9 valide ni résultat à64 équipements n’est annoncé. Aucun
+processus de test graphique n’est laissé en cours. L’utilisateur doit pouvoir
+travailler ailleurs : **pas de nouveau test ouvrant une fenêtre/prenant le focus ou
+la souris automatiquement** ; seules les vérifications sans interaction avec son
+bureau peuvent continuer sans créneau graphique explicite. Les scripts P9 demandent
+une option explicite de créneau visible. [État des performances](PERFORMANCE.md).
+
+Limites : charge/O₂ collectifs, base à40 m, pas de câbles/démantèlement/chimie,
+conditions solaires de fin de frame et aucun rattrapage hors application. Formats1/2
+refusés sans migration ; fichiers conservés. **Windows 11 natif, RTX4050 6 Go, CPU cible
+exact,1080p60 et VRAM/staging restent non validés.**
+
+---
+
+# Historique — P8 et étapes précédentes
+
 # Préparation documentaire P9 — 15 octobre 2026
 
 Le périmètre [P9_BASE](P9_BASE.md), la roadmap et NEXT_CHAT ajoutent l'inventaire
@@ -23,8 +69,8 @@ les campagnes de bureau. Bevy =0.19.1 / Cargo.lock conservés, aucune dépendanc
 | Atmosphère/ciel | [Galerie finale](p8-validation/2026-10-15/sky-final/results.json) :66,411s,code 0,22 captures inspectées sur quatre planches ; lever/coucher bleus, jour ocre/voiles, nuit étoilée, tempête, course/rebasage, abri/menu/retours. Première version à nuages trop géométriques conservée ; motif corrigé avant les mesures |
 | Performance | Référence P7 avec ses propres assets, deux P8 sans recorder + un GPU séparé : quatre codes 0, aucune capture/compilation pendant les mesures, empreintes inchangées. Surcoût1,59–1,90ms/frame sur trois phases ; [comparaison](p8-validation/2026-10-15/comparison.json), [portée et détails](PERFORMANCE.md) |
 | Profils format 2 | [Archive extraite, deux processus](p8-validation/2026-10-15/packaged-profiles/results.json) :48,414+54,388s,codes 0,32 captures inspectées ; Alpha/Bravo indépendants, stock/abris, construction/recharge/rebasage, chargement après fermeture, catalogue/espace/échec/R et refus Broken. Format 1 explicitement refusé par test, sans migration ni suppression |
-| Archive Ubuntu | [36 907 688 octets,747 fichiers vérifiés](p8-validation/2026-10-15/package.json), binaire/actifs extraits utilisés par les profils. [Smoke depuis CWD extérieur](p8-validation/2026-10-15/external-cwd-smoke-retry.json) :8,418s,code 0,audit GPU13textures et fichiers distribués inchangés. Le premier smoke échoue seulement à écrire ses captures dans son dossier docs absent ; préparation corrigée, échec conservé |
-| Ressources | ≤13 patches proches +1 couronne ≤6 400 sommets /11 520 triangles, réutilisation au repos ; aucune texture nouvelle. Audit renderer :13images,40,168Mio utiles /128Mio ; total VRAM/pilote/staging non mesuré |
+| Archive Ubuntu | [36 907 688 octets,747 fichiers vérifiés](p8-validation/2026-10-15/package.json), binaire/actifs extraits utilisés par les profils. [Smoke depuis CWD extérieur](p8-validation/2026-10-15/external-cwd-smoke-retry.json) :8,418s,code 0,audit GPU13 textures et fichiers distribués inchangés. Le premier smoke échoue seulement à écrire ses captures dans son dossier docs absent ; préparation corrigée, échec conservé |
+| Ressources | ≤13 patches proches +1 couronne ≤6 400 sommets /11 520 triangles, réutilisation au repos ; aucune texture nouvelle. Audit renderer :13images,40,168 Mio utiles /128Mio ; total VRAM/pilote/staging non mesuré |
 
 **54 captures finales P8/profils inspectées sur dix planches**, plus l'original
 nuageux ; les premières captures et les11 captures du smoke ne sont pas ajoutées à
@@ -32,7 +78,7 @@ ce compte. Inspection technique distincte de l'approbation esthétique utilisate
 Les dates/poses de la galerie sont préparées, l'événement complet d'une tempête
 n'est pas observé en temps réel ; continuité et reproductibilité sont testées.
 
-Environnement : Ubuntu/X11, i7-6700K,32 Go,GTX 1060 3 Go/NVK Mesa25.2.8 ;1440×900
+Environnement : Ubuntu/X11, i7-6700K,32 Go,GTX 1060 3 Go/NVK Mesa 25.2.8 ;1440×900
 MSAA4 pour ciel/mesures,1280×720 pour profils. [Relevé](p8-validation/2026-10-15/host.json).
 **Windows 11 natif, RTX 4050/CPU exact, objectif 1080p60 et VRAM totale/staging restent
 non validés.** Relief, nuages et climat sont artistiques, pas une reconstruction
@@ -68,9 +114,9 @@ Départ `eeaff80`, dépôt propre et origin identique. Les contrôles restants d
 
 Le parcours des profils et les mesures précèdent la retouche RGB de Jupiter. La nouvelle archive change seulement ce payload et ses crédits/manifeste ; même binaire, douze autres images et physique/UI inchangées. Son lancement final revalide les 25 vues orbitales et l’audit des 13 images. Aucun nouveau build release ni seconde campagne de profils finale inventés.
 
-Environnement confirmé : Ubuntu/X11, i7-6700K, 32 Go, GTX1060 3Go/NVK/Mesa25.2.8, 1440×900 MSAA4 pour mesures et 1280×720 pour profils. [Contexte](p7-validation/2026-10-15/host.json), [bilan détaillé et échec conservé](p7-validation/2026-10-15/NOTES.md). Aucun écran virtuel ni traitement spécial des entrées ajouté. Ne plus prendre spontanément le focus pendant le travail utilisateur.
+Environnement confirmé : Ubuntu/X11, i7-6700K, 32 Go, GTX1060 3 Go/NVK/Mesa 25.2.8, 1440×900 MSAA4 pour mesures et 1280×720 pour profils. [Contexte](p7-validation/2026-10-15/host.json), [bilan détaillé et échec conservé](p7-validation/2026-10-15/NOTES.md). Aucun écran virtuel ni traitement spécial des entrées ajouté. Ne plus prendre spontanément le focus pendant le travail utilisateur.
 
-**Limites transversales :** Windows11 natif et matériel cible/objectif1080p60 non validés, CPU annoncé « i5 12700K » à confirmer ; compteurs VRAM totale/staging non disponibles sur ce pilote. L’inspection technique ne constitue pas une approbation esthétique utilisateur. P8 relief/horizons, P9 progression et P10 exploration restent non implémentés. [Passation](NEXT_CHAT.md).
+**Limites transversales :** Windows 11 natif et matériel cible/objectif1080p60 non validés, CPU annoncé « i5 12700K » à confirmer ; compteurs VRAM totale/staging non disponibles sur ce pilote. L’inspection technique ne constitue pas une approbation esthétique utilisateur. P8 relief/horizons, P9 progression et P10 exploration restent non implémentés. [Passation](NEXT_CHAT.md).
 
 ---
 

@@ -91,7 +91,7 @@ fn input(
     }
     if elapsed >= 59.0 {
         assert_eq!(buildings.shelters.len(), 2);
-        assert_eq!(c.alloy, 0);
+        assert_eq!(c.inventory.count(crate::inventory::Item::Alloy), 0);
         assert_eq!(c.deposits.iter().filter(|d| d.remaining == 0).count(), 2);
         assert_eq!(oxygen.shelter, Some(buildings.shelters[1].id));
         assert!(!oxygen.failed);
@@ -112,7 +112,7 @@ fn input(
     if p.phase != Some(phase) {
         info!(
             "P5 phase {phase} t={elapsed:.3} alloy={} active={} preview={:?} feet={:?} O2={:.3}",
-            c.alloy,
+            c.inventory.count(crate::inventory::Item::Alloy),
             c.active,
             c.preview.as_ref().map(|p| p.verdict),
             state.feet,
@@ -140,13 +140,13 @@ fn input(
                 keys.press(KeyCode::KeyE);
             }
             5 => {
-                assert_eq!(c.alloy, 6);
+                assert_eq!(c.inventory.count(crate::inventory::Item::Alloy), 6);
             }
             6 => {
                 keys.press(KeyCode::KeyE);
             }
             7 => {
-                assert_eq!(c.alloy, 12);
+                assert_eq!(c.inventory.count(crate::inventory::Item::Alloy), 12);
                 keys.press(KeyCode::KeyB);
             }
             9 => {
@@ -156,7 +156,7 @@ fn input(
                 keys.press(KeyCode::KeyX);
             }
             11 => {
-                assert_eq!(c.alloy, 12);
+                assert_eq!(c.inventory.count(crate::inventory::Item::Alloy), 12);
                 assert_eq!(buildings.shelters.len(), 1);
                 keys.press(KeyCode::KeyB);
             }
@@ -168,7 +168,7 @@ fn input(
             }
             14 => {
                 assert_eq!(buildings.shelters.len(), 2);
-                assert_eq!(c.alloy, 0);
+                assert_eq!(c.inventory.count(crate::inventory::Item::Alloy), 0);
                 let b = &buildings.shelters[1];
                 p.pose = Some((b.position_m, b.orientation));
             }
@@ -209,12 +209,15 @@ fn input(
             }
             25 => {
                 p.reserve = oxygen.remaining_seconds;
-                p.menu_alloy = c.alloy;
+                p.menu_alloy = c.inventory.count(crate::inventory::Item::Alloy);
                 menu.open();
             }
             26 => {
                 assert_eq!(oxygen.remaining_seconds, p.reserve);
-                assert_eq!(c.alloy, p.menu_alloy);
+                assert_eq!(
+                    c.inventory.count(crate::inventory::Item::Alloy),
+                    p.menu_alloy
+                );
                 assert!(!c.active);
                 menu.play();
             }
@@ -284,7 +287,7 @@ fn capture(
         "t={:.6} mode={:?} alloy={} active={} preview={:?} buildings={} O2={:.6} shelter={:?} rebases={} feet={:?}\n",
         time.elapsed_secs_f64(),
         pilot.mode,
-        c.alloy,
+        c.inventory.count(crate::inventory::Item::Alloy),
         c.active,
         c.preview,
         buildings.shelters.len(),

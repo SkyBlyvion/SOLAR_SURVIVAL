@@ -1,0 +1,69 @@
+2026-10-15T11:59:43.720628Z  INFO bevy_render::renderer: AdapterInfo { name: "NVIDIA GeForce GTX 1060 3GB (NVK GP106)", vendor: 4318, device: 7170, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "NVK", driver_info: "Mesa 25.2.8-0ubuntu0.24.04.4", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: false }
+2026-10-15T11:59:43.824476Z  INFO bevy_pbr::cluster: GPU clustering is supported on this device.
+2026-10-15T11:59:43.824508Z  INFO bevy_render::batching::gpu_preprocessing: GPU preprocessing is fully supported on this device.
+2026-10-15T11:59:43.824977Z  INFO bevy_winit::system: Creating new window Solar Survival · 0.2 · Mars (63v0)
+2026-10-15T11:59:43.825420Z  INFO winit::platform_impl::linux::x11::window: Guessed window scale factor: 1
+2026-10-15T11:59:43.851279Z  INFO solar_survival::rendering::textures: P7 textures CPU préparées : 13 images, 42118856 octets, 23.101 ms ; données transférées au renderer, staging/pics pilote exclus
+2026-10-15T11:59:43.876339Z  INFO solar_survival::config::base_validation: P9 phase 0 t=0.000 équipements=0 O2=720.000 énergie=0.000
+2026-10-15T11:59:44.027786Z  INFO solar_survival::rendering::textures: P7 GPU résident : 13 textures RGBA8 sRGB avec mipmaps, 42118856 octets / 134217728 ; allocation pilote totale/staging exclus
+2026-10-15T11:59:45.889207Z  INFO solar_survival::config::base_validation: P9 phase 1 t=2.014 équipements=0 O2=720.000 énergie=0.000
+2026-10-15T11:59:47.885721Z  INFO solar_survival::config::base_validation: P9 phase 2 t=4.011 équipements=0 O2=720.000 énergie=0.000
+2026-10-15T11:59:49.898142Z  INFO solar_survival::config::base_validation: P9 phase 3 t=6.023 équipements=0 O2=720.000 énergie=0.000
+2026-10-15T11:59:51.877350Z  INFO solar_survival::config::base_validation: P9 phase 4 t=8.002 équipements=0 O2=720.000 énergie=0.000
+2026-10-15T11:59:53.882301Z  INFO solar_survival::config::base_validation: P9 phase 5 t=10.007 équipements=0 O2=720.000 énergie=0.000
+2026-10-15T11:59:55.891970Z  INFO solar_survival::config::base_validation: P9 phase 6 t=12.014 équipements=0 O2=720.000 énergie=0.000
+2026-10-15T11:59:57.880329Z  INFO solar_survival::config::base_validation: P9 phase 7 t=14.005 équipements=0 O2=720.000 énergie=0.000
+2026-10-15T11:59:59.902533Z  INFO solar_survival::config::base_validation: P9 phase 8 t=16.028 équipements=0 O2=720.000 énergie=0.000
+2026-10-15T12:00:01.898057Z  INFO solar_survival::config::base_validation: P9 phase 9 t=18.023 équipements=0 O2=720.000 énergie=0.000
+2026-10-15T12:00:03.875355Z  INFO solar_survival::config::base_validation: P9 phase 10 t=20.000 équipements=0 O2=720.000 énergie=0.000
+2026-10-15T12:00:05.877053Z  INFO solar_survival::config::base_validation: P9 phase 11 t=22.002 équipements=0 O2=720.000 énergie=0.000
+2026-10-15T12:00:07.900198Z  INFO solar_survival::config::base_validation: P9 phase 12 t=24.025 équipements=0 O2=720.000 énergie=0.000
+2026-10-15T12:00:09.888166Z  INFO solar_survival::config::base_validation: P9 phase 13 t=26.013 équipements=0 O2=720.000 énergie=0.000
+2026-10-15T12:00:11.905631Z  INFO solar_survival::config::base_validation: P9 phase 14 t=28.031 équipements=0 O2=720.000 énergie=0.000
+2026-10-15T12:00:13.905046Z  INFO solar_survival::config::base_validation: P9 phase 15 t=30.030 équipements=1 O2=720.000 énergie=0.000
+2026-10-15T12:00:15.882409Z  INFO solar_survival::config::base_validation: P9 phase 16 t=32.007 équipements=1 O2=720.000 énergie=0.000
+2026-10-15T12:00:17.879912Z  INFO solar_survival::config::base_validation: P9 phase 17 t=34.005 équipements=1 O2=720.000 énergie=0.000
+2026-10-15T12:00:19.882016Z  INFO solar_survival::config::base_validation: P9 phase 18 t=36.006 équipements=1 O2=720.000 énergie=0.000
+2026-10-15T12:00:21.881240Z  INFO solar_survival::config::base_validation: P9 phase 19 t=38.006 équipements=1 O2=720.000 énergie=0.000
+2026-10-15T12:00:23.879962Z  INFO solar_survival::config::base_validation: P9 phase 20 t=40.005 équipements=1 O2=720.000 énergie=0.000
+2026-10-15T12:00:25.881038Z  INFO solar_survival::config::base_validation: P9 phase 21 t=42.006 équipements=1 O2=720.000 énergie=0.000
+2026-10-15T12:00:27.883074Z  INFO solar_survival::config::base_validation: P9 phase 22 t=44.008 équipements=1 O2=720.000 énergie=0.000
+2026-10-15T12:00:29.893427Z  INFO solar_survival::config::base_validation: P9 phase 23 t=46.018 équipements=1 O2=720.000 énergie=0.000
+2026-10-15T12:00:31.876558Z  INFO solar_survival::config::base_validation: P9 phase 24 t=48.002 équipements=1 O2=720.000 énergie=0.000
+2026-10-15T12:00:33.901045Z  INFO solar_survival::config::base_validation: P9 phase 25 t=50.026 équipements=1 O2=720.000 énergie=0.000
+2026-10-15T12:00:35.893717Z  INFO solar_survival::config::base_validation: P9 phase 26 t=52.019 équipements=1 O2=720.000 énergie=0.000
+2026-10-15T12:00:37.905433Z  INFO solar_survival::config::base_validation: P9 phase 27 t=54.030 équipements=1 O2=720.000 énergie=0.000
+2026-10-15T12:00:39.889790Z  INFO solar_survival::config::base_validation: P9 phase 28 t=56.015 équipements=1 O2=720.000 énergie=0.000
+2026-10-15T12:00:41.902311Z  INFO solar_survival::config::base_validation: P9 phase 29 t=58.027 équipements=1 O2=720.000 énergie=0.000
+2026-10-15T12:00:43.901081Z  INFO solar_survival::config::base_validation: P9 phase 30 t=60.026 équipements=2 O2=720.000 énergie=0.000
+2026-10-15T12:00:45.894939Z  INFO solar_survival::config::base_validation: P9 phase 31 t=62.020 équipements=2 O2=720.000 énergie=0.000
+2026-10-15T12:00:47.882593Z  INFO solar_survival::config::base_validation: P9 phase 32 t=64.008 équipements=2 O2=720.000 énergie=0.000
+2026-10-15T12:00:49.897313Z  INFO solar_survival::config::base_validation: P9 phase 33 t=66.022 équipements=2 O2=720.000 énergie=0.000
+2026-10-15T12:00:51.901422Z  INFO solar_survival::config::base_validation: P9 phase 34 t=68.026 équipements=2 O2=720.000 énergie=0.000
+2026-10-15T12:00:53.903851Z  INFO solar_survival::config::base_validation: P9 phase 35 t=70.029 équipements=3 O2=720.000 énergie=196.999
+2026-10-15T12:00:55.876793Z  INFO solar_survival::config::base_validation: P9 phase 36 t=72.002 équipements=3 O2=720.000 énergie=394.040
+2026-10-15T12:00:57.902336Z  INFO solar_survival::config::base_validation: P9 phase 37 t=74.027 équipements=3 O2=720.000 énergie=596.112
+2026-10-15T12:00:59.886577Z  INFO solar_survival::config::base_validation: P9 phase 38 t=76.012 équipements=3 O2=720.000 énergie=794.224
+2026-10-15T12:01:01.878837Z  INFO solar_survival::config::base_validation: P9 phase 39 t=78.004 équipements=3 O2=720.000 énergie=992.774
+2026-10-15T12:01:03.879240Z  INFO solar_survival::config::base_validation: P9 phase 40 t=80.004 équipements=4 O2=720.000 énergie=1193.012
+2026-10-15T12:01:05.901792Z  INFO solar_survival::config::base_validation: P9 phase 41 t=82.027 équipements=4 O2=720.000 énergie=1395.342
+2026-10-15T12:01:07.892668Z  INFO solar_survival::config::base_validation: P9 phase 42 t=84.018 équipements=4 O2=720.000 énergie=1593.962
+2026-10-15T12:01:09.889403Z  INFO solar_survival::config::base_validation: P9 phase 43 t=86.014 équipements=4 O2=720.000 énergie=1793.309
+2026-10-15T12:01:11.903648Z  INFO solar_survival::config::base_validation: P9 phase 44 t=88.029 équipements=4 O2=720.000 énergie=1994.186
+2026-10-15T12:01:13.879059Z  INFO solar_survival::config::base_validation: P9 phase 45 t=90.004 équipements=5 O2=727.783 énergie=2114.000
+2026-10-15T12:01:15.892084Z  INFO solar_survival::config::base_validation: P9 phase 46 t=92.017 équipements=5 O2=735.832 énergie=2234.459
+2026-10-15T12:01:17.877383Z  INFO solar_survival::config::base_validation: P9 phase 47 t=94.002 équipements=5 O2=684.201 énergie=2353.339
+2026-10-15T12:01:19.888004Z  INFO solar_survival::config::base_validation: P9 phase 48 t=96.013 équipements=5 O2=684.201 énergie=2353.339
+2026-10-15T12:01:21.904018Z  INFO solar_survival::config::base_validation: P9 phase 49 t=98.029 équipements=5 O2=631.843 énergie=2474.081
+2026-10-15T12:01:23.882317Z  INFO solar_survival::config::base_validation: P9 phase 50 t=100.007 équipements=5 O2=639.762 énergie=2592.600
+2026-10-15T12:01:25.883990Z  INFO solar_survival::config::base_validation: P9 phase 51 t=102.009 équipements=5 O2=647.767 énergie=2712.405
+2026-10-15T12:01:25.889429Z DEBUG solar_survival::player::surface: GLOBAL rebasage CPU 5.399 ms, patches 13, constructions 18, LOD ([7, 5, 1], 9893, 18096), changements 0, géométrie 4.415 ms, index 0.929 ms
+2026-10-15T12:01:27.888624Z  INFO solar_survival::config::base_validation: P9 phase 52 t=104.014 équipements=5 O2=655.787 énergie=2832.437
+2026-10-15T12:01:27.892890Z DEBUG solar_survival::player::surface: GLOBAL rebasage CPU 4.222 ms, patches 13, constructions 23, LOD ([6, 6, 1], 9217, 16744), changements 0, géométrie 3.477 ms, index 0.691 ms
+2026-10-15T12:01:29.887641Z  INFO solar_survival::config::base_validation: P9 phase 53 t=106.013 équipements=5 O2=663.784 énergie=2952.116
+2026-10-15T12:01:31.896742Z  INFO solar_survival::config::base_validation: P9 phase 54 t=108.022 équipements=5 O2=671.817 énergie=2871.781
+2026-10-15T12:01:33.880954Z  INFO solar_survival::config::base_validation: P9 phase 55 t=110.006 équipements=5 O2=679.751 énergie=2792.442
+2026-10-15T12:01:35.878728Z  INFO solar_survival::config::base_validation: P9 phase 56 t=112.004 équipements=5 O2=679.751 énergie=2792.442
+2026-10-15T12:01:37.900382Z  INFO solar_survival::config::base_validation: P9 phase 57 t=114.025 équipements=0 O2=720.000 énergie=0.000
+2026-10-15T12:01:39.906692Z  INFO solar_survival::config::base_validation: P9 phase 58 t=116.032 équipements=0 O2=720.000 énergie=0.000
+2026-10-15T12:01:39.906736Z  INFO solar_survival::config::base_validation: P9 save terminé : récolte, renouvellement, coffre/transferts, quatre équipements, production/recharge, menu/rebasage/nuit et profils

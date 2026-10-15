@@ -1,0 +1,30 @@
+    Checking solar_survival v0.2.0 (/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL)
+error: very complex type used. Consider factoring parts into `type` definitions
+   --> src/ui/construction.rs:220:18
+    |
+220 |       mut buttons: Query<
+    |  __________________^
+221 | |         (&Interaction, &BuildAction, &mut BackgroundColor),
+222 | |         (Changed<Interaction>, Without<SelectRecipe>),
+223 | |     >,
+    | |_____^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#type_complexity
+    = note: `-D clippy::type-complexity` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::type_complexity)]`
+
+error: very complex type used. Consider factoring parts into `type` definitions
+   --> src/ui/construction.rs:224:18
+    |
+224 |       mut recipes: Query<
+    |  __________________^
+225 | |         (&Interaction, &SelectRecipe, &mut BackgroundColor),
+226 | |         (Changed<Interaction>, Without<BuildAction>),
+227 | |     >,
+    | |_____^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#type_complexity
+
+error: could not compile `solar_survival` (lib) due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `solar_survival` (lib test) due to 2 previous errors

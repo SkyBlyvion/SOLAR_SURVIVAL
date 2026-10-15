@@ -1,0 +1,43 @@
+{
+  "exit_code": 0,
+  "seconds": 118.0608433769994,
+  "focused_window": "0x4200004",
+  "errors": [],
+  "diagnostics": [],
+  "shots": [
+    {
+      "phase": 30,
+      "name": "panel",
+      "window": "0x4200004",
+      "width": 1440,
+      "height": 900,
+      "sha256": "bdcee413471803c4b95fdb57028f48b18cd6f563d884288f41fa618bb0e2aec2"
+    },
+    {
+      "phase": 35,
+      "name": "battery",
+      "window": "0x4200004",
+      "width": 1440,
+      "height": 900,
+      "sha256": "631360af0874ce9929459ced8d1ba0b89dbd5663c57e0918d7c5bea8b351c72b"
+    },
+    {
+      "phase": 40,
+      "name": "generator",
+      "window": "0x4200004",
+      "width": 1440,
+      "height": 900,
+      "sha256": "da6fc0c5851f5285502759aa3f1ca2eb55e2eb08607aff0c6e789d706c089545"
+    },
+    {
+      "phase": 45,
+      "name": "tank",
+      "window": "0x4200004",
+      "width": 1440,
+      "height": 900,
+      "sha256": "dd9eb4215a2a5a0672f53e4d74aac5a02e7acc80ef57469612f57f1dc6aa2bf5"
+    }
+  ],
+  "binary_sha256": "b8436414b812a9e453c1c8346dfe54b99db24577c65be2d3bd240f102d125499",
+  "binary_unchanged": true
+}

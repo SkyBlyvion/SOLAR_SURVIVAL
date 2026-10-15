@@ -1,139 +1,176 @@
 # P9 — base, inventaire et stockage
 
-Cadrage du 15 octobre 2026, après P8 commité dans `ee87770`. **P9 reste à
-implémenter.** L'utilisateur ajoute explicitement la gestion d'inventaire et le
-stockage aux panneaux solaires, batteries, générateur/réserve d'oxygène, récolte
-durable, interface et sauvegarde. Ces éléments font partie des critères de P9.
+Implémentation du 15 octobre 2026. Boucle : **récolter → transporter → déposer /
+reprendre → construire → produire / stocker → recharger → repartir**. Les valeurs
+ci-dessous sont des **conventions de gameplay**, sans masse implicite des objets,
+chimie, rendement photovoltaïque ou physiologie scientifiques.
 
-## Boucle attendue
+## Jouer et démarrer
 
-**Explorer → récolter → transporter → déposer/reprendre → fabriquer/construire →
-produire et stocker énergie/oxygène → préparer une expédition plus longue.**
+Créer une **nouvelle aventure format 3**, puis M. Le premier abri dispose d'une
+réserve initiale **finie de 720 secondes d'autonomie**, distincte de la combinaison
+pleine de 180 s. Les huit caisses dorées donnent encore 6 alliage chacune.
+Quatre points de récupération durables sont derrière l'arrivée : x=±12 m,
+z=+4 m pour l'alliage (ocre), x=±16 m, z=+4 m pour les circuits (cyan), dans la
+carte initiale. Leur pose est ensuite fixe dans Mars. Ces dispositifs de
+récupération sont artistiques ; ce ne sont pas des gisements géologiques mesurés.
 
-Le joueur doit gérer ce qu'il emporte et ce qu'il conserve à la base. La première
-installation doit être réalisable avec les moyens de départ : définir et tester
-l'amorçage pour éviter une dépendance circulaire bloquant l'aventure.
+**E à 2,5 m** récolte un lot entier de six objets, avec segment d'accès dégagé.
+Un refus pour capacité pleine conserve le lot. Le point vide reste visible,
+se recharge après **30 s actives**, puis fournit six objets à nouveau. Seuls
+quatre points sont conservés ; pas de génération mondiale à chaque déplacement.
+M, R et le streaming ne les recréent pas. Les circuits servent effectivement aux
+recettes électriques. Aucun consommable chimique n'est requis pour le générateur.
 
-## Périmètre fonctionnel
+Amorçage possible : 40 alliage et 14 circuits construisent un coffre et un
+exemplaire de chacun des quatre équipements. Les caisses fournissent 48 alliage ;
+les deux sources de circuits donnent 12, puis un renouvellement fournit les six
+suivants. La réserve initiale laisse recharger pendant cette mise en place.
+Les sources renouvelables permettent ensuite d'agrandir l'installation. En cas
+d'échec, R conserve la base et les contenus, revient au premier abri et rend une
+combinaison pleine : **secours de gameplay illimité**, sans remplir la base.
+Une nuit sans batterie chargée ne bloque donc pas définitivement l'aventure.
 
-| Élément | Résultat à livrer |
-|---|---|
-| Panneaux solaires | Production utile variant avec l'ensoleillement et la poussière/tempête de P8 ; état et puissance lisibles |
-| Batteries | Capacité finie, charge/décharge et réserve permettant de traverser la nuit ou une baisse de production |
-| Générateur et réserve d'oxygène | Consommation électrique, production et stockage bornés ; recharge de combinaison reliée à cette réserve |
-| Récolte durable | Sources accessibles au-delà des huit caisses initiales, selon une règle déterministe et persistée |
-| Inventaire du joueur | Plusieurs types d'objets/ressources utiles, quantités, piles et capacité finie ; consulter et organiser ce qui est porté |
-| Stockage de base | Coffres/conteneurs constructibles et accessibles à proximité, avec identité, capacité et contenu propres ; déposer et reprendre des objets |
-| Interface et sauvegarde | Inventaire et conteneur consultables ensemble, commandes de transfert, coûts/disponibilités, énergie/oxygène et erreurs lisibles ; toute la progression conservée par aventure |
+## Inventaire et coffres
 
-## Inventaire et conteneurs
+- Porté : **8 emplacements** ; coffre : **16 emplacements** ; **20 objets/pile**.
+  Deux types utiles : alliage et circuits. Aucune limite de masse fictive.
+- **I** ouvre le porté et le coffre accessible le plus proche ; **E** devant un
+  coffre ouvre aussi cet écran. Sans coffre proche, le porté reste consultable.
+  I / Échap ferme ; un coffre devenu distant, masqué, absent, un menu principal,
+  une sortie spatiale ou un échec ferme l'accès. L'oxygène reste visible.
+- Cliquer une pile sélectionne le côté source. **Quantité** propose 1/5/20 ;
+  **↑/↓** règle toute quantité exacte entre 1 et 20. **Transférer quantité** ou
+  **Transférer pile** refuse l'ensemble si impossible. **Maximum admissible**
+  transfère explicitement le minimum entre cette pile et la place disponible,
+  et annonce le nombre réellement déplacé. Maximum ne parcourt pas toutes les
+  piles du type : sélectionner une autre pile pour continuer.
+- **Regrouper** compacte le côté sélectionné par type. **Déplacer la pile**, puis
+  clic dans le même inventaire, échange les deux emplacements (y compris vides).
+  Changer de côté exige une commande de transfert.
+- Portée et segment yeux→coffre sont revalidés à chaque opération ; seul le volume
+  propre du coffre est ignoré dans ce segment. Les murs et obstacles bloquent.
+  Le coffre est une boîte solide ; ses contenus ne sont pas liés au proxy.
 
-L'état actuel P8 est un compteur d'alliage dans `Construction`, avec huit caisses
-épuisables. Il ne fournit pas encore l'inventaire à piles ni les coffres demandés.
-Examiner ce propriétaire et ses transactions avant de remplacer le compteur.
+Les mutations de `inventory.rs` vérifient quantités et capacités avant débit.
+Une demande exacte refusée ne publie aucune mutation. Les actions répétées ne
+peuvent retirer une pile vide, dupliquer ni dépasser les capacités. Piles et ordre
+sont sauvegardés. L'UI et ses sélections/transactions en attente ne le sont pas.
 
-Pour la première implémentation, privilégier des emplacements contenant des piles
-typées, avec limite par pile et nombre d'emplacements borné. Fixer les valeurs
-lors du cadrage concret des recettes ; ne pas inventer une masse physique à partir
-d'un nombre d'objets. Les types retenus doivent servir à une recette ou un usage
-effectivement livré. Prévoir rangement/regroupement et transfert d'une quantité
-choisie, d'une pile ou du maximum admissible, avec commandes explicites.
+## Catalogue et admission
 
-Un coffre appartient à la base, indépendamment du joueur, du patch et du proxy
-de rendu. Il possède une identité stable, une pose corporelle DVec3/DQuat, une
-capacité finie et un contenu autoritaire. Réutiliser le placement/admission et les
-principes de contacts existants selon sa géométrie réelle. Sa consultation et les
-transferts exigent une proximité définie ; fermer l'interface s'il devient
-inaccessible. Un rebasage ou un déchargement visuel ne doit pas déplacer ou vider
-le coffre.
+**B** ouvre six recettes. Sélectionner la fiche, **Prévisualiser / Entrée**, puis
+flèches et J/L, **Entrée** pour confirmer ; X/B/Échap annule sans coût. Le paiement
+vient **uniquement du porté**, après revalidation du terrain, des volumes et de la
+recette. Retirer les objets d'un coffre avant de construire ; pas de ponction à
+distance. La confirmation crée une seule identité et ferme la preview.
 
-Chaque mouvement d'objets doit préserver les quantités : vérifier disponibilité,
-type de pile, capacité et accès avant de publier la transaction. Une demande
-précise impossible est refusée sans débit ; une commande « maximum » calcule et
-annonce la quantité effectivement transférée. Une récolte refusée pour inventaire
-plein ne doit pas épuiser la source. Aucun dépassement, perte ou duplication lors
-d'un clic répété, d'une annulation, d'un changement d'écran ou du chargement.
+| Installation | Coût porté | Boîte solide (m, x/y/z) | Usage |
+|---|---|---|---|
+| Abri | 12 alliage | six pièces P4, emprise 6,3 × 6,3 | Recharge depuis la base s'il est desservi |
+| Coffre | 6 alliage | 1,4 × 0,9 × 1 | 16 piles indépendantes |
+| Panneau solaire | 8 alliage + 4 circuits | 2,8 × 0,65 × 2 | 160 W crête conventionnels |
+| Batterie | 8 alliage + 4 circuits | 1 × 1,3 × 0,8 | +4 800 000 J, installée vide |
+| Générateur O₂ | 12 alliage + 6 circuits | 1,4 × 1,6 × 1 | 40 W → 4 s d'autonomie/s |
+| Réservoir O₂ | 6 alliage | 1 × 1,8 × 1 | +3 600 s de réserve, installé vide |
 
-Rendre explicite la provenance des matériaux des recettes. Proposition initiale :
-fabrication/construction depuis l'inventaire porté ; le joueur retire les objets
-du coffre avant usage. Toute utilisation directe d'un stockage proche doit être
-définie et validée comme une règle supplémentaire, sans ponction distante implicite.
-Revalider et payer une seule fois à confirmation, jamais à la prévisualisation.
+Plafonds : **32 abris et 64 équipements/coffres** cumulés. Chaque installation a
+un BuildingId commun monotone et une pose DVec3/DQuat dans le corps de Mars.
+Les coffres peuvent être éloignés ; les quatre équipements électriques/O₂
+doivent se trouver à **40 m du premier abri**. Tous les abris à 40 m de ce premier
+abri sont desservis. Cette base utilise **un bus collectif sans câbles** : stockage
+énergétique et O₂ agrégés, sans réseau, pertes de transport ni connexion
+transitive entre abris. Une batterie augmente la capacité sans créer d'énergie ;
+un réservoir augmente la capacité sans créer d'oxygène. Pas de démantèlement.
 
-Le stockage d'objets, les batteries et la réserve d'oxygène ont des contenus et
-unités distincts. Ne pas représenter une énergie ou une réserve respiratoire par
-une pile d'objets sans définir une conversion et un usage réels.
+Le carré conservateur de support garde les extrema des triangles fins et la
+variation ≤0,4 m. Demi-largeur 4,5 m pour l'abri, demi-diagonale horizontale +0,1 m
+pour un équipement. L'abri garde son origine au milieu des extrema ; les boîtiers
+reposent sur le maximum pour éviter leur enfouissement. Admission SAT contre
+joueur, abris, équipements, obstacles, caisses pleines et sources renouvelables
+(même vides), séparation 0,2 m. Pas de terrassement ni contacts de collectible.
 
-## Énergie, oxygène et ressources
+## Électricité et oxygène
 
-Définir puissances, capacités, rendements, coûts et débits avant d'équilibrer la
-boucle. Pour l'électricité, employer des unités explicites et cohérentes (W et
-J ou Wh avec conversion documentée). P8 fournit des conditions visuelles ; ses
-couleurs, opacités et lux de présentation ne sont pas une puissance de panneau.
-Documenter le modèle de production comme convention de gameplay, ainsi que les
-arrêts pour batterie vide, réserve pleine ou énergie insuffisante.
+Les deux réserves de base sont séparées des objets. **1 Wh = 3 600 J** ; une
+batterie ajoute 1 333,33 Wh. L'O₂ est mesuré en **secondes d'autonomie P4** :
+une seconde transférée retire une seconde de la base et en ajoute une à la
+combinaison. Le service retire au plus 30 s/s et remplit au plus 180 s. Hors abri
+desservi ou réserve vide : consommation 1 s/s, même dans un abri distant. Si la
+réserve se vide au milieu d’une longue frame, le temps restant consomme de
+nouveau la combinaison après la durée du transfert effectif.
 
-L'oxygène P4 est exprimé en secondes d'autonomie de combinaison. Définir l'unité
-de réserve de base et son lien avec cette autonomie avant de modifier la recharge.
-Décrire le devenir du service actuellement gratuit de l'abri et les moyens de
-démarrer ou de récupérer d'une panne. Ne pas revendiquer une chimie ou une pression
-scientifique que le jeu ne calcule pas.
+Pour chaque panneau fixé au corps, la normale +Y de sa pose est comparée à la
+direction corporelle du Soleil depuis ce panneau, avec le catalogue et la
+rotation martienne existants. Puissance de jeu :
 
-Définir une politique temporelle commune à la production/consommation : proposition
-en secondes réelles comme la survie, P/T changeant les conditions solaires. Préciser
-et tester menus, interfaces d'inventaire, espace et longues interruptions, sans
-changer silencieusement les deux horloges existantes. La politique de progression
-application fermée doit aussi être explicite ; P8 n'effectue aucun rattrapage.
+```text
+P = 160 W × max(0, normale · direction_soleil)
+          × exp(−0,65 × poussière_P8) × (1 − 0,25 × nuages_P8)
+```
 
-Les nouvelles sources de récolte nécessitent des identités et règles de
-disponibilité persistantes : rendement, épuisement ou renouvellement, placement
-et chargement local bornés. Un retour spatial, R ou un changement de patch ne doit
-pas réinitialiser les stocks/dépôts. Conserver par défaut le comportement actuel
-de R, qui garde les ressources et bâtiments, tant qu'une autre règle n'est pas
-demandée.
+La poussière/tempête réduit donc la production ; la nuit donne zéro. Les lux et
+couleurs de rendu ne servent pas à calculer l'électricité. Pas de loi solaire
+inverse carrée, ombre de terrain/bâtiment, suivi mécanique, encrassement permanent
+ou modèle d'ingénierie photovoltaïque. Les coefficients artistiques de P8 sont
+réutilisés comme **entrée de gameplay**, pas comme opacité instrumentale.
 
-## Interface, persistance et architecture
+Le générateur demande au plus 40 W par instance ; il consomme seulement l'énergie
+nécessaire à la place libre en réserve. Production disponible et charge de
+batterie servent cette demande ; le surplus charge la batterie, puis est perdu.
+Une alimentation partielle produit proportionnellement ; batterie vide sans
+soleil : arrêt. La reprise est automatique dès qu'une énergie est disponible.
+La réserve pleine coupe la consommation du générateur. Les réserves restent
+entre zéro et leurs capacités. Une batterie pleine peut alimenter un générateur
+40 W pendant 120 000 secondes réelles, donc plus qu'une nuit martienne à ×1 ;
+P/T accélère l'alternance astronomique, pas les débits de production.
 
-Prévoir une interface lisible pour le contenu porté et celui du conteneur ouvert,
-les capacités restantes, les quantités transférées et les motifs de refus. Montrer
-production/consommation électrique, charge de batterie, stock d'oxygène et état
-des équipements. Définir les commandes et l'effet des écrans sur la capture souris,
-le déplacement et l'oxygène ; garder les instruments vitaux lisibles.
+## Horloges et propriétaires
 
-Sauvegarder inventaire/piles, identités/poses/contenus des conteneurs, équipements,
-charges/réserves et état des ressources propres à l'aventure. Valider les types,
-quantités, capacités et identités avant restauration ; annuler les transactions
-et interfaces transitoires. Vérifier deux profils indépendants après fermeture.
-Le format livré reste **2 jusqu'à l'implémentation de P9** ; choisir alors sa version
-appropriée. Aucune compatibilité ancienne ni migration n'est requise pour le moment.
+Survie, production et renouvellement utilisent les **secondes réelles intégrales**
+de Time<Real>, sans plafond 0,25 s. Le menu principal, l'espace et l'échec
+suspendent les trois ; catalogue/inventaire/preview les laissent fonctionner.
+Ces écrans libèrent la souris et bloquent la marche/visée et P/T ; la gravité et
+le calendrier continuent. P/T commandé en jeu change les conditions solaires et
+météo, sans multiplier les débits. Une longue interruption est intégrée une fois
+avec **les conditions de fin de frame** ; pas d'intégration des levers/couchers
+intermédiaires. Application fermée : **aucun rattrapage**. R et M conservent réserves,
+contenus, poses et renouvellements ; seul le secours R remplit la combinaison.
 
-Séparer les données d'inventaire et les transactions de la preview de construction,
-du rendu et de l'UI. Réutiliser bâtiments, admission et persistance lorsqu'ils
-portent réellement le besoin ; créer un module uniquement avec sa fonctionnalité.
-Conserver SI/f64, GameSet, contacts, assets partagés et budgets de P8. Pas de
-génération mondiale de gisements ou de conteneurs à chaque frame.
+`inventory.rs` : piles et transactions pures ; `Construction` : porté, caisses et
+preview ; `Buildings` : identités/poses, coffres/contenus et types d'équipements ;
+`Base` : sources, charge collective et O₂ collectif ; `Oxygen` : combinaison et
+échec ; `ui/inventory.rs` : écran et commandes transitoires ; `persistence.rs` :
+instantané validé avant remplacement. Navigation → production/survie → construction,
+puis rendu/UI dans les GameSet existants. Aucun proxy n'écrit les états physiques.
 
-## Critères de fin et contrôles
+Rendu : cube/13 textures P7 partagés, teintes et matériaux réutilisés ; un proxy
+par équipement/source et six pièces maximum de fantôme, dans 120 m. Les premiers
+boîtiers d'équipements sont simples ; l'UI donne leur nom, recette et usage.
+Pas de nouveau mesh ni texture généré par frame, ni nouvelle dépendance. Cache
+terrain ≤13 patches inchangé. Plafond 32×7+64+8+4+6 = **306 proxies** hors terrain,
+ciel et obstacles. Ces bornes ne sont pas une mesure de VRAM totale.
 
-1. Réaliser la boucle complète depuis une aventure neuve : récolter, gérer la
-   capacité portée, construire un coffre, déposer/reprendre, fabriquer et installer
-   les équipements, produire/stocker, puis recharger la combinaison.
-2. Observer l'effet jour/nuit et poussière/tempête sur la production, la décharge
-   et la reprise après panne ; aucune réserve négative ou supérieure à sa capacité.
-3. Tester inventaire plein, piles pleines, source insuffisante, transfert partiel
-   explicite/maximal, coffre distant, commandes répétées et confirmation périmée ;
-   quantités conservées et dépenses uniques.
-4. Vérifier accès/contacts des coffres et équipements, rebasages, streaming,
-   retours spatiaux, menu et R ; aucun déplacement de contenu ou réinitialisation.
-5. Retrouver inventaire organisé, contenus de plusieurs coffres, charges/réserves
-   et récoltes après redémarrage ; profils indépendants et fichier incohérent refusé
-   sans mutation de la partie active.
-6. Exécuter fmt, check, tests, Clippy et build release ; vérifier graphiquement la
-   boucle et l'UI dans un créneau autorisé, mesurer les coûts ajoutés sur des scènes
-   comparables, et documenter environnement, résultats et limites. Windows reste
-   à valider nativement.
+## Sauvegardes et vérification
 
-Les quantités, capacités, recettes et détails d'interaction restent à fixer pendant
-l'implémentation. Ce document constitue le périmètre de travail et ses critères,
-pas une annonce de fonctionnalités disponibles. P10 exploration/objectifs reste
-ultérieur ; un réseau logistique automatique n'est pas nécessaire à cette boucle.
+**SOLAR_SURVIVAL 3** : porté et ordre, coffres et capacités, équipements/identités,
+poses, énergie J, O₂ s, lots et délais des quatre sources ; caisses, joueur,
+calendrier et options existants. Fichiers ≤256 Kio. Types, quantités, capacités,
+identités, charges, délais et poses sont validés avant publication. Formats 1/2
+refusés explicitement, sans migration ni suppression. Secours et profils P6 conservés.
+
+```bash
+cargo fmt --check
+cargo check --all-targets --locked
+cargo test --locked
+cargo clippy --all-targets --locked -- -D warnings
+cargo build --release --locked
+python3 scripts/validate_base.py --output docs/mon-p9 --mesa-immediate --focus-x11
+```
+
+Le scénario graphique utilise des poses de départ préparées et les vraies touches /
+boutons ECS. Il ne télécommande pas les périphériques OS. Il conserve les refus et
+assertions, deux processus et deux profils ; ne pas le confondre avec une partie
+humaine sans repositionnement. Les scénarios P5 antérieurs restent des régressions
+de l'abri et ne prouvent pas seuls P9. Résultats/limites effectivement mesurés dans
+[VALIDATION](VALIDATION.md) et [PERFORMANCE](PERFORMANCE.md).

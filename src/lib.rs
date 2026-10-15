@@ -1,8 +1,10 @@
 //! Solar Survival: la simulation SI/f64 reste indépendante des proxies graphiques.
+pub mod base;
 pub mod buildings;
 pub mod camera;
 pub mod config;
 pub mod construction;
+pub mod inventory;
 pub mod persistence;
 pub mod physics;
 pub mod planets;

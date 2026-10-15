@@ -133,7 +133,9 @@ fn input(w: &mut World) {
         "P6 {} phase {phase} t={time:.3} profil={:?} stock={} abris={} O2={:.6} mode={:?} camera={camera:?}",
         if load { "load" } else { "save" },
         w.resource::<SaveControl>().active_profile,
-        w.resource::<Construction>().alloy,
+        w.resource::<Construction>()
+            .inventory
+            .count(crate::inventory::Item::Alloy),
         w.resource::<Buildings>().shelters.len(),
         w.resource::<Oxygen>().remaining_seconds,
         w.resource::<Explorer>().mode
@@ -161,7 +163,12 @@ fn input(w: &mut World) {
                 press(w, KeyCode::KeyE);
             }
             7 => {
-                assert_eq!(w.resource::<Construction>().alloy, 12);
+                assert_eq!(
+                    w.resource::<Construction>()
+                        .inventory
+                        .count(crate::inventory::Item::Alloy),
+                    12
+                );
                 prepare(w, 16.0, 0.0);
                 press(w, KeyCode::KeyB);
             }
@@ -219,7 +226,12 @@ fn input(w: &mut World) {
                 press(w, KeyCode::KeyE);
             }
             17 => {
-                assert_eq!(w.resource::<Construction>().alloy, 6);
+                assert_eq!(
+                    w.resource::<Construction>()
+                        .inventory
+                        .count(crate::inventory::Item::Alloy),
+                    6
+                );
                 w.resource_mut::<Oxygen>().remaining_seconds = 45.0;
                 w.resource_mut::<MenuState>().open();
                 press(w, KeyCode::F5);
@@ -230,7 +242,12 @@ fn input(w: &mut World) {
             21 => {
                 verify(w, "Alpha");
                 assert_eq!(w.resource::<Buildings>().shelters.len(), 2);
-                assert_eq!(w.resource::<Construction>().alloy, 0);
+                assert_eq!(
+                    w.resource::<Construction>()
+                        .inventory
+                        .count(crate::inventory::Item::Alloy),
+                    0
+                );
                 press(w, KeyCode::Enter);
             }
             22 => {
@@ -262,7 +279,12 @@ fn input(w: &mut World) {
                     w.resource::<SaveControl>().active_profile.as_deref(),
                     Some("Bravo")
                 );
-                assert_eq!(w.resource::<Construction>().alloy, 6);
+                assert_eq!(
+                    w.resource::<Construction>()
+                        .inventory
+                        .count(crate::inventory::Item::Alloy),
+                    6
+                );
                 assert_eq!(w.resource::<Buildings>().shelters.len(), 1);
                 assert_eq!(w.resource::<Oxygen>().remaining_seconds, 45.0);
             }
@@ -270,7 +292,12 @@ fn input(w: &mut World) {
             6 => press(w, KeyCode::KeyB),
             7 => {
                 assert!(w.resource::<Construction>().catalog_open);
-                assert_eq!(w.resource::<Construction>().alloy, 6);
+                assert_eq!(
+                    w.resource::<Construction>()
+                        .inventory
+                        .count(crate::inventory::Item::Alloy),
+                    6
+                );
                 press(w, KeyCode::Escape);
             }
             8 => {
@@ -282,7 +309,12 @@ fn input(w: &mut World) {
             11 => {
                 verify(w, "Alpha");
                 assert_eq!(w.resource::<Buildings>().shelters.len(), 2);
-                assert_eq!(w.resource::<Construction>().alloy, 0);
+                assert_eq!(
+                    w.resource::<Construction>()
+                        .inventory
+                        .count(crate::inventory::Item::Alloy),
+                    0
+                );
             }
             12 => {
                 press(w, KeyCode::Enter);

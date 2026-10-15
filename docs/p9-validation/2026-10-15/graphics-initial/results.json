@@ -1,0 +1,24 @@
+[
+  {
+    "stage": "save",
+    "exit_code": 0,
+    "seconds": 116.42907528900014,
+    "focused_window": "0x4200004",
+    "captures": 27,
+    "diagnostics": [],
+    "completion": [
+      "P9 save termin\u00e9 : r\u00e9colte, renouvellement, coffre/transferts, quatre \u00e9quipements, production/recharge, menu/rebasage/nuit et profils"
+    ]
+  },
+  {
+    "stage": "load",
+    "exit_code": 0,
+    "seconds": 26.409718548000455,
+    "focused_window": "0x4200004",
+    "captures": 9,
+    "diagnostics": [],
+    "completion": [
+      "P9 load termin\u00e9 : deux profils, contenus/charges/renouvellement, refus transactionnel, R et M"
+    ]
+  }
+]
