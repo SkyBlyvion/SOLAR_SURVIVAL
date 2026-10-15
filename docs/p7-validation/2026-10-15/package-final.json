@@ -1,0 +1,11 @@
+{
+  "archive": "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/dist/solar-survival-ubuntu-p7-final.tar.gz",
+  "bytes": 36876876,
+  "sha256": "73d7fdfd07d06e1f03d7dfd4ac0777975e9af1fa38d08158f7dbca5fc031c6ed",
+  "binary_sha256": "96ef1731fdc29a540ca31858b8e7cd876b2fa31f8142bac8ec84533d45d813ea",
+  "manifest_files_verified": 747,
+  "extracted": "/tmp/solar-survival-p7-final-2026-10-15/solar-survival-ubuntu-p7-final",
+  "launch_verified": true,
+  "launch_scenario": "planets-final-package/results.json",
+  "profile_validation": "packaged-720/results.json \u2014 m\u00eame binaire, seule image Jupiter et cr\u00e9dits/manifeste modifi\u00e9s depuis cette validation"
+}

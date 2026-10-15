@@ -119,3 +119,14 @@ extraites et exports : `manifest.json`. `prepare_orbital_textures.py` est appel�
 par la préparation P7 ; Python/NumPy/Pillow restent des outils hors jeu uniquement.
 Total final des **13 images**, mipmaps RGBA8 sRGB inclus : **42 118 856 octets,
 40,168 Mio**, sous le budget P7 de 128 Mio ; allocations/staging pilote exclus.
+
+## Correction du raccord de Jupiter — 15 octobre 2026
+
+Le maître NASA/JPL Voyager 720×360 reste inchangé. L’export corrige uniquement
+les huit colonnes de chaque bord en longitude (4° par côté) : rapprochement
+RGB en lumière linéaire vers leur moyenne commune, atténué par smoothstep.
+Les 704 colonnes intérieures sont identiques au maître ; aucun détail généré
+ni modification géométrique. Cette retouche de raccord est artistique, sans
+prétendre corriger les données d’observation. Mipmaps recalculés offline, même
+format/dimensions/occupation ; fonction periodic_longitude dans
+scripts/prepare_orbital_textures.py. Empreinte export dans manifest.json.

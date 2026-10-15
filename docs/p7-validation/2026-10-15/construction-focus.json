@@ -1,0 +1,25 @@
+{
+  "events": [
+    {
+      "seconds": 0.003304452000065794,
+      "game_window": null,
+      "focused_window": "0x3600018",
+      "game_focused": false
+    },
+    {
+      "seconds": 0.6400064580000162,
+      "game_window": "0x4600004",
+      "focused_window": "0x4600004",
+      "game_focused": true
+    },
+    {
+      "seconds": 59.85689091300003,
+      "game_window": "0x4600004",
+      "focused_window": "0x3600018",
+      "game_focused": false
+    }
+  ],
+  "exit_code": 0,
+  "interval_seconds": 0.1,
+  "description": "Lecture XGetInputFocus uniquement ; aucun titre d\u2019autre fen\u00eatre conserv\u00e9."
+}

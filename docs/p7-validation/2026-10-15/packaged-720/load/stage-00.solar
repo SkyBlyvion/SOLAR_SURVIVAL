@@ -1,0 +1,12 @@
+SOLAR_SURVIVAL 1
+clock 2451545.0000115884 0 false
+pilot space 3 15396158.329544067 5408192.149448227 15196518.672668457 -0.11272954736771298 0.3828060339915827 0.04712561568175921 0.9157132552477991 3 3
+terrain true false 1343881220 0 0 0 1
+obstacles false
+home false 0 0 0 1
+buildings 0 0
+inventory false 0 0
+oxygen 180 false
+surface 0 0 0 0 0 0 false 0 0 0 0 0 1 0
+settings 1 1 2 false
+checksum f52494cfaf20c391

@@ -1,0 +1,49 @@
+[
+  {
+    "command": [
+      "python3",
+      "scripts/validate_sky.py",
+      "--planets",
+      "--focus-x11",
+      "--mesa-immediate",
+      "--output",
+      "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p7-validation/2026-10-15/planets"
+    ],
+    "exit_code": 0,
+    "seconds": 76.495249927
+  },
+  {
+    "command": [
+      "python3",
+      "scripts/profile_planetary.py",
+      "--scene",
+      "p5",
+      "--repeats",
+      "2",
+      "--gpu-probe",
+      "--resources",
+      "--focus-x11",
+      "--mesa-immediate",
+      "--output",
+      "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p7-validation/2026-10-15/performance"
+    ],
+    "exit_code": 0,
+    "seconds": 179.545325198
+  },
+  {
+    "command": [
+      "python3",
+      "scripts/validate_persistence.py",
+      "--small-window",
+      "--mesa-immediate",
+      "--binary",
+      "/tmp/solar-survival-p7-2026-10-15/solar-survival-ubuntu-p7/solar_survival",
+      "--cwd",
+      "/tmp/solar-survival-p7-2026-10-15/solar-survival-ubuntu-p7",
+      "--output",
+      "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p7-validation/2026-10-15/packaged-720"
+    ],
+    "exit_code": 0,
+    "seconds": 103.71420194800004
+  }
+]

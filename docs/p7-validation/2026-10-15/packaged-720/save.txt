@@ -1,0 +1,50 @@
+2026-10-15T06:54:00.645484Z  INFO bevy_render::renderer: AdapterInfo { name: "NVIDIA GeForce GTX 1060 3GB (NVK GP106)", vendor: 4318, device: 7170, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "NVK", driver_info: "Mesa 25.2.8-0ubuntu0.24.04.4", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: false }
+2026-10-15T06:54:00.767927Z  INFO bevy_pbr::cluster: GPU clustering is supported on this device.
+2026-10-15T06:54:00.767970Z  INFO bevy_render::batching::gpu_preprocessing: GPU preprocessing is fully supported on this device.
+2026-10-15T06:54:00.768418Z  INFO bevy_winit::system: Creating new window Solar Survival · 0.2 · Mars (63v0)
+2026-10-15T06:54:00.768837Z  INFO winit::platform_impl::linux::x11::window: Guessed window scale factor: 1
+2026-10-15T06:54:00.792384Z  INFO solar_survival::rendering::textures: P7 textures CPU préparées : 13 images, 42118856 octets, 21.250 ms ; données transférées au renderer, staging/pics pilote exclus
+2026-10-15T06:54:00.818519Z  INFO solar_survival::config::persistence_validation: P6 save phase 0 t=0.000 profil=None stock=0 abris=0 O2=180.000000 mode=Space camera=289v0
+2026-10-15T06:54:00.951811Z  INFO solar_survival::rendering::textures: P7 GPU résident : 13 textures RGBA8 sRGB avec mipmaps, 42118856 octets / 134217728 ; allocation pilote totale/staging exclus
+2026-10-15T06:54:01.908759Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p7-validation/2026-10-15/packaged-720/save/stage-00.png
+2026-10-15T06:54:02.829502Z  INFO solar_survival::config::persistence_validation: P6 save phase 1 t=2.012 profil=None stock=0 abris=0 O2=180.000000 mode=Space camera=289v0
+2026-10-15T06:54:03.919112Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p7-validation/2026-10-15/packaged-720/save/stage-01.png
+2026-10-15T06:54:04.823131Z  INFO solar_survival::config::persistence_validation: P6 save phase 2 t=4.006 profil=None stock=0 abris=0 O2=180.000000 mode=Space camera=289v0
+2026-10-15T06:54:05.898591Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p7-validation/2026-10-15/packaged-720/save/stage-02.png
+2026-10-15T06:54:06.828042Z  INFO solar_survival::config::persistence_validation: P6 save phase 3 t=6.011 profil=None stock=0 abris=0 O2=180.000000 mode=Space camera=289v0
+2026-10-15T06:54:08.819571Z  INFO solar_survival::config::persistence_validation: P6 save phase 4 t=8.002 profil=Some("Alpha") stock=0 abris=0 O2=180.000000 mode=Space camera=289v0
+2026-10-15T06:54:09.916113Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p7-validation/2026-10-15/packaged-720/save/stage-03.png
+2026-10-15T06:54:10.826328Z  INFO solar_survival::config::persistence_validation: P6 save phase 5 t=10.009 profil=Some("Alpha") stock=0 abris=1 O2=178.001394 mode=Surface camera=289v0
+2026-10-15T06:54:12.834945Z  INFO solar_survival::config::persistence_validation: P6 save phase 6 t=12.018 profil=Some("Alpha") stock=6 abris=1 O2=175.991442 mode=Surface camera=289v0
+2026-10-15T06:54:14.840388Z  INFO solar_survival::config::persistence_validation: P6 save phase 7 t=14.023 profil=Some("Alpha") stock=12 abris=1 O2=173.987890 mode=Surface camera=289v0
+2026-10-15T06:54:15.922695Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p7-validation/2026-10-15/packaged-720/save/stage-04.png
+2026-10-15T06:54:16.829908Z  INFO solar_survival::config::persistence_validation: P6 save phase 8 t=16.013 profil=Some("Alpha") stock=12 abris=1 O2=171.994833 mode=Surface camera=289v0
+2026-10-15T06:54:17.918651Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p7-validation/2026-10-15/packaged-720/save/stage-05.png
+2026-10-15T06:54:18.842336Z  INFO solar_survival::config::persistence_validation: P6 save phase 9 t=18.025 profil=Some("Alpha") stock=12 abris=1 O2=169.989929 mode=Surface camera=289v0
+2026-10-15T06:54:19.902121Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p7-validation/2026-10-15/packaged-720/save/stage-06.png
+2026-10-15T06:54:20.818988Z  INFO solar_survival::config::persistence_validation: P6 save phase 10 t=20.002 profil=Some("Alpha") stock=0 abris=2 O2=168.006168 mode=Surface camera=289v0
+2026-10-15T06:54:20.820049Z DEBUG solar_survival::player::surface: GLOBAL rebasage CPU 1.001 ms, patches 13, constructions 19, LOD ([8, 4, 1], 10569, 19448), changements 1, géométrie 0.352 ms, index 0.604 ms
+2026-10-15T06:54:21.890486Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p7-validation/2026-10-15/packaged-720/save/stage-07.png
+2026-10-15T06:54:22.829415Z  INFO solar_survival::config::persistence_validation: P6 save phase 11 t=22.012 profil=Some("Alpha") stock=0 abris=2 O2=120.532311 mode=Surface camera=289v0
+2026-10-15T06:54:23.885166Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p7-validation/2026-10-15/packaged-720/save/stage-08.png
+2026-10-15T06:54:24.825285Z  INFO solar_survival::config::persistence_validation: P6 save phase 12 t=24.008 profil=Some("Alpha") stock=0 abris=2 O2=120.532311 mode=Surface camera=289v0
+2026-10-15T06:54:26.817353Z  INFO solar_survival::config::persistence_validation: P6 save phase 13 t=26.000 profil=Some("Alpha") stock=0 abris=2 O2=120.532311 mode=Surface camera=289v0
+2026-10-15T06:54:27.880538Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p7-validation/2026-10-15/packaged-720/save/stage-09.png
+2026-10-15T06:54:28.827222Z  INFO solar_survival::config::persistence_validation: P6 save phase 14 t=28.010 profil=Some("Alpha") stock=0 abris=2 O2=120.532311 mode=Surface camera=289v0
+2026-10-15T06:54:29.872100Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p7-validation/2026-10-15/packaged-720/save/stage-10.png
+2026-10-15T06:54:30.824076Z  INFO solar_survival::config::persistence_validation: P6 save phase 15 t=30.007 profil=Some("Bravo") stock=0 abris=0 O2=180.000000 mode=Space camera=289v0
+2026-10-15T06:54:32.819432Z  INFO solar_survival::config::persistence_validation: P6 save phase 16 t=32.002 profil=Some("Bravo") stock=0 abris=1 O2=178.007516 mode=Surface camera=289v0
+2026-10-15T06:54:34.824144Z  INFO solar_survival::config::persistence_validation: P6 save phase 17 t=34.007 profil=Some("Bravo") stock=6 abris=1 O2=176.002675 mode=Surface camera=289v0
+2026-10-15T06:54:35.892056Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p7-validation/2026-10-15/packaged-720/save/stage-11.png
+2026-10-15T06:54:36.825555Z  INFO solar_survival::config::persistence_validation: P6 save phase 18 t=36.008 profil=Some("Bravo") stock=6 abris=1 O2=45.000000 mode=Surface camera=289v0
+2026-10-15T06:54:37.882341Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p7-validation/2026-10-15/packaged-720/save/stage-12.png
+2026-10-15T06:54:38.828273Z  INFO solar_survival::config::persistence_validation: P6 save phase 19 t=38.011 profil=Some("Bravo") stock=6 abris=1 O2=45.000000 mode=Surface camera=289v0
+2026-10-15T06:54:40.820552Z  INFO solar_survival::config::persistence_validation: P6 save phase 20 t=40.003 profil=Some("Bravo") stock=6 abris=1 O2=45.000000 mode=Surface camera=289v0
+2026-10-15T06:54:41.872463Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p7-validation/2026-10-15/packaged-720/save/stage-13.png
+2026-10-15T06:54:42.830762Z  INFO solar_survival::config::persistence_validation: P6 save phase 21 t=42.014 profil=Some("Alpha") stock=0 abris=2 O2=120.532311 mode=Surface camera=289v0
+2026-10-15T06:54:44.821975Z  INFO solar_survival::config::persistence_validation: P6 save phase 22 t=44.005 profil=Some("Alpha") stock=0 abris=2 O2=180.000000 mode=Surface camera=289v0
+2026-10-15T06:54:45.872084Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p7-validation/2026-10-15/packaged-720/save/stage-14.png
+2026-10-15T06:54:46.818482Z  INFO solar_survival::config::persistence_validation: P6 save phase 23 t=46.001 profil=Some("Alpha") stock=0 abris=2 O2=180.000000 mode=Surface camera=289v0
+2026-10-15T06:54:47.884947Z  INFO bevy_render::view::window::screenshot: Screenshot saved to /home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/docs/p7-validation/2026-10-15/packaged-720/save/stage-15.png
+2026-10-15T06:54:48.817454Z  INFO solar_survival::config::persistence_validation: P6 save phase 24 t=48.000 profil=Some("Alpha") stock=0 abris=2 O2=180.000000 mode=Surface camera=289v0
+2026-10-15T06:54:48.817552Z  INFO solar_survival::config::persistence_validation: P6 save terminé : Alpha construit/rebasé, Bravo indépendant, choix des profils et retour Alpha

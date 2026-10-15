@@ -148,3 +148,12 @@ Le choix de petites résolutions natives évite les agrandissements inutiles.
 [Crédits complets et transformations](../assets/textures/CREDITS.md).
 Toutes les cartes partagent le même chemin orbital ; seules Soleil/Lune restent
 procédurales. Aucun mesh de modèle NASA ni nouvelle donnée physique intégré.
+
+### Revue du 15 octobre : raccord de Jupiter
+
+La visite du méridien de raccord révélait une ligne dans le composite Voyager.
+Correction offline artistique sur huit colonnes par bord, en RGB linéaire avec
+atténuation smoothstep ; maître intact et 704 colonnes intérieures identiques.
+Même résolution, mips et coût mémoire. Les autres douze exports sont inchangés.
+[Preuve numérique](p7-validation/2026-10-15/jupiter-seam-fix.json) et crédits
+distinguent cette correction de données scientifiques.

@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-15",
+  "boards_inspected": 26,
+  "captures_inspected": 98,
+  "original_captures_inspected": [
+    "planets/captures/sky-09.png",
+    "planets/captures/sky-24.png",
+    "planets/captures/sky-02.png",
+    "planets-final-package/captures/sky-09.png",
+    "planets-final-package/captures/sky-24.png",
+    "packaged-720/save/stage-07.png",
+    "construction-retry/captures/stage-05.png"
+  ],
+  "source_image_inspected": "art/p7-masters/jupiter.jpg",
+  "observations": [
+    "Cr\u00e9dits SkyBlyvion lisibles, porte/plaque, ressources et ghost vert/rouge lisibles.",
+    "Profils ind\u00e9pendants, retour \u00e0 Alpha et erreur Broken sans partie perdue.",
+    "Mercure/V\u00e9nus/Jupiter/Saturne/Uranus/Neptune, couture et deux p\u00f4les revus. Les vues de p\u00f4le proches cadrent le globe et peuvent couper les anneaux de Saturne.",
+    "Couture visible Jupiter rep\u00e9r\u00e9e sur premi\u00e8re galerie puis retir\u00e9e par correction offline \u00e9troite, rev\u00e9rifi\u00e9e sur original final.",
+    "P7 conserve relief sph\u00e9rique, brume proche et g\u00e9om\u00e9trie simple des obstacles ; aucune am\u00e9lioration P8 revendiqu\u00e9e."
+  ],
+  "prior_surface_inspection": "../inspection-first/verified.json \u2014 34 vues de la passe pr\u00e9c\u00e9dente"
+}

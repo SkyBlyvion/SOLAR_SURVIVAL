@@ -1,0 +1,22 @@
+{
+  "changed_textures": [
+    "jupiter.p7tex"
+  ],
+  "source_sha256": "ac2d387f8ea56a59f45dea37993c779a730f49d7d9fdbc8d36c307a351b1f1a1",
+  "columns_per_edge": 8,
+  "longitude_degrees_per_edge": 4,
+  "edge_mean_absolute_rgb_before": 12.70648193359375,
+  "edge_mean_absolute_rgb_after": 0.0,
+  "interior_identical": true,
+  "gpu_bytes_unchanged": 42118856,
+  "export": {
+    "file": "jupiter.p7tex",
+    "width": 720,
+    "height": 360,
+    "mip_levels": 10,
+    "format": "Rgba8UnormSrgb",
+    "repeat": false,
+    "gpu_bytes": 1382200,
+    "sha256": "6864d5759234ed711e7d05f470772fceec0ccdcb1b8ba95d71af471d19c01578"
+  }
+}

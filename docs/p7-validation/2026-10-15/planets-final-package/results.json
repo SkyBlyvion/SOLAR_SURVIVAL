@@ -1,0 +1,13 @@
+{
+  "exit_code": 0,
+  "seconds": 75.42664082099986,
+  "focused_window": "0x4400004",
+  "captures": 25,
+  "diagnostics": [],
+  "completion": [
+    "SKY termin\u00e9 : 25 poses, transitions et cam\u00e9ra unique v\u00e9rifi\u00e9es"
+  ],
+  "source_assets_unchanged": true,
+  "package_files_unchanged": true,
+  "binary_unchanged": true
+}

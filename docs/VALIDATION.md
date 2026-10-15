@@ -1,3 +1,28 @@
+# P7 — validation Ubuntu complétée le 15 octobre 2026
+
+Départ `eeaff80`, dépôt propre et origin identique. Les contrôles restants de la passe interrompue ont été exécutés avec accord explicite de l’utilisateur pour le focus. **P7 clôturé sur Ubuntu de développement** ; Windows et la cible RTX4050 restent à valider nativement.
+
+| Vérification | Résultat et portée |
+|---|---|
+| Sources compilées | Tous Rust/tests/shaders/Cargo identiques à ceux des **134 tests** et six contrôles du 14 ; [concordance](p7-validation/2026-10-15/final-concordance.json). Après export corrigé : deux tests Rust textures, fmt et checks Python/exports réussis ; préparation complète reproduite byte-identique en7,403s |
+| Planètes et crédits | Première galerie 25 captures réussie ; couture Jupiter détectée puis corrigée offline, maître intact. Galerie **finale depuis l’archive extraite** : 75,427 s, code 0, 25 captures, aucun ERROR/WARN/panic, tous fichiers inchangés ; [résultats](p7-validation/2026-10-15/planets-final-package/results.json) |
+| Construction et placement | Relance contrôlée 59,424 s, code 0, 16 captures : récolte, refus/autorisation, annulation/confirmation, porte/mur/recharge, rebasage, espace/menu ; [résultats](p7-validation/2026-10-15/construction-retry/results.json). Premier essai échoué conservé ; observation du focus pendant la relance, aucune modification des contrôles |
+| Profils de l’archive P7 | Deux processus hors checkout, 1280×720, **48,410 + 54,376 s**, codes 0, 32 captures, aucun diagnostic ; Alpha/Bravo indépendants après redémarrage, stock/abris, chargement après rebasage/recharge et refus Broken ; [résultats](p7-validation/2026-10-15/packaged-720/results.json) |
+| Inspection | **98 captures / 26 planches**, sept originaux et maître Jupiter, [registre](p7-validation/2026-10-15/inspection/verified.json). Les 34 vues jour/nuit/Terre/Mars de la passe précédente sont conservées et ne sont pas comptées comme nouvelles |
+| Mesures sans captures | Deux P7 sans recorder + un GPU séparé, trois codes 0 ; référence P6 supplémentaire sur la session actuelle, code 0 ; [comparaison](p7-validation/2026-10-15/comparison.json). Surcoût moyen observé environ **2,4 ms/frame**, pas de 60 FPS validés |
+| Budget textures | 13 payloads/empreintes/descripteurs conformes, **40,168 Mio / 128 Mio**, [audit final](p7-validation/2026-10-15/texture-audit-final.json). VRAM totale/pilote/staging exclus |
+| Archive finale | **36 876 876 octets**, 747 fichiers vérifiés, binaire release inchangé, lancement orbital hors checkout réussi ; [preuve](p7-validation/2026-10-15/package-final.json) |
+
+Le parcours des profils et les mesures précèdent la retouche RGB de Jupiter. La nouvelle archive change seulement ce payload et ses crédits/manifeste ; même binaire, douze autres images et physique/UI inchangées. Son lancement final revalide les 25 vues orbitales et l’audit des 13 images. Aucun nouveau build release ni seconde campagne de profils finale inventés.
+
+Environnement confirmé : Ubuntu/X11, i7-6700K, 32 Go, GTX1060 3Go/NVK/Mesa25.2.8, 1440×900 MSAA4 pour mesures et 1280×720 pour profils. [Contexte](p7-validation/2026-10-15/host.json), [bilan détaillé et échec conservé](p7-validation/2026-10-15/NOTES.md). Aucun écran virtuel ni traitement spécial des entrées ajouté. Ne plus prendre spontanément le focus pendant le travail utilisateur.
+
+**Limites transversales :** Windows11 natif et matériel cible/objectif1080p60 non validés, CPU annoncé « i5 12700K » à confirmer ; compteurs VRAM totale/staging non disponibles sur ce pilote. L’inspection technique ne constitue pas une approbation esthétique utilisateur. P8 relief/horizons, P9 progression et P10 exploration restent non implémentés. [Passation](NEXT_CHAT.md).
+
+---
+
+# Historique — état partiel reçu le 14 octobre 2026
+
 # P7 — implémentation intégrée, validation finale partielle
 
 14 octobre 2026. Départ réel `f748faf`, origin identique avant les modifications. Ubuntu 24.04.5/X11, Core i7-6700K, 32 Go, GTX 1060 3 Go/NVK/Mesa 25.2.8. Rust 1.99.0, Bevy exactement =0.19.1, Cargo inchangé. Chef de projet et orchestrateur : **SkyBlyvion**.

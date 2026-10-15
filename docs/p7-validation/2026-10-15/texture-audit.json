@@ -1,0 +1,99 @@
+{
+  "textures": [
+    {
+      "file": "earth.p7tex",
+      "width": 2048,
+      "height": 1024,
+      "mips": 12,
+      "bytes": 11184812
+    },
+    {
+      "file": "mars.p7tex",
+      "width": 1440,
+      "height": 720,
+      "mips": 11,
+      "bytes": 5529400
+    },
+    {
+      "file": "regolith.p7tex",
+      "width": 1024,
+      "height": 1024,
+      "mips": 11,
+      "bytes": 5592404
+    },
+    {
+      "file": "wall.p7tex",
+      "width": 512,
+      "height": 512,
+      "mips": 10,
+      "bytes": 1398100
+    },
+    {
+      "file": "roof.p7tex",
+      "width": 512,
+      "height": 512,
+      "mips": 10,
+      "bytes": 1398100
+    },
+    {
+      "file": "crate.p7tex",
+      "width": 512,
+      "height": 512,
+      "mips": 10,
+      "bytes": 1398100
+    },
+    {
+      "file": "oxygen-sign.p7tex",
+      "width": 512,
+      "height": 128,
+      "mips": 10,
+      "bytes": 349532
+    },
+    {
+      "file": "mercury.p7tex",
+      "width": 1024,
+      "height": 512,
+      "mips": 11,
+      "bytes": 2796204
+    },
+    {
+      "file": "venus.p7tex",
+      "width": 1440,
+      "height": 720,
+      "mips": 11,
+      "bytes": 5529400
+    },
+    {
+      "file": "jupiter.p7tex",
+      "width": 720,
+      "height": 360,
+      "mips": 10,
+      "bytes": 1382200
+    },
+    {
+      "file": "saturn.p7tex",
+      "width": 720,
+      "height": 360,
+      "mips": 10,
+      "bytes": 1382200
+    },
+    {
+      "file": "uranus.p7tex",
+      "width": 1024,
+      "height": 512,
+      "mips": 11,
+      "bytes": 2796204
+    },
+    {
+      "file": "neptune.p7tex",
+      "width": 720,
+      "height": 360,
+      "mips": 10,
+      "bytes": 1382200
+    }
+  ],
+  "total_bytes": 42118856,
+  "total_mib": 40.16767120361328,
+  "budget_bytes": 134217728,
+  "manifest_matches": true
+}

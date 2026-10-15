@@ -1,0 +1,524 @@
+[
+  {
+    "board": "docs/p7-validation/2026-10-15/inspection/planets-00.jpg",
+    "captures": [
+      {
+        "path": "docs/p7-validation/2026-10-15/planets/captures/sky-00.png",
+        "sha256": "ebcbe6bff688467c823689ce1fc7472b19906c508e7c907b9b5f3e11bcf61347"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/planets/captures/sky-01.png",
+        "sha256": "82a34a5e7d7d6bc112ae947569722ec304d2a8a196c05c1d738d2ac493eb885d"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/planets/captures/sky-02.png",
+        "sha256": "1ae68210c9a17fcd303d6242460dee7e18ddccf870274708ff1969bccdf3c091"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/planets/captures/sky-03.png",
+        "sha256": "91560066d3afa6e2eee679213d2d0b0abd74f0e25801803c7fdeebdd7c3defed"
+      }
+    ]
+  },
+  {
+    "board": "docs/p7-validation/2026-10-15/inspection/planets-01.jpg",
+    "captures": [
+      {
+        "path": "docs/p7-validation/2026-10-15/planets/captures/sky-04.png",
+        "sha256": "b42b8abf600f4b4f981a3beff7ce16185c7c3ccba1ef850a16edd6fd2f25a1ed"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/planets/captures/sky-05.png",
+        "sha256": "06d71703ac6f8cd1311de8b3f61f52e789f79cba55cf0cd67e152a570fc4a780"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/planets/captures/sky-06.png",
+        "sha256": "bb9bfc5082bdb6cb8a2e5af6f4d9adcd5768ce077cccfe9b5c58d6799bbe8b12"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/planets/captures/sky-07.png",
+        "sha256": "dd8feb05d490070de209a259daa9b8f89ea2c160df8d59f9d3eb0dfec699f928"
+      }
+    ]
+  },
+  {
+    "board": "docs/p7-validation/2026-10-15/inspection/planets-02.jpg",
+    "captures": [
+      {
+        "path": "docs/p7-validation/2026-10-15/planets/captures/sky-08.png",
+        "sha256": "2e580b2159098a9fc9cf69e53f9c6d1f3066cd4e3b9e5a405257220ed0f9ea8f"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/planets/captures/sky-09.png",
+        "sha256": "34500327b7277c42d09f2097590d6a31cf2ce6fffcf6d1b74b08a3cd3241e800"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/planets/captures/sky-10.png",
+        "sha256": "6a44d1fec49f2aa86013f88c265741686eecb6e498d341b053679704bb95971b"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/planets/captures/sky-11.png",
+        "sha256": "ec519724789ee3147ebc97454d4e3bde156d0410355894766b45781972e864c1"
+      }
+    ]
+  },
+  {
+    "board": "docs/p7-validation/2026-10-15/inspection/planets-03.jpg",
+    "captures": [
+      {
+        "path": "docs/p7-validation/2026-10-15/planets/captures/sky-12.png",
+        "sha256": "65f77876cab158486f9e3132303ea80de0a92118ad80e5f21b3df578a94d15b6"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/planets/captures/sky-13.png",
+        "sha256": "f778955f53c7bdda2f99b27ee7a6938ecff4e2ded26e217b645587ae5e0edc59"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/planets/captures/sky-14.png",
+        "sha256": "0b0789ba889dbf5b6dab7a7d362cb9e32c126810a8d078fafcaf35907d2fb217"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/planets/captures/sky-15.png",
+        "sha256": "0c88cee395667f786fd5aedce7713296e2a6e9a9f9e3066341fac8d0fcea7808"
+      }
+    ]
+  },
+  {
+    "board": "docs/p7-validation/2026-10-15/inspection/planets-04.jpg",
+    "captures": [
+      {
+        "path": "docs/p7-validation/2026-10-15/planets/captures/sky-16.png",
+        "sha256": "5ca92bf10ae512278c08dc8ce82c152b04903f318dbda2b1495c181ecc85056c"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/planets/captures/sky-17.png",
+        "sha256": "9b011ce53bff27b5f1e5dc202c53e717868c7276b1e5402d12afd53e74312072"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/planets/captures/sky-18.png",
+        "sha256": "ca59a4847f50612450a475f19dd7373181b8272d49b90b19e096d5975843179b"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/planets/captures/sky-19.png",
+        "sha256": "09230e7105834c644e092d90dd38ed2721996ad928b935113639aae8dad67e3b"
+      }
+    ]
+  },
+  {
+    "board": "docs/p7-validation/2026-10-15/inspection/planets-05.jpg",
+    "captures": [
+      {
+        "path": "docs/p7-validation/2026-10-15/planets/captures/sky-20.png",
+        "sha256": "08ea2c4b893b88f849a3d14ee140b923fe18d89cf8356dec85636e801eb73e45"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/planets/captures/sky-21.png",
+        "sha256": "b8319465dc7b82df0348b87dd27a45154e50a2ba8009f53e273b2d17d2505201"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/planets/captures/sky-22.png",
+        "sha256": "8924571573d5d2d763d08387f835b2450740ba2a25ca30eb5b183d5f29688945"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/planets/captures/sky-23.png",
+        "sha256": "a2fde7f71c077ea85b1e962e7b0116b6059978a1c4cf4ec2a95e933369b33813"
+      }
+    ]
+  },
+  {
+    "board": "docs/p7-validation/2026-10-15/inspection/planets-06.jpg",
+    "captures": [
+      {
+        "path": "docs/p7-validation/2026-10-15/planets/captures/sky-24.png",
+        "sha256": "7fa9c1aa8d86a453835a6227a68e5e5e9421b089e970f71d7c75ae02e58e8a4e"
+      }
+    ]
+  },
+  {
+    "board": "docs/p7-validation/2026-10-15/inspection/profiles-save-00.jpg",
+    "captures": [
+      {
+        "path": "docs/p7-validation/2026-10-15/packaged-720/save/stage-00.png",
+        "sha256": "961a4d0446565ec5bb14c3d08049e8ab9931e36cc07740bb2213df7a5d243ce4"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/packaged-720/save/stage-01.png",
+        "sha256": "97ddfbdbbecf46e314ea4abe750a38cb217d8405adbf2f27ada443e0942bba58"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/packaged-720/save/stage-02.png",
+        "sha256": "8af7c52ae82047a215d320a59fb3170851a53e052b484225d876e58d046834a9"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/packaged-720/save/stage-03.png",
+        "sha256": "a8e2c396ec1b32db65337709322a0bec43b4d87ca4877801439a3a252df53a4b"
+      }
+    ]
+  },
+  {
+    "board": "docs/p7-validation/2026-10-15/inspection/profiles-save-01.jpg",
+    "captures": [
+      {
+        "path": "docs/p7-validation/2026-10-15/packaged-720/save/stage-04.png",
+        "sha256": "d28ddd65a2aa2e14c47967dd3b137a696ee3e1a7351e72786852697ac703b02a"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/packaged-720/save/stage-05.png",
+        "sha256": "fb355594655fdeb191df651ad81ce0a516e3f5af133384845e6f195f401f9986"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/packaged-720/save/stage-06.png",
+        "sha256": "b02f400eae088360d3354b01c9439360b6091c2ae510778714fbaa93e3733ee2"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/packaged-720/save/stage-07.png",
+        "sha256": "dbd2f5db895b9ee4266deb8457ddad7ad56cd8181749452d3b05cdfb8008fdf5"
+      }
+    ]
+  },
+  {
+    "board": "docs/p7-validation/2026-10-15/inspection/profiles-save-02.jpg",
+    "captures": [
+      {
+        "path": "docs/p7-validation/2026-10-15/packaged-720/save/stage-08.png",
+        "sha256": "c813778164704aa100be58432fcb5901ffb7bf9c2796ac046a1a02a8a2dbd054"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/packaged-720/save/stage-09.png",
+        "sha256": "26eaab47f7e7db73a20a058cd9da30d639687138ef8b08166a0cc031cfc7549c"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/packaged-720/save/stage-10.png",
+        "sha256": "795da2618fa16f96bee9038a6d68c4f8cf8817fba4e1e925382782a4a8e0cf7f"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/packaged-720/save/stage-11.png",
+        "sha256": "49d6a26e618ed78126153165fe69cb4943b184f6b46f7dd89d8fbaad640d1001"
+      }
+    ]
+  },
+  {
+    "board": "docs/p7-validation/2026-10-15/inspection/profiles-save-03.jpg",
+    "captures": [
+      {
+        "path": "docs/p7-validation/2026-10-15/packaged-720/save/stage-12.png",
+        "sha256": "3168f7876c91fa3f55d84a05f3d6b2f5b5d43f50e74d23189f73b38999abab03"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/packaged-720/save/stage-13.png",
+        "sha256": "207833b1a1076ec9d390f112beb8ea6b8e0d17eac0a8ca8287aaa756eb15a454"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/packaged-720/save/stage-14.png",
+        "sha256": "c813778164704aa100be58432fcb5901ffb7bf9c2796ac046a1a02a8a2dbd054"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/packaged-720/save/stage-15.png",
+        "sha256": "b60dd381803ed2d5c57190a3e9e35579601e47924af0f81f0acd0284bbf6a464"
+      }
+    ]
+  },
+  {
+    "board": "docs/p7-validation/2026-10-15/inspection/profiles-load-00.jpg",
+    "captures": [
+      {
+        "path": "docs/p7-validation/2026-10-15/packaged-720/load/stage-00.png",
+        "sha256": "5242cb6432306b5009b7a6f9947cf41f05058becb1566fb91d78183702080c5b"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/packaged-720/load/stage-01.png",
+        "sha256": "73d282c4bca9d769686102ddc449a8a7502785a9482679f87396ac804bbec0e8"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/packaged-720/load/stage-02.png",
+        "sha256": "c619fa4888ff1314aeb156f555df128c019f36ee0b66c879659bf40b8ba5b62d"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/packaged-720/load/stage-03.png",
+        "sha256": "bc6b0b94a19f17eafe31f8ca7bc3425aa9b3b2bbdc470adf975296fc3a2d4210"
+      }
+    ]
+  },
+  {
+    "board": "docs/p7-validation/2026-10-15/inspection/profiles-load-01.jpg",
+    "captures": [
+      {
+        "path": "docs/p7-validation/2026-10-15/packaged-720/load/stage-04.png",
+        "sha256": "c87dcc52fed4512f308f49b84046a6669278d2c5dd2f3e4535f440e19785258a"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/packaged-720/load/stage-05.png",
+        "sha256": "492797c87398746d5dc82a248dfb7b86df9051ee69f25777e0c378218efaab1f"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/packaged-720/load/stage-06.png",
+        "sha256": "bda880406fce20b32a49e96b52c36d2a4b9b79d86f132294ea25c6228352c800"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/packaged-720/load/stage-07.png",
+        "sha256": "207833b1a1076ec9d390f112beb8ea6b8e0d17eac0a8ca8287aaa756eb15a454"
+      }
+    ]
+  },
+  {
+    "board": "docs/p7-validation/2026-10-15/inspection/profiles-load-02.jpg",
+    "captures": [
+      {
+        "path": "docs/p7-validation/2026-10-15/packaged-720/load/stage-08.png",
+        "sha256": "7506e3f8d524b1f63f41a3625565c2c69e9283e2b9c8fb178b9e0b99074908c2"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/packaged-720/load/stage-09.png",
+        "sha256": "8528de82d74222e5d8d7a64744d3f78d4406144d0806e58ecbfd93275eeb28b8"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/packaged-720/load/stage-10.png",
+        "sha256": "7f4b33d8bfb2ba10f612d6ff57888afc8427bcb17a9302eb467049505ee7adee"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/packaged-720/load/stage-11.png",
+        "sha256": "487eac74203b316fe36683739dcf3506d3b808ee4a824aa57c0e2b1bfcd9ecb9"
+      }
+    ]
+  },
+  {
+    "board": "docs/p7-validation/2026-10-15/inspection/profiles-load-03.jpg",
+    "captures": [
+      {
+        "path": "docs/p7-validation/2026-10-15/packaged-720/load/stage-12.png",
+        "sha256": "0b3c3d37e0d2f89228638c44f068c15ce084dc8085241774a992eedde7f1f17d"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/packaged-720/load/stage-13.png",
+        "sha256": "086fc7ece7803a83c7e210768a20b69db562fb3e33591c769ce9bf560ba40c6f"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/packaged-720/load/stage-14.png",
+        "sha256": "68370058bb8e0cc295a445e5dec36bec1da9ed3aa3b8ec34fae3e6a9d46f1b61"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/packaged-720/load/stage-15.png",
+        "sha256": "15a5e388ca1e5195e254c78f465f80dda0b166bb838dde7e874535bd999ed32b"
+      }
+    ]
+  },
+  {
+    "board": "docs/p7-validation/2026-10-15/inspection/construction-00.jpg",
+    "captures": [
+      {
+        "path": "docs/p7-validation/2026-10-15/construction-retry/captures/stage-00.png",
+        "sha256": "51501ef840bb62b2d698907752a7d3379c35a08dd2ea2d65e12014e47292b7b6"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/construction-retry/captures/stage-01.png",
+        "sha256": "5ff46add78f51f055d1e374c61053bc5fc0a8204b8c86bb4c7f3ff56ca15f19b"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/construction-retry/captures/stage-02.png",
+        "sha256": "3a86958b546afa2f2e7e7104f0c8ca5f18bb763e8da6a201ebc8175f7eaa8655"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/construction-retry/captures/stage-03.png",
+        "sha256": "60edfa1a85c9d7a62ed200f9cc7434a32187efc6b35c8b796a9ae2aa771c4202"
+      }
+    ]
+  },
+  {
+    "board": "docs/p7-validation/2026-10-15/inspection/construction-01.jpg",
+    "captures": [
+      {
+        "path": "docs/p7-validation/2026-10-15/construction-retry/captures/stage-04.png",
+        "sha256": "c0b1ce00b0a53b35f89c794cd99929da5856185107d1cc0eb8a8a5372c9977fa"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/construction-retry/captures/stage-05.png",
+        "sha256": "d538a52692644d73468f55357e4e63940be81c5e72e4c5db108a7685819d26e4"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/construction-retry/captures/stage-06.png",
+        "sha256": "c62cf89947aca565dc53806e4ba4c823baddeaeb8309d9174e7957f3d0a2af8d"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/construction-retry/captures/stage-07.png",
+        "sha256": "cad9369c38ab8a3effdf7e67dfcbe70259453371aa893f86483ef42664f8b068"
+      }
+    ]
+  },
+  {
+    "board": "docs/p7-validation/2026-10-15/inspection/construction-02.jpg",
+    "captures": [
+      {
+        "path": "docs/p7-validation/2026-10-15/construction-retry/captures/stage-08.png",
+        "sha256": "f4b847c2abafcd8972c641d295f492782a287e6d2fe6eeb671b97e7f99ffa570"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/construction-retry/captures/stage-09.png",
+        "sha256": "00be1bef3d1ea4c157d5747dab0ed8387b7d305ab87af77a62dbff1ab295f7f3"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/construction-retry/captures/stage-10.png",
+        "sha256": "0da37af96a3094cbc5e1541a98b81b85f13423605c3aa5647c7a80ace5b4f943"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/construction-retry/captures/stage-11.png",
+        "sha256": "b0884ead0b38c180aa707e2775b81c5b0de1b4417a7ee1851c05413f9a02f643"
+      }
+    ]
+  },
+  {
+    "board": "docs/p7-validation/2026-10-15/inspection/construction-03.jpg",
+    "captures": [
+      {
+        "path": "docs/p7-validation/2026-10-15/construction-retry/captures/stage-12.png",
+        "sha256": "869bef5f65f4a025db7ed2e68bec95dd194aef4b914f26c85986bc84ae73f7b1"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/construction-retry/captures/stage-13.png",
+        "sha256": "df9f15f872b593059a426243d028514393514bec4c287fdaffb115b1bb8aaba6"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/construction-retry/captures/stage-14.png",
+        "sha256": "52380950c4277389302ed78187f0bc7632a9af6c8a8723a9104a009732ff15fc"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/construction-retry/captures/stage-15.png",
+        "sha256": "b889a01483bb4e499b24473d6383896e08682ae6217ac56f8656cd09f4d5128c"
+      }
+    ]
+  },
+  {
+    "board": "docs/p7-validation/2026-10-15/inspection/planets-final-00.jpg",
+    "captures": [
+      {
+        "path": "docs/p7-validation/2026-10-15/planets-final-package/captures/sky-00.png",
+        "sha256": "ebcbe6bff688467c823689ce1fc7472b19906c508e7c907b9b5f3e11bcf61347"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/planets-final-package/captures/sky-01.png",
+        "sha256": "82a34a5e7d7d6bc112ae947569722ec304d2a8a196c05c1d738d2ac493eb885d"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/planets-final-package/captures/sky-02.png",
+        "sha256": "1ae68210c9a17fcd303d6242460dee7e18ddccf870274708ff1969bccdf3c091"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/planets-final-package/captures/sky-03.png",
+        "sha256": "91560066d3afa6e2eee679213d2d0b0abd74f0e25801803c7fdeebdd7c3defed"
+      }
+    ]
+  },
+  {
+    "board": "docs/p7-validation/2026-10-15/inspection/planets-final-01.jpg",
+    "captures": [
+      {
+        "path": "docs/p7-validation/2026-10-15/planets-final-package/captures/sky-04.png",
+        "sha256": "b42b8abf600f4b4f981a3beff7ce16185c7c3ccba1ef850a16edd6fd2f25a1ed"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/planets-final-package/captures/sky-05.png",
+        "sha256": "06d71703ac6f8cd1311de8b3f61f52e789f79cba55cf0cd67e152a570fc4a780"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/planets-final-package/captures/sky-06.png",
+        "sha256": "bb9bfc5082bdb6cb8a2e5af6f4d9adcd5768ce077cccfe9b5c58d6799bbe8b12"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/planets-final-package/captures/sky-07.png",
+        "sha256": "dd8feb05d490070de209a259daa9b8f89ea2c160df8d59f9d3eb0dfec699f928"
+      }
+    ]
+  },
+  {
+    "board": "docs/p7-validation/2026-10-15/inspection/planets-final-02.jpg",
+    "captures": [
+      {
+        "path": "docs/p7-validation/2026-10-15/planets-final-package/captures/sky-08.png",
+        "sha256": "71b78383c8c510866459a39a326918228a60b1ee5032bdec19274afcd230b54c"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/planets-final-package/captures/sky-09.png",
+        "sha256": "86c0adaab4c65cd177b82d07e96caca7476fd13cc1ca4b85054ef08b98e76c02"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/planets-final-package/captures/sky-10.png",
+        "sha256": "26dccfa1cc48f939fa3c8f0b7f61fefdf82c5e258399d8cc84bec4f3d66e94e5"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/planets-final-package/captures/sky-11.png",
+        "sha256": "b3e099ac7bb8d746e8c1da852c04aac2de18e5c5a0b00fbddc42e13a244347fe"
+      }
+    ]
+  },
+  {
+    "board": "docs/p7-validation/2026-10-15/inspection/planets-final-03.jpg",
+    "captures": [
+      {
+        "path": "docs/p7-validation/2026-10-15/planets-final-package/captures/sky-12.png",
+        "sha256": "65f77876cab158486f9e3132303ea80de0a92118ad80e5f21b3df578a94d15b6"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/planets-final-package/captures/sky-13.png",
+        "sha256": "f778955f53c7bdda2f99b27ee7a6938ecff4e2ded26e217b645587ae5e0edc59"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/planets-final-package/captures/sky-14.png",
+        "sha256": "0b0789ba889dbf5b6dab7a7d362cb9e32c126810a8d078fafcaf35907d2fb217"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/planets-final-package/captures/sky-15.png",
+        "sha256": "0c88cee395667f786fd5aedce7713296e2a6e9a9f9e3066341fac8d0fcea7808"
+      }
+    ]
+  },
+  {
+    "board": "docs/p7-validation/2026-10-15/inspection/planets-final-04.jpg",
+    "captures": [
+      {
+        "path": "docs/p7-validation/2026-10-15/planets-final-package/captures/sky-16.png",
+        "sha256": "5ca92bf10ae512278c08dc8ce82c152b04903f318dbda2b1495c181ecc85056c"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/planets-final-package/captures/sky-17.png",
+        "sha256": "9b011ce53bff27b5f1e5dc202c53e717868c7276b1e5402d12afd53e74312072"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/planets-final-package/captures/sky-18.png",
+        "sha256": "ca59a4847f50612450a475f19dd7373181b8272d49b90b19e096d5975843179b"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/planets-final-package/captures/sky-19.png",
+        "sha256": "09230e7105834c644e092d90dd38ed2721996ad928b935113639aae8dad67e3b"
+      }
+    ]
+  },
+  {
+    "board": "docs/p7-validation/2026-10-15/inspection/planets-final-05.jpg",
+    "captures": [
+      {
+        "path": "docs/p7-validation/2026-10-15/planets-final-package/captures/sky-20.png",
+        "sha256": "08ea2c4b893b88f849a3d14ee140b923fe18d89cf8356dec85636e801eb73e45"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/planets-final-package/captures/sky-21.png",
+        "sha256": "b8319465dc7b82df0348b87dd27a45154e50a2ba8009f53e273b2d17d2505201"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/planets-final-package/captures/sky-22.png",
+        "sha256": "8924571573d5d2d763d08387f835b2450740ba2a25ca30eb5b183d5f29688945"
+      },
+      {
+        "path": "docs/p7-validation/2026-10-15/planets-final-package/captures/sky-23.png",
+        "sha256": "a2fde7f71c077ea85b1e962e7b0116b6059978a1c4cf4ec2a95e933369b33813"
+      }
+    ]
+  },
+  {
+    "board": "docs/p7-validation/2026-10-15/inspection/planets-final-06.jpg",
+    "captures": [
+      {
+        "path": "docs/p7-validation/2026-10-15/planets-final-package/captures/sky-24.png",
+        "sha256": "7fa9c1aa8d86a453835a6227a68e5e5e9421b089e970f71d7c75ae02e58e8a4e"
+      }
+    ]
+  }
+]

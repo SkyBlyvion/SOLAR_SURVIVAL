@@ -1,0 +1,201 @@
+{
+  "textures": [
+    {
+      "file": "earth.p7tex",
+      "width": 2048,
+      "height": 1024,
+      "mip_levels": 12,
+      "format": "Rgba8UnormSrgb",
+      "repeat": false,
+      "gpu_bytes": 11184812,
+      "sha256": "10c0867ef7a8e34c4b756f61a618885ffd211c665f59a07946e040a4358ccba6"
+    },
+    {
+      "file": "mars.p7tex",
+      "width": 1440,
+      "height": 720,
+      "mip_levels": 11,
+      "format": "Rgba8UnormSrgb",
+      "repeat": false,
+      "gpu_bytes": 5529400,
+      "sha256": "7389f56d31bc0f80412793933fb4176196f30eefaaabac26f7680f2fb26763da"
+    },
+    {
+      "file": "regolith.p7tex",
+      "width": 1024,
+      "height": 1024,
+      "mip_levels": 11,
+      "format": "Rgba8UnormSrgb",
+      "repeat": true,
+      "gpu_bytes": 5592404,
+      "sha256": "db049f77c7f72d253ea335650ef191c9003e4d5aa60d27ff787eb4554a90859a"
+    },
+    {
+      "file": "wall.p7tex",
+      "width": 512,
+      "height": 512,
+      "mip_levels": 10,
+      "format": "Rgba8UnormSrgb",
+      "repeat": true,
+      "gpu_bytes": 1398100,
+      "sha256": "ea5b459d15b958d689f1682dd157d06867c05b6c8430ca3b8d3c29dcb0a28cb0"
+    },
+    {
+      "file": "roof.p7tex",
+      "width": 512,
+      "height": 512,
+      "mip_levels": 10,
+      "format": "Rgba8UnormSrgb",
+      "repeat": true,
+      "gpu_bytes": 1398100,
+      "sha256": "5f93e1fe2a208da462fe041e38a54339755994b439c0cedbe8321ab7e548ed36"
+    },
+    {
+      "file": "crate.p7tex",
+      "width": 512,
+      "height": 512,
+      "mip_levels": 10,
+      "format": "Rgba8UnormSrgb",
+      "repeat": false,
+      "gpu_bytes": 1398100,
+      "sha256": "b10a76d81ac948c8e614ab21767f2cd3ef456e453239ed5452350687c44a896d"
+    },
+    {
+      "file": "oxygen-sign.p7tex",
+      "width": 512,
+      "height": 128,
+      "mip_levels": 10,
+      "format": "Rgba8UnormSrgb",
+      "repeat": false,
+      "gpu_bytes": 349532,
+      "sha256": "0931e9d57bac679d85dc29222f52009cf113657290d963551706753eaa7bc1d6"
+    },
+    {
+      "file": "mercury.p7tex",
+      "width": 1024,
+      "height": 512,
+      "mip_levels": 11,
+      "format": "Rgba8UnormSrgb",
+      "repeat": false,
+      "gpu_bytes": 2796204,
+      "sha256": "b45a609266a15d160f2e466caeff1b0957db5e78c54bf07e4fd670810d3968d4"
+    },
+    {
+      "file": "venus.p7tex",
+      "width": 1440,
+      "height": 720,
+      "mip_levels": 11,
+      "format": "Rgba8UnormSrgb",
+      "repeat": false,
+      "gpu_bytes": 5529400,
+      "sha256": "32d477d6cbb84629e978d44670f08fb44f7a8e61393daf1d13053009b4308274"
+    },
+    {
+      "file": "jupiter.p7tex",
+      "width": 720,
+      "height": 360,
+      "mip_levels": 10,
+      "format": "Rgba8UnormSrgb",
+      "repeat": false,
+      "gpu_bytes": 1382200,
+      "sha256": "6864d5759234ed711e7d05f470772fceec0ccdcb1b8ba95d71af471d19c01578"
+    },
+    {
+      "file": "saturn.p7tex",
+      "width": 720,
+      "height": 360,
+      "mip_levels": 10,
+      "format": "Rgba8UnormSrgb",
+      "repeat": false,
+      "gpu_bytes": 1382200,
+      "sha256": "af0ccb47b30933573bd062d912d2a52800f1d8777c89eac101b8ac9a86fc9d8e"
+    },
+    {
+      "file": "uranus.p7tex",
+      "width": 1024,
+      "height": 512,
+      "mip_levels": 11,
+      "format": "Rgba8UnormSrgb",
+      "repeat": false,
+      "gpu_bytes": 2796204,
+      "sha256": "f270a659392ee8bc2594601e2653c123de62faf0f5b9c8dae893dfe9d0a2d01f"
+    },
+    {
+      "file": "neptune.p7tex",
+      "width": 720,
+      "height": 360,
+      "mip_levels": 10,
+      "format": "Rgba8UnormSrgb",
+      "repeat": false,
+      "gpu_bytes": 1382200,
+      "sha256": "a729c1f576b59a9b4c475a1fad63bcb8edd474216406b1110ab68032098f3c1a"
+    }
+  ],
+  "total_gpu_bytes": 42118856,
+  "budget_gpu_bytes": 134217728,
+  "masters": {
+    "art/p7-masters/earth-january.jpg": {
+      "sha256": "99f5faad74efe985fbf1714c8be7296ca9999759a1215b65f99b7f1df278dde5",
+      "dimensions": [
+        5400,
+        2700
+      ]
+    },
+    "art/p7-masters/jupiter.jpg": {
+      "sha256": "ac2d387f8ea56a59f45dea37993c779a730f49d7d9fdbc8d36c307a351b1f1a1",
+      "dimensions": [
+        720,
+        360
+      ]
+    },
+    "art/p7-masters/mars.jpg": {
+      "sha256": "12ec6bf02ebd42a246edc778cb2ce8c595b4d9f0892badf0bfff8abb2303c780",
+      "dimensions": [
+        1440,
+        720
+      ]
+    },
+    "art/p7-masters/mercury-atlas.png": {
+      "sha256": "fadf06aa5c8e6846f79a53167a528e6e91ab55142404f89df83fc858d94482f0",
+      "dimensions": [
+        2048,
+        1536
+      ]
+    },
+    "art/p7-masters/neptune.jpg": {
+      "sha256": "e9bb2b7bcfb98d3f1adc6f2e20e833a00c11e9677238d8a00ae7431214ca70aa",
+      "dimensions": [
+        720,
+        360
+      ]
+    },
+    "art/p7-masters/regolith-generated.png": {
+      "sha256": "471604ebaeb1acaa76fadb702c669afeb655b2882ac2ca583c39847293a91200",
+      "dimensions": [
+        1254,
+        1254
+      ]
+    },
+    "art/p7-masters/saturn.jpg": {
+      "sha256": "d959a239e3d87630daf08e2a688dcbf315fe01b1fd474e55522770108f40aca7",
+      "dimensions": [
+        720,
+        360
+      ]
+    },
+    "art/p7-masters/uranus.png": {
+      "sha256": "cf72fd1f5a8fd2ca14d268503db7f94b57adab8be3b80b3a1dc460644c97be28",
+      "dimensions": [
+        1024,
+        512
+      ]
+    },
+    "art/p7-masters/venus-clouds.png": {
+      "sha256": "95ec00618445e786598ddab5b467af9d496016d984d23c26a427b99ef9047f23",
+      "dimensions": [
+        1440,
+        720
+      ]
+    }
+  }
+}

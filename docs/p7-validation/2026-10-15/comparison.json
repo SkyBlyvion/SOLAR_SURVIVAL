@@ -1,0 +1,432 @@
+{
+  "host_reference": "host.json",
+  "resolution": [
+    1440,
+    900
+  ],
+  "msaa": 4,
+  "terrain_lod": "adaptive",
+  "mesa_immediate": true,
+  "no_captures_in_performance": true,
+  "frames": [
+    {
+      "phase": "built_rest",
+      "before": {
+        "mean_ms": 28.924831076923077,
+        "p95_ms": 30.283515
+      },
+      "after": [
+        {
+          "mean_ms": 31.005664333333332,
+          "p95_ms": 32.828745
+        },
+        {
+          "mean_ms": 31.595019708333336,
+          "p95_ms": 36.55749534999999
+        }
+      ],
+      "mean_increase_ms": 2.375510943910257
+    },
+    {
+      "phase": "placement",
+      "before": {
+        "mean_ms": 33.944971604938274,
+        "p95_ms": 36.445213
+      },
+      "after": [
+        {
+          "mean_ms": 36.22510213157895,
+          "p95_ms": 38.785400499999994
+        },
+        {
+          "mean_ms": 36.361550618421056,
+          "p95_ms": 39.0414705
+        }
+      ],
+      "mean_increase_ms": 2.348354770061732
+    },
+    {
+      "phase": "streaming",
+      "before": {
+        "mean_ms": 27.65781045,
+        "p95_ms": 29.76065725
+      },
+      "after": [
+        {
+          "mean_ms": 30.18161756031128,
+          "p95_ms": 32.1831526
+        },
+        {
+          "mean_ms": 30.114947228682173,
+          "p95_ms": 32.27221425
+        }
+      ],
+      "mean_increase_ms": 2.4904719444967256
+    }
+  ],
+  "selected_cpu_gpu_metrics": {
+    "built_rest": [
+      {
+        "run": "run-adaptive-1",
+        "phase": "built_rest",
+        "metric": "cpu/interface",
+        "samples": "24",
+        "mean_ms": "0.07791645833333334",
+        "p95_ms": "0.10032665"
+      },
+      {
+        "run": "run-adaptive-1",
+        "phase": "built_rest",
+        "metric": "cpu/navigation",
+        "samples": "24",
+        "mean_ms": "0.04162383333333333",
+        "p95_ms": "0.0507334"
+      },
+      {
+        "run": "run-adaptive-1",
+        "phase": "built_rest",
+        "metric": "cpu/rendering_sync",
+        "samples": "24",
+        "mean_ms": "0.04764691666666667",
+        "p95_ms": "0.05713695"
+      },
+      {
+        "run": "run-adaptive-1",
+        "phase": "built_rest",
+        "metric": "cpu/simulation",
+        "samples": "24",
+        "mean_ms": "0.008794416666666667",
+        "p95_ms": "0.014022749999999995"
+      },
+      {
+        "run": "run-adaptive-2",
+        "phase": "built_rest",
+        "metric": "cpu/interface",
+        "samples": "24",
+        "mean_ms": "0.08424679166666667",
+        "p95_ms": "0.12438559999999996"
+      },
+      {
+        "run": "run-adaptive-2",
+        "phase": "built_rest",
+        "metric": "cpu/navigation",
+        "samples": "24",
+        "mean_ms": "0.04586341666666666",
+        "p95_ms": "0.06551509999999998"
+      },
+      {
+        "run": "run-adaptive-2",
+        "phase": "built_rest",
+        "metric": "cpu/rendering_sync",
+        "samples": "24",
+        "mean_ms": "0.052236833333333337",
+        "p95_ms": "0.066471"
+      },
+      {
+        "run": "run-adaptive-2",
+        "phase": "built_rest",
+        "metric": "cpu/simulation",
+        "samples": "24",
+        "mean_ms": "0.0074580416666666675",
+        "p95_ms": "0.011913149999999994"
+      },
+      {
+        "run": "run-adaptive-gpu",
+        "phase": "built_rest",
+        "metric": "cpu/interface",
+        "samples": "24",
+        "mean_ms": "0.08679066666666667",
+        "p95_ms": "0.14091364999999997"
+      },
+      {
+        "run": "run-adaptive-gpu",
+        "phase": "built_rest",
+        "metric": "cpu/navigation",
+        "samples": "24",
+        "mean_ms": "0.043002708333333334",
+        "p95_ms": "0.059866849999999985"
+      },
+      {
+        "run": "run-adaptive-gpu",
+        "phase": "built_rest",
+        "metric": "cpu/rendering_sync",
+        "samples": "24",
+        "mean_ms": "0.04850366666666667",
+        "p95_ms": "0.06088599999999999"
+      },
+      {
+        "run": "run-adaptive-gpu",
+        "phase": "built_rest",
+        "metric": "cpu/simulation",
+        "samples": "24",
+        "mean_ms": "0.0123655",
+        "p95_ms": "0.012433699999999992"
+      },
+      {
+        "run": "run-adaptive-gpu",
+        "phase": "built_rest",
+        "metric": "render/bin_unpacking/elapsed_gpu",
+        "samples": "24",
+        "mean_ms": "0.14473066666666667",
+        "p95_ms": "0.5794223999999998"
+      },
+      {
+        "run": "run-adaptive-gpu",
+        "phase": "built_rest",
+        "metric": "render/clustering/elapsed_gpu",
+        "samples": "24",
+        "mean_ms": "0.5710786666666666",
+        "p95_ms": "0.9526959999999999"
+      },
+      {
+        "run": "run-adaptive-gpu",
+        "phase": "built_rest",
+        "metric": "render/early_mesh_preprocessing/elapsed_gpu",
+        "samples": "24",
+        "mean_ms": "0.21107333333333334",
+        "p95_ms": "0.19418399999999997"
+      },
+      {
+        "run": "run-adaptive-gpu",
+        "phase": "built_rest",
+        "metric": "render/main_opaque_pass_3d/elapsed_cpu",
+        "samples": "24",
+        "mean_ms": "0.016711208333333335",
+        "p95_ms": "0.020767349999999997"
+      },
+      {
+        "run": "run-adaptive-gpu",
+        "phase": "built_rest",
+        "metric": "render/main_opaque_pass_3d/elapsed_gpu",
+        "samples": "24",
+        "mean_ms": "10.474298666666668",
+        "p95_ms": "10.5592576"
+      },
+      {
+        "run": "run-adaptive-gpu",
+        "phase": "built_rest",
+        "metric": "render/tonemapping/elapsed_gpu",
+        "samples": "24",
+        "mean_ms": "2.2012506666666667",
+        "p95_ms": "2.2563744000000003"
+      },
+      {
+        "run": "run-adaptive-gpu",
+        "phase": "built_rest",
+        "metric": "render/ui/elapsed_gpu",
+        "samples": "24",
+        "mean_ms": "0.413916",
+        "p95_ms": "0.4461968"
+      },
+      {
+        "run": "run-adaptive-gpu",
+        "phase": "built_rest",
+        "metric": "render/upscaling/elapsed_gpu",
+        "samples": "24",
+        "mean_ms": "1.4234213333333334",
+        "p95_ms": "1.5323935999999998"
+      }
+    ],
+    "streaming": [
+      {
+        "run": "run-adaptive-1",
+        "phase": "streaming",
+        "metric": "cpu/interface",
+        "samples": "257",
+        "mean_ms": "0.08466491050583658",
+        "p95_ms": "0.1119302"
+      },
+      {
+        "run": "run-adaptive-1",
+        "phase": "streaming",
+        "metric": "cpu/navigation",
+        "samples": "257",
+        "mean_ms": "0.06278950972762647",
+        "p95_ms": "0.08159339999999997"
+      },
+      {
+        "run": "run-adaptive-1",
+        "phase": "streaming",
+        "metric": "cpu/rendering_sync",
+        "samples": "257",
+        "mean_ms": "0.04928279766536965",
+        "p95_ms": "0.06718039999999999"
+      },
+      {
+        "run": "run-adaptive-1",
+        "phase": "streaming",
+        "metric": "cpu/simulation",
+        "samples": "257",
+        "mean_ms": "0.008020817120622569",
+        "p95_ms": "0.011928199999999995"
+      },
+      {
+        "run": "run-adaptive-2",
+        "phase": "streaming",
+        "metric": "cpu/interface",
+        "samples": "258",
+        "mean_ms": "0.08323378682170543",
+        "p95_ms": "0.11563634999999998"
+      },
+      {
+        "run": "run-adaptive-2",
+        "phase": "streaming",
+        "metric": "cpu/navigation",
+        "samples": "258",
+        "mean_ms": "0.06279347286821706",
+        "p95_ms": "0.07882774999999997"
+      },
+      {
+        "run": "run-adaptive-2",
+        "phase": "streaming",
+        "metric": "cpu/rendering_sync",
+        "samples": "258",
+        "mean_ms": "0.04817258914728682",
+        "p95_ms": "0.06475519999999998"
+      },
+      {
+        "run": "run-adaptive-2",
+        "phase": "streaming",
+        "metric": "cpu/simulation",
+        "samples": "258",
+        "mean_ms": "0.007719403100775193",
+        "p95_ms": "0.011623099999999999"
+      },
+      {
+        "run": "run-adaptive-gpu",
+        "phase": "streaming",
+        "metric": "cpu/interface",
+        "samples": "258",
+        "mean_ms": "0.08172929457364342",
+        "p95_ms": "0.1119181"
+      },
+      {
+        "run": "run-adaptive-gpu",
+        "phase": "streaming",
+        "metric": "cpu/navigation",
+        "samples": "258",
+        "mean_ms": "0.06378406589147287",
+        "p95_ms": "0.07925469999999998"
+      },
+      {
+        "run": "run-adaptive-gpu",
+        "phase": "streaming",
+        "metric": "cpu/rendering_sync",
+        "samples": "258",
+        "mean_ms": "0.048923868217054266",
+        "p95_ms": "0.06423449999999997"
+      },
+      {
+        "run": "run-adaptive-gpu",
+        "phase": "streaming",
+        "metric": "cpu/simulation",
+        "samples": "258",
+        "mean_ms": "0.008617852713178295",
+        "p95_ms": "0.0138173"
+      },
+      {
+        "run": "run-adaptive-gpu",
+        "phase": "streaming",
+        "metric": "render/bin_unpacking/elapsed_gpu",
+        "samples": "258",
+        "mean_ms": "0.07200111627906977",
+        "p95_ms": "0.05246879999999999"
+      },
+      {
+        "run": "run-adaptive-gpu",
+        "phase": "streaming",
+        "metric": "render/clustering/elapsed_gpu",
+        "samples": "258",
+        "mean_ms": "0.6560097984496124",
+        "p95_ms": "1.6846463999999999"
+      },
+      {
+        "run": "run-adaptive-gpu",
+        "phase": "streaming",
+        "metric": "render/early_mesh_preprocessing/elapsed_gpu",
+        "samples": "258",
+        "mean_ms": "0.17264607751937983",
+        "p95_ms": "0.157192"
+      },
+      {
+        "run": "run-adaptive-gpu",
+        "phase": "streaming",
+        "metric": "render/main_opaque_pass_3d/elapsed_cpu",
+        "samples": "258",
+        "mean_ms": "0.013517693798449613",
+        "p95_ms": "0.017612799999999994"
+      },
+      {
+        "run": "run-adaptive-gpu",
+        "phase": "streaming",
+        "metric": "render/main_opaque_pass_3d/elapsed_gpu",
+        "samples": "258",
+        "mean_ms": "9.713883410852713",
+        "p95_ms": "9.9670192"
+      },
+      {
+        "run": "run-adaptive-gpu",
+        "phase": "streaming",
+        "metric": "render/tonemapping/elapsed_gpu",
+        "samples": "258",
+        "mean_ms": "2.2292759069767443",
+        "p95_ms": "3.2770656"
+      },
+      {
+        "run": "run-adaptive-gpu",
+        "phase": "streaming",
+        "metric": "render/ui/elapsed_gpu",
+        "samples": "258",
+        "mean_ms": "0.4254039069767442",
+        "p95_ms": "0.5411631999999995"
+      },
+      {
+        "run": "run-adaptive-gpu",
+        "phase": "streaming",
+        "metric": "render/upscaling/elapsed_gpu",
+        "samples": "258",
+        "mean_ms": "1.498658480620155",
+        "p95_ms": "1.6239535999999941"
+      }
+    ]
+  },
+  "memory": {
+    "baseline-p6": [
+      {
+        "peak_rss_kib": 253384,
+        "process_hwm_kib": 253384,
+        "drm_available": false,
+        "interval_seconds": 0.25,
+        "limitations": "RSS processus pas allocation textures seule. HWM noyau et \u00e9chantillonnage. VRAM/staging absents si pilote non instrument\u00e9. Linux uniquement.",
+        "file": "docs/p7-validation/2026-10-15/baseline-p6/run-adaptive-1-resources.json"
+      }
+    ],
+    "performance": [
+      {
+        "peak_rss_kib": 257348,
+        "process_hwm_kib": 278136,
+        "drm_available": false,
+        "interval_seconds": 0.25,
+        "limitations": "RSS processus pas allocation textures seule. HWM noyau et \u00e9chantillonnage. VRAM/staging absents si pilote non instrument\u00e9. Linux uniquement.",
+        "file": "docs/p7-validation/2026-10-15/performance/run-adaptive-1-resources.json"
+      },
+      {
+        "peak_rss_kib": 255292,
+        "process_hwm_kib": 273328,
+        "drm_available": false,
+        "interval_seconds": 0.25,
+        "limitations": "RSS processus pas allocation textures seule. HWM noyau et \u00e9chantillonnage. VRAM/staging absents si pilote non instrument\u00e9. Linux uniquement.",
+        "file": "docs/p7-validation/2026-10-15/performance/run-adaptive-2-resources.json"
+      },
+      {
+        "peak_rss_kib": 257844,
+        "process_hwm_kib": 275828,
+        "drm_available": false,
+        "interval_seconds": 0.25,
+        "limitations": "RSS processus pas allocation textures seule. HWM noyau et \u00e9chantillonnage. VRAM/staging absents si pilote non instrument\u00e9. Linux uniquement.",
+        "file": "docs/p7-validation/2026-10-15/performance/run-adaptive-gpu-resources.json"
+      }
+    ]
+  },
+  "limitations": "Une r\u00e9f\u00e9rence P6 sans recorder, deux P7 sans recorder et un GPU s\u00e9par\u00e9. P7 mesur\u00e9 avant retouche RGB du seul raccord Jupiter ; m\u00eames Rust/shaders, formats, dimensions, mips et douze autres images. Intervalles courts, pas une garantie FPS cible. VRAM totale et staging non disponibles."
+}

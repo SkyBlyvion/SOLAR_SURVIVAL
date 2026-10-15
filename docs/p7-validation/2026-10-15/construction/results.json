@@ -1,0 +1,11 @@
+{
+  "exit_code": 101,
+  "seconds": 26.461484624000036,
+  "focused_window": "0x4400004",
+  "diagnostics": [
+    "thread 'Compute Task Pool (0)' (20371) panicked at src/config/construction_validation.rs:188:17:"
+  ],
+  "completion": [],
+  "captures": 10,
+  "hashes_unchanged": true
+}

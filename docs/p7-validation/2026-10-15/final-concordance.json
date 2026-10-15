@@ -1,0 +1,12 @@
+{
+  "rust_tests_shaders_cargo_unchanged": true,
+  "asset_differences_from_eeaff80": [
+    "assets/textures/CREDITS.md",
+    "assets/textures/jupiter.p7tex",
+    "assets/textures/manifest.json"
+  ],
+  "binary_sha256": "96ef1731fdc29a540ca31858b8e7cd876b2fa31f8142bac8ec84533d45d813ea",
+  "binary_matches_134_tests": true,
+  "final_package_result": "planets-final-package/results.json",
+  "logical_gpu_bytes_unchanged": 42118856
+}

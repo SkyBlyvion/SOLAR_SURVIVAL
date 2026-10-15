@@ -9,6 +9,27 @@ ROOT = Path(__file__).resolve().parent.parent
 MASTER = ROOT/'art/p7-masters'
 
 
+def periodic_longitude(image, width=8):
+    """Raccorder artistiquement les bords du composite, sans toucher au maître.
+    Correction RGB linéaire sur huit colonnes par bord (4° à 720 px).
+    Le reste de la carte et ses détails restent exactement inchangés.
+    """
+    source=np.asarray(image.convert('RGB'),dtype=np.float32)/255
+    linear=np.where(source<=.04045,source/12.92,((source+.055)/1.055)**2.4)
+    result=linear.copy()
+    middle=(linear[:,0]+linear[:,-1])*.5
+    for i in range(width):
+        t=i/(width-1);weight=1-t*t*(3-2*t)
+        result[:,i]+=(middle-linear[:,0])*weight
+        result[:,-1-i]+=(middle-linear[:,-1])*weight
+    result=np.clip(result,0,1)
+    encoded=np.where(result<=.0031308,result*12.92,1.055*result**(1/2.4)-.055)
+    output=np.uint8(np.clip(np.rint(encoded*255),0,255))
+    assert np.array_equal(output[:,0],output[:,-1])
+    assert np.array_equal(output[:,width:-width],np.asarray(image.convert('RGB'))[:,width:-width])
+    return Image.fromarray(output)
+
+
 def mercury_map():
     """Rayons unitaires contre le mesh VTAD : convertir son atlas, pas ses zones blanches.
     Y-up et zéro +X / est -Z sont les conventions du jeu, pas un repère IAU certifié.
@@ -81,5 +102,7 @@ def prepare(export):
         im=Image.open(MASTER/source).convert('RGB')
         assert im.width==2*im.height
         size=(min(2048,im.width),min(1024,im.height))
-        records.append(export(name,im.resize(size,Image.Resampling.LANCZOS),False))
+        im=im.resize(size,Image.Resampling.LANCZOS)
+        if name=='jupiter': im=periodic_longitude(im)
+        records.append(export(name,im,False))
     return records

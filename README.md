@@ -12,7 +12,7 @@ Prototype d'exploration 3D de notre système solaire, fondation d'un jeu de surv
 
 **Survie P4 :** une combinaison de 180 s d’oxygène et un abri de recharge accessible à six mètres devant l’arrivée. Entrez par la porte pour recharger ; à zéro, **R** relance une expédition à l’abri. [Règles et architecture](docs/SURVIVAL.md).
 
-**P7, qualité visuelle et textures :** sol martien détaillé, panneaux industriels partagés, caisses marquées et plaque O₂ ; cartes pour les huit planètes : Blue Marble, Viking/USGS, Voyager et représentations NASA/JPL/VTAD. Les sources artistiques sont identifiées dans les crédits. Les textures utilisent des niveaux précalculés et occupent 40,2 Mio de données GPU, sous le budget de 128 Mio. Relief/horizons P8, progression de base P9 et exploration P10 restent prévus. [Direction visuelle et sources](docs/ART_DIRECTION.md). Les derniers contrôles graphiques/performance après extension aux six autres planètes et le lancement de l’archive restent ouverts ; [état précis](docs/VALIDATION.md). La validation native Windows reste ouverte.
+**P7, qualité visuelle et textures :** sol martien détaillé, panneaux industriels partagés, caisses marquées et plaque O₂ ; cartes pour les huit planètes : Blue Marble, Viking/USGS, Voyager et représentations NASA/JPL/VTAD. Les sources artistiques sont identifiées dans les crédits. Les textures utilisent des niveaux précalculés et occupent 40,2 Mio de données GPU, sous le budget de 128 Mio. Relief/horizons P8, progression de base P9 et exploration P10 restent prévus. [Direction visuelle et sources](docs/ART_DIRECTION.md). P7 est vérifié sur Ubuntu depuis le 15 octobre 2026 : cartes des huit planètes inspectées, profils/archive contrôlés et mesures conservées ; [preuves et limites](docs/VALIDATION.md). La validation native Windows reste ouverte.
 
 **Cible de performance :** machines modestes, RTX 4050 **6 Go au mieux**. P7 utilise des textures modestes et partagées, avec budgets mémoire et mesures ; objectif 1080p/60 FPS sur la cible à vérifier. Le CPU indiqué « i5 12700K » reste à confirmer. [Contraintes détaillées](docs/ART_DIRECTION.md).
 
@@ -331,3 +331,14 @@ pour jouer ou compiler Rust, les exports sont versionnés. Après compilation,
 `validate_sky.py --p7` inspecte Terre/Mars/sol et `--planets` les autres globes,
 coutures/pôles et crédits ; ajouter un dossier `--output` neuf et les options
 locales X11/Mesa seulement sur le poste concerné. [Validations](docs/VALIDATION.md).
+
+### Archive P7 vérifiée sur Ubuntu
+
+`dist/solar-survival-ubuntu-p7-final.tar.gz` contient le même binaire release, les
+textures et crédits, les licences et `lancer.sh`. Extraction hors checkout et
+lancement orbital vérifiés ; les profils multiples ont été testés avec le même
+binaire avant la seule retouche du raccord Jupiter. [Empreintes et portée](docs/p7-validation/2026-10-15/package-final.json).
+
+P8 relief/horizons reste la prochaine étape. Le coût observé des textures est
+d’environ2,4ms/frame sur GTX1060 ; aucune garantie1080p60 sur RTX4050 ni validation
+nativeWindows n’est déduite de ces essais.

@@ -1,3 +1,25 @@
+# P7 — mesure finale sur le poste Ubuntu, 15 octobre 2026
+
+Une référence P6 actuelle sans recorder, **deux répétitions P7 sans recorder**, puis un P7 GPU séparé, tous codes 0. Binaire P6 de l’archive profils identique à celui d’avant P7 ; sources/actifs gelés pendant chaque campagne. Même scène P5, poste i7-6700K/32Go/GTX1060 3Go NVK, 1440×900 MSAA4, LOD adaptatif, Mesa immediate local, aucune capture pendant les mesures. [Données, spans CPU/GPU et mémoire](p7-validation/2026-10-15/comparison.json).
+
+| Phase | P6 moyenne / p95 ms | P7 répétition 1 moyenne / p95 ms | P7 répétition 2 moyenne / p95 ms |
+|---|---:|---:|---:|
+| Abri au repos | 28,925 / 30,284 | 31,006 / 32,829 | 31,595 / 36,557 |
+| Placement | 33,945 / 36,445 | 36,225 / 38,785 | 36,362 / 39,041 |
+| Streaming | 27,658 / 29,761 | 30,182 / 32,183 | 30,115 / 32,272 |
+
+Surcoût moyen observé **2,35–2,49 ms/frame** sur ces phases. La dispersion de la courte fenêtre de repos est visible ; conserver le p95 de 36,557 ms, ne pas le lisser ni en déduire un gain à partir des anciens essais interrompus. Le rendu garde un unique albédo et trois échantillons triplanaires ; les essais de bump/branches précédents ne sont pas livrés. P7 GPU main opaque moyen : repos10,474 ms, placement10,310 ms, streaming9,714 ms ; ce span n’est pas le temps GPU total. Spans CPU détaillés dans les CSV ; aucun span de système n’est présenté comme CPU frame complet.
+
+Pics processus observés : P6 HWM253384 Kio ; P7 HWM273328–278136 Kio, RSS max255292–257844 Kio. Préparation CPU des 13 payloads environ22ms dans les journaux (pas un chargement complet). Textures utiles GPU : **42118856 octets, 40,168 Mio / 128 Mio**, RGBA8 sRGB, mips compris. Pas de compteurs DRM pour isoler VRAM totale/staging sur NVK. HWM/RSS englobent tout le processus ; aucune attribution de ce delta aux seules copies textures.
+
+Ces mesures précèdent la correction de raccord RGB de Jupiter : mêmes exécutables/shaders/algorithmes, format720×360/niveaux/octets et douze autres exports inchangés. La correction du contenu orbital n’est pas présentée comme une optimisation de performance ; elle est vérifiée dans la galerie de l’archive finale. La portée et les versions sont explicites dans [le bilan](p7-validation/2026-10-15/NOTES.md).
+
+Les anciens échecs de parcours de marche et le premier essai à captures de cette reprise restent conservés. Une relance à captures avec focus observé réussit ; pas de contrôle modifié ni reprise de focus en boucle. Windows/RTX4050 et **1080p60 restent non validés**. VRAM totale/allocation pilote/staging restent à relever sur la cible. La référence12700K correspond à un i7 ; attendre le modèle CPU exact annoncé par l’utilisateur. Ces limites sont transversales, distinctes de la clôture du contenu P7 sur Ubuntu.
+
+---
+
+# Historique — mesures et état de la passe précédente
+
 # Mesures P7 — 14 octobre 2026
 
 Les 13 textures des huit planètes et de la surface occupent **40,168 Mio** de texels RGBA8 sRGB/mipmaps contre un plafond de **128 Mio** (134 217 728 octets). Ces 128 Mio concernent les nouvelles textures partagées en mémoire GPU, pas le disque ni la VRAM totale du jeu. Une image 1024² RGBA8 occupe 4 Mio au niveau principal et environ 5,33 Mio avec tous ses mips ; un PNG léger peut demander autant de mémoire une fois décodé. Le plafond laisse une marge aux meshes, ombres, buffers et au reste du jeu sur une cible de 6 Go, sans garantir les FPS. Les descripteurs réels des 13 GpuImage confirment 42 118 856 octets. Alignement du pilote, copies/staging/pics et VRAM totale exclus : compteurs DRM absents sur NVK. La sonde Vulkan externe décrit le processus observateur, pas celui du jeu ; heapUsage zéro n’est pas une mesure du jeu.

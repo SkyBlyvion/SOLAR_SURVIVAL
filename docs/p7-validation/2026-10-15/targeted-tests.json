@@ -1,0 +1,21 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--lib",
+    "--locked",
+    "rendering::textures::tests"
+  ],
+  "exit_code": 0,
+  "tests_passed": 2,
+  "reported_build_seconds": 6.77,
+  "reported_tests_seconds": 0.01,
+  "source": "Sortie Cargo observ\u00e9e dans le terminal de ce chat",
+  "additional_checks": [
+    "cargo fmt --check : code 0",
+    "git diff --check : code 0",
+    "python3 -m py_compile scripts/prepare_orbital_textures.py : code 0",
+    "jupiter-seam-fix.json : bords identiques, 704 colonnes int\u00e9rieures inchang\u00e9es",
+    "Pr\u00e9paration compl\u00e8te des treize exports : code 0, 7,403 s, tous les fichiers byte-identiques (reproduction.json)."
+  ]
+}
