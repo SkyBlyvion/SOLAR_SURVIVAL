@@ -280,7 +280,23 @@ fn refresh(
     } else {
         Explorer::SPEED_NAMES[pilot.speed_index].to_owned()
     };
-    let movement = movement + &lod;
+    let weather = if pilot.mode == MovementMode::Surface && terrain.globe.is_some() {
+        let w = crate::rendering::atmosphere::current(&terrain, &surface, &solar, &clock);
+        format!(
+            "\n{} · visibilité {:.1} km\nPression moyenne ≈ 600 Pa (0,6 % Terre)",
+            if w.storm > 0.35 {
+                "Tempête de poussière"
+            } else if w.clouds > 0.45 {
+                "Voiles de glace"
+            } else {
+                "Ciel poussiéreux"
+            },
+            w.visibility_m().1 / 1000.0
+        )
+    } else {
+        String::new()
+    };
+    let movement = movement + &lod + &weather;
     ***texts.p0() = format!(
         "TÉLÉMÉTRIE\n\n{fps:.0} FPS  ·  Mode {mode}\nJour julien : {:.5}\nJ2000 + {:.3} jours\nTemps : ×{:.0} {}\n\n{}\n{} / s{}\nRepère : {anchor}\nOffset : {}\nPlus proche : {}\n\n{}",
         clock.jd,

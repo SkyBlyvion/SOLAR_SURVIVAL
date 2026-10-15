@@ -1,46 +1,142 @@
-# Prochain chat Solar Survival — P8, relief et horizons
+# Prochain chat Solar Survival — P9, base et progression
 
-Mise à jour : **15 octobre 2026**. **P1–P6 fonctionnels et P7 terminé sur Ubuntu de développement.** La validation native Windows et le matériel cible restent ouverts en transversal. Chef de projet et orchestrateur : **SkyBlyvion**.
+Mise à jour : **15 octobre 2026**. **P1–P8 réalisés sur Ubuntu de développement.**
+P9 et P10 ne sont pas implémentés. Windows natif et matériel cible restent ouverts.
+Chef de projet et orchestrateur : **SkyBlyvion**.
 
-## Prompt autonome de reprise
+## Prompt autonome
 
-Nous poursuivons Solar Survival dans `/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL`. Lire AGENTS.md, README.md, docs/ROADMAP.md, cette passation, ASTRONOMY.md, CUBE_SPHERE.md, GLOBAL_TERRAIN.md, SURVIVAL.md, CONSTRUCTION.md, PERSISTENCE.md, ART_DIRECTION.md, SURFACE_SKY.md, VALIDATION.md, PERFORMANCE.md et docs/p7-validation/2026-10-15/NOTES.md. Examiner Git et le code avant de modifier, préserver les changements utilisateur et toutes les preuves historiques. La reprise du 15 partait de `eeaff80`, propre et identique à origin ; vérifier les HEAD/origin réels. Commit/push du travail terminé autorisés par l’utilisateur, sans nouvelle demande.
+Nous poursuivons Solar Survival dans `/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL`.
+Lire AGENTS.md, README.md, docs/ROADMAP.md, cette passation, ASTRONOMY.md,
+MARS_ENVIRONMENT.md, GLOBAL_TERRAIN.md, SURVIVAL.md, CONSTRUCTION.md,
+PERSISTENCE.md, ART_DIRECTION.md, VALIDATION.md, PERFORMANCE.md et
+`docs/p8-validation/2026-10-15/NOTES.md`. Examiner Git avant de modifier et préserver
+les changements utilisateur et toutes les preuves historiques. Le chat P8 est
+parti de `496e26a7269dcdc5c61705ddb0e93d805ed6f6f4` propre ; ses changements sont
+regroupés dans le commit `feat: add P8 Mars relief, horizons and dynamic atmosphere`,
+créé à la demande de l’utilisateur ; aucun push effectué pendant cette clôture.
+Retrouver son identifiant avec `git log` et vérifier l’état réel au démarrage,
+sans supposer que HEAD/origin ont évolué ensemble.
 
-## État livré et limites
+**Décision utilisateur actuelle : aucune compatibilité avec les anciennes
+sauvegardes n'est nécessaire pour le moment.** Format courant `SOLAR_SURVIVAL 2`,
+format 1 refusé explicitement, sans migration ni suppression des fichiers.
+Ne pas réintroduire une obligation de migration depuis les anciennes passations.
 
-P4/P5/LOD/caméra unique existaient avant P6 ; ne pas les représenter comme du travail neuf. Le MVP P6 livré dans `6898bdb` inclut plusieurs aventures nommées `saves/Nom/session.solar`, menus/options/HUD communs et catalogue B. Contrat courant : PERSISTENCE.md, pas les preuves intermédiaires à fichier unique. La première passe P7 dans `eeaff80` avait intégré les textures mais laissé les contrôles finaux ouverts. **La reprise du 15 les a terminés et corrigé une couture réellement observée sur Jupiter.** Échecs et versions intermédiaires conservés.
+## État réel livré
 
-P7 : treize images P7TX RGBA8 sRGB avec mipmaps offline, partagées, chargées une fois PreStartup puis transférées au renderer. Cartes des huit planètes : Terre Blue Marble janvier 2004, Mars Viking/USGS/JPL, Mercure atlas VTAD reprojeté, Vénus nuages VTAD, Jupiter Voyager, Saturne et Neptune représentations artistiques identifiées, Uranus VTAD. Soleil/Lune restent procéduraux. Sources/projections/dimensions/crédits/conditions/hashes dans `assets/textures/CREDITS.md` et `manifest.json`, maîtres et prompt ImageGen dans `art/p7-masters`. Ne pas relabelliser les représentations artistiques en données naturelles ou météorologie actuelle ; axes du catalogue conventionnels, pas IAU exact.
+- M ouvre Mars mondiale, six faces, contacts/poses SI f64 et origine mobile.
+  P4/P5 : oxygène 180 s, recharge dans le même abri, huit caisses, stock et
+  construction à 12 alliage. Menus/options/catalogue/HUD et profils indépendants.
+- P7 : treize textures partagées, 40,168 Mio utiles GPU / budget 128 Mio ; cartes
+  des huit planètes sourcées. Soleil/Lune et détails locaux artistiques. Le raccord
+  de Jupiter avait été corrigé offline avant P8 ; maîtres/crédits/preuves conservés.
+- P8 : champ de hauteur artistique mondial en axes corporels f64, bruit de valeur
+  3D quintique à quatre échelles 3600/900/240/60 m, amplitudes 70/14/1,2/0,1 m,
+  |h| ≤85,3 m. Aucun relief MOLA ou site géographique réel. Les mêmes sommets/indices
+  servent au rendu et aux contacts ; normales visuelles métriques du même champ.
+- Niveau spatial 15, intérieurs 32/16/8, bords communs 32, hystérésis et contacts
+  proches fins conservés. Cache ≤13 patches, index 8 m sur ±72 m ; rebasage à 64 m.
+  `MarsTerrain::chart` soustrait l'origine corporelle avant rotation inverse :
+  test de collider conservé à sa tolérance initiale de 2 nm.
+- Paysage : une couronne depuis le contour exact des patches, sans jupe ni fissure
+  topologique, neuf anneaux supplémentaires jusqu'à +11 km du contour ; ≤6400
+  sommets /11520 triangles. Même champ de hauteur, approximation visuelle sans
+  contacts lointains. Recréée au changement de patch central/site seulement,
+  Arc/mesh réutilisés sinon. Pas de quadtree, asynchrone ni morphing temporel.
+- Atmosphère : jour ocre, halo bleu localisé au lever/coucher, nuit étoilée, voiles
+  de glace d'eau et poussière/tempêtes dynamiques. `rendering/atmosphere.rs` dérive
+  l'état depuis JD/position/graine : pas d'intégrateur ni de météo sérialisée.
+  P/T agit sur le calendrier et la météo ; menus laissent ce calendrier évoluer.
+  Pression d'ordre 600 Pa /0,6 % Terre affichée, pas de pression locale simulée.
+  Sources NASA et conventions artistiques distinctes dans MARS_ENVIRONMENT.md.
+- Une caméra, même triangle de ciel ; nuages analytiques sur coquille artistique
+  20 km avec deux échelles de bruit 3D, sans volume/texture/passe nouvelle. Bloc
+  uniforme 704 octets. Lumière/ambiante/étoiles/disques/brouillard atténués par
+  poussière et voiles. Visibilité calme 5–8,5 km, tempête 150 m ; far surface 15 km.
+  Les anciens modes de régression gardent la brume 40–60 m et leur terrain propre.
 
-Correction Jupiter : maître intact ; huit colonnes par bord (4° par côté) rapprochées vers une couleur commune en RGB linéaire avec poids smoothstep. 704 colonnes intérieures inchangées, export720×360 et dix niveaux conservés. Fonction opérationnelle `periodic_longitude` dans `scripts/prepare_orbital_textures.py`, utilisée par `prepare_p7_textures.py`. Python/Pillow/NumPy sont des outils offline, aucune dépendance Rust ajoutée. Même SHA du binaire après correction, car seuls l’image exportée, ses crédits/manifeste et l’outil de préparation changent.
+## Vérifications acquises, ne pas répéter sans motif
 
-Sol artistique 1024², période 4 m ; triplanaire à trois échantillons albedo, poids de normale corporelle puissance4, sans bump. Coordonnées `(p−O+O mod4)/4` calculées en f64 corporels avant conversion f32 (UV0xy/UV1z). Le modulo porte sur l’origine, pas chaque sommet. Textures stables aux rebasages/raccords ; normales/relief de la sphère existante, pas de géométrie rocheuse ajoutée. Panneaux métriques wall/roof 512², crate 512², plaque O₂ 512×128. Même OxygenShelter : six colliders, porte/contact/service, sept proxies visuels dont plaque sans collider, cinq meshes partagés. Ghost six volumes transparents vert/rouge inchangé. Sauvegardes sans mesh/handle/Transform ; GameCamera unique conservée.
+- `final-checks.json` : fmt, check all-targets, **139 tests**, Clippy -D warnings,
+  probe CPU et release réussis ; release 161,732 s. Correction ultérieure **WGSL
+  seule** des nuages trop géométriques, build confirmé 0,20 s et shader validé GPU.
+  Même binaire, dernier shader présent dans l'archive et les campagnes finales.
+- Tests : coutures six faces/LOD mixtes bit-identiques, couronne jointe et bornée,
+  contacts/admission fins, marches/courses/sauts/rebasages, bâtiments et profils ;
+  météo reproductible/continue, événements rares et états jour/nuit, invariance
+  des paramètres d'observateur et météo au rebasage. Anciennes fixtures refusées.
+- Ciel final : 66,411 s, code 0, 22 captures inspectées sur quatre planches ;
+  lever/coucher, nuit, nuages, tempête, rebasage, abri/menu/retours et autres sites.
+  Dates/poses préparées naturellement, pas d'observation continue d'une tempête
+  complète. Première galerie aux nuages géométriques conservée séparément.
+- Référence P7 actuelle avec son binaire ET ses assets propres : 59,494 s, code 0.
+  Deux P8 sans recorder 59,461 /59,495 s, puis GPU séparé 59,506 s, trois codes 0,
+  aucun diagnostic, hashes inchangés. 1440×900 MSAA4, même parcours P5 sans captures.
+  Surcoût moyen P8 : +1,59 ms preview, +1,84 ms streaming, +1,90 ms abri repos.
+  Tableau p95, spans CPU/GPU et RSS/HWM dans PERFORMANCE/comparison.json.
+  Rebasage observé ≤5,725 ms ; sync meshes ≤9,361 ms, retours inclus. Peu
+  d'événements, pas une garantie de pire cas. Aucun gain 60 FPS annoncé.
+- Probe CPU dev optimisé, hors renderer : sphère 0,753 ms moyen /0,974 p95 ;
+  relief+couronne 2,280 /5,145 ms. 200 rebasages sur 12,8 km ; ce n'est pas du
+  release/GPU et cela exclut les normales/uploads.
+- Archive extraite : deux processus profils 48,414 +54,388 s, codes 0, 32 captures
+  inspectées sur six planches ; Alpha deux abris/stock0, Bravo un abri/stock6,
+  fermeture/chargement/rebasage/recharge, catalogue/espace/échec/R et refus Broken.
+  Profils **neufs format 2**. Binaire/assets hors checkout, CWD du helper checkout.
+  Smoke supplémentaire avec CWD extérieur : 8,418 s, code 0, audit textures et
+  fichiers distribués inchangés. Premier smoke en erreur IO car son vieux
+  diagnostic suppose un dossier docs pour capturer ; création explicite puis
+  relance sans modification de jeu. Échec/preuves conservés, pas masqués.
+- **54 captures finales ciel/profils inspectées**, dix planches ; original nuageux
+  en plus. Les captures intermédiaires/smoke ne sont pas comptées dans ces 54.
+  L'inspection n'est pas une approbation esthétique donnée par l'utilisateur.
 
-Budget utile vérifié sur les 13 GpuImage : **42 118 856 octets = 40,168 Mio / 128 Mio**, formats/mips compris. Les 128 Mio concernent les nouvelles textures, pas toute la VRAM du jeu. Données CPU transférées au renderer ; HWM/RSS de processus suivis séparément. VRAM totale, alignements pilote et staging ne sont pas disponibles sur NVK ; ne pas présumer zéro ni utiliser la sonde Vulkan externe pour attribuer la mémoire du jeu.
+Archive actuelle : `dist/solar-survival-ubuntu-p8.tar.gz`, **36 907 688 octets**,
+747 fichiers vérifiés. SHA256 `96c28d2c71351278b5fa36207627c668b0730a6c271d098e7264a8c3d102f003`.
+Binaire `b27bdbd4207a0685132897ddac2b11c416d1a6df91aaca7ba5f8569efd00d5c3`.
+Extraction temporaire : `/tmp/solar-survival-p8-2026-10-15/solar-survival-ubuntu-p8`.
 
-## Validations : ne pas les rejouer sans raison
+## Prochain objectif : P9
 
-- Les six commandes Cargo et **134 tests** (52 internes) de `build-all-planets-final` restent ceux des Rust/tests/shaders/Cargo actuels, inchangés pendant cette reprise. Release 178,322 s le 14, pas de nouveau build release attribué au 15. Deux tests Rust textures réussis après la correction, fmt/diff/py_compile et assertions d’export également (`2026-10-15/targeted-tests.json`). Fixtures réelles P6 Alpha/Bravo restaurées sans migration.
-- Deux P7 sans captures/recorder, puis un GPU séparé : 59,471 / 59,449 / 59,483s, codes 0. Référence P6 supplémentaire dans la même session, même ancien binaire. 1440×900, MSAA4, LOD adaptatif, Mesa immediate local. Surcoût observé environ 2,4 ms/frame : repos P6 28,925ms → P7 31,006/31,595 ; placement33,945 →36,225/36,362 ; streaming27,658 →30,182/30,115. P95 détaillés et spans CPU/GPU dans PERFORMANCE et comparison.json, conserver les dispersions. Les mesures précèdent la retouche RGB seule de Jupiter ; formats/niveaux/octets/algorithmes et douze autres textures identiques. Ne pas prétendre avoir mesuré un gain avec cette retouche.
-- Profils de l’archive P7 extraite hors checkout à720p : deux processus48,410 +54,376s, codes 0,32 captures, aucun diagnostic ; Alpha/Bravo indépendants après fermeture, stock/abris, chargement/rebasage/recharge, catalogue, espace, échec/R et refus Broken sans perte de partie. Parcours réalisé avant la seule retouche d’albedo Jupiter, même exécutable et textures locales.
-- Construction avec captures : premier essai échoué à la porte conservé ; relance59,424s code 0,16 captures. Observation XGetInputFocus100ms confirme le focus maintenu de la création à la fermeture. Aucun contrôle modifié, pas de focus forcé en boucle. Ne pas attribuer une cause précisément mesurée à l’échec initial qui n’était pas instrumenté.
-- Préparation complète offline relancée : les treize exports sont byte-identiques à l’archive finale, code 0, 7,403 s (`reproduction.json`).
-- Première galerie six planètes/crédits25 captures réussie, couture Jupiter détectée puis corrigée. Galerie finale **depuis la nouvelle archive extraite**,75,427s, code 0,25 captures, aucun diagnostic et tous fichiers inchangés. **98 captures inspectées /26planches**, sept originaux et maître Jupiter pendant cette reprise ; les34vues jour/nuit/Terre/Mars du14 restent des preuves antérieures distinctes. Ces contrôles ne constituent pas une approbation esthétique utilisateur.
+Examiner les propriétaires actuels bâtiments/construction/survie/persistance avant
+de choisir une première chaîne jouable **énergie → production/stockage d'oxygène →
+autonomie**. Le cycle jour/nuit et la poussière/tempête peuvent fournir une
+variation solaire utile, mais leurs constantes de présentation ne sont pas une
+puissance électrique en watts. Définir et documenter les unités/conventions du
+modèle énergétique, les coûts et règles, puis implémenter une boucle complète et
+compréhensible : récolter/fabriquer/installer/produire/consommer/voir l'état/sauver.
+La ressource doit dépasser les huit caisses initiales selon une règle durable
+vérifiable. Préserver la marche, les contacts, les profils et la précision f64 ;
+ne pas ajouter une abstraction de réseau ou des modules vides sans besoin concret.
+P10 objectifs/exploration reste ultérieur. Les retours visuels utilisateur sur P8
+peuvent naturellement réorienter le travail s'il en donne.
 
-**Archive finale :** `dist/solar-survival-ubuntu-p7-final.tar.gz`, **36 876 876 octets**,747 fichiers du manifeste vérifiés. SHA256archive `73d7fdfd07d06e1f03d7dfd4ac0777975e9af1fa38d08158f7dbca5fc031c6ed`, SHA256binaire `96ef1731fdc29a540ca31858b8e7cd876b2fa31f8142bac8ec84533d45d813ea`. Extraction/lancement final : `/tmp/solar-survival-p7-final-2026-10-15/solar-survival-ubuntu-p7-final` (répertoire temporaire susceptible de disparaître). Sources/empreintes/version testée explicitement distinguées dans `package-final.json`, `planets-final-package` et `final-concordance.json`. L’ancienne archive sans correction est conservée, pas la référence finale.
+## Contraintes et limites permanentes
 
-## Objectif suivant prévu : P8
+Rust stable édition 2024, Bevy **exactement =0.19.1**, Cargo.lock versionné ; aucune
+nouvelle dépendance ni Avian sans fonctionnalité réelle et compatibilité vérifiée.
+SI f64 (DVec3/DQuat), origine soustraite avant conversion explicite f32. Ordre
+Input→Simulation→Navigation→Rendering→Interface. Horloge orbitale Time<Real>,
+deltas souris sans delta time ; marche4,5/course8/saut4m/s, gravité radiale,
+pas1/120s et0,25s max/frame. Oxygène180s, dehors1s/s, recharge30s/s, menu suspend
+la survie ; P/T ne modifie ni physique ni survie. Visites spatiales translatoires ;
+surface tournante, forces d'inertie du repère toujours omises.
 
-Le terrain actuel est une sphère sans relief, avec LOD réel **32/16/8 depuis 43f163b**, niveau spatial15, bords fins communs, contacts proches fins, hystérésis et ≤13 patches résidents. Pas de quadtree, relief mondial ou streaming asynchrone. Brume actuelle40–60m et fond d’horizon artistique sans support physique. P8 doit apporter du relief jouable et un paysage visible plus loin, pas de nouvelles textures seules.
+P8 garde des collines douces, une couronne visuelle approximative sans morphing,
+une sphère orbitale P7 sans ce relief, pas d'ombres de terrain/nuages, de vent
+physique, de pression locale ni de climat scientifique. Ce sont des limites
+explicites, pas des fonctionnalités P9/P10 déjà réalisées.
 
-Commencer par examiner le fournisseur mondial, le support et l’admission des constructions avant de préciser une modification opérationnelle. Garder un même terrain déterministe pour rendu et contacts f64, raccords et transitions sans fissure, rebasages robustes, cache/génération bornés, anciennes aventures préservées. Identifier relief artistique ou mesuré et ses unités/sources. Mesurer le coût observé avant de choisir les niveaux/distances ; pas d’architecture vide, nouvelle dépendance ou effets coûteux par principe. P8, P9 base/énergie/progression et P10 exploration/objectifs restent **non implémentés** ; ne pas déclarer leur absence comme une régression P4–P7.
+**Ne pas reprendre le focus sans un créneau explicitement convenu dans le nouveau
+chat.** L'accord reçu couvrait cette campagne, maintenant terminée. Pas d'écran
+virtuel ni de contournement des règles de capture d'entrée. Scénarios GPU
+successifs après compilation, sources/assets gelés, sorties neuves et aucune
+capture pendant les mesures. Vérifier graphiquement si une session est disponible.
 
-## Contraintes permanentes et campagnes
+Poste confirmé : Ubuntu/X11, i7-6700K,32Go,GTX1060 3Go/NVK Mesa25.2.8. **Windows11
+natif, RTX4050 6Go au mieux, CPU cible exact (« i5 12700K » à confirmer),1080p60 et
+VRAM totale/pilote/staging non validés**. Ne pas extrapoler les résultats Ubuntu.
 
-Rust stable édition 2024, **Bevy exactement =0.19.1**, Cargo.lock versionné. Simulation/origine/poses globales SI f64 ; soustraction d’origine en f64 avant proxies f32. Ordre GameSet Input→Simulation→Navigation→Rendering→Interface. Horloge orbitale Time<Real>, deltas souris sans multiplication delta. Marche4,5/course8/saut4m/s, gravité radiale, pas1/120s et0,25s max/frame. Oxygène180s, consommation dehors1s/s, recharge abri30s/s, menu suspend, espace conserve, R conserve stock/bâtiments. P/T ne commandent ni survie ni physique.
-
-**Ne pas prendre le bureau sans un créneau convenu :** l’utilisateur travaille à côté, --focus-x11 prend son focus et sa souris. Accord explicite obtenu pour les campagnes de cette reprise, pas une autorisation permanente à interrompre son travail. Scénarios GPU successifs, après compilation, sources/assets gelés, sorties finales neuves, pas de captures pendant les mesures. L’essai d’écran virtuel du14 a été abandonné à sa demande : ne pas repartir dans cette architecture pour les validations. Options X11/Mesa concernent ce poste seulement ; ne pas simuler des périphériques OS pour masquer une campagne instable.
-
-**Limites transversales ouvertes :** Windows 11 natif build/test/package et archive/profils, matériel RTX 4050 6Go au mieux, CPU annoncé « i5 12700K » à confirmer (12700K est un i7), RAM/puissance/pilote/résolution à relever, objectif 1080p/60 FPS et total/picsVRAM/staging non validés. Poste de développement confirmé i7-6700K/32Go/GTX 1060 3Go/NVK Mesa25.2.8. Ne pas transformer des instructions Windows ou FPS Ubuntu en preuve cible. Ces limites n’annulent pas le contenu P7 réalisé sur Ubuntu.
-
-À la fin : actualiser README/ROADMAP/VALIDATION/PERFORMANCE et cette passation selon les résultats réels, préserver les historiques et fournir son lien en réponse finale.
+À la fin du prochain chat : actualiser critères/état ROADMAP, README, VALIDATION,
+PERFORMANCE et cette passation selon les résultats réels ; fournir son lien.

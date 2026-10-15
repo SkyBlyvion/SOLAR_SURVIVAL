@@ -2,7 +2,7 @@
 
 Le projet avance par étapes vérifiables vers une boucle de survie sur Mars, en préservant l'exploration spatiale et l'échelle physique 1:1. Cette roadmap est la référence pour choisir le travail du prochain chat. Les dates de livraison dépendront des résultats ; les étapes futures ne sont pas des fonctionnalités déjà réalisées.
 
-Dernière mise à jour : 15 octobre 2026. Objectif **Mars traversable sur ses six faces avec chargement dynamique réalisé sur Ubuntu**. **P4, première boucle de survie jouable, terminé sur Ubuntu**. **P5, ressources et construction du même abri, réalisé sur Ubuntu**. **Phase moteur planétaire terminée sur Ubuntu** : LOD de résolution 32/16/8, index local, régressions/inspection et comparaisons CPU/GPU réalisés. **Caméra de jeu unique et ciel astronomique léger réalisés sur Ubuntu**, avec reprise visuelle après retour utilisateur. **Le MVP fonctionnel P1–P6 est réalisé sur Ubuntu** : plusieurs aventures nommées, répertoires indépendants, menu principal, catalogue de construction et HUD communs. La validation native Windows 11 reste ouverte comme travail transversal de distribution. **P7, qualité visuelle et textures, est clôturé sur Ubuntu le 15 octobre 2026**, avec huit planètes, matériaux locaux, profils/archive et mesures contrôlés. La prochaine étape est P8, relief et horizons ; elle reste non implémentée. À la demande explicite de l’utilisateur, le cadrage d’une chaîne fixe P3.5 est remplacé par cette fonctionnalité complète. P3.1 à P3.4 restent les fondations et régressions. La passation détaillée est dans [NEXT_CHAT](NEXT_CHAT.md), les résultats dans [VALIDATION](VALIDATION.md).
+Dernière mise à jour : 15 octobre 2026. Objectif **Mars traversable sur ses six faces avec chargement dynamique réalisé sur Ubuntu**. **P4, première boucle de survie jouable, terminé sur Ubuntu**. **P5, ressources et construction du même abri, réalisé sur Ubuntu**. **Phase moteur planétaire terminée sur Ubuntu** : LOD de résolution 32/16/8, index local, régressions/inspection et comparaisons CPU/GPU réalisés. **Caméra de jeu unique et ciel astronomique léger réalisés sur Ubuntu**, avec reprise visuelle après retour utilisateur. **Le MVP fonctionnel P1–P6 est réalisé sur Ubuntu** : plusieurs aventures nommées, répertoires indépendants, menu principal, catalogue de construction et HUD communs. La validation native Windows 11 reste ouverte comme travail transversal de distribution. **P7, qualité visuelle et textures, est clôturé sur Ubuntu le 15 octobre 2026**, avec huit planètes, matériaux locaux, profils/archive et mesures contrôlés. P8 est réalisé et vérifié sur Ubuntu : relief mondial artistique, paysage lointain et atmosphère dynamique demandée par l’utilisateur. La prochaine étape est P9, base et progression de survie. À la demande explicite de l’utilisateur, le cadrage d’une chaîne fixe P3.5 est remplacé par cette fonctionnalité complète. P3.1 à P3.4 restent les fondations et régressions. La passation détaillée est dans [NEXT_CHAT](NEXT_CHAT.md), les résultats dans [VALIDATION](VALIDATION.md).
 
 ## Fondations réalisées
 
@@ -32,8 +32,8 @@ Les étapes suivantes décrivent l’ordre de travail retenu pour la reprise ; l
 | Étape après MVP | État | Résultat attendu | Critères de fin |
 |---|---|---|---|
 | **P7 Qualité visuelle et textures** | **Réalisé et vérifié sur Ubuntu, 15 octobre 2026** | Première scène martienne aboutie : sol poussière/roche, abri et caisses avec matériaux cohérents ; cartes sourcées des huit planètes pour les vues spatiales | Détails à échelle métrique, textures stables aux rebasages/raccords, portes/ressources lisibles, jour/nuit/placement inspectés, crédits et conversion reproductible, budget textures et mesures avant/après, gameplay/profils conservés |
-| **P8 Relief et horizons** | Prévu, non réalisé | Relief jouable et paysage visible plus loin ; adaptation du LOD et du chargement aux besoins réels | Même terrain pour rendu/contact, raccords et transitions sans fissures, admission des bâtiments, génération déterministe, absence de blocage majeur pendant le streaming, budgets CPU/GPU mesurés. Relief artistique ou mesuré identifié explicitement ; anciennes aventures préservées |
-| **P9 Base et progression de survie** | Prévu, périmètre à préciser après P7/P8 | Première chaîne utile énergie → production d’oxygène → autonomie, avec récolte et fabrication qui dépassent les huit caisses initiales | Bâtiments et coûts réels, production/consommation/stockage compréhensibles, cycle jour/nuit ayant un effet mesurable, ressources accessibles selon des règles durables et progression sauvegardée/migrée |
+| **P8 Relief, horizons et atmosphère** | **Réalisé et vérifié sur Ubuntu, 15 octobre 2026** | Relief artistique jouable, paysage à plusieurs kilomètres ; ciel ocre/halo bleu/nuit étoilée, voiles de glace et poussière/tempêtes dynamiques | Terrain/contacts communs, raccords/LOD/rebasages, construction/survie et nouveaux profils vérifiés ; cache borné, mesures CPU/GPU et inspection. Sources et conventions distinguées. Format 2, sans migration des anciennes aventures, à la demande utilisateur du 15 octobre |
+| **P9 Base et progression de survie** | Prévu, périmètre à préciser après P7/P8 | Première chaîne utile énergie → production d’oxygène → autonomie, avec récolte et fabrication qui dépassent les huit caisses initiales | Bâtiments et coûts réels, production/consommation/stockage compréhensibles, cycle jour/nuit ayant un effet mesurable, ressources accessibles selon des règles durables et progression sauvegardée au format courant, sans migration ancienne requise pour le moment |
 | **P10 Exploration et objectifs** | Prévu, périmètre à préciser | Raisons concrètes de partir de la base et d’y revenir : balises, sites à découvrir et objectifs progressifs | Un parcours complet avec risque/récompense et navigation lisible, découvertes/progression persistées, sans dépendre d’une téléportation spatiale pour l’expédition locale |
 
 **Transversal à chaque étape :** ergonomie et retours utilisateur, sons utiles/retours d’action puis ambiance, remappage/accessibilité selon les besoins, stabilité et temps de chargement, compatibilité des sauvegardes et distribution Ubuntu/Windows. La première passe audio sera une fonctionnalité concrète avec ressources et réglages, pas l’activation d’une dépendance sans contenu. Relever et tester la cible RTX 4050/Core i5 avant d’annoncer une qualité ou 60 FPS.
@@ -322,4 +322,38 @@ Reprise des contrôles ouverts à eeaff80, avec créneau de focus autorisé. Gal
 
 Référence P6 actuelle + deux P7 sans captures + un GPU séparé : surcoût moyen observé environ2,4ms sur le poste GTX1060. Budget textures utile40,168Mio/128Mio. L’échec initial à captures reste conservé ; relance avec focus observé réussie. Aucun écran virtuel ni contrôle spécial ajouté. [Bilan exact](p7-validation/2026-10-15/NOTES.md).
 
-**P8 est l’étape suivante prévue, pas réalisée.** Préparer un relief déterministe jouable et des horizons plus lointains avec mêmes f64/raccords/supports/budgets et anciennes aventures préservées. Windows natif, RTX4050/CPU exact, objectif1080p60 et VRAM totale/staging restent ouverts en transversal. Ne pas présenter l’approbation esthétique utilisateur comme acquise.
+**État de passation avant P8, remplacé par la livraison ci-dessous :** relief et horizons étaient à réaliser. La décision utilisateur du 15 octobre dispense de préserver la compatibilité des anciennes aventures. Windows natif, RTX4050/CPU exact, objectif1080p60 et VRAM totale/staging restent ouverts en transversal. Ne pas présenter l’approbation esthétique utilisateur comme acquise.
+
+
+## P8 livré sur Ubuntu — 15 octobre 2026
+
+Le périmètre inclut la demande atmosphérique de SkyBlyvion : jour ocre/poussiéreux,
+halo bleu au lever et coucher, nuit étoilée, voiles de glace d'eau, poussière
+variable et tempêtes occasionnelles. [Paramètres/sources/architecture](MARS_ENVIRONMENT.md).
+Relief artistique f64 commun au rendu et aux triangles de contact, paysage raccordé
+par couronne jusqu'au-delà de 11 km, visibilité calme 5–8,5 km et tempête 150 m. Pas de
+terrain mondial entièrement généré ni nouvelle dépendance. Préservation des
+anciennes sauvegardes explicitement retirée du critère : **format 2 sans migration**,
+anciens fichiers refusés et laissés intacts.
+
+Critères vérifiés : coutures six faces/LOD mixtes et contour de couronne sans
+fissures topologiques, couverture/support et admission, marche/course/saut/rebasages,
+services des bâtiments et profils neufs après redémarrage.139 tests,fmt/check/Clippy/
+release ;54 captures finales ciel/profils inspectées. Une première version de
+nuages trop géométriques corrigée avant les mesures. Le smoke historique demande
+un dossier docs pour ses captures ; essai initial en erreur IO conservé, relance
+après préparation réussie sans modifier le jeu. [Preuves et limites](VALIDATION.md).
+
+Cache ≤13 patches +1 couronne de6 400 sommets /11 520 triangles ; ni image ni passe
+nouvelle. Comparaison P7→P8 release sans captures : surcoût moyen 1,59–1,90 ms/frame
+selon phase, trois runs P8 codes 0 et archive Ubuntu vérifiée. [PERFORMANCE](PERFORMANCE.md).
+Windows 11 natif, cible RTX 4050/CPU exact,1080p60 et VRAM totale/staging restent
+ouverts ; validation artistique utilisateur distincte. Le relief reste doux,
+la couronne sans morphing temporel et la météo sans climat/ombres volumétriques.
+**Objectif suivant : P9, première chaîne utile énergie→oxygène→autonomie**, à
+implémenter et valider dans la prochaine étape, sans présenter P9/P10 comme acquis.
+
+
+Clôture Git P8 du 15 octobre 2026 : code, documentation et preuves de validation
+regroupés en commit à la demande utilisateur. P9 reste l’objectif suivant,
+sans modification fonctionnelle supplémentaire pendant cette clôture.

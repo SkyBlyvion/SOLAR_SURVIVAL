@@ -26,6 +26,9 @@ use bevy::{
 #[derive(Clone, Copy, Debug, ShaderType)]
 pub struct SkyUniform {
     pub inertial_from_local: Mat4,
+    pub body_from_local: Mat4,
+    pub weather: Vec4,
+    pub observer: Vec4,
     pub up: Vec4,
     pub sun: Vec4,
     pub zenith: Vec4,
@@ -39,6 +42,9 @@ impl Default for SkyUniform {
     fn default() -> Self {
         Self {
             inertial_from_local: Mat4::IDENTITY,
+            body_from_local: Mat4::IDENTITY,
+            weather: Vec4::ZERO,
+            observer: Vec4::ZERO,
             up: Vec3::Y.extend(0.0),
             sun: Vec3::Y.extend(0.0),
             zenith: Vec4::ZERO,
@@ -198,9 +204,20 @@ pub fn parameters(
     let position = pilot.global(solar, clock.jd);
     let up = terrain.site_relative(state.eye(terrain)).normalize();
     let sun = inverse * (-position).normalize();
-    let (zenith, horizon, day) = sky_palette(sun.dot(up));
+    let weather = super::atmosphere::current(terrain, state, solar, clock);
+    let (zenith, horizon, day) = weather.palette(sun.dot(up));
     let mut data = SkyUniform {
         inertial_from_local: Mat4::from_quat(frame.orientation.as_quat()),
+        body_from_local: Mat4::from_quat(terrain.orientation.as_quat()),
+        weather: Vec4::new(
+            weather.dust,
+            weather.clouds,
+            weather.drift[0],
+            weather.drift[1],
+        ),
+        observer: (terrain.body_relative(state.eye(terrain)) / super::atmosphere::CLOUD_HEIGHT_M)
+            .as_vec3()
+            .extend((terrain.radius_m / super::atmosphere::CLOUD_HEIGHT_M + 1.0) as f32),
         up: up.as_vec3().extend(day),
         zenith: zenith.extend(0.0),
         horizon: horizon.extend(0.0),
@@ -349,6 +366,8 @@ mod tests {
                 .rotation(clock.seconds_since_epoch()),
         );
         let after = parameters(&pilot, &state, &terrain, &solar, &clock);
+        assert_eq!(before.weather, after.weather);
+        assert_eq!(before.observer, after.observer);
         for i in 0..9 {
             let a = before
                 .inertial_from_local

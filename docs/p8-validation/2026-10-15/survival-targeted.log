@@ -1,0 +1,9 @@
+   Compiling solar_survival v0.2.0 (/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL)
+    Finished `test` profile [optimized] target(s) in 4.25s
+     Running tests/survival.rs (target/debug/deps/survival-1a4d11f7f7d656a5)
+
+running 1 test
+test second_instance_and_rebase_keep_body_poses_contacts_and_recharge ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 6 filtered out; finished in 0.13s
+

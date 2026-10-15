@@ -1,0 +1,4 @@
+    Finished `dev` profile [optimized] target(s) in 0.20s
+     Running `target/debug/examples/p8_terrain_probe`
+relief=false rebase_mean_ms=0.7525 p95_ms=0.9744 max_ms=1.1275 local_max_triangles=14248 landscape_max_vertices=0 landscape_max_triangles=0
+relief=true rebase_mean_ms=2.2795 p95_ms=5.1449 max_ms=5.6155 local_max_triangles=14248 landscape_max_vertices=6400 landscape_max_triangles=11520

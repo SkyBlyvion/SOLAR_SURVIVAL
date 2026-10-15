@@ -210,7 +210,9 @@ fn admission_covers_full_triangles_and_rejects_historical_rough_ground() {
     let (low, high) = t
         .construction_height_range(DVec3::new(16.0, 0.0, -9.0), 4.5)
         .unwrap();
-    assert!(high - low < 0.001);
+    // P8 : le fournisseur mondial est réellement vallonné ; les extrema doivent
+    // encore envelopper tous les points du carré, sans supposer une sphère lisse.
+    assert!(high > low && high - low < 2.0);
     for x in 0..19 {
         for z in 0..19 {
             let height = t.height(11.5 + x as f64 * 0.5, -13.5 + z as f64 * 0.5);

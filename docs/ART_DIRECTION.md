@@ -73,7 +73,7 @@ Comparer avant/après sans captures, à résolution/MSAA/site/visée identiques 
 5. Mesures sans captures aux mêmes réglages : temps de frame, chargement et budgets d'assets ; budget P7 de 128 Mio de nouvelles textures respecté, pics et régressions traités ; objectif cible 1080p/60 FPS à vérifier nativement.
 6. Tests adaptés aux matériaux/chargement/f64, régressions survie/construction/profils, contrôles Cargo et archive hors checkout avec crédits. L'approbation esthétique de l'utilisateur reste distincte des vérifications techniques.
 
-Le relief mondial, les grands horizons et le streaming asynchrone sont prévus en P8. Une extension de sauvegarde ultérieure devra préserver les aventures P6 via une migration explicite ; aucun nouveau contenu ne doit rendre silencieusement les profils existants illisibles.
+Le relief mondial, les grands horizons et le streaming asynchrone sont prévus en P8. Décision utilisateur du 15 octobre pour P8 : pas de compatibilité des anciennes sauvegardes ; format 2 et refus explicite sans migration. Les fichiers anciens restent intacts.
 
 
 ## Intégration P7 — 14 octobre 2026

@@ -47,6 +47,7 @@ struct TileCache {
     tiles: BTreeMap<(i32, i32), (Entity, Handle<Mesh>)>,
     globe: HashMap<PatchKey, (Entity, Handle<Mesh>)>,
     globe_segments: HashMap<PatchKey, u32>,
+    landscape: Option<(PatchKey, Entity, Handle<Mesh>)>,
 }
 
 pub struct SurfaceRenderingPlugin;
@@ -204,7 +205,7 @@ fn cube_mesh(terrain: &MarsTerrain, patch: usize) -> Mesh {
     );
     mesh
 }
-fn globe_mesh(patch: &SurfacePatch) -> (Mesh, GlobeVisual) {
+fn globe_mesh(patch: &SurfacePatch, radius_m: f64) -> (Mesh, GlobeVisual) {
     let up = patch.key.center_direction().unwrap();
     let radius = patch.positions_m[0].length();
     let origin = up * radius;
@@ -218,7 +219,15 @@ fn globe_mesh(patch: &SurfacePatch) -> (Mesh, GlobeVisual) {
     let normals: Vec<_> = patch
         .positions_m
         .iter()
-        .map(|p| (inverse * p.normalize()).as_vec3().to_array())
+        .map(|p| {
+            (inverse
+                * patch.relief_seed.map_or_else(
+                    || p.normalize(),
+                    |seed| crate::planets::relief::normal(*p, radius_m, seed),
+                ))
+            .as_vec3()
+            .to_array()
+        })
         .collect();
     let mut mesh = Mesh::new(
         PrimitiveTopology::TriangleList,
@@ -289,7 +298,7 @@ fn stream(
                 && cache.globe_segments.get(key) != Some(&patch.segments)
             {
                 uploads += 1;
-                let (mesh, visual) = globe_mesh(patch);
+                let (mesh, visual) = globe_mesh(patch, terrain.radius_m);
                 *meshes.get_mut(handle).unwrap() = mesh;
                 commands.entity(*entity).insert(visual);
             }
@@ -298,7 +307,7 @@ fn stream(
             }
             cache.globe_segments.insert(*key, patch.segments);
             cache.globe.entry(*key).or_insert_with(|| {
-                let (mesh, visual) = globe_mesh(patch);
+                let (mesh, visual) = globe_mesh(patch, terrain.radius_m);
                 if let Some((entity, handle)) = recycled.pop() {
                     *meshes.get_mut(&handle).unwrap() = mesh;
                     commands.entity(entity).insert(visual);
@@ -368,6 +377,41 @@ fn stream(
                     .expect("Handle de paire résident") = cube_mesh(&terrain, patch);
             }
         }
+    }
+    let landscape = if active {
+        terrain.globe.as_ref().and_then(|g| g.landscape.as_ref())
+    } else {
+        None
+    };
+    let wanted = landscape.map(|p| p.key);
+    let replace_landscape = cache
+        .landscape
+        .as_ref()
+        .is_some_and(|(key, _, _)| Some(*key) != wanted)
+        || revision_changed && terrain.globe.as_ref().is_some_and(|g| g.rebases == 0);
+    if replace_landscape && let Some((_, entity, mesh)) = cache.landscape.take() {
+        commands.entity(entity).despawn();
+        meshes.remove(mesh.id());
+    }
+    if cache.landscape.is_none()
+        && let Some(patch) = landscape
+    {
+        let (mesh, visual) = globe_mesh(patch, terrain.radius_m);
+        let mesh = meshes.add(mesh);
+        let entity = commands
+            .spawn((
+                LocalVisual {
+                    origin: DVec3::ZERO,
+                },
+                visual,
+                Mesh3d(mesh.clone()),
+                MeshMaterial3d(assets.material.clone()),
+                RenderLayers::layer(1),
+                Transform::default(),
+                Visibility::Hidden,
+            ))
+            .id();
+        cache.landscape = Some((patch.key, entity, mesh));
     }
     cache.revision = terrain.revision;
     if !active || terrain.cube.is_some() || terrain.globe.is_some() {
@@ -473,6 +517,8 @@ fn sync(
     let radial_up = terrain.site_relative(eye).normalize();
     sunlight.illuminance = if to_sun.dot(radial_up) > 0.0 {
         11000.0
+            * super::atmosphere::current(&terrain, &surface, &solar, &clock)
+                .direct_light(to_sun.dot(radial_up))
     } else {
         0.0
     };
@@ -514,7 +560,7 @@ mod tests {
         }
         let cache = app.world().resource::<TileCache>();
         assert_eq!(cache.globe.len(), 13);
-        assert_eq!(app.world().resource::<Assets<Mesh>>().len(), 13);
+        assert_eq!(app.world().resource::<Assets<Mesh>>().len(), 14);
         let mut shared = 0;
         for (key, slot) in &cache.globe {
             if let Some(old) = first.get(key) {

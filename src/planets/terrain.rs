@@ -64,10 +64,11 @@ impl MarsTerrain {
         if self.globe_enabled {
             self.cube = None;
             self.orientation = DQuat::from_rotation_arc(DVec3::Y, outward.normalize());
-            self.globe = Some(super::globe_terrain::GlobeTerrain::new(
+            self.globe = Some(super::globe_terrain::GlobeTerrain::with_relief(
                 outward,
                 self.orientation,
                 self.radius_m,
+                self.seed,
             ));
         } else if self.offcenter_enabled {
             // L'entrée remplace le site : libérer l'ancienne paire avant de
@@ -129,7 +130,7 @@ impl MarsTerrain {
         self.orientation * self.site_relative(point)
     }
     pub fn chart(&self, body_relative: DVec3) -> DVec3 {
-        self.orientation.inverse() * body_relative - DVec3::Y * self.radius_m
+        self.orientation.inverse() * (body_relative - self.orientation * (DVec3::Y * self.radius_m))
     }
     /// Seuls les sommets sont échantillonnés ; contacts et mesh partagent les triangles.
     pub fn vertex(&self, x: i32, z: i32) -> DVec3 {

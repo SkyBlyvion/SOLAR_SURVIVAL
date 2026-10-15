@@ -1,3 +1,4 @@
+pub mod atmosphere;
 mod buildings;
 mod construction;
 mod ground;

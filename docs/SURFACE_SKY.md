@@ -1,3 +1,5 @@
+> P8, 15 octobre 2026 : [contrat actuel relief/horizons/atmosphère](MARS_ENVIRONMENT.md). Le parcours mondial utilise désormais une couronne locale, une brume dynamique et des voiles de glace ; les chiffres 40–60m/1000m/palette fixe ci-dessous décrivent la version antérieure et les anciens modes de régression. La caméra unique et les directions f64 restent en vigueur.
+
 # Caméra unique et ciel local — 13 octobre 2026
 
 `camera::GameCamera` est l'unique Camera3d du jeu. Navigation publie sa pose : translation nulle, rotation globale en espace, visée locale en surface. Rendering adapte la même projection (near/far 0,001/30 000 en espace ; 0,05/1 000 m en surface), la couche 0/1, l'ambiance et le brouillard. FOV, MSAA, HDR, bloom et toutes les racines UI appartiennent à cette caméra. La publication est faite avant extraction ; aucun changement différé d'entité caméra aux transitions M/G/O/U/R. Les visites spatiales demeurent translatoires et rendent les sphères compressées/anneaux historiques.

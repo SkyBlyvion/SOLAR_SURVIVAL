@@ -1,0 +1,70 @@
+[
+  {
+    "command": [
+      "cargo",
+      "fmt",
+      "--check"
+    ],
+    "exit_code": 0,
+    "seconds": 0.26284943800010296,
+    "log": "final-check-0.log"
+  },
+  {
+    "command": [
+      "cargo",
+      "check",
+      "--all-targets",
+      "--locked"
+    ],
+    "exit_code": 0,
+    "seconds": 1.512628857999971,
+    "log": "final-check-1.log"
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "--locked"
+    ],
+    "exit_code": 0,
+    "seconds": 32.64176894599996,
+    "log": "final-check-2.log"
+  },
+  {
+    "command": [
+      "cargo",
+      "clippy",
+      "--all-targets",
+      "--locked",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit_code": 0,
+    "seconds": 3.962748414000089,
+    "log": "final-check-3.log"
+  },
+  {
+    "command": [
+      "cargo",
+      "run",
+      "--locked",
+      "--example",
+      "p8_terrain_probe"
+    ],
+    "exit_code": 0,
+    "seconds": 0.8792140379996454,
+    "log": "final-check-4.log"
+  },
+  {
+    "command": [
+      "cargo",
+      "build",
+      "--release",
+      "--locked"
+    ],
+    "exit_code": 0,
+    "seconds": 161.73246683599973,
+    "log": "final-check-5.log"
+  }
+]

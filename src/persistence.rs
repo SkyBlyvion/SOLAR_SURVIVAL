@@ -230,8 +230,11 @@ impl Session {
             return fail();
         }
         let radius = SolarSystem::default().body(BodyId::MARS).radius_m;
-        let pose =
-            |p: DVec3, q: DQuat| vector(p) && (p.length() - radius).abs() < 20.0 && quaternion(q);
+        let pose = |p: DVec3, q: DQuat| {
+            vector(p)
+                && (p.length() - radius).abs() < crate::planets::relief::MAX_HEIGHT_M + 2.0
+                && quaternion(q)
+        };
         let mut ids = std::collections::HashSet::new();
         for b in &self.buildings.shelters {
             if b.id.0 == 0
@@ -295,8 +298,8 @@ impl Session {
                 if !vector(s.min)
                     || !vector(s.max)
                     || !s.min.cmplt(s.max).all()
-                    || s.min.abs().max_element() > 100.0
-                    || s.max.abs().max_element() > 100.0
+                    || s.min.abs().max_element() > 120.0
+                    || s.max.abs().max_element() > 120.0
                 {
                     return fail();
                 }
@@ -308,7 +311,7 @@ impl Session {
         Ok(())
     }
     pub fn encode(&self) -> String {
-        let mut text = String::from("SOLAR_SURVIVAL 1\n");
+        let mut text = String::from("SOLAR_SURVIVAL 2\n");
         writeln!(
             text,
             "clock {} {} {}",
@@ -431,7 +434,7 @@ impl Session {
         }
         let mut r = Reader(payload.split_whitespace());
         r.tag("SOLAR_SURVIVAL")?;
-        if r.num::<u32>()? != 1 {
+        if r.num::<u32>()? != 2 {
             return Err("Version de sauvegarde incompatible".into());
         }
         r.tag("clock")?;
@@ -636,15 +639,16 @@ impl Session {
         terrain.site_obstacles = self.obstacles;
         terrain.revision = world.resource::<MarsTerrain>().revision.wrapping_add(1);
         if self.ready && self.global {
-            terrain.globe = Some(GlobeTerrain::new(
+            terrain.globe = Some(GlobeTerrain::with_relief(
                 self.orientation * DVec3::Y,
                 self.orientation,
                 terrain.radius_m,
+                terrain.seed,
             ));
         }
         if self.pilot.mode == MovementMode::Surface {
             let f = self.surface.feet;
-            if !(-10.0..=1000.0).contains(&f.y)
+            if !(-crate::planets::relief::MAX_HEIGHT_M - 1.0..=1000.0).contains(&f.y)
                 || if self.global {
                     f.x.hypot(f.z) > 64.1
                 } else {
@@ -1229,8 +1233,8 @@ mod tests {
         assert!(load(target.world_mut(), &folder.file()).is_err());
         for text in [
             String::from("incomplet"),
-            before.replace("SOLAR_SURVIVAL 1", "SOLAR_SURVIVAL 2"),
-            resign(&before.replace("SOLAR_SURVIVAL 1", "SOLAR_SURVIVAL 2")),
+            before.replace("SOLAR_SURVIVAL 2", "SOLAR_SURVIVAL 1"),
+            resign(&before.replace("SOLAR_SURVIVAL 2", "SOLAR_SURVIVAL 1")),
             resign(&before.replace("buildings 2 2", "buildings 999999999 2")),
             resign(&before.replace("oxygen ", "oxygen NaN ")),
             "x".repeat(MAX_BYTES as usize + 1),

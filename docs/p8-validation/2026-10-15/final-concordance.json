@@ -1,0 +1,20 @@
+{
+  "sky-final": {
+    "binary_matches": true,
+    "sources_and_assets_match": true
+  },
+  "performance": {
+    "binary_matches": true,
+    "sources_and_assets_match": true
+  },
+  "packaged-profiles": {
+    "binary_matches": true,
+    "sources_and_assets_match": true
+  },
+  "package": {
+    "files_match": true,
+    "archive_match": true,
+    "runtime_assets_match": true
+  },
+  "bevy_and_lock_unchanged": true
+}

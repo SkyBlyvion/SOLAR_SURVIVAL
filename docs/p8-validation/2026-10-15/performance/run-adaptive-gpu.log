@@ -1,0 +1,41 @@
+2026-10-15T07:42:41.826285Z  INFO bevy_render::renderer: AdapterInfo { name: "NVIDIA GeForce GTX 1060 3GB (NVK GP106)", vendor: 4318, device: 7170, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "NVK", driver_info: "Mesa 25.2.8-0ubuntu0.24.04.4", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: false }
+2026-10-15T07:42:41.964068Z  INFO bevy_pbr::cluster: GPU clustering is supported on this device.
+2026-10-15T07:42:41.964118Z  INFO bevy_render::batching::gpu_preprocessing: GPU preprocessing is fully supported on this device.
+2026-10-15T07:42:41.964784Z  INFO bevy_winit::system: Creating new window Solar Survival · 0.2 · Mars (63v0)
+2026-10-15T07:42:41.965115Z  INFO winit::platform_impl::linux::x11::window: Guessed window scale factor: 1
+2026-10-15T07:42:41.990574Z  INFO solar_survival::rendering::textures: P7 textures CPU préparées : 13 images, 42118856 octets, 23.102 ms ; données transférées au renderer, staging/pics pilote exclus
+2026-10-15T07:42:42.020908Z  INFO solar_survival::config::construction_validation: P5 phase 0 t=0.000 alloy=0 active=false preview=None feet=DVec3(0.0, 0.0, 0.0) O2=180.000
+2026-10-15T07:42:42.036685Z DEBUG solar_survival::rendering::terrain: GLOBAL meshes sync CPU 7.256 ms, uploads 13, LOD ([6, 5, 2], 9009, 16328)
+2026-10-15T07:42:42.175536Z  INFO solar_survival::rendering::textures: P7 GPU résident : 13 textures RGBA8 sRGB avec mipmaps, 42118856 octets / 134217728 ; allocation pilote totale/staging exclus
+2026-10-15T07:42:44.046829Z  INFO solar_survival::config::construction_validation: P5 phase 1 t=2.026 alloy=0 active=false preview=None feet=DVec3(0.0, -7.610709164967115, 0.0) O2=178.007
+2026-10-15T07:42:46.038607Z  INFO solar_survival::config::construction_validation: P5 phase 2 t=4.019 alloy=0 active=true preview=Some(Err("Alliage insuffisant : 12 requis")) feet=DVec3(0.0, -7.610709164967115, 0.0) O2=176.020
+2026-10-15T07:42:48.038007Z  INFO solar_survival::config::construction_validation: P5 phase 3 t=6.018 alloy=0 active=true preview=Some(Err("Alliage insuffisant : 12 requis")) feet=DVec3(0.0, -7.610709164967115, 0.0) O2=174.020
+2026-10-15T07:42:49.522484Z  INFO solar_survival::config::construction_validation: P5 phase 4 t=7.503 alloy=0 active=false preview=None feet=DVec3(6.712499999991298, -7.772060646821389, 0.0) O2=172.530
+2026-10-15T07:42:50.229199Z  INFO solar_survival::config::construction_validation: P5 phase 5 t=8.209 alloy=6 active=false preview=None feet=DVec3(6.712499999991298, -7.772060646821389, 0.0) O2=171.824
+2026-10-15T07:42:51.230462Z  INFO solar_survival::config::construction_validation: P5 phase 6 t=9.210 alloy=6 active=false preview=None feet=DVec3(6.712499999985431, -7.768663592183413, -4.499999999997389) O2=170.822
+2026-10-15T07:42:52.031796Z  INFO solar_survival::config::construction_validation: P5 phase 7 t=10.012 alloy=12 active=false preview=None feet=DVec3(6.712499999985431, -7.768663592183413, -4.499999999997389) O2=170.020
+2026-10-15T07:42:54.031142Z  INFO solar_survival::config::construction_validation: P5 phase 8 t=12.011 alloy=12 active=true preview=Some(Err("Volume occupé : joueur, abri, obstacle ou caisse")) feet=DVec3(6.712499999985431, -7.768663592183413, -4.499999999997389) O2=168.031
+2026-10-15T07:42:57.049010Z  INFO solar_survival::config::construction_validation: P5 phase 9 t=15.029 alloy=12 active=true preview=Some(Ok(())) feet=DVec3(6.712499999985431, -7.768663592183413, -4.499999999997389) O2=165.008
+2026-10-15T07:42:58.031864Z  INFO solar_survival::config::construction_validation: P5 phase 10 t=16.012 alloy=12 active=true preview=Some(Ok(())) feet=DVec3(6.712499999985431, -7.768663592183413, -4.499999999997389) O2=164.025
+2026-10-15T07:43:00.023631Z  INFO solar_survival::config::construction_validation: P5 phase 11 t=18.004 alloy=12 active=false preview=None feet=DVec3(6.712499999985431, -7.768663592183413, -4.499999999997389) O2=162.029
+2026-10-15T07:43:03.040977Z  INFO solar_survival::config::construction_validation: P5 phase 12 t=21.021 alloy=12 active=true preview=Some(Ok(())) feet=DVec3(6.712499999985431, -7.768663592183413, -4.499999999997389) O2=159.015
+2026-10-15T07:43:04.027734Z  INFO solar_survival::config::construction_validation: P5 phase 13 t=22.008 alloy=12 active=true preview=Some(Ok(())) feet=DVec3(6.712499999985431, -7.768663592183413, -4.499999999997389) O2=158.030
+2026-10-15T07:43:05.034063Z  INFO solar_survival::config::construction_validation: P5 phase 14 t=23.014 alloy=0 active=false preview=None feet=DVec3(6.712499999985431, -7.768663592183413, -4.499999999997389) O2=157.018
+2026-10-15T07:43:06.035949Z  INFO solar_survival::config::construction_validation: P5 phase 15 t=24.016 alloy=0 active=false preview=None feet=DVec3(6.712499999985431, -7.768663592183413, -4.499999999997389) O2=156.017
+2026-10-15T07:43:07.041829Z  INFO solar_survival::config::construction_validation: P5 phase 16 t=25.022 alloy=0 active=false preview=None feet=DVec3(15.873440088110508, -7.995805651329395, -22.007104981092464) O2=72.147
+2026-10-15T07:43:08.041570Z  INFO solar_survival::config::construction_validation: P5 phase 17 t=26.022 alloy=0 active=false preview=None feet=DVec3(15.873440088110508, -7.995805651329395, -22.007104981092464) O2=102.136
+2026-10-15T07:43:12.049159Z  INFO solar_survival::config::construction_validation: P5 phase 18 t=30.029 alloy=0 active=false preview=None feet=DVec3(15.873440088110508, -7.995805651329395, -22.007104981092464) O2=180.000
+2026-10-15T07:43:14.039940Z  INFO solar_survival::config::construction_validation: P5 phase 19 t=32.020 alloy=0 active=false preview=None feet=DVec3(17.633061508825023, -8.040168464624003, -23.67413197934685) O2=178.500
+2026-10-15T07:43:15.051751Z  INFO solar_survival::config::construction_validation: P5 phase 20 t=33.032 alloy=0 active=false preview=None feet=DVec3(17.633061508825023, -8.040168464624003, -23.67413197934685) O2=177.488
+2026-10-15T07:43:20.536001Z DEBUG solar_survival::player::surface: GLOBAL rebasage CPU 5.725 ms, patches 13, constructions 18, LOD ([7, 5, 1], 9893, 18096), changements 0, géométrie 4.524 ms, index 1.131 ms
+2026-10-15T07:43:20.540811Z DEBUG solar_survival::rendering::terrain: GLOBAL meshes sync CPU 4.698 ms, uploads 5, LOD ([7, 5, 1], 9893, 18096)
+2026-10-15T07:43:23.043958Z  INFO solar_survival::config::construction_validation: P5 phase 21 t=41.024 alloy=0 active=false preview=None feet=DVec3(19.933333332949353, -9.492292177824314, -1.6073521772556952e-10) O2=169.495
+2026-10-15T07:43:25.022663Z  INFO solar_survival::config::construction_validation: P5 phase 22 t=43.003 alloy=0 active=false preview=None feet=DVec3(19.933333332949353, -9.492292177824314, -1.6073521772556952e-10) O2=167.516
+2026-10-15T07:43:27.022798Z  INFO solar_survival::config::construction_validation: P5 phase 23 t=45.003 alloy=0 active=false preview=None feet=DVec3(19.933333332949353, -9.492292177824314, -1.6073521772556952e-10) O2=167.516
+2026-10-15T07:43:27.034416Z DEBUG solar_survival::rendering::terrain: GLOBAL meshes sync CPU 6.458 ms, uploads 13, LOD ([6, 5, 2], 9009, 16328)
+2026-10-15T07:43:30.043232Z  INFO solar_survival::config::construction_validation: P5 phase 24 t=48.023 alloy=0 active=false preview=None feet=DVec3(0.0, -7.6107091652647885, 0.0) O2=164.503
+2026-10-15T07:43:32.037335Z  INFO solar_survival::config::construction_validation: P5 phase 25 t=50.017 alloy=0 active=true preview=Some(Err("Alliage insuffisant : 12 requis")) feet=DVec3(0.0, -7.6107091652647885, 0.0) O2=162.513
+2026-10-15T07:43:34.039069Z  INFO solar_survival::config::construction_validation: P5 phase 26 t=52.019 alloy=0 active=false preview=None feet=DVec3(0.0, -7.6107091652647885, 0.0) O2=162.513
+2026-10-15T07:43:36.045032Z  INFO solar_survival::config::construction_validation: P5 phase 27 t=54.025 alloy=0 active=false preview=None feet=DVec3(0.0, -7.6107091652647885, 0.0) O2=160.506
+2026-10-15T07:43:38.026037Z  INFO solar_survival::config::construction_validation: P5 phase 28 t=56.006 alloy=0 active=false preview=None feet=DVec3(15.950811782329003, -7.997615534360362, -21.92543570312468) O2=100.992
+2026-10-15T07:43:41.031459Z  INFO solar_survival::config::construction_validation: P5 terminé : récolte, refus, déplacement/orientation, annulation, construction, porte/mur/recharge, rebasage, espace, menu

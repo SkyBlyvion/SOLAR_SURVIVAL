@@ -4,6 +4,8 @@ Prototype d'exploration 3D de notre système solaire, fondation d'un jeu de surv
 
 **M ouvre un terrain martien mondial : six faces traversables, arêtes et coins continus, LOD adaptatif à trois résolutions et chargement local borné.** Les anciens parcours bornés restent des modes de régression. [Architecture et commandes](docs/GLOBAL_TERRAIN.md).
 
+**P8, relief et atmosphère martienne :** collines artistiques jouables, paysage local prolongé sur plusieurs kilomètres, ciel ocre le jour, halo bleu au lever/coucher, nuit étoilée, voiles de glace et tempêtes de poussière occasionnelles. P/T commande aussi leur évolution ; H indique la météo et la visibilité. Anciennes aventures refusées sans migration : créer une aventure au format 2. [Paramètres, sources et limites](docs/MARS_ENVIRONMENT.md).
+
 **Caméra unique :** la même caméra rend les visites spatiales et la surface. Sur Mars : ciel poussiéreux, étoiles discrètes la nuit, Soleil et astres calculés depuis le catalogue, masqués par le terrain et les abris. Le ciel et le sol restent des présentations artistiques ; [architecture, ressources et limites](docs/SURFACE_SKY.md).
 
 **Construction P5 :** récupérer les caisses dorées avec **E**, ouvrir le catalogue avec **B**, choisir **Prévisualiser**, déplacer avec les **flèches**, orienter avec **J/L**, confirmer avec **Entrée** ou annuler avec **X/Échap**. Coût : 12 alliage ; prévisualisation verte/rouge, inventaire et bâtiments conservés en session. [Règles et architecture](docs/CONSTRUCTION.md).
@@ -12,7 +14,7 @@ Prototype d'exploration 3D de notre système solaire, fondation d'un jeu de surv
 
 **Survie P4 :** une combinaison de 180 s d’oxygène et un abri de recharge accessible à six mètres devant l’arrivée. Entrez par la porte pour recharger ; à zéro, **R** relance une expédition à l’abri. [Règles et architecture](docs/SURVIVAL.md).
 
-**P7, qualité visuelle et textures :** sol martien détaillé, panneaux industriels partagés, caisses marquées et plaque O₂ ; cartes pour les huit planètes : Blue Marble, Viking/USGS, Voyager et représentations NASA/JPL/VTAD. Les sources artistiques sont identifiées dans les crédits. Les textures utilisent des niveaux précalculés et occupent 40,2 Mio de données GPU, sous le budget de 128 Mio. Relief/horizons P8, progression de base P9 et exploration P10 restent prévus. [Direction visuelle et sources](docs/ART_DIRECTION.md). P7 est vérifié sur Ubuntu depuis le 15 octobre 2026 : cartes des huit planètes inspectées, profils/archive contrôlés et mesures conservées ; [preuves et limites](docs/VALIDATION.md). La validation native Windows reste ouverte.
+**P7, qualité visuelle et textures :** sol martien détaillé, panneaux industriels partagés, caisses marquées et plaque O₂ ; cartes pour les huit planètes : Blue Marble, Viking/USGS, Voyager et représentations NASA/JPL/VTAD. Les sources artistiques sont identifiées dans les crédits. Les textures utilisent des niveaux précalculés et occupent 40,2 Mio de données GPU, sous le budget de 128 Mio. Le relief/horizon et la météo P8 sont implémentés ; progression de base P9 et exploration P10 restent prévus. [Direction visuelle et sources](docs/ART_DIRECTION.md). P7 est vérifié sur Ubuntu depuis le 15 octobre 2026 : cartes des huit planètes inspectées, profils/archive contrôlés et mesures conservées ; [preuves et limites](docs/VALIDATION.md). La validation native Windows reste ouverte.
 
 **Cible de performance :** machines modestes, RTX 4050 **6 Go au mieux**. P7 utilise des textures modestes et partagées, avec budgets mémoire et mesures ; objectif 1080p/60 FPS sur la cible à vérifier. Le CPU indiqué « i5 12700K » reste à confirmer. [Contraintes détaillées](docs/ART_DIRECTION.md).
 
@@ -120,7 +122,7 @@ Les vitesses disponibles sont 5 m/s, 250 m/s, 20 km/s, 20 000 km/s, 2 millions k
 - Deux meshes de sphère partagés pour le LOD ; étoiles regroupées dans un mesh ; pas de création de mesh par frame.
 - Interface sélectionnable à la souris : FPS, temps, cible, altitude, rayon, repère, vitesse et astre le plus proche. Repères visuels pour les corps trop petits à l'écran.
 - FPS martien : site fixé au repère tournant de Mars, gravité radiale, marche/course/saut, contacts avec terrain et trois obstacles statiques dans le site.
-- Terrain mondial sphérique : six faces, voisinage local de treize patches maximum, marche/course/saut sans borne de site ; coordonnées et contacts f64, meshes réutilisés. Résolutions intérieures 32/16/8 choisies selon la distance, bords communs fins et contacts proches précis. Le terrain artistique historique de neuf tuiles reste disponible avec `SOLAR_MARS_GLOBAL=0`.
+- Terrain mondial sphérique : six faces, voisinage local de treize patches maximum, marche/course/saut sans borne de site ; coordonnées et contacts f64, meshes réutilisés. Résolutions intérieures 32/16/8 choisies selon la distance, bords communs fins et contacts proches précis. Relief artistique déterministe commun au rendu/contact, couronne locale raccordée pour le paysage lointain. Le terrain artistique historique de neuf tuiles reste disponible avec `SOLAR_MARS_GLOBAL=0`.
 - Contrat cube-sphere f64 : conversions, voisins orientés, graines reproductibles et raccord de deux patches de même niveau.
 - Première boucle de survie : réserve/consommation/recharge/HUD, expédition terminée et reprise ; abris instanciables avec identités et poses fixes sur Mars pour leur réutilisation en P5.
 - Ressources et construction : huit caisses épuisables, inventaire réel, recette du même abri, preview orientable avec admission terrain/volumes et paiement après confirmation ; persistance de session.
@@ -142,6 +144,9 @@ src/planets/          clés cube-sphere, graines et géométrie du terrain local
 src/planets/cube_sphere.rs conversions, voisins et paire de patches à sommets partagés
 src/planets/cube_terrain.rs fournisseur optionnel de support de la paire f64
 src/planets/globe_terrain.rs voisinage mondial dynamique et contacts f64
+src/planets/relief.rs champ de hauteur artistique mondial SI/f64
+src/planets/landscape.rs couronne lointaine raccordée, sans contacts
+src/rendering/atmosphere.rs météo visuelle déterministe, sources NASA et paramètres artistiques
 src/config/cube_validation.rs parcours graphique borné de franchissement
 examples/cube_seam.rs diagnostic graphique borné, indépendant du terrain jouable
 src/buildings/        abris instanciables, identités et poses corporelles f64
@@ -263,7 +268,7 @@ Le pas physique est de 1/120 s, alimenté par `Time<Real>` dans `GameSet::Naviga
 
 Même en l’air, le joueur reste exprimé dans le site tournant. Aucune force de Coriolis, centrifuge, d’Euler ni due à l’accélération translatoire orbitale n’est appliquée ; aucune vitesse inertielle n’est transférée lors des téléportations M/G/O/U. Ce contrôleur est un compromis de gameplay, particulièrement visible sous T, pas une intégration inertielle d’un astronaute. Voir les formules et conventions dans [ASTRONOMY](docs/ASTRONOMY.md).
 
-**P6 :** sauvegarde/chargement de session et préparation d’archives natives ; validation Windows 11 à réaliser. La caméra unique et son ciel de surface sont livrés/testés sur Ubuntu. P5 fournit maintenant récupération, inventaire et construction du même abri. Le LOD adaptatif 32/16/8 est livré ; relief et géométries plus complexes restent des extensions distinctes. [Roadmap](docs/ROADMAP.md).
+**P6 :** sauvegarde/chargement de session et préparation d’archives natives ; validation Windows 11 à réaliser. La caméra unique et son ciel de surface sont livrés/testés sur Ubuntu. P5 fournit maintenant récupération, inventaire et construction du même abri. Le LOD adaptatif 32/16/8 porte désormais le relief artistique P8 ; les géométries avec surplombs restent hors périmètre. [Roadmap](docs/ROADMAP.md).
 
 
 Les sections P3.2–P3.4 ci-dessous décrivent les anciens modes de régression ; le lancement normal utilise le terrain mondial et la survie.
@@ -339,6 +344,24 @@ textures et crédits, les licences et `lancer.sh`. Extraction hors checkout et
 lancement orbital vérifiés ; les profils multiples ont été testés avec le même
 binaire avant la seule retouche du raccord Jupiter. [Empreintes et portée](docs/p7-validation/2026-10-15/package-final.json).
 
-P8 relief/horizons reste la prochaine étape. Le coût observé des textures est
+P8 ajoute le relief, les horizons et la météo ; ses mesures sont distinguées de P7. Le coût observé des seules textures P7 est
 d’environ2,4ms/frame sur GTX1060 ; aucune garantie1080p60 sur RTX4050 ni validation
 nativeWindows n’est déduite de ces essais.
+
+
+## P8 — relief et météo visuelle
+
+Le terrain mondial possède désormais un relief artistique déterministe et une
+couronne de paysage raccordée ; les contacts proches et le placement des abris
+utilisent ses mêmes triangles. Le ciel ocre évolue avec poussière et voiles de
+glace, devient bleu près du Soleil bas, puis sombre et étoilé la nuit ; les
+tempêtes diminuent la visibilité et la lumière. P/T fige ou accélère aussi cette
+évolution ; H affiche les informations atmosphériques. Ce sont des représentations
+artistiques sourcées, sans simulation climatique ni pression locale de survie.
+
+**Créer une nouvelle aventure : format 2 uniquement**, sans migration des profils
+anciens. 139 tests et les contrôles Cargo passent ; ciel, profils après redémarrage
+et archive Ubuntu inspectés. Surcoût mesuré 1,6–1,9 ms/frame face à P7 sur le poste de
+développement ; Windows natif et objectif cible1080p60 restent à vérifier.
+Archive : `dist/solar-survival-ubuntu-p8.tar.gz` ; [contrat et limites](docs/MARS_ENVIRONMENT.md),
+[preuves](docs/VALIDATION.md), [prochain chat P9](docs/NEXT_CHAT.md).

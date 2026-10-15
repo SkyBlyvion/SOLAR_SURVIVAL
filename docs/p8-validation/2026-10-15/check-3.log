@@ -1,0 +1,66 @@
+    Checking solar_survival v0.2.0 (/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL)
+error: casting to the same type is unnecessary (`f64` -> `f64`)
+   --> src/config/sky_validation.rs:434:21
+    |
+434 |           let score = match stage {
+    |  _____________________^
+435 | |             4 | 5 => {
+436 | |                 (h - 0.02).abs()
+437 | |                     + if (elevation(seconds + 10.0) > h) == (stage == 4) {
+...   |
+445 | |             _ => 1.0 - weather.storm as f64 + (0.5 - h).max(0.0),
+446 | |         } as f64;
+    | |________________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#unnecessary_cast
+    = note: `-D clippy::unnecessary-cast` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::unnecessary_cast)]`
+help: try
+    |
+434 ~         let score = match stage {
+435 +             4 | 5 => {
+436 +                 (h - 0.02).abs()
+437 +                     + if (elevation(seconds + 10.0) > h) == (stage == 4) {
+438 +                         0.0
+439 +                     } else {
+440 +                         10.0
+441 +                     }
+442 +             }
+443 +             7 => (h + 0.6).abs(),
+444 +             6 => (weather.clouds as f64 - 0.6).abs() + (0.5 - h).max(0.0),
+445 +             _ => 1.0 - weather.storm as f64 + (0.5 - h).max(0.0),
+446 ~         };
+    |
+
+error: this `if` statement can be collapsed
+   --> src/rendering/terrain.rs:387:5
+    |
+387 | /     if cache
+388 | |         .landscape
+389 | |         .as_ref()
+390 | |         .is_some_and(|(key, _, _)| Some(*key) != wanted)
+...   |
+397 | |     }
+    | |_____^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#collapsible_if
+    = note: `-D clippy::collapsible-if` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::collapsible_if)]`
+help: collapse nested if block
+    |
+387 ~     if (cache
+388 |         .landscape
+389 |         .as_ref()
+390 |         .is_some_and(|(key, _, _)| Some(*key) != wanted)
+391 ~         || revision_changed && terrain.globe.as_ref().is_some_and(|g| g.rebases == 0)
+392 ~         || revision_changed && terrain.globe.as_ref().is_some_and(|g| g.rebases == 0))
+393 |     {
+394 ~         && let Some((_, entity, mesh)) = cache.landscape.take() {
+395 |             commands.entity(entity).despawn();
+396 |             meshes.remove(mesh.id());
+397 ~         }
+    |
+
+error: could not compile `solar_survival` (lib) due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `solar_survival` (lib test) due to 2 previous errors

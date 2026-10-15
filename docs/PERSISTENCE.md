@@ -1,3 +1,5 @@
+> P8, 15 octobre 2026 : format courant **SOLAR_SURVIVAL 2**. À la demande utilisateur, les formats antérieurs sont refusés sans migration ; fichiers laissés intacts. Relief reconstruit depuis la graine, météo depuis JD/position. Les mentions de format 1 ci-dessous décrivent le contrat historique P6. Voir [MARS_ENVIRONMENT](MARS_ENVIRONMENT.md).
+
 # P6 — aventures et sauvegardes par profil
 
 ## Créer et choisir une aventure

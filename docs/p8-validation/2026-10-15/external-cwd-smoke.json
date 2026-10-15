@@ -1,0 +1,21 @@
+{
+  "exit_code": 0,
+  "seconds": 8.412323521999951,
+  "cwd": "/tmp/solar-survival-p8-2026-10-15/solar-survival-ubuntu-p8",
+  "focused_window": "0x4400004",
+  "diagnostics": [
+    "2026-10-15T07:46:38.933386Z ERROR bevy_render::view::window::screenshot: Cannot save screenshot, IO error: No such file or directory (os error 2)",
+    "2026-10-15T07:46:39.668371Z ERROR bevy_render::view::window::screenshot: Cannot save screenshot, IO error: No such file or directory (os error 2)",
+    "2026-10-15T07:46:40.400001Z ERROR bevy_render::view::window::screenshot: Cannot save screenshot, IO error: No such file or directory (os error 2)",
+    "2026-10-15T07:46:41.105827Z ERROR bevy_render::view::window::screenshot: Cannot save screenshot, IO error: No such file or directory (os error 2)",
+    "2026-10-15T07:46:41.809954Z ERROR bevy_render::view::window::screenshot: Cannot save screenshot, IO error: No such file or directory (os error 2)",
+    "2026-10-15T07:46:42.541810Z ERROR bevy_render::view::window::screenshot: Cannot save screenshot, IO error: No such file or directory (os error 2)",
+    "2026-10-15T07:46:43.257238Z ERROR bevy_render::view::window::screenshot: Cannot save screenshot, IO error: No such file or directory (os error 2)",
+    "2026-10-15T07:46:44.008649Z ERROR bevy_render::view::window::screenshot: Cannot save screenshot, IO error: No such file or directory (os error 2)",
+    "2026-10-15T07:46:44.714538Z ERROR bevy_render::view::window::screenshot: Cannot save screenshot, IO error: No such file or directory (os error 2)",
+    "2026-10-15T07:46:45.497456Z ERROR bevy_render::view::window::screenshot: Cannot save screenshot, IO error: No such file or directory (os error 2)",
+    "2026-10-15T07:46:46.214199Z ERROR bevy_render::view::window::screenshot: Cannot save screenshot, IO error: No such file or directory (os error 2)"
+  ],
+  "files_still_match": true,
+  "gpu_textures_audit": true
+}

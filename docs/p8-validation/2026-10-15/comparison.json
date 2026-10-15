@@ -1,0 +1,716 @@
+{
+  "baseline-p7": {
+    "run-adaptive-1/built_rest/cpu/interface": {
+      "samples": 24.0,
+      "mean_ms": 0.07391120833333333,
+      "p95_ms": 0.0930506,
+      "max_ms": 0.097707
+    },
+    "run-adaptive-1/built_rest/cpu/navigation": {
+      "samples": 24.0,
+      "mean_ms": 0.04208758333333334,
+      "p95_ms": 0.05304129999999999,
+      "max_ms": 0.065684
+    },
+    "run-adaptive-1/built_rest/cpu/rendering_sync": {
+      "samples": 24.0,
+      "mean_ms": 0.048904375,
+      "p95_ms": 0.06552934999999999,
+      "max_ms": 0.092021
+    },
+    "run-adaptive-1/built_rest/cpu/simulation": {
+      "samples": 24.0,
+      "mean_ms": 0.008620541666666667,
+      "p95_ms": 0.013791249999999993,
+      "max_ms": 0.015345
+    },
+    "run-adaptive-1/built_rest/frame": {
+      "samples": 24.0,
+      "mean_ms": 30.584535541666668,
+      "p95_ms": 31.042851199999998,
+      "max_ms": 31.848648
+    },
+    "run-adaptive-1/preview/cpu/interface": {
+      "samples": 45.0,
+      "mean_ms": 0.09408024444444443,
+      "p95_ms": 0.10163619999999998,
+      "max_ms": 0.906987
+    },
+    "run-adaptive-1/preview/cpu/navigation": {
+      "samples": 45.0,
+      "mean_ms": 0.0737284,
+      "p95_ms": 0.09411219999999998,
+      "max_ms": 0.096585
+    },
+    "run-adaptive-1/preview/cpu/rendering_sync": {
+      "samples": 45.0,
+      "mean_ms": 0.048037533333333333,
+      "p95_ms": 0.0612154,
+      "max_ms": 0.066454
+    },
+    "run-adaptive-1/preview/cpu/simulation": {
+      "samples": 45.0,
+      "mean_ms": 0.0076292,
+      "p95_ms": 0.011479199999999998,
+      "max_ms": 0.013669
+    },
+    "run-adaptive-1/preview/frame": {
+      "samples": 45.0,
+      "mean_ms": 39.19178242222222,
+      "p95_ms": 40.9464136,
+      "max_ms": 43.197483
+    },
+    "run-adaptive-1/streaming/cpu/interface": {
+      "samples": 263.0,
+      "mean_ms": 0.08043907604562738,
+      "p95_ms": 0.1073676,
+      "max_ms": 0.286412
+    },
+    "run-adaptive-1/streaming/cpu/navigation": {
+      "samples": 263.0,
+      "mean_ms": 0.060325741444866916,
+      "p95_ms": 0.07437759999999999,
+      "max_ms": 1.190921
+    },
+    "run-adaptive-1/streaming/cpu/rendering_sync": {
+      "samples": 263.0,
+      "mean_ms": 0.04718469961977186,
+      "p95_ms": 0.0604151,
+      "max_ms": 0.220121
+    },
+    "run-adaptive-1/streaming/cpu/simulation": {
+      "samples": 263.0,
+      "mean_ms": 0.008024897338403043,
+      "p95_ms": 0.012372899999999985,
+      "max_ms": 0.051372
+    },
+    "run-adaptive-1/streaming/frame": {
+      "samples": 263.0,
+      "mean_ms": 29.570890509505706,
+      "p95_ms": 30.8405843,
+      "max_ms": 31.58967
+    },
+    "runs": [
+      {
+        "run": "run-adaptive-1",
+        "seconds": 59.49365857299972,
+        "exit_code": 0,
+        "focused_window": "0x4400004",
+        "diagnostics": []
+      }
+    ],
+    "concordance": {
+      "hashes_unchanged": true
+    },
+    "resources": {
+      "run-adaptive-1-resources.json": {
+        "peak_rss_kib": 256444,
+        "process_hwm_kib": 276508,
+        "drm_available": false,
+        "interval_seconds": 0.25,
+        "limitations": "RSS processus pas allocation textures seule. HWM noyau et \u00e9chantillonnage. VRAM/staging absents si pilote non instrument\u00e9. Linux uniquement."
+      }
+    },
+    "rebase_cpu_ms": {
+      "samples": 1,
+      "max": 1.073
+    },
+    "mesh_sync_ms": {
+      "samples": 3,
+      "max": 0.744
+    }
+  },
+  "performance": {
+    "run-adaptive-1/built_rest/cpu/interface": {
+      "samples": 24.0,
+      "mean_ms": 0.077875625,
+      "p95_ms": 0.10397469999999999,
+      "max_ms": 0.112253
+    },
+    "run-adaptive-1/built_rest/cpu/navigation": {
+      "samples": 24.0,
+      "mean_ms": 0.04323829166666667,
+      "p95_ms": 0.04903444999999999,
+      "max_ms": 0.058184
+    },
+    "run-adaptive-1/built_rest/cpu/rendering_sync": {
+      "samples": 24.0,
+      "mean_ms": 0.05495841666666667,
+      "p95_ms": 0.061104399999999996,
+      "max_ms": 0.224775
+    },
+    "run-adaptive-1/built_rest/cpu/simulation": {
+      "samples": 24.0,
+      "mean_ms": 0.0083295,
+      "p95_ms": 0.013658049999999995,
+      "max_ms": 0.014255
+    },
+    "run-adaptive-1/built_rest/frame": {
+      "samples": 24.0,
+      "mean_ms": 32.518880708333334,
+      "p95_ms": 33.6347022,
+      "max_ms": 33.741364
+    },
+    "run-adaptive-1/preview/cpu/interface": {
+      "samples": 43.0,
+      "mean_ms": 0.08137002325581395,
+      "p95_ms": 0.10900599999999999,
+      "max_ms": 0.130728
+    },
+    "run-adaptive-1/preview/cpu/navigation": {
+      "samples": 43.0,
+      "mean_ms": 0.07897804651162792,
+      "p95_ms": 0.09261889999999999,
+      "max_ms": 0.101596
+    },
+    "run-adaptive-1/preview/cpu/rendering_sync": {
+      "samples": 43.0,
+      "mean_ms": 0.05158206976744186,
+      "p95_ms": 0.0637115,
+      "max_ms": 0.075305
+    },
+    "run-adaptive-1/preview/cpu/simulation": {
+      "samples": 43.0,
+      "mean_ms": 0.007880511627906976,
+      "p95_ms": 0.012027599999999998,
+      "max_ms": 0.014108
+    },
+    "run-adaptive-1/preview/frame": {
+      "samples": 43.0,
+      "mean_ms": 40.71818611627907,
+      "p95_ms": 42.1032528,
+      "max_ms": 42.271839
+    },
+    "run-adaptive-1/streaming/cpu/interface": {
+      "samples": 247.0,
+      "mean_ms": 0.0811652064777328,
+      "p95_ms": 0.1106002,
+      "max_ms": 0.161763
+    },
+    "run-adaptive-1/streaming/cpu/navigation": {
+      "samples": 247.0,
+      "mean_ms": 0.08026095951417003,
+      "p95_ms": 0.08083789999999999,
+      "max_ms": 4.813337
+    },
+    "run-adaptive-1/streaming/cpu/rendering_sync": {
+      "samples": 247.0,
+      "mean_ms": 0.08031146153846154,
+      "p95_ms": 0.06439859999999999,
+      "max_ms": 7.646862
+    },
+    "run-adaptive-1/streaming/cpu/simulation": {
+      "samples": 247.0,
+      "mean_ms": 0.007743412955465587,
+      "p95_ms": 0.011900099999999999,
+      "max_ms": 0.025284
+    },
+    "run-adaptive-1/streaming/frame": {
+      "samples": 247.0,
+      "mean_ms": 31.420466744939272,
+      "p95_ms": 32.6404071,
+      "max_ms": 34.288277
+    },
+    "run-adaptive-2/built_rest/cpu/interface": {
+      "samples": 23.0,
+      "mean_ms": 0.07901252173913044,
+      "p95_ms": 0.1049435,
+      "max_ms": 0.111056
+    },
+    "run-adaptive-2/built_rest/cpu/navigation": {
+      "samples": 23.0,
+      "mean_ms": 0.04700013043478261,
+      "p95_ms": 0.054256,
+      "max_ms": 0.054798
+    },
+    "run-adaptive-2/built_rest/cpu/rendering_sync": {
+      "samples": 23.0,
+      "mean_ms": 0.04966421739130435,
+      "p95_ms": 0.06935859999999998,
+      "max_ms": 0.077089
+    },
+    "run-adaptive-2/built_rest/cpu/simulation": {
+      "samples": 23.0,
+      "mean_ms": 0.008658565217391305,
+      "p95_ms": 0.013228599999999995,
+      "max_ms": 0.026175
+    },
+    "run-adaptive-2/built_rest/frame": {
+      "samples": 23.0,
+      "mean_ms": 32.44304439130435,
+      "p95_ms": 33.528549,
+      "max_ms": 33.71839
+    },
+    "run-adaptive-2/preview/cpu/interface": {
+      "samples": 43.0,
+      "mean_ms": 0.07939490697674419,
+      "p95_ms": 0.1021202,
+      "max_ms": 0.125406
+    },
+    "run-adaptive-2/preview/cpu/navigation": {
+      "samples": 43.0,
+      "mean_ms": 0.0785627441860465,
+      "p95_ms": 0.0998496,
+      "max_ms": 0.113969
+    },
+    "run-adaptive-2/preview/cpu/rendering_sync": {
+      "samples": 43.0,
+      "mean_ms": 0.05162218604651163,
+      "p95_ms": 0.06937419999999998,
+      "max_ms": 0.110705
+    },
+    "run-adaptive-2/preview/cpu/simulation": {
+      "samples": 43.0,
+      "mean_ms": 0.00789086046511628,
+      "p95_ms": 0.011125799999999998,
+      "max_ms": 0.033497
+    },
+    "run-adaptive-2/preview/frame": {
+      "samples": 43.0,
+      "mean_ms": 40.854490279069765,
+      "p95_ms": 42.1369646,
+      "max_ms": 42.679793
+    },
+    "run-adaptive-2/streaming/cpu/interface": {
+      "samples": 247.0,
+      "mean_ms": 0.08028577327935223,
+      "p95_ms": 0.11042999999999999,
+      "max_ms": 0.174847
+    },
+    "run-adaptive-2/streaming/cpu/navigation": {
+      "samples": 247.0,
+      "mean_ms": 0.07891591902834008,
+      "p95_ms": 0.07839969999999997,
+      "max_ms": 4.674391
+    },
+    "run-adaptive-2/streaming/cpu/rendering_sync": {
+      "samples": 247.0,
+      "mean_ms": 0.0788978866396761,
+      "p95_ms": 0.06446389999999999,
+      "max_ms": 7.64583
+    },
+    "run-adaptive-2/streaming/cpu/simulation": {
+      "samples": 247.0,
+      "mean_ms": 0.007768299595141701,
+      "p95_ms": 0.0115947,
+      "max_ms": 0.039502
+    },
+    "run-adaptive-2/streaming/frame": {
+      "samples": 247.0,
+      "mean_ms": 31.39602198785425,
+      "p95_ms": 32.599524,
+      "max_ms": 33.472718
+    },
+    "run-adaptive-gpu/built_rest/cpu/interface": {
+      "samples": 23.0,
+      "mean_ms": 0.07930065217391304,
+      "p95_ms": 0.10080249999999999,
+      "max_ms": 0.104277
+    },
+    "run-adaptive-gpu/built_rest/cpu/navigation": {
+      "samples": 23.0,
+      "mean_ms": 0.046119608695652174,
+      "p95_ms": 0.0558387,
+      "max_ms": 0.056711
+    },
+    "run-adaptive-gpu/built_rest/cpu/rendering_sync": {
+      "samples": 23.0,
+      "mean_ms": 0.05133691304347826,
+      "p95_ms": 0.06473659999999999,
+      "max_ms": 0.0745
+    },
+    "run-adaptive-gpu/built_rest/cpu/simulation": {
+      "samples": 23.0,
+      "mean_ms": 0.007787869565217391,
+      "p95_ms": 0.011373599999999998,
+      "max_ms": 0.012183
+    },
+    "run-adaptive-gpu/built_rest/frame": {
+      "samples": 23.0,
+      "mean_ms": 32.327459347826085,
+      "p95_ms": 33.274789500000004,
+      "max_ms": 33.380924
+    },
+    "run-adaptive-gpu/built_rest/render/bin_unpacking/elapsed_cpu": {
+      "samples": 23.0,
+      "mean_ms": 0.0030498260869565217,
+      "p95_ms": 0.0038579999999999995,
+      "max_ms": 0.004174
+    },
+    "run-adaptive-gpu/built_rest/render/bin_unpacking/elapsed_gpu": {
+      "samples": 23.0,
+      "mean_ms": 0.1738504347826087,
+      "p95_ms": 1.1751615999999983,
+      "max_ms": 1.31968
+    },
+    "run-adaptive-gpu/built_rest/render/clustering/elapsed_cpu": {
+      "samples": 23.0,
+      "mean_ms": 0.01790113043478261,
+      "p95_ms": 0.0231087,
+      "max_ms": 0.023911
+    },
+    "run-adaptive-gpu/built_rest/render/clustering/elapsed_gpu": {
+      "samples": 23.0,
+      "mean_ms": 0.4546810434782608,
+      "p95_ms": 0.43864000000000003,
+      "max_ms": 1.023808
+    },
+    "run-adaptive-gpu/built_rest/render/early_mesh_preprocessing/elapsed_cpu": {
+      "samples": 23.0,
+      "mean_ms": 0.0023573478260869567,
+      "p95_ms": 0.0032055999999999994,
+      "max_ms": 0.003689
+    },
+    "run-adaptive-gpu/built_rest/render/early_mesh_preprocessing/elapsed_gpu": {
+      "samples": 23.0,
+      "mean_ms": 0.15491478260869565,
+      "p95_ms": 0.1568736,
+      "max_ms": 0.156992
+    },
+    "run-adaptive-gpu/built_rest/render/main_opaque_pass_3d/elapsed_cpu": {
+      "samples": 23.0,
+      "mean_ms": 0.01567304347826087,
+      "p95_ms": 0.019353699999999998,
+      "max_ms": 0.022714
+    },
+    "run-adaptive-gpu/built_rest/render/main_opaque_pass_3d/elapsed_gpu": {
+      "samples": 23.0,
+      "mean_ms": 12.223871999999998,
+      "p95_ms": 12.441766399999999,
+      "max_ms": 12.454688
+    },
+    "run-adaptive-gpu/built_rest/render/tonemapping/elapsed_cpu": {
+      "samples": 23.0,
+      "mean_ms": 0.0031344782608695655,
+      "p95_ms": 0.0045119999999999995,
+      "max_ms": 0.005398
+    },
+    "run-adaptive-gpu/built_rest/render/tonemapping/elapsed_gpu": {
+      "samples": 23.0,
+      "mean_ms": 2.1076452173913043,
+      "p95_ms": 2.1943872,
+      "max_ms": 2.201504
+    },
+    "run-adaptive-gpu/built_rest/render/ui/elapsed_cpu": {
+      "samples": 23.0,
+      "mean_ms": 0.006040173913043478,
+      "p95_ms": 0.007109999999999999,
+      "max_ms": 0.007677
+    },
+    "run-adaptive-gpu/built_rest/render/ui/elapsed_gpu": {
+      "samples": 23.0,
+      "mean_ms": 0.4332827826086956,
+      "p95_ms": 0.4514784,
+      "max_ms": 0.462336
+    },
+    "run-adaptive-gpu/built_rest/render/upscaling/elapsed_cpu": {
+      "samples": 23.0,
+      "mean_ms": 0.0019255217391304347,
+      "p95_ms": 0.0023924999999999997,
+      "max_ms": 0.002492
+    },
+    "run-adaptive-gpu/built_rest/render/upscaling/elapsed_gpu": {
+      "samples": 23.0,
+      "mean_ms": 1.4338629565217391,
+      "p95_ms": 1.5028352,
+      "max_ms": 1.548192
+    },
+    "run-adaptive-gpu/preview/cpu/interface": {
+      "samples": 43.0,
+      "mean_ms": 0.08213181395348837,
+      "p95_ms": 0.1097483,
+      "max_ms": 0.175131
+    },
+    "run-adaptive-gpu/preview/cpu/navigation": {
+      "samples": 43.0,
+      "mean_ms": 0.08077048837209302,
+      "p95_ms": 0.10811379999999998,
+      "max_ms": 0.141511
+    },
+    "run-adaptive-gpu/preview/cpu/rendering_sync": {
+      "samples": 43.0,
+      "mean_ms": 0.054878279069767444,
+      "p95_ms": 0.07478299999999999,
+      "max_ms": 0.178779
+    },
+    "run-adaptive-gpu/preview/cpu/simulation": {
+      "samples": 43.0,
+      "mean_ms": 0.008036,
+      "p95_ms": 0.012495899999999999,
+      "max_ms": 0.021208
+    },
+    "run-adaptive-gpu/preview/frame": {
+      "samples": 43.0,
+      "mean_ms": 40.56160795348837,
+      "p95_ms": 42.0962643,
+      "max_ms": 42.717763
+    },
+    "run-adaptive-gpu/preview/render/bin_unpacking/elapsed_cpu": {
+      "samples": 43.0,
+      "mean_ms": 0.004196302325581395,
+      "p95_ms": 0.006607699999999996,
+      "max_ms": 0.025012
+    },
+    "run-adaptive-gpu/preview/render/bin_unpacking/elapsed_gpu": {
+      "samples": 43.0,
+      "mean_ms": 0.06532167441860465,
+      "p95_ms": 0.06657919999999999,
+      "max_ms": 0.075328
+    },
+    "run-adaptive-gpu/preview/render/clustering/elapsed_cpu": {
+      "samples": 43.0,
+      "mean_ms": 0.01889,
+      "p95_ms": 0.0221917,
+      "max_ms": 0.024319
+    },
+    "run-adaptive-gpu/preview/render/clustering/elapsed_gpu": {
+      "samples": 43.0,
+      "mean_ms": 0.6941551627906977,
+      "p95_ms": 1.9738207999999997,
+      "max_ms": 2.503776
+    },
+    "run-adaptive-gpu/preview/render/early_mesh_preprocessing/elapsed_cpu": {
+      "samples": 43.0,
+      "mean_ms": 0.0028149302325581396,
+      "p95_ms": 0.0037695,
+      "max_ms": 0.004007
+    },
+    "run-adaptive-gpu/preview/render/early_mesh_preprocessing/elapsed_gpu": {
+      "samples": 43.0,
+      "mean_ms": 0.20005655813953488,
+      "p95_ms": 0.20905600000000002,
+      "max_ms": 0.222688
+    },
+    "run-adaptive-gpu/preview/render/main_opaque_pass_3d/elapsed_cpu": {
+      "samples": 43.0,
+      "mean_ms": 0.01874988372093023,
+      "p95_ms": 0.0247069,
+      "max_ms": 0.030014
+    },
+    "run-adaptive-gpu/preview/render/main_opaque_pass_3d/elapsed_gpu": {
+      "samples": 43.0,
+      "mean_ms": 11.973609674418606,
+      "p95_ms": 12.1946944,
+      "max_ms": 12.257984
+    },
+    "run-adaptive-gpu/preview/render/main_transparent_pass_3d/elapsed_cpu": {
+      "samples": 43.0,
+      "mean_ms": 0.005909186046511628,
+      "p95_ms": 0.0085713,
+      "max_ms": 0.009707
+    },
+    "run-adaptive-gpu/preview/render/main_transparent_pass_3d/elapsed_gpu": {
+      "samples": 43.0,
+      "mean_ms": 4.613349953488372,
+      "p95_ms": 4.7192928,
+      "max_ms": 4.732192
+    },
+    "run-adaptive-gpu/preview/render/tonemapping/elapsed_cpu": {
+      "samples": 43.0,
+      "mean_ms": 0.004154465116279069,
+      "p95_ms": 0.010574299999999998,
+      "max_ms": 0.022803
+    },
+    "run-adaptive-gpu/preview/render/tonemapping/elapsed_gpu": {
+      "samples": 43.0,
+      "mean_ms": 2.1083988837209304,
+      "p95_ms": 2.1804608,
+      "max_ms": 2.236448
+    },
+    "run-adaptive-gpu/preview/render/ui/elapsed_cpu": {
+      "samples": 43.0,
+      "mean_ms": 0.007326348837209303,
+      "p95_ms": 0.0097179,
+      "max_ms": 0.022836
+    },
+    "run-adaptive-gpu/preview/render/ui/elapsed_gpu": {
+      "samples": 43.0,
+      "mean_ms": 0.49410976744186047,
+      "p95_ms": 0.5186112,
+      "max_ms": 0.626752
+    },
+    "run-adaptive-gpu/preview/render/upscaling/elapsed_cpu": {
+      "samples": 43.0,
+      "mean_ms": 0.0022186046511627907,
+      "p95_ms": 0.0032573,
+      "max_ms": 0.005745
+    },
+    "run-adaptive-gpu/preview/render/upscaling/elapsed_gpu": {
+      "samples": 43.0,
+      "mean_ms": 1.421415441860465,
+      "p95_ms": 1.4920224,
+      "max_ms": 1.538336
+    },
+    "run-adaptive-gpu/streaming/cpu/interface": {
+      "samples": 249.0,
+      "mean_ms": 0.08172500401606426,
+      "p95_ms": 0.11012,
+      "max_ms": 0.180369
+    },
+    "run-adaptive-gpu/streaming/cpu/navigation": {
+      "samples": 249.0,
+      "mean_ms": 0.08348085140562249,
+      "p95_ms": 0.0816468,
+      "max_ms": 5.865832
+    },
+    "run-adaptive-gpu/streaming/cpu/rendering_sync": {
+      "samples": 249.0,
+      "mean_ms": 0.08824264257028112,
+      "p95_ms": 0.0665646,
+      "max_ms": 9.537526
+    },
+    "run-adaptive-gpu/streaming/cpu/simulation": {
+      "samples": 249.0,
+      "mean_ms": 0.008083232931726908,
+      "p95_ms": 0.0128796,
+      "max_ms": 0.048649
+    },
+    "run-adaptive-gpu/streaming/frame": {
+      "samples": 249.0,
+      "mean_ms": 31.209546995983935,
+      "p95_ms": 32.258816,
+      "max_ms": 33.145298
+    },
+    "run-adaptive-gpu/streaming/render/bin_unpacking/elapsed_cpu": {
+      "samples": 249.0,
+      "mean_ms": 0.003535574297188755,
+      "p95_ms": 0.004795,
+      "max_ms": 0.017235
+    },
+    "run-adaptive-gpu/streaming/render/bin_unpacking/elapsed_gpu": {
+      "samples": 249.0,
+      "mean_ms": 0.05974515662650602,
+      "p95_ms": 0.050368,
+      "max_ms": 1.093888
+    },
+    "run-adaptive-gpu/streaming/render/clustering/elapsed_cpu": {
+      "samples": 249.0,
+      "mean_ms": 0.018771630522088353,
+      "p95_ms": 0.0247812,
+      "max_ms": 0.03405
+    },
+    "run-adaptive-gpu/streaming/render/clustering/elapsed_gpu": {
+      "samples": 249.0,
+      "mean_ms": 0.5109987469879518,
+      "p95_ms": 1.1596224,
+      "max_ms": 2.040928
+    },
+    "run-adaptive-gpu/streaming/render/early_mesh_preprocessing/elapsed_cpu": {
+      "samples": 249.0,
+      "mean_ms": 0.0027397550200803215,
+      "p95_ms": 0.0038561999999999997,
+      "max_ms": 0.012297
+    },
+    "run-adaptive-gpu/streaming/render/early_mesh_preprocessing/elapsed_gpu": {
+      "samples": 249.0,
+      "mean_ms": 0.17508857831325303,
+      "p95_ms": 0.1569856,
+      "max_ms": 2.11808
+    },
+    "run-adaptive-gpu/streaming/render/main_opaque_pass_3d/elapsed_cpu": {
+      "samples": 249.0,
+      "mean_ms": 0.01487908032128514,
+      "p95_ms": 0.0200754,
+      "max_ms": 0.038064
+    },
+    "run-adaptive-gpu/streaming/render/main_opaque_pass_3d/elapsed_gpu": {
+      "samples": 249.0,
+      "mean_ms": 11.231015068273091,
+      "p95_ms": 11.4963584,
+      "max_ms": 11.579904
+    },
+    "run-adaptive-gpu/streaming/render/tonemapping/elapsed_cpu": {
+      "samples": 249.0,
+      "mean_ms": 0.0033243895582329317,
+      "p95_ms": 0.005829799999999998,
+      "max_ms": 0.015193
+    },
+    "run-adaptive-gpu/streaming/render/tonemapping/elapsed_gpu": {
+      "samples": 249.0,
+      "mean_ms": 2.170756497991968,
+      "p95_ms": 2.1960832000000003,
+      "max_ms": 4.426656
+    },
+    "run-adaptive-gpu/streaming/render/ui/elapsed_cpu": {
+      "samples": 249.0,
+      "mean_ms": 0.006702156626506024,
+      "p95_ms": 0.009192,
+      "max_ms": 0.022469
+    },
+    "run-adaptive-gpu/streaming/render/ui/elapsed_gpu": {
+      "samples": 249.0,
+      "mean_ms": 0.43788710040160644,
+      "p95_ms": 0.4682048,
+      "max_ms": 0.604224
+    },
+    "run-adaptive-gpu/streaming/render/upscaling/elapsed_cpu": {
+      "samples": 249.0,
+      "mean_ms": 0.002150895582329317,
+      "p95_ms": 0.002832,
+      "max_ms": 0.010722
+    },
+    "run-adaptive-gpu/streaming/render/upscaling/elapsed_gpu": {
+      "samples": 249.0,
+      "mean_ms": 1.4560341847389557,
+      "p95_ms": 1.5026432,
+      "max_ms": 3.782112
+    },
+    "runs": [
+      {
+        "run": "run-adaptive-1",
+        "seconds": 59.461356887999955,
+        "exit_code": 0,
+        "focused_window": "0x4400004",
+        "diagnostics": []
+      },
+      {
+        "run": "run-adaptive-2",
+        "seconds": 59.494635242000186,
+        "exit_code": 0,
+        "focused_window": "0x4400004",
+        "diagnostics": []
+      },
+      {
+        "run": "run-adaptive-gpu",
+        "seconds": 59.50587694399974,
+        "exit_code": 0,
+        "focused_window": "0x4400004",
+        "diagnostics": []
+      }
+    ],
+    "concordance": {
+      "hashes_unchanged": true
+    },
+    "resources": {
+      "run-adaptive-1-resources.json": {
+        "peak_rss_kib": 259084,
+        "process_hwm_kib": 277976,
+        "drm_available": false,
+        "interval_seconds": 0.25,
+        "limitations": "RSS processus pas allocation textures seule. HWM noyau et \u00e9chantillonnage. VRAM/staging absents si pilote non instrument\u00e9. Linux uniquement."
+      },
+      "run-adaptive-gpu-resources.json": {
+        "peak_rss_kib": 256796,
+        "process_hwm_kib": 274944,
+        "drm_available": false,
+        "interval_seconds": 0.25,
+        "limitations": "RSS processus pas allocation textures seule. HWM noyau et \u00e9chantillonnage. VRAM/staging absents si pilote non instrument\u00e9. Linux uniquement."
+      },
+      "run-adaptive-2-resources.json": {
+        "peak_rss_kib": 261700,
+        "process_hwm_kib": 276472,
+        "drm_available": false,
+        "interval_seconds": 0.25,
+        "limitations": "RSS processus pas allocation textures seule. HWM noyau et \u00e9chantillonnage. VRAM/staging absents si pilote non instrument\u00e9. Linux uniquement."
+      }
+    },
+    "rebase_cpu_ms": {
+      "samples": 3,
+      "max": 5.725
+    },
+    "mesh_sync_ms": {
+      "samples": 9,
+      "max": 9.361
+    }
+  }
+}

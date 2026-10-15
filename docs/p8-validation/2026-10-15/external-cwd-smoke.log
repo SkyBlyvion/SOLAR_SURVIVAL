@@ -1,0 +1,29 @@
+2026-10-15T07:46:38.151781Z  INFO bevy_render::renderer: AdapterInfo { name: "NVIDIA GeForce GTX 1060 3GB (NVK GP106)", vendor: 4318, device: 7170, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "NVK", driver_info: "Mesa 25.2.8-0ubuntu0.24.04.4", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: false }
+2026-10-15T07:46:38.289332Z  INFO bevy_pbr::cluster: GPU clustering is supported on this device.
+2026-10-15T07:46:38.289377Z  INFO bevy_render::batching::gpu_preprocessing: GPU preprocessing is fully supported on this device.
+2026-10-15T07:46:38.289860Z  INFO bevy_winit::system: Creating new window Solar Survival · 0.2 · Mars (63v0)
+2026-10-15T07:46:38.290273Z  INFO winit::platform_impl::linux::x11::window: Guessed window scale factor: 1
+2026-10-15T07:46:38.316529Z  INFO solar_survival::rendering::textures: P7 textures CPU préparées : 13 images, 42118856 octets, 24.086 ms ; données transférées au renderer, staging/pics pilote exclus
+2026-10-15T07:46:38.343229Z  INFO solar_survival::config::validation: Validation graphique : étape 1 / 11
+2026-10-15T07:46:38.475166Z  INFO solar_survival::rendering::textures: P7 GPU résident : 13 textures RGBA8 sRGB avec mipmaps, 42118856 octets / 134217728 ; allocation pilote totale/staging exclus
+2026-10-15T07:46:38.933386Z ERROR bevy_render::view::window::screenshot: Cannot save screenshot, IO error: No such file or directory (os error 2)
+2026-10-15T07:46:39.084628Z  INFO solar_survival::config::validation: Validation graphique : étape 2 / 11
+2026-10-15T07:46:39.668371Z ERROR bevy_render::view::window::screenshot: Cannot save screenshot, IO error: No such file or directory (os error 2)
+2026-10-15T07:46:39.820598Z  INFO solar_survival::config::validation: Validation graphique : étape 3 / 11
+2026-10-15T07:46:40.400001Z ERROR bevy_render::view::window::screenshot: Cannot save screenshot, IO error: No such file or directory (os error 2)
+2026-10-15T07:46:40.528608Z  INFO solar_survival::config::validation: Validation graphique : étape 4 / 11
+2026-10-15T07:46:41.105827Z ERROR bevy_render::view::window::screenshot: Cannot save screenshot, IO error: No such file or directory (os error 2)
+2026-10-15T07:46:41.256975Z  INFO solar_survival::config::validation: Validation graphique : étape 5 / 11
+2026-10-15T07:46:41.809954Z ERROR bevy_render::view::window::screenshot: Cannot save screenshot, IO error: No such file or directory (os error 2)
+2026-10-15T07:46:41.998194Z  INFO solar_survival::config::validation: Validation graphique : étape 6 / 11
+2026-10-15T07:46:42.541810Z ERROR bevy_render::view::window::screenshot: Cannot save screenshot, IO error: No such file or directory (os error 2)
+2026-10-15T07:46:42.706479Z  INFO solar_survival::config::validation: Validation graphique : étape 7 / 11
+2026-10-15T07:46:43.257238Z ERROR bevy_render::view::window::screenshot: Cannot save screenshot, IO error: No such file or directory (os error 2)
+2026-10-15T07:46:43.448567Z  INFO solar_survival::config::validation: Validation graphique : étape 8 / 11
+2026-10-15T07:46:44.008649Z ERROR bevy_render::view::window::screenshot: Cannot save screenshot, IO error: No such file or directory (os error 2)
+2026-10-15T07:46:44.178520Z  INFO solar_survival::config::validation: Validation graphique : étape 9 / 11
+2026-10-15T07:46:44.714538Z ERROR bevy_render::view::window::screenshot: Cannot save screenshot, IO error: No such file or directory (os error 2)
+2026-10-15T07:46:44.901172Z  INFO solar_survival::config::validation: Validation graphique : étape 10 / 11
+2026-10-15T07:46:45.497456Z ERROR bevy_render::view::window::screenshot: Cannot save screenshot, IO error: No such file or directory (os error 2)
+2026-10-15T07:46:45.629404Z  INFO solar_survival::config::validation: Validation graphique : étape 11 / 11
+2026-10-15T07:46:46.214199Z ERROR bevy_render::view::window::screenshot: Cannot save screenshot, IO error: No such file or directory (os error 2)

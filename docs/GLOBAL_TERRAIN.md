@@ -1,3 +1,5 @@
+> P8 : le parcours normal déplace les sommets par un relief artistique mondial et ajoute une couronne visuelle raccordée, ≤13 patches de contact +1mesh lointain. [Contrat actuel](MARS_ENVIRONMENT.md). Les mentions de sphère sans relief ci-dessous sont historiques ; les règles de clés, transport, contacts et index restent en vigueur.
+
 # Mars traversable : LOD adaptatif et streaming local
 
 13 octobre 2026. Le parcours normal et le profiler mondial utilisent maintenant trois **résolutions réellement choisies selon la distance** : 32, 16 et 8 cellules par côté. Les clés spatiales restent au niveau 15, avec un voisinage de distance de graphe ≤2, au plus treize patches. Cette optimisation conserve Mars sphérique sans relief, les mètres 1:1 et les poses/contacts f64. Elle ne génère ni une planète entière ni un mesh par frame.

@@ -1,0 +1,11 @@
+{
+  "exit_code": 0,
+  "seconds": 8.418481987000177,
+  "cwd": "/tmp/solar-survival-p8-2026-10-15/solar-survival-ubuntu-p8",
+  "focused_window": "0x4400004",
+  "diagnostics": [],
+  "files_still_match": true,
+  "gpu_textures_audit": true,
+  "captures": 11,
+  "preparation": "Sous-dossier docs requis par le diagnostic smoke historique, cr\u00e9\u00e9 explicitement hors checkout."
+}

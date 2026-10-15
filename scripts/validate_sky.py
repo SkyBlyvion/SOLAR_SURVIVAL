@@ -20,6 +20,7 @@ def main():
     parser.add_argument('--mesa-immediate',action='store_true')
     parser.add_argument('--focus-x11',action='store_true')
     parser.add_argument('--construction',action='store_true')
+    parser.add_argument('--p8',action='store_true',help='22 vues relief/horizons/météo et transitions')
     parser.add_argument('--p7',action='store_true',help='34 poses ciel + Terre/Mars/coutures/pôles/sol proche')
     parser.add_argument('--planets',action='store_true',help='24 vues des six autres planètes et crédits SkyBlyvion')
     args=parser.parse_args()
@@ -31,6 +32,9 @@ def main():
     env={k:v for k,v in os.environ.items() if not k.startswith('SOLAR_')}
     env.update(RUST_LOG='info,solar_survival::player::surface=debug', **{('SOLAR_CONSTRUCTION_VALIDATE_DIR' if args.construction else 'SOLAR_SKY_VALIDATE_DIR'):str(out/'captures')})
     if args.mesa_immediate:env['MESA_VK_WSI_PRESENT_MODE']='immediate'
+    if args.p8:
+        if args.p7 or args.planets or args.construction: parser.error('--p8 scénario séparé')
+        env['SOLAR_P8_REVIEW']='1'
     if args.p7:
         if args.construction: parser.error('--p7 incompatible avec --construction')
         env['SOLAR_P7_REVIEW']='1'
@@ -50,6 +54,6 @@ def main():
         completion=re.findall(r'(?:SKY|P5) terminé[^\n]*',log),captures=len(list((out/'captures').glob('*.png'))),
         hashes_unchanged=sha(binary)==meta['binary_sha256'] and all(sha(ROOT/p)==h for p,h in meta['source_sha256'].items()))
     (out/'results.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result,indent=2))
-    if code or result['diagnostics'] or not result['completion'] or result['captures']!=(16 if args.construction else (25 if args.planets else (34 if args.p7 else 24))) or not result['hashes_unchanged']:raise SystemExit(1)
+    if code or result['diagnostics'] or not result['completion'] or result['captures']!=(22 if args.p8 else (16 if args.construction else (25 if args.planets else (34 if args.p7 else 24)))) or not result['hashes_unchanged']:raise SystemExit(1)
 
 if __name__=='__main__':main()

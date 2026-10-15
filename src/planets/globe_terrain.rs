@@ -54,6 +54,7 @@ pub struct SurfacePatch {
     pub segments: u32,
     pub positions_m: Vec<DVec3>,
     pub indices: Vec<u32>,
+    pub relief_seed: Option<u64>,
 }
 impl SurfacePatch {
     pub fn with_segments(key: PatchKey, radius_m: f64, segments: u32) -> Self {
@@ -137,7 +138,19 @@ impl SurfacePatch {
             segments,
             positions_m,
             indices,
+            relief_seed: None,
         }
+    }
+}
+
+impl SurfacePatch {
+    pub fn with_relief(key: PatchKey, radius_m: f64, segments: u32, seed: u64) -> Self {
+        let mut patch = Self::with_segments(key, radius_m, segments);
+        for point in &mut patch.positions_m {
+            *point = super::relief::displace(*point, radius_m, seed);
+        }
+        patch.relief_seed = Some(seed);
+        patch
     }
 }
 
@@ -178,6 +191,9 @@ pub struct GlobeTerrain {
     pub rebases: usize,
     pub lod_changes: usize,
     pub adaptive: bool,
+    pub relief_seed: Option<u64>,
+    /// Couronne visuelle, sans contacts ; bord intérieur identique au terrain résident.
+    pub landscape: Option<Arc<SurfacePatch>>,
     /// Durées murales de la dernière préparation, pas des temps GPU.
     pub geometry_ms: f64,
     pub index_ms: f64,
@@ -194,10 +210,35 @@ impl GlobeTerrain {
         )
     }
     pub fn with_lod(up: DVec3, orientation: DQuat, radius_m: f64, adaptive: bool) -> Self {
-        Self::build(up, orientation, radius_m, None, adaptive)
+        Self::build(up, orientation, radius_m, None, adaptive, None)
+    }
+    pub fn with_relief(up: DVec3, orientation: DQuat, radius_m: f64, seed: u64) -> Self {
+        Self::with_relief_lod(
+            up,
+            orientation,
+            radius_m,
+            seed,
+            std::env::var("SOLAR_TERRAIN_LOD").as_deref() != Ok("fixed"),
+        )
+    }
+    pub fn with_relief_lod(
+        up: DVec3,
+        orientation: DQuat,
+        radius_m: f64,
+        seed: u64,
+        adaptive: bool,
+    ) -> Self {
+        Self::build(up, orientation, radius_m, None, adaptive, Some(seed))
     }
     pub fn rebased(&self, up: DVec3, orientation: DQuat, radius_m: f64) -> Self {
-        Self::build(up, orientation, radius_m, Some(self), self.adaptive)
+        Self::build(
+            up,
+            orientation,
+            radius_m,
+            Some(self),
+            self.adaptive,
+            self.relief_seed,
+        )
     }
     fn build(
         up: DVec3,
@@ -205,6 +246,7 @@ impl GlobeTerrain {
         radius_m: f64,
         previous: Option<&Self>,
         adaptive: bool,
+        relief_seed: Option<u64>,
     ) -> Self {
         let started = std::time::Instant::now();
         let center = key_at(up);
@@ -228,11 +270,20 @@ impl GlobeTerrain {
                     .cloned()
                     .unwrap_or_else(|| {
                         constructions += 1;
-                        Arc::new(SurfacePatch::with_segments(key, radius_m, segments))
+                        Arc::new(match relief_seed {
+                            Some(seed) => SurfacePatch::with_relief(key, radius_m, segments, seed),
+                            None => SurfacePatch::with_segments(key, radius_m, segments),
+                        })
                     });
                 (key, patch)
             })
             .collect();
+        let landscape = relief_seed.map(|seed| {
+            previous
+                .filter(|p| p.center == center)
+                .and_then(|p| p.landscape.clone())
+                .unwrap_or_else(|| Arc::new(super::landscape::build(center, radius_m, seed)))
+        });
         let geometry_ms = started.elapsed().as_secs_f64() * 1000.0;
         let indexed = std::time::Instant::now();
         let origin = orientation * (DVec3::Y * radius_m);
@@ -288,6 +339,8 @@ impl GlobeTerrain {
             triangles,
             bins,
             adaptive,
+            relief_seed,
+            landscape,
             lod_changes,
             geometry_ms,
             index_ms: indexed.elapsed().as_secs_f64() * 1000.0,

@@ -1,3 +1,45 @@
+# P8 — relief, horizons et atmosphère, vérifiés sur Ubuntu le 15 octobre 2026
+
+Départ réel `496e26a`, propre. Demande utilisateur : P8 et météo visuelle martienne,
+**sans compatibilité avec les anciennes sauvegardes**. Accord explicite reçu pour
+les campagnes de bureau. Bevy =0.19.1 / Cargo.lock conservés, aucune dépendance ajoutée.
+[Contrat, sources et paramètres](MARS_ENVIRONMENT.md), [bilan détaillé et essais intermédiaires](p8-validation/2026-10-15/NOTES.md).
+
+| Vérification | Résultat et portée |
+|---|---|
+| Cargo | fmt, check all-targets, **139 tests**, Clippy -D warnings et build release réussis ; build161,732s, [journaux et codes](p8-validation/2026-10-15/final-checks.json). Après correction WGSL seule : build confirmé0,20s, shader validé au lancement suivant |
+| Relief/contacts | Champ mondial f64 artistique, bords bit-identiques sur six faces et LOD mixtes ; couronne sans fissures topologiques, contacts/admission fins, courses/sauts/rebasages et services testés. Une ancienne assertion de sol plat corrigée ; calcul de repère amélioré sans élargir sa tolérance2nm |
+| Atmosphère/ciel | [Galerie finale](p8-validation/2026-10-15/sky-final/results.json) :66,411s,code 0,22 captures inspectées sur quatre planches ; lever/coucher bleus, jour ocre/voiles, nuit étoilée, tempête, course/rebasage, abri/menu/retours. Première version à nuages trop géométriques conservée ; motif corrigé avant les mesures |
+| Performance | Référence P7 avec ses propres assets, deux P8 sans recorder + un GPU séparé : quatre codes 0, aucune capture/compilation pendant les mesures, empreintes inchangées. Surcoût1,59–1,90ms/frame sur trois phases ; [comparaison](p8-validation/2026-10-15/comparison.json), [portée et détails](PERFORMANCE.md) |
+| Profils format 2 | [Archive extraite, deux processus](p8-validation/2026-10-15/packaged-profiles/results.json) :48,414+54,388s,codes 0,32 captures inspectées ; Alpha/Bravo indépendants, stock/abris, construction/recharge/rebasage, chargement après fermeture, catalogue/espace/échec/R et refus Broken. Format 1 explicitement refusé par test, sans migration ni suppression |
+| Archive Ubuntu | [36 907 688 octets,747 fichiers vérifiés](p8-validation/2026-10-15/package.json), binaire/actifs extraits utilisés par les profils. [Smoke depuis CWD extérieur](p8-validation/2026-10-15/external-cwd-smoke-retry.json) :8,418s,code 0,audit GPU13textures et fichiers distribués inchangés. Le premier smoke échoue seulement à écrire ses captures dans son dossier docs absent ; préparation corrigée, échec conservé |
+| Ressources | ≤13 patches proches +1 couronne ≤6 400 sommets /11 520 triangles, réutilisation au repos ; aucune texture nouvelle. Audit renderer :13images,40,168Mio utiles /128Mio ; total VRAM/pilote/staging non mesuré |
+
+**54 captures finales P8/profils inspectées sur dix planches**, plus l'original
+nuageux ; les premières captures et les11 captures du smoke ne sont pas ajoutées à
+ce compte. Inspection technique distincte de l'approbation esthétique utilisateur.
+Les dates/poses de la galerie sont préparées, l'événement complet d'une tempête
+n'est pas observé en temps réel ; continuité et reproductibilité sont testées.
+
+Environnement : Ubuntu/X11, i7-6700K,32 Go,GTX 1060 3 Go/NVK Mesa25.2.8 ;1440×900
+MSAA4 pour ciel/mesures,1280×720 pour profils. [Relevé](p8-validation/2026-10-15/host.json).
+**Windows 11 natif, RTX 4050/CPU exact, objectif 1080p60 et VRAM totale/staging restent
+non validés.** Relief, nuages et climat sont artistiques, pas une reconstruction
+scientifique : ombres de relief/nuages, pression locale et forces de vent hors
+périmètre. Aucun écran virtuel ou changement de règle d'entrée ajouté.
+P8 est réalisé sur Ubuntu ; P9 énergie/progression et P10 restent à implémenter.
+[Passation actualisée](NEXT_CHAT.md).
+
+Clôture Git : empreintes des sources et assets revérifiées contre les métadonnées
+finales ciel/performance/profils avant commit, toutes identiques. Aucune modification
+de code ni nouvelle campagne graphique pendant cette clôture ; validations ci-dessus
+conservées, sans leur attribuer une nouvelle exécution.
+
+
+---
+
+# Historique — P7
+
 # P7 — validation Ubuntu complétée le 15 octobre 2026
 
 Départ `eeaff80`, dépôt propre et origin identique. Les contrôles restants de la passe interrompue ont été exécutés avec accord explicite de l’utilisateur pour le focus. **P7 clôturé sur Ubuntu de développement** ; Windows et la cible RTX4050 restent à valider nativement.

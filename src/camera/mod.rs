@@ -377,7 +377,7 @@ fn sync_view(
     }
     if let Projection::Perspective(p) = &mut **projection {
         p.near = if surface { 0.05 } else { 0.001 };
-        p.far = if surface { 1000.0 } else { 30000.0 };
+        p.far = if surface { 15000.0 } else { 30000.0 };
     }
     **layers = RenderLayers::layer(usize::from(surface));
     if surface {
@@ -388,21 +388,28 @@ fn sync_view(
         );
         let sun = frame.orientation.inverse() * (-pilot.global(&solar, clock.jd)).normalize();
         let elevation = sun.dot(terrain.site_relative(state.eye(&terrain)).normalize());
-        let (_, horizon, _) = crate::rendering::sky::sky_palette(elevation);
+        let weather = crate::rendering::atmosphere::current(&terrain, &state, &solar, &clock);
+        let (_, horizon, day) = weather.palette(elevation);
+        ambient.brightness = (15.0 + 85.0 * day) * (1.0 - weather.storm * 0.65);
+        let (start, end) = if terrain
+            .globe
+            .as_ref()
+            .is_some_and(|g| g.landscape.is_some())
+        {
+            weather.visibility_m()
+        } else {
+            (40.0, 60.0)
+        };
+        fog.falloff = FogFalloff::Linear { start, end };
         fog.color = Color::linear_rgb(horizon.x, horizon.y, horizon.z);
     }
-    ambient.brightness = if surface { 100.0 } else { 0.0 };
-    fog.falloff = if surface {
-        FogFalloff::Linear {
-            start: 40.0,
-            end: 60.0,
-        }
-    } else {
-        FogFalloff::Linear {
+    if !surface {
+        ambient.brightness = 0.0;
+        fog.falloff = FogFalloff::Linear {
             start: 30000.0,
             end: 40000.0,
-        }
-    };
+        };
+    }
 }
 
 #[cfg(test)]
@@ -498,7 +505,7 @@ mod tests {
                 panic!("Perspective");
             };
             assert_eq!(p.near, 0.05);
-            assert_eq!(p.far, 1000.0);
+            assert_eq!(p.far, 15000.0);
             assert_eq!(
                 app.world().get::<RenderLayers>(entity).unwrap(),
                 &RenderLayers::layer(1)

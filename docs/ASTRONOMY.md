@@ -1,3 +1,5 @@
+> P8 : relief et météo **artistiques**, paramètres et sources de pression/poussière/nuages dans [MARS_ENVIRONMENT](MARS_ENVIRONMENT.md). Aucun GM, orbite, rayon moyen ou orientation du catalogue changé.
+
 > Rendu actuel du 13 octobre 2026 : une seule caméra de jeu réutilisée espace/surface, ciel dynamique dans la vue locale. [Contrat, sources réutilisées, palette et approximations](SURFACE_SKY.md). Les mentions de deux caméras ci-dessous décrivent les étapes historiques ; elles ne s'appliquent plus au rendu actuel. Aucune donnée astronomique ajoutée.
 
 # Données astronomiques et conventions du prototype

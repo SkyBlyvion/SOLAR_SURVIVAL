@@ -1,0 +1,49 @@
+{
+  "inspected_captures": {
+    "save": [
+      "stage-00.png",
+      "stage-01.png",
+      "stage-02.png",
+      "stage-03.png",
+      "stage-04.png",
+      "stage-05.png",
+      "stage-06.png",
+      "stage-07.png",
+      "stage-08.png",
+      "stage-09.png",
+      "stage-10.png",
+      "stage-11.png",
+      "stage-12.png",
+      "stage-13.png",
+      "stage-14.png",
+      "stage-15.png"
+    ],
+    "load": [
+      "stage-00.png",
+      "stage-01.png",
+      "stage-02.png",
+      "stage-03.png",
+      "stage-04.png",
+      "stage-05.png",
+      "stage-06.png",
+      "stage-07.png",
+      "stage-08.png",
+      "stage-09.png",
+      "stage-10.png",
+      "stage-11.png",
+      "stage-12.png",
+      "stage-13.png",
+      "stage-14.png",
+      "stage-15.png"
+    ]
+  },
+  "sheets": [
+    "save-00.png",
+    "save-06.png",
+    "save-12.png",
+    "load-00.png",
+    "load-06.png",
+    "load-12.png"
+  ],
+  "result": "32 captures inspectées : création, catalogue/preview, abri/recharge, profils indépendants, espace/R, refus Broken."
+}

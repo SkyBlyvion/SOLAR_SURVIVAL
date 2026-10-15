@@ -67,7 +67,10 @@ fn input(
     let stage = (time.elapsed_secs_f64() / 3.0) as usize;
     keys.reset_all();
     let planets = std::env::var_os("SOLAR_P7_PLANETS_REVIEW").is_some();
-    let count = if planets {
+    let p8 = std::env::var_os("SOLAR_P8_REVIEW").is_some();
+    let count = if p8 {
+        22
+    } else if planets {
         25
     } else if std::env::var_os("SOLAR_P7_REVIEW").is_some() {
         34
@@ -82,7 +85,81 @@ fn input(
     if *previous != Some(stage) {
         clock.paused = true;
         pilot.captured = false;
-        if planets {
+        if p8 {
+            match stage {
+                0 => {
+                    clock.jd = J2000;
+                    keys.press(KeyCode::KeyM);
+                }
+                1 => {
+                    state.pitch = 0.02;
+                }
+                2 => {
+                    state.yaw += std::f64::consts::PI;
+                }
+                3 => {
+                    aim_sun(&mut state, &pilot, &terrain, &solar, &clock);
+                }
+                4 | 5 | 6 | 7 | 9 | 10 => {
+                    clock.jd = p8_epoch(stage, &state, &terrain, &solar);
+                    aim_sun(&mut state, &pilot, &terrain, &solar, &clock);
+                    if stage == 6 {
+                        state.pitch = 0.6;
+                    }
+                    if stage == 7 {
+                        state.pitch = 0.65;
+                    }
+                    if stage == 9 {
+                        state.pitch = 0.02;
+                    }
+                }
+                8 => {
+                    state.pitch = 0.02;
+                }
+                11 => {
+                    clock.jd = J2000;
+                    state.pitch = 0.25;
+                }
+                12 => {
+                    state.feet.x = 63.5;
+                    state.feet.y = terrain.support_height(state.feet, 0.3) + 0.002;
+                    state.yaw = -std::f64::consts::FRAC_PI_2;
+                    state.pitch = 0.0;
+                }
+                13 | 14 => {
+                    keys.press(KeyCode::KeyM);
+                }
+                15 => {
+                    state.feet = terrain.chart(buildings.shelters[0].position_m);
+                    state.feet.y = terrain.support_height(state.feet, 0.3) + 0.002;
+                    state.velocity = DVec3::ZERO;
+                    state.pitch = 0.1;
+                }
+                16 => menu.open(),
+                17 => {
+                    keys.press(KeyCode::Enter);
+                }
+                18 => {
+                    clock.speed_index = 3;
+                    clock.paused = false;
+                    state.pitch = 0.3;
+                }
+                19..=21 => {
+                    let up = match stage {
+                        19 => DVec3::new(1.0, 1.0, 1.0).normalize(),
+                        20 => DVec3::new(-1.0, 0.23, 1.0).normalize(),
+                        _ => DVec3::NEG_Y,
+                    };
+                    terrain.set_site(up);
+                    *state = SurfaceState::default();
+                    state.feet.y = terrain.support_height(state.feet, 0.3) + 0.002;
+                    state.pitch = 0.02;
+                    clock.jd = J2000;
+                    oxygen.remaining_seconds = 180.0;
+                }
+                _ => {}
+            }
+        } else if planets {
             clock.jd = J2000;
             if stage < 24 {
                 let id = BodyId([1, 2, 5, 6, 7, 8][stage / 4]);
@@ -215,13 +292,18 @@ fn input(
             }
         }
     }
-    if !planets && stage == 8 {
+    if p8 && stage == 12 {
+        pilot.captured = true;
+        keys.press(KeyCode::KeyW);
+        keys.press(KeyCode::ShiftLeft);
+    }
+    if !p8 && !planets && stage == 8 {
         pilot.captured = true;
         keys.press(KeyCode::KeyW);
         keys.press(KeyCode::ShiftLeft);
     }
     // Vraies commandes P et T : pause→reprise et accélération ; pose suivante les fige.
-    if !planets && stage == 9 && time.elapsed_secs_f64() % 3.0 < 0.15 && clock.paused {
+    if !p8 && !planets && stage == 9 && time.elapsed_secs_f64() % 3.0 < 0.15 && clock.paused {
         keys.press(KeyCode::KeyP);
         keys.press(KeyCode::KeyT);
     }
@@ -292,7 +374,10 @@ fn capture(
     } else {
         *identity = Some(entity);
     }
-    let count = if std::env::var_os("SOLAR_P7_PLANETS_REVIEW").is_some() {
+    let p8 = std::env::var_os("SOLAR_P8_REVIEW").is_some();
+    let count = if p8 {
+        22
+    } else if std::env::var_os("SOLAR_P7_PLANETS_REVIEW").is_some() {
         25
     } else if std::env::var_os("SOLAR_P7_REVIEW").is_some() {
         34
@@ -319,7 +404,53 @@ fn capture(
             ));
         *previous = Some(stage);
     }
-    if stage == 12 || stage == 14 || stage == 16 || stage == 18 {
+    if !p8 && (stage == 12 || stage == 14 || stage == 16 || stage == 18) {
         assert_eq!(pilot.mode, MovementMode::Space);
     }
+}
+
+/// Cherche des dates naturelles du modèle, sans forcer les paramètres météo.
+fn p8_epoch(stage: usize, state: &SurfaceState, terrain: &MarsTerrain, solar: &SolarSystem) -> f64 {
+    use crate::rendering::atmosphere;
+    let period = solar.body(BodyId::MARS).rotation_period_s;
+    let duration = if stage == 4 || stage == 5 || stage == 7 {
+        1.0
+    } else {
+        100.0
+    };
+    let count = if duration == 1.0 { 2000 } else { 20000 };
+    let mut best = (f64::INFINITY, J2000);
+    let body = terrain.body_relative(state.eye(terrain));
+    for i in 0..count {
+        let seconds = period * duration * i as f64 / count as f64;
+        let jd = J2000 + seconds / DAY;
+        let elevation = |t: f64| {
+            let q = solar.body(BodyId::MARS).rotation(t) * terrain.orientation;
+            (q.inverse() * (-solar.position(BodyId::MARS, J2000 + t / DAY)).normalize())
+                .dot(terrain.site_relative(state.eye(terrain)).normalize())
+        };
+        let h = elevation(seconds);
+        let weather = atmosphere::sample(seconds, period, body, terrain.seed);
+        let score = match stage {
+            4 | 5 => {
+                (h - 0.02).abs()
+                    + if (elevation(seconds + 10.0) > h) == (stage == 4) {
+                        0.0
+                    } else {
+                        10.0
+                    }
+            }
+            7 => (h + 0.6).abs(),
+            6 => (weather.clouds as f64 - 0.6).abs() + (0.5 - h).max(0.0),
+            _ => 1.0 - weather.storm as f64 + (0.5 - h).max(0.0),
+        };
+        if score < best.0 {
+            best = (score, jd);
+        }
+    }
+    info!(
+        "P8 date préparation {stage} : JD {}, score {}",
+        best.1, best.0
+    );
+    best.1
 }

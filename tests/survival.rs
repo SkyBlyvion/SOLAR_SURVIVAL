@@ -277,7 +277,11 @@ fn second_instance_and_rebase_keep_body_poses_contacts_and_recharge() {
             .flat_map(|b| b.solids()),
     ) {
         let (center, _, rotation) = solid.chart_pose(t);
-        assert!(t.body_relative(center).distance(building.center) < 2e-9);
+        assert!(
+            t.body_relative(center).distance(building.center) < 2e-9,
+            "écart métrique {}",
+            t.body_relative(center).distance(building.center)
+        );
         assert!(
             (t.orientation * rotation * DVec3::Y).distance(building.orientation * DVec3::Y) < 1e-12
         );

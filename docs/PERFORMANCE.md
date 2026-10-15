@@ -1,3 +1,54 @@
+# P8 — relief, horizon et météo, 15 octobre 2026
+
+Comparaison release sur le même poste Ubuntu/X11 i7-6700K / 32 Go / GTX 1060
+3 Go NVK Mesa 25.2.8, 1440×900, MSAA4, LOD adaptatif, Mesa immediate local.
+Une référence **P7 avec son binaire et ses propres assets d'archive**, puis deux
+P8 sans recorder et un GPU séparé. Tous codes 0, aucune capture pendant les
+mesures, empreintes de chaque campagne inchangées. Même parcours P5 et commandes ;
+la nouvelle géométrie et l'éclairage sont précisément le changement comparé.
+[Résultats structurés, spans et ressources](p8-validation/2026-10-15/comparison.json).
+
+| Phase | P7 moyenne / p95 ms | P8 répétition 1 moyenne / p95 ms | P8 répétition 2 moyenne / p95 ms |
+|---|---:|---:|---:|
+| Abri au repos | 30,585 / 31,043 | 32,519 / 33,635 | 32,443 / 33,529 |
+| Prévisualisation | 39,192 / 40,946 | 40,718 / 42,103 | 40,854 / 42,137 |
+| Streaming | 29,571 / 30,841 | 31,420 / 32,640 | 31,396 / 32,600 |
+
+Surcoût moyen observé : **1,59 ms en prévisualisation, 1,84 ms en streaming et
+1,90 ms au repos** (moyenne des deux P8 face à cette référence). Fenêtres de
+repos/prévisualisation courtes, respectivement 23–24 et 43–45 frames ; streaming
+247–263 frames. Ce n'est pas une garantie sur tous les sites, météos ou matériels.
+Le GPU séparé donne main opaque moyen 12,224 / 11,974 / 11,231 ms pour ces mêmes
+phases ; ce span n'est pas le temps GPU total. Pas de nouveau relevé GPU P7
+strictement comparable : ne pas inventer une différence GPU précise.
+
+Sur ces parcours P5 : rebasage CPU observé ≤5,725 ms, synchronisation meshes
+≤9,361 ms, cette dernière incluant les retours avec chargement de tous les patches.
+Les journaux distinguent géométrie/index/uploads ; quelques événements seulement,
+pas une garantie de pire cas mondial. La scène stable ne reconstruit aucun mesh.
+Le probe CPU indépendant **dev optimisé**, 200 rebasages sur 12,8 km, donne sphère
+0,753 ms moyen /0,974 p95 contre relief+couronne 2,280 /5,145 ms. Il exclut normales,
+uploads et GPU ; [journal](p8-validation/2026-10-15/final-check-4.log).
+
+Couronne bornée à 6 400 sommets /11 520 triangles, en plus des ≤13 patches locaux.
+Données utiles positions/normales/deux UV/indices de la couronne : estimation
+394 240 octets, **hors allocations du moteur/pilote**. Uniforme du ciel 704 octets
+(+96), aucune image ni passe nouvelle. Les 13 textures P7 restent vérifiées au
+renderer : **42 118 856 octets, 40,168 Mio /128 Mio**, sans duplication par patch.
+
+Mémoire processus : P7 RSS max 256 444 Kio, HWM 276 508 Kio ; P8 sans recorder
+RSS max 259 084–261 700 Kio, HWM 276 472–277 976 Kio. Le relevé GPU séparé atteint
+RSS 256 796 /HWM 274 944 Kio. Dispersion conservée, aucune attribution de ces
+écarts à une seule ressource. Compteurs DRM/VRAM totale/staging indisponibles.
+
+**1080p/60 FPS sur la cible RTX 4050 6 Go et Windows 11 natif restent non validés.**
+Le CPU cible annoncé « i5 12700K » reste à confirmer. Les FPS de cette GTX 1060
+ne sont pas extrapolés. [Architecture, paramètres artistiques et limites](MARS_ENVIRONMENT.md).
+
+---
+
+# Historique — P7
+
 # P7 — mesure finale sur le poste Ubuntu, 15 octobre 2026
 
 Une référence P6 actuelle sans recorder, **deux répétitions P7 sans recorder**, puis un P7 GPU séparé, tous codes 0. Binaire P6 de l’archive profils identique à celui d’avant P7 ; sources/actifs gelés pendant chaque campagne. Même scène P5, poste i7-6700K/32Go/GTX1060 3Go NVK, 1440×900 MSAA4, LOD adaptatif, Mesa immediate local, aucune capture pendant les mesures. [Données, spans CPU/GPU et mémoire](p7-validation/2026-10-15/comparison.json).

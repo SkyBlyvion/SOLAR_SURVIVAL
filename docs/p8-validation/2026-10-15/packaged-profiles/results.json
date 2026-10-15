@@ -1,0 +1,24 @@
+[
+  {
+    "stage": "save",
+    "exit_code": 0,
+    "seconds": 48.41373385199995,
+    "focused_window": "0x4400004",
+    "captures": 16,
+    "diagnostics": [],
+    "completion": [
+      "P6 save termin\u00e9 : Alpha construit/rebas\u00e9, Bravo ind\u00e9pendant, choix des profils et retour Alpha"
+    ]
+  },
+  {
+    "stage": "load",
+    "exit_code": 0,
+    "seconds": 54.388227475999884,
+    "focused_window": "0x4400004",
+    "captures": 16,
+    "diagnostics": [],
+    "completion": [
+      "P6 load termin\u00e9 : red\u00e9marrage r\u00e9el, profils ind\u00e9pendants, catalogue, espace, \u00e9chec/R et refus corrompu"
+    ]
+  }
+]
