@@ -151,6 +151,13 @@ fn harvest_range_depletion_inventory_and_session_returns() {
 #[test]
 fn rejected_cancelled_and_confirmed_placement_pay_only_once() {
     let mut app = app(60);
+    #[derive(Resource, Default)]
+    struct Cues(Vec<solar_survival::audio::SoundCue>);
+    app.init_resource::<Cues>().add_observer(
+        |event: On<solar_survival::audio::SoundCue>, mut cues: ResMut<Cues>| {
+            cues.0.push(*event.event())
+        },
+    );
     placement(&mut app);
     press(&mut app, KeyCode::Enter);
     assert_eq!(app.world().resource::<Buildings>().shelters.len(), 1);
@@ -193,6 +200,20 @@ fn rejected_cancelled_and_confirmed_placement_pay_only_once() {
     );
     press(&mut app, KeyCode::Enter);
     assert_eq!(app.world().resource::<Buildings>().shelters.len(), 2);
+    let cues = &app.world().resource::<Cues>().0;
+    assert_eq!(
+        cues.iter()
+            .filter(|&&c| c == solar_survival::audio::SoundCue::Built)
+            .count(),
+        1
+    );
+    assert_eq!(
+        cues.iter()
+            .filter(|&&c| c == solar_survival::audio::SoundCue::Harvest)
+            .count(),
+        2
+    );
+    assert!(cues.contains(&solar_survival::audio::SoundCue::Refused));
 }
 #[test]
 fn placement_blocks_player_obstacle_building_deposit_and_uncovered_terrain() {

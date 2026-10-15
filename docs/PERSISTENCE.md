@@ -1,7 +1,12 @@
-> P9, 15 octobre 2026 : format courant **SOLAR_SURVIVAL 3**, fichiers ≤256 Kio.
+> P11 : écriture **SOLAR_SURVIVAL 5**, volume et mode muet par aventure. Lecture du
+> format P10 **4 conservée** avec volume 50 %/son activé, sans réécriture au simple
+> chargement ; prochaine écriture en 5 (F5 ou sauvegarde avant changement d’aventure). Formats 1/2/3 toujours refusés.
+> [Contrat courant audio et compatibilité](P11_AUDIO.md).
+
+> Livraison historique P10, 15 octobre 2026 : **SOLAR_SURVIVAL 4**, fichiers ≤256 Kio.
 > Porté organisé, coffres/contenus, équipements, énergie J, réserve O₂ et renouvellement
-> des sources sont conservés par profil. Formats 1/2 refusés sans migration ni
-> suppression des fichiers. [Contrat P9](P9_BASE.md).
+> des sources, ainsi que les objectifs/relevés P10, sont conservés par profil.
+> Formats 1/2/3 refusés sans migration ni suppression des fichiers. [Contrat P9](P9_BASE.md), [expéditions P10](P10_EXPLORATION.md).
 
 # P6 — aventures et sauvegardes par profil
 
@@ -31,23 +36,25 @@ saves/
 
 Chaque répertoire possède sa session et sa copie précédente. Le nom accepte 1 à 40 lettres/chiffres, espaces, tirets et `_` ; les espaces extérieurs sont retirés. Chemins, noms réservés, noms vides et doublons sont refusés, sans écrasement. Les créations ignorent la casse pour éviter Alpha/alpha sur des OS différents. Les répertoires de profil liés symboliquement ne sont pas admis. Le chargement lit uniquement le profil choisi ; une aventure corrompue ne remplace pas l’aventure active.
 
-Le format d’instantané courant est la version 3. Les anciens profils peuvent apparaître dans la liste, mais leur chargement est refusé explicitement. Les preuves de cette implémentation intermédiaire restent dans `docs/p6-validation/` ; elles ne prouvent pas la gestion de plusieurs profils. Les nouvelles preuves sont dans `docs/p6-profiles-validation/`.
+Le format d’instantané courant est la version 5 ; la lecture de la version 4 est conservée. Les anciens profils peuvent apparaître dans la liste, mais leur chargement est refusé explicitement. Les preuves de cette implémentation intermédiaire restent dans `docs/p6-validation/` ; elles ne prouvent pas la gestion de plusieurs profils. Les nouvelles preuves sont dans `docs/p6-profiles-validation/`.
 
 ## État de chaque aventure
 
 - Identités et poses DVec3/DQuat des abris, compteur d’identités et site de retour.
 - Porté de 8 piles et coffres de 16 piles (20 objets/pile), ordre et contenu typés alliage/circuits ; équipements, énergie collective en J, O₂ collectif en secondes, sources renouvelables et délais.
 - Caisses : positions/orientations corporelles et épuisement, sans récolte ni paiement lors du chargement.
+- P10 : trois découvertes, rapports validés et données en cours. Poses des balises reconstruites depuis le premier abri et la graine ; données en cours admises seulement en surface sans échec. Aucun paiement au chargement.
 - Oxygène et échec ; abri de recharge recalculé depuis la pose restaurée. R conserve les constructions et ressources de ce profil.
 - Joueur en espace/surface : astre suivi, sélection, position/rotation f64, vitesse configurée ; pieds/vitesse/visée/grounded/accumulateur du contrôleur.
 - Fournisseur mondial/artistique, graine et orientation de la carte active, trois obstacles du premier site.
-- JD, pause/multiplicateur, sensibilité/FOV/MSAA/fenêtre.
+- JD, pause/multiplicateur, sensibilité/FOV/MSAA/fenêtre, volume sonore et mode muet.
+- Les voix audio et les temporisations d’alerte P11 sont transitoires et supprimées à la restauration.
 
 Aucun patch résident, mesh, index de contact, handle GPU, entité ou Transform n’est sauvegardé. Charger reconstruit les caches depuis les poses f64, republie les mêmes six BodyBox par abri et conserve la même GameCamera. Les prévisualisations, catalogues de construction, inventaire ouvert/sélection et entrées/capture sont annulés. Les anciens proxies sont retirés, y compris au démarrage d’une nouvelle aventure vide. Le temps passé application fermée n’est pas rattrapé.
 
 ## Format, refus et secours
 
-`src/persistence.rs` gère l’instantané ; `src/persistence/profiles.rs` gère les répertoires, nouvelles parties et changements de profil. UTF-8 **SOLAR_SURVIVAL 3**, nombres décimaux à aller-retour f64, collections bornées à 32 abris/64 équipements-coffres/8 caisses/4 sources et fichier limité à **256 Kio**. FNV-1a 64 bits détecte une corruption accidentelle ; ce n’est pas une signature de sécurité.
+`src/persistence.rs` gère l’instantané ; `src/persistence/profiles.rs` gère les répertoires, nouvelles parties et changements de profil. UTF-8 **SOLAR_SURVIVAL 5** (lecture 4 conservée), nombres décimaux à aller-retour f64, collections bornées à 32 abris/64 équipements-coffres/8 caisses/4 sources et fichier limité à **256 Kio**. FNV-1a 64 bits détecte une corruption accidentelle ; ce n’est pas une signature de sécurité.
 
 Versions inconnues, fichiers tronqués/supplémentaires, valeurs non finies, quaternions/indices/JD/réserve invalides, identités, types/piles/capacités, énergie/O₂ ou délais de renouvellement incohérents, graine incompatible et pose non couverte/sous le terrain sont refusés avant remplacement du World. Le terrain candidat est construit avant publication des ressources ; sa révision renouvelle les caches. Les modes historiques sans assets de survie refusent création et chargement de parties normales.
 

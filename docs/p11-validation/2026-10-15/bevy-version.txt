@@ -1,0 +1,2 @@
+bevy v0.19.1
+└── solar_survival v0.2.0 (/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL)

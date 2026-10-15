@@ -1,0 +1,57 @@
+{
+  "ui.wav": {
+    "bytes": 2028,
+    "seconds": 0.04498866213151927,
+    "sha256": "dd3b92304997746e01809db8ac97ae45bbb6fa04c91b677e5f4c2e57b609a124"
+  },
+  "refused.wav": {
+    "bytes": 11730,
+    "seconds": 0.2649886621315193,
+    "sha256": "d06af28f02da3f76533caa24497bc8fe95585df13bc5dc33ed4d74e8d8bd1943"
+  },
+  "harvest.wav": {
+    "bytes": 9306,
+    "seconds": 0.21002267573696146,
+    "sha256": "73c90ee70a6e790b6bfe971a8ca01f75f8cd5e694e3ef3cbd6ef0ef963f6d0c3"
+  },
+  "built.wav": {
+    "bytes": 19888,
+    "seconds": 0.44997732426303855,
+    "sha256": "12c40858902cc7a20b9a6c0a7893785790c7733de0cad7ad0db18beceffe2e22"
+  },
+  "survey.wav": {
+    "bytes": 17684,
+    "seconds": 0.4,
+    "sha256": "ce27582c294230c0d6ce2235a5f5a000230607b49b982bef25a1d0e837b347a1"
+  },
+  "report.wav": {
+    "bytes": 25178,
+    "seconds": 0.5699319727891157,
+    "sha256": "8a0c36495f0fb0761b84f778326877c8a8b9204ac4426ff05476621997265edd"
+  },
+  "refill.wav": {
+    "bytes": 16360,
+    "seconds": 0.36997732426303853,
+    "sha256": "edeb4882359bbbce7d7f26a28015a44701045ba02787e2a49f2a6a75308b498d"
+  },
+  "low.wav": {
+    "bytes": 18124,
+    "seconds": 0.40997732426303857,
+    "sha256": "b944b1720174c80e1ed0bea7a1161f9b7dd683516a311498a4be29a8f534f2e9"
+  },
+  "critical.wav": {
+    "bytes": 18124,
+    "seconds": 0.40997732426303857,
+    "sha256": "0f9798e289657d80161c16ec6da211a89574bd338cb88db14b9f72e84b08f055"
+  },
+  "failed.wav": {
+    "bytes": 34882,
+    "seconds": 0.7899773242630386,
+    "sha256": "8c36aa3c431b00319aa2b325b01ff8eb60b962dad85cc4305e448fa052ee8781"
+  },
+  "saved.wav": {
+    "bytes": 13716,
+    "seconds": 0.31002267573696146,
+    "sha256": "3cb8b0176854a666b6c6f9c43ec5f24d8ab54f9316795573bb84a386a4e2bf19"
+  }
+}

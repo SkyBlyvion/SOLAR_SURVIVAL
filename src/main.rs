@@ -6,6 +6,7 @@ use solar_survival::{
 
 fn main() {
     let config = GameConfig::default();
+    let automated = config.automated();
     let resolution = if config
         .profile
         .as_ref()
@@ -19,10 +20,14 @@ fn main() {
     } else {
         (1440, 900)
     };
+    let mut plugins = DefaultPlugins.build();
+    if automated {
+        plugins = plugins.disable::<bevy::audio::AudioPlugin>();
+    }
     App::new()
         .insert_resource(config)
         .add_plugins(
-            DefaultPlugins
+            plugins
                 .set(WindowPlugin {
                     primary_window: Some(Window {
                         title: "Solar Survival · 0.2 · Mars".into(),

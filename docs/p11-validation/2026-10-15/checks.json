@@ -1,0 +1,78 @@
+[
+  {
+    "name": "fmt",
+    "command": [
+      "cargo",
+      "fmt",
+      "--check"
+    ],
+    "code": 0,
+    "seconds": 0.568
+  },
+  {
+    "name": "check",
+    "command": [
+      "cargo",
+      "check",
+      "--all-targets",
+      "--locked"
+    ],
+    "code": 0,
+    "seconds": 8.417
+  },
+  {
+    "name": "tests",
+    "command": [
+      "cargo",
+      "test",
+      "--locked"
+    ],
+    "code": 0,
+    "seconds": 75.994
+  },
+  {
+    "name": "clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "--all-targets",
+      "--locked",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "code": 0,
+    "seconds": 2.715
+  },
+  {
+    "name": "release",
+    "command": [
+      "cargo",
+      "build",
+      "--release",
+      "--locked"
+    ],
+    "code": 0,
+    "seconds": 447,
+    "log": "release.txt",
+    "note": "dur\u00e9e Cargo, recompilation des fonctionnalit\u00e9s audio comprise"
+  },
+  {
+    "name": "package",
+    "command": [
+      "python3",
+      "scripts/package_release.py",
+      "--output",
+      "dist/solar-survival-ubuntu-p11"
+    ],
+    "code": 0,
+    "log": "package.json"
+  },
+  {
+    "name": "archive-verification",
+    "code": 0,
+    "log": "archive-verification.json",
+    "game_launched": false,
+    "audio_played": false
+  }
+]

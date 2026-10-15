@@ -1,0 +1,14 @@
+   Compiling solar_survival v0.2.0 (/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL)
+    Finished `test` profile [optimized] target(s) in 1.62s
+     Running tests/p10_expedition.rs (target/debug/deps/p10_expedition-19fb70a285a2322b)
+
+running 5 tests
+test bearing_is_horizontal_and_consistent_after_rebase ... ok
+test screens_block_scan_while_pause_and_acceleration_keep_the_same_site_poses ... ok
+test range_locked_sites_full_reward_failure_and_space_exits_keep_discovery_only ... ok
+test profiles_restart_with_pending_data_and_independent_discoveries_without_duplicate_rewards ... ok
+Trois allers-retours au sol ; O₂ minimal avant porte : 84.600 s
+test three_real_ground_roundtrips_refill_risk_rewards_streaming_and_no_duplicate ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.13s
+

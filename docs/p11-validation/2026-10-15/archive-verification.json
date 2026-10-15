@@ -1,0 +1,14 @@
+{
+  "archive": "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/dist/solar-survival-ubuntu-p11.tar.gz",
+  "bytes": 37773347,
+  "sha256": "284f45eb0a0ffd2dbaf6d4768ce6454ebcae0134596b6c929ee6c8e9ce345477",
+  "binary_sha256": "9fccb1e750171d7b95db90fd2a50ac041310ea8dad48e854d574eb17f7b25cf3",
+  "verified_files": 803,
+  "audio_files": 11,
+  "extraction": "/tmp/solar-survival-p11-2026-10-15-p8gxdns3/solar-survival-ubuntu-p11",
+  "source_assets_unchanged": true,
+  "all_runtime_libraries_resolved": true,
+  "private_build_tools_required_at_runtime": false,
+  "game_launched": false,
+  "audio_played": false
+}

@@ -1,6 +1,7 @@
 pub mod atmosphere;
 mod buildings;
 mod construction;
+mod expedition;
 mod ground;
 mod planets;
 pub mod sky;
@@ -21,6 +22,7 @@ impl Plugin for SpaceRenderingPlugin {
                 sky::SurfaceSkyPlugin,
                 buildings::BuildingRenderingPlugin,
                 construction::ConstructionRenderingPlugin,
+                expedition::ExpeditionRenderingPlugin,
             ))
             .insert_resource(ClearColor(Color::BLACK))
             .add_systems(Startup, (planets::spawn, stars::spawn))

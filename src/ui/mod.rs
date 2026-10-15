@@ -15,6 +15,7 @@ use bevy::{
     window::PrimaryWindow,
 };
 mod construction;
+pub mod expedition;
 pub mod inventory;
 pub mod menu;
 mod survival;
@@ -61,6 +62,7 @@ impl Plugin for HudPlugin {
             menu::MenuPlugin,
             survival::SurvivalHudPlugin,
             construction::ConstructionHudPlugin,
+            expedition::ExpeditionHudPlugin,
             inventory::InventoryHudPlugin,
         ))
         .add_plugins(FrameTimeDiagnosticsPlugin::default())
@@ -99,7 +101,7 @@ fn setup(mut commands: Commands, solar: Res<SolarSystem>, assets: Res<AssetServe
                 panel.spawn((Button, Action::Select(body.id), Node { padding: UiRect::axes(px(12),px(4)), border_radius: BorderRadius::ZERO, ..default() }, BackgroundColor(theme::BUTTON)))
                     .with_child((Text::new(format!("{}   {}",body.id.0,body.name)),font(13.0, &ui_font),TextColor(theme::TEXT)));
             }
-            for (action,label) in [(Action::Center,"F   Centrer"),(Action::Visit,"G   Visiter"),(Action::Overview,"O   Vue du système"),(Action::Surface,"M   Surface Mars / retour"),(Action::Menu,"Échap   Menu principal")] {
+            for (action,label) in [(Action::Center,"F   Centrer (espace)"),(Action::Visit,"G   Visiter"),(Action::Overview,"O   Vue du système"),(Action::Surface,"M   Surface Mars / retour"),(Action::Menu,"Échap   Menu principal")] {
                 panel.spawn((Button,action,Node { padding: UiRect::axes(px(12),px(6)), border_radius: BorderRadius::ZERO, ..default() }, BackgroundColor(theme::BUTTON)))
                     .with_child((Text::new(label),font(13.0, &ui_font),TextColor(theme::TEXT)));
             }
@@ -432,7 +434,7 @@ fn help(
     }
     *previous = Some(pilot.mode);
     ***text = if pilot.mode == MovementMode::Surface {
-        "WASD / ZQSD : marcher · Shift : courir · Espace : sauter · E : récolte / coffre · I : inventaire · B : construction\nClic droit : piloter · Échap : curseur / menu · M : espace · N : navigation · H : télémétrie".into()
+        "WASD / ZQSD : marcher · Shift : courir · Espace : sauter · E : récolte / coffre · F : relevé / rapport · I : inventaire · B : construction\nClic droit : piloter · Échap : curseur / menu · M : espace · N : navigation · H : télémétrie".into()
     } else {
         "Clic droit : piloter · Échap : curseur · WASD / ZQSD : vol · Espace / Ctrl : monter / descendre · Shift : ×10\nMolette / Pg↑ Pg↓ : vitesse · Tab / 0–9 : cible · F : centrer · G : visiter · M : surface Mars · O : système · U : repère solaire · T / P : temps · H : télémétrie · N : navigation".into()
     };

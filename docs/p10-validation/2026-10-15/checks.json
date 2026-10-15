@@ -1,0 +1,65 @@
+[
+  {
+    "name": "fmt",
+    "command": [
+      "cargo",
+      "fmt",
+      "--check"
+    ],
+    "code": 0
+  },
+  {
+    "name": "check",
+    "command": [
+      "cargo",
+      "check",
+      "--all-targets",
+      "--locked"
+    ],
+    "code": 0
+  },
+  {
+    "name": "clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "--all-targets",
+      "--locked",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "code": 0
+  },
+  {
+    "name": "release",
+    "command": [
+      "cargo",
+      "build",
+      "--release",
+      "--locked"
+    ],
+    "code": 0
+  },
+  {
+    "name": "tests",
+    "command": [
+      "cargo",
+      "test",
+      "--locked"
+    ],
+    "code": 0,
+    "passed": 153,
+    "log": "tests.txt"
+  },
+  {
+    "name": "package",
+    "command": [
+      "python3",
+      "scripts/package_release.py",
+      "--output",
+      "dist/solar-survival-ubuntu-p10"
+    ],
+    "code": 0
+  }
+]

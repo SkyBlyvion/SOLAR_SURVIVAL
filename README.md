@@ -2,19 +2,34 @@
 
 Prototype d'exploration 3D de notre système solaire, fondation d'un jeu de survie spatial en première personne. **Les positions, rayons et distances physiques restent en mètres à l'échelle 1:1, en `f64`.** Bevy ne reçoit que des représentations relatives à la caméra.
 
+**P11, audio et alertes :** signaux de récolte, construction, relevé/rapport,
+transfert et refus ; alertes O₂ à 30 s et 10 s, recharge et épuisement. Volume
+0–100 % et mode muet dans Options, sauvegardés au format 5. Les aventures P10
+format 4 restent lisibles (volume initial 50 %). Écoute et inspection graphique
+reportées à la campagne groupée. [Contrat audio](docs/P11_AUDIO.md).
+
+**P10, exploration et objectifs :** trois expéditions locales à environ 120/240/360 m.
+**F** relève la balise active à 3 m ; rentrer dans le premier abri puis **F** valide
+le rapport, paie une récompense unique en alliage/circuits et débloque la suivante.
+Cap, distance et estimation du retour dans le HUD. Échec ou sortie spatiale :
+données non rapportées perdues, découvertes conservées. **Écriture au format 5 avec P11** ; lecture des profils P10 format 4 conservée,
+formats 1/2/3 refusés sans suppression.
+Tests sans bureau ; inspection graphique encore à faire dans un créneau autorisé.
+[Règles, architecture et limites](docs/P10_EXPLORATION.md).
+
 **M ouvre un terrain martien mondial : six faces traversables, arêtes et coins continus, LOD adaptatif à trois résolutions et chargement local borné.** Les anciens parcours bornés restent des modes de régression. [Architecture et commandes](docs/GLOBAL_TERRAIN.md).
 
-**P8, relief et atmosphère martienne :** collines artistiques jouables, paysage local prolongé sur plusieurs kilomètres, ciel ocre le jour, halo bleu au lever/coucher, nuit étoilée, voiles de glace et tempêtes de poussière occasionnelles. P/T commande aussi leur évolution ; H indique la météo et la visibilité. Anciennes aventures refusées sans migration : créer une aventure au format 3. [Paramètres, sources et limites](docs/MARS_ENVIRONMENT.md).
+**P8, relief et atmosphère martienne :** collines artistiques jouables, paysage local prolongé sur plusieurs kilomètres, ciel ocre le jour, halo bleu au lever/coucher, nuit étoilée, voiles de glace et tempêtes de poussière occasionnelles. P/T commande aussi leur évolution ; H indique la météo et la visibilité. Anciennes aventures refusées sans migration : créer une aventure au format courant 5. [Paramètres, sources et limites](docs/MARS_ENVIRONMENT.md).
 
 **Caméra unique :** la même caméra rend les visites spatiales et la surface. Sur Mars : ciel poussiéreux, étoiles discrètes la nuit, Soleil et astres calculés depuis le catalogue, masqués par le terrain et les abris. Le ciel et le sol restent des présentations artistiques ; [architecture, ressources et limites](docs/SURFACE_SKY.md).
 
 **Construction P5 :** récupérer les caisses dorées avec **E**, ouvrir le catalogue avec **B**, choisir **Prévisualiser**, déplacer avec les **flèches**, orienter avec **J/L**, confirmer avec **Entrée** ou annuler avec **X/Échap**. Coût : 12 alliage ; prévisualisation verte/rouge, inventaire et bâtiments conservés en session. [Règles et architecture](docs/CONSTRUCTION.md).
 
-**Aventures P6 :** **Nouvelle aventure** demande un nom et crée une partie indépendante ; **Charger une aventure / F9** permet de choisir un profil. **Sauvegarder / F5** met à jour uniquement l’aventure active. Bâtiments, caisses épuisées, stock, oxygène, pose, calendrier et options sont conservés sur disque. Plusieurs aventures nommées, chacune dans son répertoire avec sa copie de secours ; aucune sauvegarde automatique à Quitter. [Format, restauration et distribution](docs/PERSISTENCE.md).
+**Aventures P6 :** **Nouvelle aventure** demande un nom et crée une partie indépendante ; **Charger une aventure / F9** permet de choisir un profil. **Sauvegarder / F5** met à jour uniquement l’aventure active. Bâtiments, caisses épuisées, stock, oxygène, objectifs, pose, calendrier et options sont conservés sur disque. Plusieurs aventures nommées, chacune dans son répertoire avec sa copie de secours ; aucune sauvegarde automatique à Quitter. [Format, restauration et distribution](docs/PERSISTENCE.md).
 
 **Survie P4 :** une combinaison de 180 s d’oxygène et un abri de recharge accessible à six mètres devant l’arrivée. Entrez par la porte pour recharger ; à zéro, **R** relance une expédition à l’abri. [Règles et architecture](docs/SURVIVAL.md).
 
-**P7, qualité visuelle et textures :** sol martien détaillé, panneaux industriels partagés, caisses marquées et plaque O₂ ; cartes pour les huit planètes : Blue Marble, Viking/USGS, Voyager et représentations NASA/JPL/VTAD. Les sources artistiques sont identifiées dans les crédits. Les textures utilisent des niveaux précalculés et occupent 40,2 Mio de données GPU, sous le budget de 128 Mio. Le relief/horizon et la météo P8 sont implémentés ; progression de base P9 est intégrée ; exploration P10 reste prévue. [Direction visuelle et sources](docs/ART_DIRECTION.md). P7 est vérifié sur Ubuntu depuis le 15 octobre 2026 : cartes des huit planètes inspectées, profils/archive contrôlés et mesures conservées ; [preuves et limites](docs/VALIDATION.md). La validation native Windows reste ouverte.
+**P7, qualité visuelle et textures :** sol martien détaillé, panneaux industriels partagés, caisses marquées et plaque O₂ ; cartes pour les huit planètes : Blue Marble, Viking/USGS, Voyager et représentations NASA/JPL/VTAD. Les sources artistiques sont identifiées dans les crédits. Les textures utilisent des niveaux précalculés et occupent 40,2 Mio de données GPU, sous le budget de 128 Mio. Le relief/horizon et la météo P8 sont implémentés ; progression de base P9 est intégrée ; exploration P10 est intégrée, avec inspection graphique encore ouverte. [Direction visuelle et sources](docs/ART_DIRECTION.md). P7 est vérifié sur Ubuntu depuis le 15 octobre 2026 : cartes des huit planètes inspectées, profils/archive contrôlés et mesures conservées ; [preuves et limites](docs/VALIDATION.md). La validation native Windows reste ouverte.
 
 **Cible de performance :** machines modestes, RTX 4050 **6 Go au mieux**. P7 utilise des textures modestes et partagées, avec budgets mémoire et mesures ; objectif 1080p/60 FPS sur la cible à vérifier. Le CPU indiqué « i5 12700K » reste à confirmer. [Contraintes détaillées](docs/ART_DIRECTION.md).
 
@@ -24,12 +39,15 @@ O₂. **I** ouvre l'inventaire ; **E** accède au coffre proche. Choisir une pil
 transférer une quantité, une pile ou le maximum ; regrouper/déplacer les piles.
 **B** propose les six recettes, payées depuis le porté. L'abri puise dans une
 réserve finie ; équipements et abris à moins de 40 m du premier abri partagent la
-base. Soleil et poussière règlent la puissance, en secondes réelles. **Format 3
-uniquement**, sans migration. 147 tests et parcours fonctionnels Ubuntu validés ;
+base. Soleil et poussière règlent la puissance, en secondes réelles. **Format courant 5
+avec P11**, lecture P10 format 4 conservée. 147 tests et parcours fonctionnels Ubuntu validés pour P9 ;
 comparaison de performance reportée à la demande utilisateur, sans nouveaux tests
 prenant le focus pendant son travail. [Règles, recettes et limites](docs/P9_BASE.md).
 
 La suite du développement suit [la roadmap](docs/ROADMAP.md). Le [prompt du prochain chat](docs/NEXT_CHAT.md) est actualisé à chaque fin de chat de développement avec l'état réel et l'objectif suivant.
+
+Les [tests reportés](docs/TESTS_A_REALISER.md) sont regroupés dans une checklist
+persistante : prochaine campagne commune, corrections puis vérification des correctifs.
 
 ## Démarrer sur ce poste Ubuntu
 
@@ -54,13 +72,13 @@ Installer Rust avec [rustup](https://rustup.rs/). Un compilateur/linker C, une s
 
 ```bash
 sudo apt update
-sudo apt install build-essential curl libx11-6 libxi6 libxrandr2 libxcursor1 libvulkan1 mesa-vulkan-drivers
+sudo apt install build-essential curl libx11-6 libxi6 libxrandr2 libxcursor1 libvulkan1 mesa-vulkan-drivers pkg-config libasound2-dev
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 source "$HOME/.cargo/env"
 cargo run
 ```
 
-Le backend Linux choisi est X11 ; une session Wayland doit disposer de XWayland. Aucun paquet de développement ALSA/udev n'est requis : audio et manettes sont désactivés dans ce prototype. Les pilotes propriétaires peuvent remplacer Mesa selon la carte graphique.
+Le backend Linux choisi est X11 ; une session Wayland doit disposer de XWayland. La compilation audio P11 requiert aussi `pkg-config` et `libasound2-dev` ; les manettes restent désactivées. Les pilotes propriétaires peuvent remplacer Mesa selon la carte graphique.
 
 ## Installation sous Windows 11
 
@@ -85,7 +103,7 @@ cargo run
 
 Le menu affiche **Nouvelle aventure**, **Charger une aventure**, **Options**, **Crédits** et **Quitter**. Donnez un nom à la nouvelle aventure : un répertoire de sauvegarde indépendant est créé. **Reprendre** et **Sauvegarder** apparaissent avec une aventure active. F5 sauvegarde ce profil ; F9 ouvre la liste des aventures. Les erreurs sont affichées et conservent la partie courante. Avec une aventure active, **Reprendre** retrouve la même session et la même pose ; il ne réinitialise pas le site. Le bouton **Menu principal** du panneau de navigation (N en surface) et Échap lorsque le curseur est libre ouvrent le menu. Un premier Échap en pilotage libère seulement la souris. Entrée lance/reprend depuis l'écran principal ; Échap revient depuis les sous-écrans.
 
-Les options s'appliquent immédiatement : sensibilité souris ×0,5/1/1,5/2, champ de vision **vertical** 55/65/75/90°, MSAA désactivé/×2/×4, affichage fenêtré/plein écran sans bordure. **Rétablir les valeurs par défaut** restaure ×1, 65°, MSAA ×4 et fenêtré. Les valeurs initiales de rendu restent celles du prototype. Les réglages sont conservés pour la session et inclus dans une sauvegarde explicite. Il n'y a pas d'option sonore car l'audio n'est pas activé.
+Les options s'appliquent immédiatement : sensibilité souris ×0,5/1/1,5/2, champ de vision **vertical** 55/65/75/90°, MSAA désactivé/×2/×4, affichage fenêtré/plein écran sans bordure. **Rétablir les valeurs par défaut** restaure ×1, 65°, MSAA ×4 et fenêtré. Les valeurs initiales de rendu restent celles du prototype. Les réglages sont conservés pour la session et inclus dans une sauvegarde explicite. Le volume sonore (0/25/50/75/100 %, défaut 50 %) et le mode muet sont inclus dans les sauvegardes. Les signaux sont des retours de combinaison/interface ; voir [P11](docs/P11_AUDIO.md).
 
 Le menu libère la souris et bloque les commandes de navigation, P/T et H. Le calendrier orbital continue avec `Time<Real>` ; pour le figer, utiliser P avant d'ouvrir le menu. En surface, la gravité et les contacts continuent, sans entrée de déplacement. L’oxygène et sa recharge sont suspendus pendant le menu ; le calendrier et la gravité continuent. Cette convention conserve les deux horloges du prototype. Les scénarios historiques de validation/profilage démarrent directement en jeu ; le diagnostic P6 parcourt aussi les menus.
 
@@ -104,7 +122,7 @@ Les touches de déplacement désignent des positions physiques : WASD sur QWERTY
 | Molette (pilotage), Pg↑ / Pg↓, + / − | Changer de niveau de vitesse en espace |
 | Tab | Sélection suivante |
 | 0–9 | Soleil, Mercure, Vénus, Terre, Mars, Jupiter, Saturne, Uranus, Neptune, Lune |
-| F | Orienter la caméra vers la cible en espace |
+| F | En espace : orienter vers la cible ; en surface : relever une balise / transmettre au premier abri |
 | G | Visiter la cible, à 3,5 rayons de son centre (5,5 pour Saturne) |
 | M | Surface de Mars / retour à la visite spatiale de Mars |
 | O | Vue globale depuis 35 UA au-dessus du plan écliptique |
@@ -165,6 +183,7 @@ examples/cube_seam.rs diagnostic graphique borné, indépendant du terrain jouab
 src/buildings/        abris instanciables, identités et poses corporelles f64
 src/construction.rs   porté, récupération, admission et transaction de placement
 src/inventory.rs      piles bornées et transactions atomiques
+src/audio.rs          signaux, alertes O₂ et mixage borné, WAV partagés
 src/base.rs           équipements, récoltes durables et réserves J/O₂
 src/ui/inventory.rs   inventaire/conteneur et commandes de proximité
 src/rendering/construction.rs fantôme et caisses locaux, cube partagé
@@ -173,6 +192,9 @@ src/config/construction_validation.rs parcours graphique ciblé P5
 src/persistence.rs   instantané versionné, écriture avec secours et chargement transactionnel
 src/config/persistence_validation.rs diagnostic à deux processus après redémarrage réel
 src/survival/         réserve d’oxygène et issue de l’expédition
+src/expedition.rs     balises, découvertes, rapports et récompenses P10
+src/rendering/expedition.rs mâts partagés, poses corporelles en lecture
+src/ui/expedition.rs  objectif, cap et estimation de retour
 src/rendering/buildings.rs proxies locaux des abris et assets partagés
 src/ui/survival.rs    HUD vital et instruction de reprise
 src/ui/               panneau de navigation, télémétrie et marqueurs
@@ -375,9 +397,9 @@ tempêtes diminuent la visibilité et la lumière. P/T fige ou accélère aussi 
 évolution ; H affiche les informations atmosphériques. Ce sont des représentations
 artistiques sourcées, sans simulation climatique ni pression locale de survie.
 
-**Créer une nouvelle aventure : format 3 uniquement**, sans migration des profils
-anciens. 139 tests et les contrôles Cargo passent ; ciel, profils après redémarrage
+**Format actuel : écriture 5, lecture P10/4 conservée** ; les anciens formats
+1/2/3 restent refusés. 139 tests et les contrôles Cargo passent ; ciel, profils après redémarrage
 et archive Ubuntu inspectés. Surcoût mesuré 1,6–1,9 ms/frame face à P7 sur le poste de
 développement ; Windows natif et objectif cible1080p60 restent à vérifier.
 Archive : `dist/solar-survival-ubuntu-p8.tar.gz` ; [contrat et limites](docs/MARS_ENVIRONMENT.md),
-[preuves](docs/VALIDATION.md), [prochain chat P9](docs/NEXT_CHAT.md).
+[preuves](docs/VALIDATION.md), [passation actuelle](docs/NEXT_CHAT.md).

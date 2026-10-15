@@ -11,7 +11,7 @@ bevy = { version = "=0.19.1", default-features = false, features = [
     "std", "async_executor", "bevy_asset", "bevy_log", "bevy_winit",
     "bevy_pbr", "bevy_core_pipeline", "bevy_post_process", "bevy_ui_render",
     "default_font", "multi_threaded", "x11", "keyboard", "mouse", "png",
-    "tonemapping_luts", "zstd_rust", "reflect_auto_register"
+    "tonemapping_luts", "zstd_rust", "reflect_auto_register", "bevy_audio", "wav"
 ] }
 
 [profile.dev]

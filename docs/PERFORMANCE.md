@@ -1,3 +1,39 @@
+# P11 — audio borné, coût réel non mesuré — 15 octobre 2026
+
+Onze WAV partagés, **187 020 octets** de fichiers ; huit voix maximum, onze demandes
+uniques au plus et expiration de secours de 2 s. Aucun mesh, texture ou passe GPU
+ajouté. Le décodage CPU et les plafonds ECS sont vérifiés sans backend matériel ;
+ces comptes ne sont ni une mesure RAM globale ni un benchmark du mixeur/périphérique.
+
+Les scénarios automatisés existants désactivent AudioPlugin et le mixage P11 pour
+conserver leurs scènes silencieuses. Une comparaison P10→P11 **avec audio réellement
+actif** est donc un cas distinct de la [campagne groupée](TESTS_A_REALISER.md),
+PERF-05. Aucune écoute ou mesure GPU/audio lancée pendant ce chat. Les mesures
+P8→P9/P9→P10, Windows/cible/1080p60 et mémoire totale restent ouvertes.
+[Contrat et dépendances](P11_AUDIO.md).
+
+---
+
+# P10 — ressources bornées, aucun nouveau benchmark — 15 octobre 2026
+
+Trois balises CPU déterministes, au plus six proxies dans 600 m, cube existant et
+un ajout de trois matériaux constants. Aucun mesh/texture/passe/lumière supplémentaire
+par frame ; plafond P9+P10 **312 proxies**, hors terrain/ciel/obstacles. Terrain,
+LOD, couronne et textures P7 conservés. Ces bornes ne mesurent ni VRAM totale ni GPU.
+
+153 tests CPU/ECS passent, dont les trois expéditions complètes au sol et la
+réutilisation des proxies. Leur temps d'exécution n'est pas un benchmark de jeu.
+Aucune fenêtre ni campagne graphique lancée, conformément à la consigne sans
+focus. **Pas de comparaison P9/P10, de mesure graphique P10 ou de gain FPS annoncé**.
+Les mesures P9 reportées restent ouvertes, Windows 11/RTX4050/1080p60 aussi.
+[Contrat](P10_EXPLORATION.md), [validation](VALIDATION.md).
+
+Les mesures différées P8→P9, P9→P10, base chargée et mémoire sont conservées dans
+la [checklist de campagne groupée](TESTS_A_REALISER.md). Aucun nouveau relevé
+n'est effectué lors de sa rédaction.
+
+---
+
 # P9 — mesures reportées, 15 octobre 2026
 
 P9 est fonctionnel et validé par147 tests et les parcours graphiques/profils ;

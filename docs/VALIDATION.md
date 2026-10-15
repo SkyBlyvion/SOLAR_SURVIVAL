@@ -1,3 +1,86 @@
+# P11 — audio intégré, 159 tests sans bureau — 15 octobre 2026
+
+Périmètre demandé par SkyBlyvion : audio et alertes de jeu. Onze signaux originaux,
+alertes O₂, volume/muet et sauvegarde5 avec lecture P10/4 conservée.
+[Contrat](P11_AUDIO.md), [notes détaillées](p11-validation/2026-10-15/NOTES.md),
+[commandes/codes](p11-validation/2026-10-15/checks.json).
+
+| Vérification | Résultat réel |
+|---|---|
+| Environnement | Ubuntu, Ruststable1.99.0, i7-6700K/32Go ; Bevy exactement0.19.1 ; fonctionnalités audio/wav, Cargo.lock versionné. [Relevé](p11-validation/2026-10-15/environment.json) |
+| Compilation sans bureau | fmt/check all-targets, **159 tests**, Clippy -D warnings et build release réussis ; release7min27s avec recompilation audio, [journal](p11-validation/2026-10-15/release.txt) |
+| Audio CPU | Onze WAV décodés par le vrai décodeur Bevy, 187020octets, échantillons et durées bornés, silence aux extrémités. Aucun périphérique utilisé |
+| Alertes et mixage ECS | Seuils30s/10s, rappels5s/1,5s actives, recharge/échec/menu/espace, longue frame sans rafale ; huit voix/11demandes, priorités/préemption, expiration sans sink, zéro/muet/reset sans vieux son |
+| Actions réelles | Observateurs dans les tests de construction et des trois trajets P10 : deux récoltes/un bâtiment, trois relevés/trois rapports, refus et absence de doubles succès |
+| Options/persistance | Vrais boutons ECS, volume/muet/Reset ; snapshot5 et lecture4 conservant l'état, défaut50%/activé, index/booléen invalides refusés avant mutation ; formats1/2/3 refusés |
+| Archive | Ubuntu préparée, extraite hors checkout ; **803 fichiers** vérifiés, binaire identique et onze WAV conformes ; dépendances runtime résolues sans outils privés. **Non exécutée** ; [preuve](p11-validation/2026-10-15/archive-verification.json) |
+
+**Aucune écoute, fenêtre de jeu, capture, renderer GPU ou benchmark exécuté.** Les
+nouveaux tests sont CPU/ECS sans AudioPlugin/AudioOutput, ni périphérique OS.
+Les tests de trajets restent automatiquement orientés et certains états sont
+préparés ; ce n'est ni une partie humaine ni une validation du confort sonore.
+Les scripts automatisés existants désactivent volontairement le backend et le
+mixage P11 ; ils ne peuvent pas seuls mesurer l'audio réellement actif.
+
+Le poste ne disposait pas de pkg-config/libasound2-dev. Sudo sans mot de passe
+refusé ; aucune installation système. Paquets Ubuntu téléchargés/extraits sous
+/tmp pour compiler avec la bibliothèque ALSA runtime déjà installée. Les notes
+conservent versions et environnement local ; ces chemins ne sont pas distribués.
+La compilation Ubuntu standard requiert désormais ces deux paquets de développement.
+Les essais intermédiaires (emprunt mutable du sink, détection de Window, lien ALSA
+local manquant, deux assertions Clippy) sont conservés et corrigés avant les
+résultats finaux, sans réduire les contrôles ni changer le gameplay.
+
+**Restent ouverts : écoute et confort Ubuntu, vrai périphérique et absence de
+périphérique, Options à1280×720/1440×900, archive lancée, performance/mémoire audio,
+Windows11 natif et cible RTX4050/1080p60.** Cas AUD-01–07/PERF-05 ajoutés à la
+[campagne groupée](TESTS_A_REALISER.md), sans cocher ni lancer les anciens cas
+P9/P10. Pas de reconnexion audio à chaud, musique, ambiance ou pas ; pas de gain
+FPS/mesure VRAM ou d'approbation sonore/esthétique annoncé. Pas de changement
+astronomique, physique ou des GameSet. Aucun jeu/audio/benchmark laissé actif.
+
+---
+
+# P10 — implémenté, 153 tests sans bureau — 15 octobre 2026
+
+Trois expéditions progressives, F relevé/rapport dans le premier abri, récompenses
+uniques portées, cap/distance/base et découverte/progression par profil. Format4,
+sans migration des anciens formats ni suppression. [Contrat](P10_EXPLORATION.md),
+[notes détaillées et limites](p10-validation/2026-10-15/NOTES.md).
+
+À la demande utilisateur, les vérifications différées sont désormais détaillées
+dans [TESTS_A_REALISER](TESTS_A_REALISER.md), avec critères et suivi des corrections
+pour une campagne groupée ultérieure. Cet ajout est documentaire : liens/diff
+contrôlés, aucun nouveau test Cargo, graphique ou benchmark exécuté ; les résultats
+et limites P10 ci-dessous demeurent ceux de l'implémentation précédente.
+
+| Vérification | Résultat réel |
+|---|---|
+| Environnement | Ubuntu Linux, i7-6700K, Rust1.99.0, Bevy exactement0.19.1, aucune dépendance ajoutée ; [relevé](p10-validation/2026-10-15/environment.json) |
+| Cargo | fmt/check all-targets, **153 tests**, Clippy -D warnings, build release2min48s réussis ; [commandes/codes](p10-validation/2026-10-15/checks.json) |
+| Expéditions | Trois allers-retours par course ECS au sol, entrée/sortie par porte et recharge finie, O₂ minimal84,6s avant porte ; récompenses uniques, refus total si porté plein, portée et ordre |
+| Risque et écrans | Données perdues sur les quatre sorties spatiales et échec/R sans récompense ; découvertes connues gardées, menus/catalogue/inventaire bloquent F ; P/T et poses fixes |
+| Profils format4 | Deux profils et nouvelle App, relevé en cours sur place, découvertes/rapports/contenus indépendants, répétition après chargement sans duplication ; incohérences et ancien profil3 refusés |
+| Rendu sans GPU | Six proxies au plus, cube partagé, entités conservées au rebasage, erreur<20µm dans le cas testé, suppression espace/profil vide ; aucun nouveau mesh/image |
+| Archive | Préparée et extraite hors checkout, tous fichiers/empreintes contrôlés, binaire release identique ; **non exécutée** conformément au sans-focus ; [preuve](p10-validation/2026-10-15/archive-verification.json) |
+
+**Aucun jeu, renderer GPU, fenêtre de test ou benchmark lancé pendant ce chat.** Les
+153 tests sont CPU/ECS ; entités Window en mémoire, aucun Winit/périphérique OS.
+La visée des trajets est orientée par le test ; certains cas ciblés préparent leurs
+poses. Ce n'est pas une partie humaine ni une validation visuelle de l'interface.
+L'essai initial de boucle heurtait le jambage à la sortie diagonale : chemin du
+test corrigé par la porte, sans toucher aux collisions ; journaux conservés.
+
+**Restent ouverts : inspection P10 dans le jeu et de l'archive, esthétique/lisibilité
+aux deux résolutions, transitions des balises, performance GPU/VRAM et comparaison
+P9→P10.** Un créneau explicite est requis avant toute fenêtre prenant focus/souris ;
+pas d'écran virtuel ni modification de capture. Bornes structurelles≠mesures :
+P9+P10≤312 proxies hors terrain/ciel/obstacles, trois matériaux nouveaux, images P7
+conservées. Pas d'approbation esthétique utilisateur. Windows11 natif, cible
+RTX4050/CPU exact et1080p60 non validés. Aucun jeu/benchmark laissé actif.
+
+---
+
 # P9 — validation fonctionnelle Ubuntu, 15 octobre 2026
 
 P9 livré : inventaire porté, coffres, transferts/rangement, sources renouvelables,

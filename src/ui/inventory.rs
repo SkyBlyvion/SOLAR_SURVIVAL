@@ -197,6 +197,7 @@ fn setup(mut commands: Commands, assets: Res<AssetServer>) {
     reason = "Accès de proximité et transactions d'inventaire ECS."
 )]
 fn input(
+    mut commands: Commands,
     keys: Res<ButtonInput<KeyCode>>,
     menu: Res<MenuState>,
     pilot: Res<Explorer>,
@@ -353,6 +354,7 @@ fn input(
                     .chest
                     .filter(|id| chest_access(&buildings, *id, feet, eye, &terrain))
                 else {
+                    commands.trigger(crate::audio::SoundCue::Refused);
                     screen.message = "Aucun coffre accessible (2,5 m)".into();
                     continue;
                 };
@@ -372,6 +374,11 @@ fn input(
                 } else {
                     transfer(&mut c.inventory, chest, screen.selected, amount)
                 };
+                commands.trigger(if result.is_ok() {
+                    crate::audio::SoundCue::Harvest
+                } else {
+                    crate::audio::SoundCue::Refused
+                });
                 screen.message = match result {
                     Ok(n) => format!("{n} objet(s) transféré(s)"),
                     Err(e) => e.into(),

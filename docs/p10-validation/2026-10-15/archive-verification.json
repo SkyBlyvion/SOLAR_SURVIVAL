@@ -1,0 +1,9 @@
+{
+  "extracted": "/tmp/solar-survival-p10-2026-10-15-uk2lbnxm/solar-survival-ubuntu-p10",
+  "files_verified": 747,
+  "archive_bytes": 37025421,
+  "archive_sha256": "ebcd8a6dd0e47e483019d3191c27629b03fca37e1ee71130f027fb1fa11640ed",
+  "binary_sha256": "f27d64e774b7926ae9952628c1527b2b20fbdda4cbc4994418a60f0af729f78d",
+  "binary_matches_release": true,
+  "game_launched": false
+}

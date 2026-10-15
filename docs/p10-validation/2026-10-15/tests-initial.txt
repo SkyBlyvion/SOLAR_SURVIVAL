@@ -1,0 +1,33 @@
+   Compiling solar_survival v0.2.0 (/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL)
+warning: value assigned to `state` is never read
+   --> tests/p10_expedition.rs:379:5
+    |
+379 |     state.heading = DQuat::IDENTITY;
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: maybe it is overwritten before being read?
+    = note: `#[warn(unused_assignments)]` (part of `#[warn(unused)]`) on by default
+
+warning: `solar_survival` (test "p10_expedition") generated 1 warning
+    Finished `test` profile [optimized] target(s) in 26.44s
+     Running tests/p10_expedition.rs (target/debug/deps/p10_expedition-19fb70a285a2322b)
+
+running 5 tests
+test bearing_is_horizontal_and_consistent_after_rebase ... ok
+test screens_block_scan_while_pause_and_acceleration_keep_the_same_site_poses ... ok
+test range_locked_sites_full_reward_failure_and_space_exits_keep_discovery_only ... ok
+test profiles_restart_with_pending_data_and_independent_discoveries_without_duplicate_rewards ... ok
+
+thread 'three_real_ground_roundtrips_refill_risk_rewards_streaming_and_no_duplicate' (154320) panicked at tests/p10_expedition.rs:126:5:
+Trajet bloqué : distance 10.062598748541953
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test three_real_ground_roundtrips_refill_risk_rewards_streaming_and_no_duplicate ... FAILED
+
+failures:
+
+failures:
+    three_real_ground_roundtrips_refill_risk_rewards_streaming_and_no_duplicate
+
+test result: FAILED. 4 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.86s
+
+error: test failed, to rerun pass `--test p10_expedition`

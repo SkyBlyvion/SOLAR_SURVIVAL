@@ -84,6 +84,7 @@ fn process(world: &mut World) {
         return;
     };
     let save_action = matches!(action, SaveAction::Save);
+    let audible = !matches!(action, SaveAction::Refresh);
     let result: Result<String> = match action {
         SaveAction::Save => {
             if world.resource::<SaveControl>().active_profile.is_none() {
@@ -114,6 +115,13 @@ fn process(world: &mut World) {
             profiles::refresh(world).map(|()| "Choisissez une aventure, puis Charger".into())
         }
     };
+    if audible {
+        world.trigger(if result.is_ok() {
+            crate::audio::SoundCue::Saved
+        } else {
+            crate::audio::SoundCue::Refused
+        });
+    }
     let mut c = world.resource_mut::<SaveControl>();
     c.status = match result {
         Ok(message) => message,
@@ -143,6 +151,7 @@ pub struct Session {
     construction: Construction,
     oxygen: Oxygen,
     base: Base,
+    expedition: crate::expedition::Expedition,
     settings: PlayerSettings,
 }
 impl Session {
@@ -171,6 +180,7 @@ impl Session {
             construction: Construction::default(),
             oxygen: Oxygen::default(),
             base: Base::default(),
+            expedition: crate::expedition::Expedition::default(),
             settings: world.resource::<PlayerSettings>().clone(),
         };
         s.validate()?;
@@ -194,6 +204,7 @@ impl Session {
             construction: world.resource::<Construction>().clone(),
             oxygen: world.resource::<Oxygen>().clone(),
             base: world.resource::<Base>().clone(),
+            expedition: world.resource::<crate::expedition::Expedition>().clone(),
             settings: world.resource::<PlayerSettings>().clone(),
         };
         s.validate()?;
@@ -201,6 +212,13 @@ impl Session {
     }
     fn validate(&self) -> Result<()> {
         let fail = || Err("Données de session invalides ou incohérentes".into());
+        if !self.expedition.valid_progress(
+            self.ready && self.global,
+            self.pilot.mode == MovementMode::Surface,
+            self.oxygen.failed,
+        ) {
+            return fail();
+        }
         let vector = |p: DVec3| p.is_finite() && p.length() < 1e16;
         let quaternion = |q: DQuat| q.is_finite() && (q.length_squared() - 1.0).abs() < 1e-9;
         if !(MIN_JD..=MAX_JD).contains(&self.clock.jd)
@@ -223,6 +241,7 @@ impl Session {
             || self.settings.sensitivity_index >= 4
             || self.settings.fov_index >= 4
             || self.settings.msaa_index >= 3
+            || self.settings.volume_index >= 5
         {
             return fail();
         }
@@ -351,7 +370,7 @@ impl Session {
         Ok(())
     }
     pub fn encode(&self) -> String {
-        let mut text = String::from("SOLAR_SURVIVAL 3\n");
+        let mut text = String::from("SOLAR_SURVIVAL 5\n");
         writeln!(
             text,
             "clock {} {} {}",
@@ -493,6 +512,22 @@ impl Session {
             self.settings.fullscreen
         )
         .unwrap();
+        writeln!(
+            text,
+            "expedition {} {} {} {} {}",
+            self.expedition.completed,
+            self.expedition.carrying,
+            self.expedition.discovered[0],
+            self.expedition.discovered[1],
+            self.expedition.discovered[2]
+        )
+        .unwrap();
+        writeln!(
+            text,
+            "audio {} {}",
+            self.settings.volume_index, self.settings.muted
+        )
+        .unwrap();
         let sum = checksum(text.as_bytes());
         writeln!(text, "checksum {sum:016x}").unwrap();
         text
@@ -509,7 +544,8 @@ impl Session {
         }
         let mut r = Reader(payload.split_whitespace());
         r.tag("SOLAR_SURVIVAL")?;
-        if r.num::<u32>()? != 3 {
+        let version = r.num::<u32>()?;
+        if !matches!(version, 4 | 5) {
             return Err("Version de sauvegarde incompatible".into());
         }
         r.tag("clock")?;
@@ -662,12 +698,25 @@ impl Session {
             jump_pending: false,
         };
         r.tag("settings")?;
-        let settings = PlayerSettings {
+        let mut settings = PlayerSettings {
             sensitivity_index: r.num()?,
             fov_index: r.num()?,
             msaa_index: r.num()?,
             fullscreen: r.num()?,
+            ..default()
         };
+        r.tag("expedition")?;
+        let expedition = crate::expedition::Expedition {
+            completed: r.num()?,
+            carrying: r.num()?,
+            discovered: [r.num()?, r.num()?, r.num()?],
+            ..default()
+        };
+        if version == 5 {
+            r.tag("audio")?;
+            settings.volume_index = r.num()?;
+            settings.muted = r.num()?;
+        }
         if r.0.next().is_some() {
             return Err("Données supplémentaires inattendues".into());
         }
@@ -684,6 +733,7 @@ impl Session {
             construction,
             oxygen,
             base,
+            expedition,
             settings,
         };
         s.validate()?;
@@ -831,6 +881,7 @@ impl Session {
             );
         }
         self.buildings.publish_colliders(&mut terrain);
+        self.expedition.seed_site(&terrain, &self.buildings);
         self.oxygen.shelter = if self.pilot.mode == MovementMode::Surface {
             self.buildings.shelter_at(
                 terrain.body_relative(self.surface.feet),
@@ -864,9 +915,11 @@ impl Session {
         world.insert_resource(self.construction);
         world.insert_resource(self.oxygen);
         world.insert_resource(self.base);
+        world.insert_resource(self.expedition);
         world.insert_resource(crate::ui::inventory::InventoryScreen::default());
         world.insert_resource(self.settings);
         world.insert_resource(RenderOrigin(origin));
+        crate::audio::reset(world);
         world.insert_resource(NavigationRequest::default());
         if let Some(mut menu) = world.get_resource_mut::<MenuState>() {
             menu.loaded();
@@ -1089,6 +1142,7 @@ mod tests {
                 crate::camera::ExplorationPlugin,
                 crate::survival::SurvivalPlugin,
                 crate::construction::ConstructionPlugin,
+                crate::expedition::ExpeditionPlugin,
             ));
         app.world_mut().spawn((
             Window {
@@ -1374,6 +1428,44 @@ mod tests {
     }
 
     #[test]
+    fn audio_settings_roundtrip_read_p10_format4_and_refuse_invalid_without_mutation() {
+        let mut source = built();
+        source
+            .world_mut()
+            .resource_mut::<PlayerSettings>()
+            .volume_index = 4;
+        source.world_mut().resource_mut::<PlayerSettings>().muted = true;
+        let text = capture(&source);
+        assert!(text.starts_with("SOLAR_SURVIVAL 5\n"));
+        let mut target = app(true);
+        Session::decode(&text)
+            .unwrap()
+            .restore(target.world_mut())
+            .unwrap();
+        assert_eq!(capture(&target), text);
+        assert_eq!(target.world().resource::<PlayerSettings>().volume_index, 4);
+        assert!(target.world().resource::<PlayerSettings>().muted);
+        // Même schéma P10, sans la nouvelle ligne audio, checksum recalculé.
+        let old = resign(
+            &text
+                .replace("SOLAR_SURVIVAL 5", "SOLAR_SURVIVAL 4")
+                .replace("audio 4 true\n", ""),
+        );
+        let legacy = Session::decode(&old).unwrap();
+        assert_eq!(legacy.settings.audio_gain(), 0.5);
+        legacy.restore(target.world_mut()).unwrap();
+        let after = capture(&target);
+        let mut expected = Session::decode(&text).unwrap();
+        expected.settings.volume_index = 2;
+        expected.settings.muted = false;
+        assert_eq!(after, expected.encode());
+        for bad in ["audio 5 true", "audio 999 false", "audio 1 invalid"] {
+            let invalid = resign(&text.replace("audio 4 true", bad));
+            assert!(Session::decode(&invalid).is_err());
+            assert_eq!(capture(&target), after);
+        }
+    }
+    #[test]
     fn complete_session_roundtrip_after_construction_airborne_rebase_and_settings() {
         let mut source = built();
         prepare(&mut source, 64.1, 0.0);
@@ -1550,8 +1642,8 @@ mod tests {
         assert!(load(target.world_mut(), &folder.file()).is_err());
         for text in [
             String::from("incomplet"),
-            before.replace("SOLAR_SURVIVAL 3", "SOLAR_SURVIVAL 2"),
-            resign(&before.replace("SOLAR_SURVIVAL 3", "SOLAR_SURVIVAL 2")),
+            before.replace("SOLAR_SURVIVAL 5", "SOLAR_SURVIVAL 3"),
+            resign(&before.replace("SOLAR_SURVIVAL 5", "SOLAR_SURVIVAL 3")),
             resign(&before.replace("buildings 2 2", "buildings 999999999 2")),
             resign(&before.replace("oxygen ", "oxygen NaN ")),
             "x".repeat(MAX_BYTES as usize + 1),

@@ -1,0 +1,24 @@
+   Compiling alsa-sys v0.4.0
+   Compiling x11-dl v2.21.0
+    Checking alsa v0.11.0
+    Checking cpal v0.17.3
+    Checking rodio v0.22.2
+    Checking bevy_audio v0.19.1
+    Checking winit v0.30.13
+    Checking accesskit_winit v0.32.2
+    Checking bevy_winit v0.19.1
+    Checking bevy_internal v0.19.1
+    Checking bevy v0.19.1
+    Checking solar_survival v0.2.0 (/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL)
+error[E0596]: cannot borrow `*sink` as mutable, as it is behind a `&` reference
+   --> src/audio.rs:120:65
+    |
+120 |             if settings.is_changed() && let Some(sink) = sink { sink.set_volume(Volume::Linear(gain)); }
+    |                                                  ----           ^^^^ `sink` is a `&` reference, so it cannot be borrowed as mutable
+    |                                                  |
+    |                                                  consider changing this binding's type to be: `&mut bevy::bevy_audio::AudioSink`
+
+For more information about this error, try `rustc --explain E0596`.
+error: could not compile `solar_survival` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `solar_survival` (lib test) due to 1 previous error

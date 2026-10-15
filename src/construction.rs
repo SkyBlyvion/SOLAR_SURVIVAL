@@ -311,7 +311,8 @@ impl Plugin for ConstructionPlugin {
     clippy::too_many_arguments,
     reason = "Commandes et transaction de construction ECS P5."
 )]
-fn update(
+pub(crate) fn update(
+    mut commands: Commands,
     keys: Res<ButtonInput<KeyCode>>,
     time: Res<Time<Real>>,
     menu: Option<Res<MenuState>>,
@@ -368,18 +369,29 @@ fn update(
     if !c.active && keys.just_pressed(KeyCode::KeyE) {
         let feet = terrain.body_relative(state.feet);
         if let Some(i) = base.nearby(feet) {
-            c.message = match base.harvest(
+            let result = base.harvest(
                 i,
                 &mut c.inventory,
                 feet,
                 terrain.body_relative(state.eye(&terrain)),
                 &terrain,
-            ) {
+            );
+            commands.trigger(if result.is_ok() {
+                crate::audio::SoundCue::Harvest
+            } else {
+                crate::audio::SoundCue::Refused
+            });
+            c.message = match result {
                 Ok(_) => "Récolte renouvelable : +6 objets · renouvellement 30 s",
                 Err(reason) => reason,
             };
         } else {
-            c.harvest(&terrain, &state);
+            let success = c.harvest(&terrain, &state);
+            commands.trigger(if success {
+                crate::audio::SoundCue::Harvest
+            } else {
+                crate::audio::SoundCue::Refused
+            });
         }
     }
     if !c.active {
@@ -401,10 +413,15 @@ fn update(
         + (keys.pressed(KeyCode::KeyL) as i32 - keys.pressed(KeyCode::KeyJ) as i32) as f64 * dt)
         .rem_euclid(std::f64::consts::TAU);
     c.preview = Some(c.candidate(&terrain, &state, &buildings, &base));
-    if !started
-        && keys.just_pressed(KeyCode::Enter)
-        && let Err(reason) = c.confirm(&mut terrain, &state, &mut buildings, &base)
-    {
-        c.message = reason;
+    if !started && keys.just_pressed(KeyCode::Enter) {
+        let result = c.confirm(&mut terrain, &state, &mut buildings, &base);
+        commands.trigger(if result.is_ok() {
+            crate::audio::SoundCue::Built
+        } else {
+            crate::audio::SoundCue::Refused
+        });
+        if let Err(reason) = result {
+            c.message = reason;
+        }
     }
 }

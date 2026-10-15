@@ -1,3 +1,7 @@
+> P11 : écriture au format **5**, lecture P10/**4** conservée ; volume/muet et alertes. [Contrat courant audio](P11_AUDIO.md).
+
+> P10 : format courant 4, expéditions et progression par profil. Les formats 2/3 mentionnés ci-dessous sont historiques. [Contrat actuel](P10_EXPLORATION.md).
+
 > **Évolution P9, 15 octobre 2026 :** le [contrat courant](P9_BASE.md) remplace le stock simple et la recharge gratuite. Porté/coffres à piles, six recettes, sources durables, réserve O₂ et énergie finies, service à 40 m du premier abri ; format 3. Les sections P4/P5 ci-dessous décrivent leur fondation historique.
 
 # P4 : oxygène et abri de session

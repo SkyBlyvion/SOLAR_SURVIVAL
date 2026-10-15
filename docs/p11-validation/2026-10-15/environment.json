@@ -1,0 +1,11 @@
+{
+  "date": "2026-10-15",
+  "os": "Linux-7.0.0-34-generic-x86_64-with-glibc2.39",
+  "rust": "rustc 1.99.0 (b940084d7 2026-09-28)",
+  "cargo": "cargo 1.99.0 (5f94df478 2026-08-27)",
+  "head": "fec803ab5af60ea48516e75a0b88936535d08293",
+  "workspace": "P10 déjà modifié/non commité au départ, conservé ; P11 ajouté sans commit",
+  "audio_backend_tests": "aucun AudioPlugin/AudioOutput installé ; décodage CPU/ECS seulement",
+  "graphics": "aucun lancement, fenêtre, GPU ni focus",
+  "native_build_deps": "paquets Ubuntu pkgconf-bin/libpkgconf3/libasound2-dev extraits dans /tmp/solar-p11-build-deps/root ; env.sh local, aucun sudo réussi ni installation système"
+}

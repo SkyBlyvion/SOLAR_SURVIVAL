@@ -1,3 +1,7 @@
+> P11 : écriture au format **5**, lecture P10/**4** conservée ; volume/muet et alertes. [Contrat courant audio](P11_AUDIO.md).
+
+> P10 : format courant 4, expéditions et progression par profil. Les formats 2/3 mentionnés ci-dessous sont historiques. [Contrat actuel](P10_EXPLORATION.md).
+
 > P9 utilise désormais le format 3, sans migration. Les mentions de format 2 dans ce bilan décrivent la livraison P8. [Contrat courant](P9_BASE.md).
 
 # P8 — relief, horizon et atmosphère martienne

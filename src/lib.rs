@@ -1,9 +1,11 @@
 //! Solar Survival: la simulation SI/f64 reste indépendante des proxies graphiques.
+pub mod audio;
 pub mod base;
 pub mod buildings;
 pub mod camera;
 pub mod config;
 pub mod construction;
+pub mod expedition;
 pub mod inventory;
 pub mod persistence;
 pub mod physics;
@@ -44,9 +46,11 @@ impl Plugin for SolarSurvivalPlugin {
             camera::ExplorationPlugin,
             survival::SurvivalPlugin,
             construction::ConstructionPlugin,
+            expedition::ExpeditionPlugin,
             persistence::PersistencePlugin,
             rendering::SpaceRenderingPlugin,
             ui::HudPlugin,
+            audio::GameAudioPlugin,
         ));
     }
 }

@@ -1,0 +1,66 @@
+   Compiling num-traits v0.2.19
+   Compiling alsa-sys v0.4.0
+   Compiling x11-dl v2.21.0
+   Compiling dasp_sample v0.11.0
+   Compiling hound v3.5.1
+   Compiling alsa v0.11.0
+   Compiling half v2.7.1
+   Compiling rand_distr v0.6.0
+   Compiling bevy_math v0.19.1
+   Compiling naga v29.0.4
+   Compiling moxcms v0.8.1
+   Compiling euclid v0.22.14
+   Compiling guillotiere v0.6.2
+   Compiling image v0.25.10
+   Compiling bevy_transform v0.19.1
+   Compiling bevy_input v0.19.1
+   Compiling bevy_window v0.19.1
+   Compiling wgpu-naga-bridge v29.0.4
+   Compiling bevy_color v0.19.1
+   Compiling bevy_image v0.19.1
+   Compiling bevy_mesh v0.19.1
+   Compiling ordered-float v5.5.0
+   Compiling wgpu-hal v29.0.4
+   Compiling bevy_camera v0.19.1
+   Compiling wgpu-core-deps-windows-linux-android v29.0.4
+   Compiling naga_oil v0.22.0
+   Compiling bevy_shader v0.19.1
+   Compiling wgpu-core v29.0.4
+   Compiling wgpu v29.0.4
+   Compiling bevy_material v0.19.1
+   Compiling bevy_render v0.19.1
+   Compiling bevy_light v0.19.1
+   Compiling bevy_text v0.19.1
+   Compiling num-integer v0.1.47
+   Compiling num-bigint v0.4.8
+   Compiling bevy_sprite v0.19.1
+   Compiling bevy_core_pipeline v0.19.1
+   Compiling bevy_input_focus v0.19.1
+   Compiling num-rational v0.4.2
+   Compiling winit v0.30.13
+   Compiling cpal v0.17.3
+   Compiling rodio v0.22.2
+   Compiling bevy_sprite_render v0.19.1
+   Compiling accesskit_winit v0.32.2
+   Compiling bevy_ui v0.19.1
+   Compiling approx v0.5.1
+   Compiling bevy_winit v0.19.1
+   Compiling bevy_ui_render v0.19.1
+   Compiling bevy_audio v0.19.1
+   Compiling bevy_post_process v0.19.1
+   Compiling bevy_pbr v0.19.1
+   Compiling bevy_internal v0.19.1
+   Compiling bevy v0.19.1
+   Compiling solar_survival v0.2.0 (/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL)
+error[E0599]: no method named `is_changed` found for struct `Single<'_, '_, &Window, With<PrimaryWindow>>` in the current scope
+   --> src/ui/menu.rs:506:20
+    |
+506 |         && !window.is_changed()
+    |                    ^^^^^^^^^^ method not found in `Single<'_, '_, &Window, With<PrimaryWindow>>`
+    |
+    = note: the full name for the type has been written to '/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/target/debug/deps/solar_survival-67fc4e4969e1b2c2.long-type-13705635047079109288.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+For more information about this error, try `rustc --explain E0599`.
+error: could not compile `solar_survival` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...

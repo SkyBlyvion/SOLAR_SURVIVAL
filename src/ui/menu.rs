@@ -64,6 +64,8 @@ pub struct PlayerSettings {
     pub(crate) fov_index: usize,
     pub(crate) msaa_index: usize,
     pub(crate) fullscreen: bool,
+    pub(crate) volume_index: usize,
+    pub(crate) muted: bool,
 }
 impl Default for PlayerSettings {
     fn default() -> Self {
@@ -72,6 +74,8 @@ impl Default for PlayerSettings {
             fov_index: 1,
             msaa_index: 2,
             fullscreen: false,
+            volume_index: 2,
+            muted: false,
         }
     }
 }
@@ -81,6 +85,13 @@ impl PlayerSettings {
     }
     pub fn fov_degrees(&self) -> f32 {
         [55.0, 65.0, 75.0, 90.0][self.fov_index]
+    }
+    pub fn audio_gain(&self) -> f32 {
+        if self.muted {
+            0.0
+        } else {
+            [0.0, 0.25, 0.5, 0.75, 1.0][self.volume_index]
+        }
     }
     fn msaa(&self) -> Msaa {
         [Msaa::Off, Msaa::Sample2, Msaa::Sample4][self.msaa_index]
@@ -114,6 +125,8 @@ enum MenuAction {
     Fov,
     Msaa,
     Fullscreen,
+    Volume,
+    Mute,
     Reset,
     Save,
     Load,
@@ -218,12 +231,12 @@ fn setup(mut commands: Commands, assets: Res<AssetServer>) {
                             }
                             Screen::Options=>{
                                 heading(panel,"Options",&font);
-                                for action in [MenuAction::Sensitivity,MenuAction::Fov,MenuAction::Msaa,MenuAction::Fullscreen,MenuAction::Reset,MenuAction::Back] {button(panel,action,&font);}
+                                for action in [MenuAction::Sensitivity,MenuAction::Fov,MenuAction::Msaa,MenuAction::Fullscreen,MenuAction::Volume,MenuAction::Mute,MenuAction::Reset,MenuAction::Back] {button(panel,action,&font);}
                                 description(panel,"Cliquez pour changer une valeur.\nCes réglages sont inclus dans les sauvegardes.",&font);
                             }
                             Screen::Credits=>{
                                 heading(panel,"Crédits",&font);
-                                description(panel,"Solar Survival · Rust / Bevy · licence MIT\n\nChef de projet et orchestrateur : SkyBlyvion\n\nMoteur : Bevy (MIT / Apache-2.0)\nPlanètes : NASA / JPL-Caltech / VTAD\nTerre : NASA Earth Observatory / Blue Marble\nNeptune : Don Davis & JPL/Caltech\nPolice : DejaVu Sans\n\nDéveloppement assisté par OpenAI Codex.\nSol : ImageGen, interprétation artistique.\nSources et conditions : assets/textures/CREDITS.md",&font);
+                                description(panel,"Solar Survival · Rust / Bevy · licence MIT\n\nChef de projet et orchestrateur : SkyBlyvion\n\nMoteur : Bevy (MIT / Apache-2.0)\nPlanètes : NASA / JPL-Caltech / VTAD\nTerre : NASA Earth Observatory / Blue Marble\nNeptune : Don Davis & JPL/Caltech\nPolice : DejaVu Sans\n\nDéveloppement assisté par OpenAI Codex.\nSol : ImageGen, interprétation artistique.\nSignaux audio : synthèse originale, licence MIT.\nSources : assets/textures et assets/audio/CREDITS.md",&font);
                                 button(panel,MenuAction::Back,&font);
                             }
                             Screen::Playing=>unreachable!(),
@@ -335,12 +348,15 @@ fn action(
         MenuAction::Fov => settings.fov_index = (settings.fov_index + 1) % 4,
         MenuAction::Msaa => settings.msaa_index = (settings.msaa_index + 1) % 3,
         MenuAction::Fullscreen => settings.fullscreen = !settings.fullscreen,
+        MenuAction::Volume => settings.volume_index = (settings.volume_index + 1) % 5,
+        MenuAction::Mute => settings.muted = !settings.muted,
         MenuAction::Reset => *settings = PlayerSettings::default(),
         MenuAction::Quit => {}
     }
 }
 #[expect(clippy::too_many_arguments, reason = "Menu, profils et options ECS.")]
 fn input(
+    mut commands: Commands,
     keys: Res<ButtonInput<KeyCode>>,
     pilot: Res<Explorer>,
     construction: Option<Res<crate::construction::Construction>>,
@@ -385,6 +401,7 @@ fn input(
     };
     if let Some(a) = shortcut {
         action(a, &mut state, &mut settings, persistence.as_deref_mut());
+        commands.trigger(crate::audio::SoundCue::Ui);
     }
     for (interaction, a, mut color) in &mut interactions {
         color.0 = match interaction {
@@ -400,6 +417,8 @@ fn input(
             | MenuAction::Fov
             | MenuAction::Msaa
             | MenuAction::Fullscreen
+            | MenuAction::Volume
+            | MenuAction::Mute
             | MenuAction::Reset => Screen::Options,
             MenuAction::Create => Screen::NewAdventure,
             MenuAction::Choose(_)
@@ -416,6 +435,7 @@ fn input(
             exit.write(AppExit::Success);
         } else {
             action(*a, &mut state, &mut settings, persistence.as_deref_mut());
+            commands.trigger(crate::audio::SoundCue::Ui);
         }
     }
 }
@@ -471,7 +491,7 @@ fn display(
             Without<DraftText>,
         ),
     >,
-    window: Single<&Window, With<PrimaryWindow>>,
+    window: Single<Ref<Window>, With<PrimaryWindow>>,
 ) {
     let (entity, mut node) = root.into_inner();
     commands.entity(entity).insert(UiTargetCamera(*camera));
@@ -483,6 +503,7 @@ fn display(
     if !state.is_changed()
         && !settings.is_changed()
         && !persistence.as_ref().is_some_and(|p| p.is_changed())
+        && !window.is_changed()
     {
         return;
     }
@@ -526,6 +547,16 @@ fn display(
             });
     }
     for (a, mut node, mut border) in &mut buttons {
+        node.padding = UiRect::axes(
+            px(18),
+            px(
+                if state.screen == Screen::Options && window.height() < 800.0 {
+                    8.0
+                } else {
+                    13.0
+                },
+            ),
+        );
         node.display = if (*a == MenuAction::Play && !state.started)
             || (*a == MenuAction::Save && c.is_none_or(|c| c.active_profile.is_none()))
         {
@@ -573,6 +604,8 @@ fn display(
                 "Anticrénelage MSAA : {}",
                 ["désactivé", "×2", "×4"][settings.msaa_index]
             ),
+            MenuAction::Volume => format!("Volume sonore : {} %", settings.volume_index * 25),
+            MenuAction::Mute => format!("Son : {}", if settings.muted { "muet" } else { "activé" }),
             MenuAction::Fullscreen => format!(
                 "Affichage : {}",
                 if settings.fullscreen {
@@ -835,11 +868,30 @@ mod tests {
         );
     }
     #[test]
+    fn audio_options_cycle_mute_remembers_volume_and_reset_restores_defaults() {
+        let mut app = app();
+        click(&mut app, MenuAction::Options);
+        assert_eq!(app.world().resource::<PlayerSettings>().audio_gain(), 0.5);
+        click(&mut app, MenuAction::Volume);
+        assert_eq!(app.world().resource::<PlayerSettings>().audio_gain(), 0.75);
+        click(&mut app, MenuAction::Mute);
+        assert_eq!(app.world().resource::<PlayerSettings>().audio_gain(), 0.0);
+        click(&mut app, MenuAction::Volume);
+        click(&mut app, MenuAction::Mute);
+        assert_eq!(app.world().resource::<PlayerSettings>().audio_gain(), 1.0);
+        click(&mut app, MenuAction::Volume);
+        assert_eq!(app.world().resource::<PlayerSettings>().audio_gain(), 0.0);
+        click(&mut app, MenuAction::Reset);
+        assert_eq!(app.world().resource::<PlayerSettings>().audio_gain(), 0.5);
+        assert!(!app.world().resource::<PlayerSettings>().muted);
+    }
+    #[test]
     fn named_adventures_from_menu_text_input_and_profile_browser() {
         let mut app = app();
         app.add_plugins((
             crate::survival::SurvivalPlugin,
             crate::construction::ConstructionPlugin,
+            crate::expedition::ExpeditionPlugin,
             crate::persistence::PersistencePlugin,
         ));
         app.world_mut().resource_mut::<MenuState>().started = false;
