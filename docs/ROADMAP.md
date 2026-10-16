@@ -1,8 +1,108 @@
 # Roadmap Solar Survival
 
-Le projet avance par étapes vérifiables vers une boucle de survie sur Mars, en préservant l'exploration spatiale et l'échelle physique 1:1. Cette roadmap est la référence pour choisir le travail du prochain chat. Les dates de livraison dépendront des résultats ; les étapes futures ne sont pas des fonctionnalités déjà réalisées.
+Dernière mise à jour : **16 octobre 2026**. Cette page distingue la direction
+actuelle du jeu, les étapes à construire et les livraisons historiques.
 
-Dernière mise à jour : 15 octobre 2026. Objectif **Mars traversable sur ses six faces avec chargement dynamique réalisé sur Ubuntu**. **P4, première boucle de survie jouable, terminé sur Ubuntu**. **P5, ressources et construction du même abri, réalisé sur Ubuntu**. **Phase moteur planétaire terminée sur Ubuntu** : LOD de résolution 32/16/8, index local, régressions/inspection et comparaisons CPU/GPU réalisés. **Caméra de jeu unique et ciel astronomique léger réalisés sur Ubuntu**, avec reprise visuelle après retour utilisateur. **Le MVP fonctionnel P1–P6 est réalisé sur Ubuntu** : plusieurs aventures nommées, répertoires indépendants, menu principal, catalogue de construction et HUD communs. La validation native Windows 11 reste ouverte comme travail transversal de distribution. **P7, qualité visuelle et textures, est clôturé sur Ubuntu le 15 octobre 2026**, avec huit planètes, matériaux locaux, profils/archive et mesures contrôlés. P8 est réalisé et vérifié sur Ubuntu : relief mondial artistique, paysage lointain et atmosphère dynamique demandée par l’utilisateur. P9, base et progression de survie avec inventaire et stockage, est livré et validé fonctionnellement sur Ubuntu le 15 octobre ; sa comparaison de performance est reportée à la demande utilisateur pour ne plus interrompre son travail. P10 est implémenté avec trois expéditions locales et sauvegarde format4. P11 ajoute les sons, alertes O₂, volume/muet et format5 avec lecture4 conservée ; 159 tests CPU/ECS réussissent, écoute, inspection graphique et mesures restent ouvertes sans créneau autorisé. À la demande explicite de l’utilisateur, le cadrage d’une chaîne fixe P3.5 est remplacé par cette fonctionnalité complète. P3.1 à P3.4 restent les fondations et régressions. P12 intègre 26 commandes remappables et le format6, avec lecture4/5 ; 165 tests CPU/ECS passent, menus/audio/archive ont des preuves ciblées. Les validations sont désormais arrêtées à la demande utilisateur, sans répéter la passe d’expédition. La passation détaillée est dans [NEXT_CHAT](NEXT_CHAT.md), les résultats dans [VALIDATION](VALIDATION.md).
+## Direction actuelle : construire le jeu autour des fondations
+
+Retour utilisateur du16octobre : le jeu paraît très simple, sa boucle est
+insuffisante et l’ensemble ressemble à un test. Ce retour réoriente la roadmap.
+**P1–P12 ont construit un prototype technique jouable ; la première expérience de
+survie complète reste à livrer.** Les critères techniques déjà réussis restent
+acquis dans leur périmètre, sans constituer une validation du plaisir de jeu.
+
+La direction est précisée par l’utilisateur : **un jeu comparable dans son
+principe à Planet Crafter**, avec plusieurs matériaux à récolter, des bâtiments
+à poser et des machines qui produisent. La progression de la base devient le
+centre du jeu ; les sorties permettent de l’approvisionner et de la développer.
+
+Boucle centrale : **récolter → fabriquer → construire → alimenter → produire →
+améliorer → explorer plus loin**. La barre rapide d’outils et la pose de machines
+à l’intérieur comme à l’extérieur sont des besoins explicites du premier périmètre.
+
+## Prochaine étape : P13 — outils, construction et première production
+
+**État : liste de travail définie, non implémenté.**
+[Liste complète et critères](P13_GAMEPLAY.md). Ce contrat est le document de travail
+unique des ajouts/modifications ; les tests déjà reportés restent dans leur
+checklist séparée, sans lancer une nouvelle campagne.
+
+Trois lots jouables, à livrer dans cet ordre :
+
+1. **Outils/inventaire :** barre rapide8 cases, affectation/sélection remappable,
+   outils de récolte/construction, cinq matériaux distincts et inventaire adapté.
+2. **Construction/aménagement :** catalogue par catégories, fondations et atelier,
+   vrais supports de plancher, machines posées dedans/dehors, accès et démontage.
+3. **Production/progression :** établi, four, extracteur, stocks/recettes/énergie,
+   productionO₂ depuis une ressource, amélioration d’autonomie et déblocages.
+
+Le premier résultat complet est une base dont les machines produisent les
+composants utilisés pour la développer. L’ancienne proposition d’un chapitre
+principal « réparer la liaison de secours en30–45min » est remplacée par cette
+progression ; une réparation pourra devenir une activité secondaire plus tard.
+
+## Suite de développement retenue
+
+P13 est la priorité. La suite est ajustable selon le jeu obtenu ; ce sont des
+objectifs de développement, sans fonctionnalité annoncée comme déjà réalisée.
+
+| Étape | Apport pour le joueur | Critère de sortie |
+|---|---|---|
+| **P13 — première base productive** | Outils rapides, collecte variée, bâtiments et machines dedans/dehors | Récolte → fabrication → pose → alimentation → production → amélioration dans une partie neuve, reprise persistante et aucune duplication |
+| **P14 — habitat et fabrication avancée** | Aménager/agrandir sa base et automatiser davantage de recettes | Modules connectables, postes spécialisés, assembleur, plusieurs usages des matériaux et améliorations qui ouvrent des possibilités |
+| **P15 — transformation planétaire** | Donner un objectif durable à la production | Cadrage puis premiers producteurs/indicateurs, déblocages et effets visibles graduels ; conventions de terraformation distinguées de la physique scientifique |
+| **P16 — exploration et rover** | Chercher des matériaux et établir des avant-postes | Lieux/ressources différenciés, découverte/navigation, transport et sorties utiles au-delà du rayon initial |
+| **P17 — logistique et gestion de base** | Organiser la circulation et les priorités de production | Transferts choisis, alimentation, maintenance/météo et pénuries lisibles ; réseaux ajoutés pour un usage réel |
+| **P18 — alpha martienne** | Une progression de survie/construction cohérente | Contenu et économie éprouvés en partie, prise en main, présentation, sauvegardes, distribution Ubuntu/Windows et performances sur cible |
+
+La transformation planétaire est une direction de conception à préciser à partir
+de la référence utilisateur ; son modèle détaillé n’est pas encore arrêté.
+**Après l’alpha : progression spatiale**, avec un premier voyage utile et un
+second monde. Le catalogue et la caméra libre ne constituent pas déjà un système
+de vol. Ni planète entière détaillée d’avance, ni climat scientifique complet,
+ni calendrier de livraison promis.
+
+## Méthode pour avancer plus vite
+
+Demande utilisateur explicite : avancer beaucoup plus vite. Livrer des lots qui
+changent le vrai jeu, avec interactions, interface et persistance ensemble.
+Réutiliser les fondations ; pas de moteur générique ou de document de conception
+supplémentaire sans besoin. La liste P13 sert directement à suivre l’exécution.
+Regrouper les contrôles requis à la fin d’un lot cohérent ; après correction,
+cibler le défaut observé. Ne pas rejouer les campagnes historiques à chaque ajout,
+ne pas multiplier captures/archives/benchmarks sans question concrète à résoudre.
+Les critères de fiabilité restent nécessaires ; aucun gain de vitesse n’est
+annoncé comme mesuré par ce changement de méthode.
+
+## Règles de priorité et validation
+
+- Favoriser les changements dont l’effet se voit dans une partie : une raison de
+  sortir, une décision, un obstacle, une amélioration et une conséquence.
+- Les outils, le moteur, les graphismes et le son servent ces besoins. Ne pas
+  ouvrir une nouvelle phase technique sans problème concret observé.
+- Ne pas confondre nombre de tests, conformité technique, durée de contenu et
+  intérêt du jeu. Aucune étape à venir n’est validée par le présent cadrage.
+- Conserver les contraintes de performance et la compatibilité Ubuntu/Windows
+  tout au long des étapes ; P18 ne reporte pas les corrections nécessaires avant.
+- Respecter l’arrêt des revalidations répétées demandé par l’utilisateur : pas de
+  campagne automatique pour solder la checklist, pas de répétition de la passe
+  d’expédition. Pour du code significatif, regrouper les vérifications nécessaires
+  sur une version cohérente et cibler les retours en cas de défaut.
+
+P12 est intégré, ses deux derniers rappels corrigés et le démarrage `cargo run`
+réparé sur le poste Ubuntu. Les limites de performance, d’écoute subjective,
+Windows et matériel cible restent consignées dans [VALIDATION](VALIDATION.md).
+Ce chat réoriente les documents ; il n’implémente pas P13 et ne lance aucun test.
+La passation opérationnelle est dans [NEXT_CHAT](NEXT_CHAT.md).
+
+---
+
+## Historique des fondations et décisions P1–P12
+
+Les sections ci-dessous retracent les livraisons et les décisions à leur date.
+Leurs formulations « prochaine étape », « MVP » et « boucle complète » décrivent
+ces anciens périmètres techniques. **La direction et l’ordre actuels sont ceux
+des sections P13–P18 ci-dessus, révisées après la précision Planet Crafter.**
 
 ## Fondations réalisées
 
@@ -34,8 +134,8 @@ Les étapes suivantes décrivent l’ordre de travail retenu pour la reprise ; l
 | **P7 Qualité visuelle et textures** | **Réalisé et vérifié sur Ubuntu, 15 octobre 2026** | Première scène martienne aboutie : sol poussière/roche, abri et caisses avec matériaux cohérents ; cartes sourcées des huit planètes pour les vues spatiales | Détails à échelle métrique, textures stables aux rebasages/raccords, portes/ressources lisibles, jour/nuit/placement inspectés, crédits et conversion reproductible, budget textures et mesures avant/après, gameplay/profils conservés |
 | **P8 Relief, horizons et atmosphère** | **Réalisé et vérifié sur Ubuntu, 15 octobre 2026** | Relief artistique jouable, paysage à plusieurs kilomètres ; ciel ocre/halo bleu/nuit étoilée, voiles de glace et poussière/tempêtes dynamiques | Terrain/contacts communs, raccords/LOD/rebasages, construction/survie et nouveaux profils vérifiés ; cache borné, mesures CPU/GPU et inspection. Sources et conventions distinguées. Format 2, sans migration des anciennes aventures, à la demande utilisateur du 15 octobre |
 | **P9 Base, inventaire et progression de survie** | Livré et validé fonctionnellement sur Ubuntu ; mesures de performance reportées à la demande utilisateur | Panneaux solaires, batteries, production/réserve d’oxygène, récolte durable, inventaire porté et coffres de base, interface et sauvegarde ; [cadrage](P9_BASE.md) | Boucle récolter→transporter→stocker/transférer→construire→produire→recharger ; piles/capacités bornées, transferts sans perte/duplication, accès local, recettes et coûts explicites, effet jour/nuit/tempête, réserves et contenus persistés par profil ; pas de migration ancienne requise pour le moment |
-| **P10 Exploration et objectifs** | Implémenté, validé en CPU/ECS ; inspection graphique ouverte | Trois balises progressives à 120/240/360 m, relevé F, retour au premier abri, récompense unique, cap/distance et progression par profil ; [contrat](P10_EXPLORATION.md) | Trois vrais allers-retours au sol et risques/récompenses testés ; profils et refus transactionnels vérifiés, format 4 sans migration. Lisibilité/esthétique, lancement archive et coût GPU à vérifier dans un créneau explicite |
-| **P11 Audio et alertes de jeu** | Implémenté, 159 tests CPU/ECS ; écoute et inspection ouvertes | Onze signaux de combinaison/interface, alertes O₂, volume/muet et profils 5 avec lecture 4 ; [contrat](P11_AUDIO.md) | Transactions et alertes en secondes réelles, ressources bornées, options et reprise vérifiées sans bureau ; écoute Ubuntu/Windows et inspection des options à la campagne groupée |
+| **P10 Exploration et objectifs** | Implémenté ; CPU/ECS et une passe graphique contrôlés, campagne ensuite arrêtée | Trois balises progressives à 120/240/360 m, relevé F, retour au premier abri, récompense unique, cap/distance et progression par profil ; [contrat](P10_EXPLORATION.md) | Trois vrais allers-retours au sol et risques/récompenses testés ; profils et refus transactionnels vérifiés, format 4 sans migration. Lisibilité/esthétique, lancement archive et coût GPU à vérifier dans un créneau explicite |
+| **P11 Audio et alertes de jeu** | Implémenté ; backend/options et capture numérique contrôlés, confort sonore subjectif ouvert | Onze signaux de combinaison/interface, alertes O₂, volume/muet et profils 5 avec lecture 4 ; [contrat](P11_AUDIO.md) | Transactions et alertes en secondes réelles, ressources bornées, options et reprise vérifiées sans bureau ; écoute Ubuntu/Windows et inspection des options à la campagne groupée |
 | **P12 Ergonomie et commandes remappables** | Intégré ; 165 tests CPU/ECS, campagne arrêtée à la demande utilisateur | 26 commandes, écran paginé, conflits/annulation/reset, aides dynamiques, profils 6 avec lecture 4/5 ; [contrat](P12_CONTROLS.md) | Navigation et actions remappées, barrières des menus, persistance transactionnelle, interface 720p/900p et archive testées ; résultats/limites de la campagne consignés |
 
 **Transversal à chaque étape :** ergonomie et retours utilisateur, sons utiles/retours d’action puis ambiance, remappage/accessibilité selon les besoins, stabilité et temps de chargement, compatibilité des sauvegardes et distribution Ubuntu/Windows. La première passe audio sera une fonctionnalité concrète avec ressources et réglages, pas l’activation d’une dépendance sans contenu. Relever et tester la cible RTX 4050/Core i5 avant d’annoncer une qualité ou 60 FPS.
@@ -474,5 +574,40 @@ relance automatique**, y compris pour les cases ouvertes ou les références P8
 en échec. Menus720p/900p, sauvegardes/redémarrage, backend audio réel et absent,
 archive extraite et entrées natives sont contrôlés. Comparaisons de performance,
 charge64 équipements, confort sonore, Windows/cible et quelques variantes restent
-ouverts. Deux rappels secondaires de construction conservent E/B par défaut.
+ouverts. Les deux rappels secondaires encore fixes au 15 octobre sont corrigés
+dans les sources le 16 octobre, sans relancer la campagne.
 Aucun jeu ou benchmark laissé actif.
+
+
+## P12 — reprise ciblée du 16 octobre 2026
+
+À la demande « reprends », correction des deux aides restantes : distance de
+caisse et rappel du catalogue affichent les affectations de récolte/construction,
+via les marqueurs existants. Périmètre limité à deux chaînes ; aucune commande,
+sauvegarde, dépendance ou règle de jeu modifiée. Critère des deux rappels corrigé
+dans les sources ; les validations graphiques antérieures ne sont pas réattribuées
+à ce diff. Aucun test Cargo, build, jeu, benchmark ou trajet d’expédition relancé.
+Diff contrôlé ; l’archive du 15 octobre conserve le build antérieur. Les mesures
+incomplètes et validations Windows/cible restent ouvertes, sans relance automatique.
+
+
+### Contrôle rapide demandé le 16 octobre
+
+Après la retouche, l’utilisateur demande explicitement de lancer le jeu.
+Un build dev optimisé puis un lancement normal suffisent : Mars/HUD/menu inspectés,
+rappelsK/Y corrects, aucun diagnostic observé. Jeu laissé ouvert sur une copie de
+profil d’essai, menu et souris libres. Aucun trajet d’expédition, benchmark ou
+suite de tests répété. Ce contrôle ciblé clôt l’inspection des deux rappels ; il
+ne rouvre pas la campagne groupée. [Résultat](VALIDATION.md).
+
+
+### Démarrage Cargo réparé sur le poste — 16 octobre
+
+Après signalement utilisateur, échec `cargo run` reproduit : fichiers de
+compilation ALSA absents du système, précédent lancement dépendant de `/tmp`.
+Paquet de développement Ubuntu correspondant au runtime extrait dans
+`.local-deps/` ignoré, chemin pkg-config ciblé dans la configuration Cargo.
+Critère de démarrage depuis le terminal rétabli : `cargo run --locked` compile
+puis affiche le jeu, sans environnement temporaire ni scénario de validation.
+Une seule vérification du démarrage, aucune suite/expédition relancée.
+Jeu laissé actif ; archive/release antérieure et limites Windows/cible inchangées.

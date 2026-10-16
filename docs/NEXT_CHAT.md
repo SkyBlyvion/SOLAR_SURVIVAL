@@ -1,115 +1,147 @@
-# Prochain chat Solar Survival — P12 intégré, validations arrêtées
+# Prochain chat Solar Survival — P13, outils et base productive
 
-Mise à jour : **15 octobre 2026**. Chef de projet : **SkyBlyvion**.
-
-## Consignes utilisateur prioritaires
-
-**Ne plus lancer de tests, de benchmark ou de campagne pour compléter les cases.**
-L’utilisateur avait autorisé la main sur le poste et toutes les validations en
-attente, puis a précisé « ne refais pas la passe d’expédition, c’est trop long »,
-et enfin « arrête de revalider […] les mêmes tests ». Cette dernière consigne
-arrête les validations. La passe graphique unique des trois trajets a réussi et
-n’a pas été répétée. Les résultats ouverts ne donnent aucune autorisation de
-relance. Aucun jeu, benchmark ou enregistrement n’est laissé actif.
+Mise à jour : **16 octobre 2026**. Chef de projet : **SkyBlyvion**.
 
 ## Prompt autonome
 
 Nous poursuivons Solar Survival dans `/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL`.
-Lire AGENTS.md, README.md, ROADMAP.md, cette passation, ASTRONOMY.md,
-TESTS_A_REALISER.md, P12_CONTROLS.md, P11_AUDIO.md, PERSISTENCE.md et les premières
-sections de VALIDATION.md/PERFORMANCE.md ; détails dans
-`docs/p12-validation/2026-10-15/NOTES.md` et
-`docs/validation-groupee/2026-10-15/NOTES.md`.
-Examiner Git : départ de ce chat propre à `ecc711c` (P11), P12 et la campagne sont
-maintenant présents dans le workspace **non commité**. Aucun commit demandé/créé.
-Préserver les changements et preuves ; ne pas attribuer les anciens travaux à P12.
+Lire AGENTS.md, README.md, ROADMAP.md, cette passation, P12_CONTROLS.md,
+P13_GAMEPLAY.md et les premières sections de VALIDATION.md. Lire ASTRONOMY.md
+avant toute modification physique/astronomique et consulter les contrats du
+domaine concerné.
 
-**Objectif suivant : suivre la nouvelle demande de SkyBlyvion, sans relancer de
-validation par défaut. P13 n’est pas défini.** Si une prochaine demande porte
-sur les commandes, deux aides secondaires restent à corriger : dans
-`src/ui/construction.rs`, distance de caisse (~ligne220, « E à moins… ») et rappel
-de catalogue (~ligne226, « B : construction ») n’utilisent pas encore les marqueurs
-de touches. Cette limite est documentée ; elle n’a pas été modifiée après l’arrêt.
-Ne pas transformer cette passation en ordre de relancer une campagne ou un trajet.
+Examiner Git avant d’éditer. La reprise partait du dépôt propre à **808ed4d**
+(titre « p11 », contenant aussi P12 et sa campagne). Ce chat laisse des
+modifications **non commitées**, sans commit demandé : deux aides de construction,
+configuration Cargo/ignore, README, documents et preuves du 16 octobre, puis
+réorientation de la roadmap et nouveau contrat P13_GAMEPLAY.md.
+Préserver tous les changements et les anciennes preuves.
 
-## État réel P12
+**Objectif suivant : implémenter le lot A de P13, puis B et C.** La liste de
+travail est désormais **P13_GAMEPLAY.md** ; ne pas recommencer une phase de cadrage
+ni créer une nouvelle liste. Ce chat a actualisé les documents, **sans coder P13**.
 
-- `controls.rs` : 26 commandes physiques, table de touches admissibles/ids disque
-  explicites, conflits refusés sans mutation, modificateurs gauche/droite liés.
-  Menus, chiffres0–9, flèches, Entrée/Échap, F5/F9/F12, molette et souris fixes.
-- Options → Commandes : cinq pages, six lignes maximum, saisie/annulation/reset,
-  nom de la commande en conflit. QWERTY/AZERTY indiqués pour les positions qui
-  diffèrent. Pas de combos, manette ou remappage de souris ajouté.
-- `GameplayKeys` traduit une fois les entrées brutes après le menu, avant
-  inventaire/caméra. Navigation espace/surface, construction, inventaire,
-  expéditions et HUD utilisent cette vue. Touches maintenues dans un menu
-  bloquées jusqu’au relâchement. Champs de nom et menus restent sur le brut.
-- Aides par marqueurs `<key:KeyF>` et petit cache des modèles statiques, nettoyé
-  des entités retirées après Interface. Deux rappels E/B encore fixes, ci-dessus.
-- **Écriture format6 ; lecture4/5/6.** Affectations dans PlayerSettings par
-  aventure ;4/5 utilisent les commandes par défaut. Ancien binaire P10/P11 ne lit
-  pas6. Formats1/2/3 toujours refusés sans supprimer les fichiers. Validation du
-  nombre, des ids et de l’unicité avant publication ; checksum/secours conservés.
-- Aucun ajout de dépendance, de physique ou d’astronomie. Bevy exactement0.19.1,
-  Rust stable2024, Cargo.lock inchangé ; main.rs inchangé.
+Dernières précisions utilisateur : s’inspirer du principe de Planet Crafter,
+récolter plusieurs matériaux, construire des bâtiments et machines productives,
+ajouter une barre rapide pour les outils, enrichir B, poser les machines dans
+les bâtiments comme dehors. Il demande une grande liste d’ajouts/modifications
+et d’avancer beaucoup plus vite. Ces demandes remplacent la proposition antérieure
+centrée sur trois lieux et une liaison de secours à réparer.
 
-## Résultats acquis et limites
+Boucle : récolter → fabriquer → construire → alimenter → produire → améliorer
+→ explorer plus loin. Le but du premier palier est une base productive qui sert
+son propre développement ; aucune fin arbitraire après trois balises.
 
-**165 tests CPU/ECS**, fmt/check all-targets, Clippy -D warnings, release et
-compilation release du diagnostic réussis **avant l’arrêt**. Aucun nouveau test
-relancé après. Les erreurs intermédiaires de compilation/fixtures/Clippy ont été
-corrigées et leurs journaux conservés.
+Suivre les trois lots de **P13_GAMEPLAY.md**, avec interface et sauvegarde ensemble :
 
-- Une seule passe graphique au sol des trois expéditions avec C/V :268,660s,
-  code0,21captures,36alliage/18circuits. Entrées ECS et visée automatique ; pas
-  une partie humaine. Rebasages/patches et recharge contrôlés.
-- Options/commandes720p/900p, conflits/pages, aides, inventaire/catalogue et cas
-  ciblés : sortie0. Sites futurs/hors portée, murs/autre abri, rapport sans O₂
-  de base, sorties, épuisement/R, jour/crépuscules/nuit/tempête contrôlés selon
-  les assertions. Les cas préparés réinstallent aussi les obstacles du site ;
-  ne pas les confondre avec les trajets non repositionnés.
-- Deux processus : données en cours et C/V restaurés, rapport unique après retour
-  préparé à l’abri. Archive803 fichiers/11WAV vérifiée et lancée hors checkout/CWD
-  extérieur ; P9 base/profils116,403s+26,472s,deux codes0,36captures inspectées.
-  Entrées natives XTest sur l’archive,sortie0,progression/stock/touches conservés
-  après rapport déjà payé. Pas de nouveau trajet d’expédition.
-- Backend audio réel avec AudioSink ; onze motifs demandés, faible5,020s et
-  critique1,507s. Sortie du jeu seule enregistrée (pas de microphone/autres apps),
-  13,78s,22050Hz,crête0,0982,aucun échantillon écrêté. pw-record interrompu
-  volontairement par SIGINT/code1,WAV lisible ; aucune écoute subjective validée.
-- Absence de périphérique limitée à l’environnement ALSA du seul processus :
-  avertissement attendu,57,153s,code0,pic5 lecteurs/0sink,expiration sans accumulation.
--101captures produites, inspection ciblée et quatre planches P9 ; pas101 vues
-  individuellement approuvées. Aucun aval esthétique/sonore de l’utilisateur.
-- **Performances non comparées** : deux références P8 en échec avant export,
-  8,608s puis26,424s. La seconde passe la collecte et échoue au placement ; cause
-  complète non établie. Le scénario64 équipements/audio activé-muet est préparé
-  mais non exécuté. VRAM totale/staging, Windows11 natif, RTX4050/CPU cible exact
-  et1080p60 restent ouverts. Ne pas relancer ces essais sans nouvelle demande.
+1. **A — outils/inventaire :** barre rapide8 cases liée aux vrais objets,
+   sélection remappable, outil de récolte/construction, inventaire adapté et cinq
+   ressources proposées (fer/titane/silice/cobalt/glace), dépôts persistants.
+2. **B — construction/aménagement :** catégories, fondations, atelier,
+   établi/four/extracteur, support terrain/plancher, accès, déplacement/démontage.
+3. **C — production :** recettes, entrées/sorties/cycles alimentés, budgets
+   énergétiques, composants utilisables, premier palier d’autonomie/déblocages.
 
-Archive : `dist/solar-survival-ubuntu-p12.tar.gz`,SHA256
-`1506af817db4cc20f41e8b34b040c0dfab9e41ca98fa4e6adcfc5262ef5d65c5`.
-Binaire `36bb3f85c1c764c9ade64ec15285569ab3f41cc1b12d6288d69bd4b669c7fbba`.
-Sources de jeu/assets/lock inchangés durant les essais ; preuves dans le JSON de
-concordance. Les dernières mises à jour après l’arrêt sont documentaires.
+Dépendance observée dans `Construction::candidate` : la pose s’appuie seulement
+sur le terrain et exclut le volume complet des abris6,3×3,95×6,3m. Il faut utiliser
+les vrais solides/supports pour aménager l’intérieur, pas désactiver les collisions.
+Les machines sur plancher et terrain gardent leur pose f64 au rebasage/rechargement.
 
-## Contexte permanent et compilation
+Les nombres/recettes du contrat sont un premier périmètre de conception à équilibrer,
+pas des fonctionnalités existantes. Aujourd’hui, Item a deux variantes et BuildKind
+six recettes. Réutiliser inventaire/base/énergie/contacts existants. Prévoir
+les données de sauvegarde dès chaque lot ; définir le traitement des profils4/5/6
+avant tout nouveau format, sans conversion silencieuse, écrasement ou suppression.
+Les touches1–8 de barre rapide doivent cohabiter avec la visite numérique des
+planètes via la séparation aventure/visite libre, et respecter le remappage P12.
 
-P9 : porté8/coffre16/pile20, six recettes, base collective40m ; temps réel pour
-production/renouvellement, P/T pour conditions. P10 : trois missions120/240/360m,
-F de base pour relevé/rapport, récompenses uniques, perte des données en cours
-sur échec/sortie. P11 : onze WAV originaux187020octets,huit voix maximum, alertes
-O₂30s/10s,volume/muet. Profils6 actuels, lecture4/5 conservée.
+La suite P14–P18 : habitat/fabrication avancée, transformation planétaire à cadrer,
+exploration/rover, logistique, alpha martienne ; vol et second monde ensuite.
+La terraformation est une piste cohérente avec la référence, pas un modèle détaillé
+explicitement spécifié par l’utilisateur ni une simulation scientifique livrée.
 
-Ubuntu de compilation : pkg-config/libasound2-dev absents ; sysroot local P11
-sous `/tmp/solar-p11-build-deps`, `source /tmp/solar-p11-build-deps/env.sh` pour
-Cargo si un prochain travail le requiert. Temporaire, peut disparaître ; procédé
-reproductible dans les notes P11. Aucune installation système faite. Runtime ALSA
-standard installé ; aucun chemin temporaire distribué. Windows utilise CPAL natif.
+**Méthode :** travailler par lots jouables, réutiliser les fondations, regrouper
+les vérifications nécessaires en fin d’ensemble cohérent et cibler les corrections.
+Ne pas étendre la documentation à chaque petit ajout, multiplier les captures,
+recréer les archives ou relancer les benchmarks sans besoin concret. Les règles
+AGENTS sur les changements significatifs restent applicables. Ne pas échanger
+l’intérêt du jeu contre le nombre de tests. P12/démarrage Cargo sont réparés.
 
-SI/f64/DVec3/DQuat, soustraction de l’origine avant f32, proxies en lecture.
+## Consigne de validation
+
+L’utilisateur a autorisé la campagne du 15 octobre, puis interdit de répéter la
+passe d’expédition et demandé l’arrêt des revalidations répétées. Le 16 octobre,
+« reprends » a conduit à corriger les deux aides restantes, puis « lance le jeu »
+a autorisé un contrôle rapide Mars/HUD/menu. Ensuite, le signalement d’échec de
+`cargo run` a nécessité une reproduction et une seule vérification après réparation.
+Ces demandes ne rouvrent pas les suites, benchmarks ou expéditions. Les cadrages
+P13 n’ont lancé ni compilation, ni jeu, ni tests ; aucune manipulation de la partie
+potentiellement ouverte. **Ne rien relancer automatiquement pour compléter les
+cases ouvertes.** Pour une implémentation significative future, regrouper les
+contrôles Cargo requis par AGENTS sur un ensemble cohérent ; éviter de répéter les
+mêmes parcours et respecter le créneau graphique/focus demandé par l’utilisateur.
+
+Le contrôle rapide a compilé le profil dev en 28,19 s ; captures K/Y inspectées,
+sans diagnostic. Le jeu d’essai PID16108 était fermé au début du dépannage Cargo.
+Le lancement final est **`cargo run --locked`**, compilation dev en 20,15 s puis
+fenêtre X11 et Mars visibles, sans entrée injectée, scénario SOLAR ni réglage Mesa.
+**Jeu laissé actif au contrôle final, PID18485**, session outil82592. Examiner
+l’état réel avant toute interaction, sans supposer que ce PID reste vivant.
+Ce lancement ordinaire utilise les profils normaux ; aucune écriture de sauvegarde
+ni chargement automatisé effectué par l’agent pendant ce dépannage.
+[Résultats](VALIDATION.md), preuves dans `docs/p12-validation/2026-10-16/`.
+
+## État réel et configuration du poste
+
+- P12 : 26 commandes physiques remappables, Options → Commandes (cinq pages),
+  conflits/réservations refusés, annulation/reset, modificateurs gauche/droite liés.
+  GameplayKeys partagé entre les domaines ; touches maintenues dans le menu
+  bloquées jusqu’au relâchement. Aides résolues après Interface.
+- Deux chaînes de `src/ui/construction.rs` emploient maintenant `<key:KeyE>` et
+  `<key:KeyB>` : approche d’une caisse et rappel du catalogue. K/Y vus au contrôle.
+- Clic droit, souris/molette, Entrée/Échap, flèches, 0–9, +/−, F5/F9/F12 fixes.
+  Pas de combos, manette ou remappage souris. Sauvegardes écrites en6, lues en4/5/6,
+  affectations par aventure ; formats1/2/3 refusés sans suppression.
+- P9 : porté8/coffre16/pile20, six recettes, énergie/O₂, services à40m.
+  P10 : trois missions120/240/360m, récompenses uniques et données en cours.
+  P11 : onze WAV originaux, huit voix, alertes O₂, volume/muet persistants.
+- Ubuntu/X11, i7-6700K/32Go/GTX1060 3Go NVK. L’erreur Cargo était l’absence du
+  paquet système `libasound2-dev`/`alsa.pc`, malgré le runtime ALSA présent.
+  L’ancien sysroot `/tmp/solar-p12-build-deps` **n’est plus nécessaire**.
+- Sans sudo disponible, le paquet Ubuntu `libasound2-dev 1.2.11-1ubuntu0.3`
+  correspondant au runtime est extrait dans **`.local-deps/` ignoré par Git**.
+  Son `alsa.pc` utilise un préfixe relatif et sa bibliothèque de développement
+  pointe sur le runtime installé. `.cargo/config.toml` configure
+  `PKG_CONFIG_PATH_x86_64_unknown_linux_gnu` avec ce chemin relatif ; chemins
+  système conservés. **`cargo run` fonctionne sans `source` supplémentaire**.
+  Sur un autre poste, installer normalement les prérequis du README : ce dossier
+  local n’est pas distribué. Bevy/Cargo.toml/Cargo.lock et logique audio inchangés.
+
+## Preuves historiques et limites
+
+Le 15 octobre : **165 tests CPU/ECS**, fmt/check all-targets, Clippy et release
+réussis. Une seule passe graphique des trois expéditions, 268,660s, jamais répétée.
+Menus720p/900p, backend audio réel/absent, sauvegarde/reprise, archive extraite et
+entrées natives contrôlés. Parcours automatisés avec poses parfois préparées ;
+pas de partie humaine ni d’approbation esthétique/sonore. Capture numérique audio
+sans écrêtage ; confort subjectif non établi. Voir `docs/p12-validation/2026-10-15/`
+et `docs/validation-groupee/2026-10-15/` ; leurs deux anciennes aides fixes sont
+maintenant corrigées. Le 16 octobre n’a pas rejoué les suites.
+
+Références P8 en échec avant export : **aucune comparaison de performance valide**.
+Charge64 équipements/audio actif-muet, VRAM/staging, Windows11 natif, RTX4050,
+CPU cible exact et1080p60 restent ouverts, sans relance automatique.
+
+Archive `dist/solar-survival-ubuntu-p12.tar.gz` non reconstruite depuis la retouche,
+SHA256 `1506af817db4cc20f41e8b34b040c0dfab9e41ca98fa4e6adcfc5262ef5d65c5`.
+Elle contient encore les rappels E/B du 15 octobre ; ne pas lui attribuer le code
+corrigé le16. Aucun nouveau build release demandé pour ce dépannage.
+
+## Contraintes permanentes
+
+Rust stable2024, Bevy **exactement0.19.1**, Cargo.lock versionné, Ubuntu/Windows11.
+SI/f64/DVec3/DQuat, origine soustraite avant f32, proxies en lecture.
 Input→Simulation→Navigation→Rendering→Interface ; Time<Real> orbital indépendant,
-souris sans facteur delta time. Visites spatiales translatoires, surface tournante
-et forces d’inertie omises conservées. Ubuntu/X11,i7-6700K/32Go/GTX1060 3Go NVK.
-En fin de prochain chat de développement : actualiser roadmap, validations/limites
-et cette passation, puis fournir son lien. Respecter en priorité l’arrêt des tests.
+souris sans delta time. Visites spatiales translatoires et surface tournante
+conservées. Aucun changement physique dans cette reprise. En fin de prochain chat,
+actualiser roadmap, validations/limites et cette passation, puis fournir son lien.

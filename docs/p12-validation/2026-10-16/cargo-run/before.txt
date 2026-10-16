@@ -1,0 +1,46 @@
+   Compiling alsa-sys v0.4.0
+   Compiling x11-dl v2.21.0
+error: failed to run custom build command for `alsa-sys v0.4.0`
+
+Caused by:
+  process didn't exit successfully: `/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/target/debug/build/alsa-sys-f1799c2f55b415fc/build-script-build` (exit status: 101)
+  --- stdout
+  cargo:rerun-if-env-changed=ALSA_NO_PKG_CONFIG
+  cargo:rerun-if-env-changed=PKG_CONFIG_x86_64-unknown-linux-gnu
+  cargo:rerun-if-env-changed=PKG_CONFIG_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=HOST_PKG_CONFIG
+  cargo:rerun-if-env-changed=PKG_CONFIG
+  cargo:rerun-if-env-changed=PKG_CONFIG_PATH_x86_64-unknown-linux-gnu
+  cargo:rerun-if-env-changed=PKG_CONFIG_PATH_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=HOST_PKG_CONFIG_PATH
+  cargo:rerun-if-env-changed=PKG_CONFIG_PATH
+  cargo:rerun-if-env-changed=PKG_CONFIG_LIBDIR_x86_64-unknown-linux-gnu
+  cargo:rerun-if-env-changed=PKG_CONFIG_LIBDIR_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=HOST_PKG_CONFIG_LIBDIR
+  cargo:rerun-if-env-changed=PKG_CONFIG_LIBDIR
+  cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR_x86_64-unknown-linux-gnu
+  cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=HOST_PKG_CONFIG_SYSROOT_DIR
+  cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR
+
+  --- stderr
+
+  thread 'main' (16700) panicked at /home/cfa_m2_cs/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/alsa-sys-0.4.0/build.rs:13:19:
+
+  pkg-config exited with status code 1
+  > PKG_CONFIG_ALLOW_SYSTEM_LIBS=1 PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1 pkg-config --libs --cflags alsa
+
+  pkg-config output:
+    Package alsa was not found in the pkg-config search path.
+    Perhaps you should add the directory containing `alsa.pc'
+    to the PKG_CONFIG_PATH environment variable
+    Package 'alsa', required by 'virtual:world', not found
+
+  The system library `alsa` required by crate `alsa-sys` was not found.
+  The file `alsa.pc` needs to be installed and the PKG_CONFIG_PATH environment variable must contain its parent directory.
+  The PKG_CONFIG_PATH environment variable is not set.
+
+  HINT: if you have installed the library, try setting PKG_CONFIG_PATH to the directory containing `alsa.pc`.
+
+  note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+warning: build failed, waiting for other jobs to finish...

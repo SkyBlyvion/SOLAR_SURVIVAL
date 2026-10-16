@@ -1,3 +1,107 @@
+# P13 — liste outils/construction/production — 16 octobre 2026
+
+Précisions utilisateur : référence Planet Crafter, matériaux variés, bâtiments et
+machines productives, barre rapide et aménagement intérieur/extérieur ; demande
+d’une grande liste de travail et d’un rythme de livraison plus rapide.
+[P13_GAMEPLAY](P13_GAMEPLAY.md) est réécrit en checklist priorisée, lotsA/B/C.
+Roadmap, README et passation alignés. **Aucune implémentation P13**, aucun outil,
+nouveau bâtiment ou cycle de production encore validé. La proposition précédente
+de scénario de secours est remplacée comme objectif central ; les éléments
+concernant ce scénario dans la section suivante décrivent le cadrage antérieur.
+
+Lecture ciblée du code : `Construction::candidate` prend le terrain comme support
+et exclut le volume complet des abris. La pose intérieure exige donc une vraie
+évolution du support et de l’admission, consignée dans la liste de travail.
+Documentation seulement ; contrôle du diff et des références, sans compilation,
+tests Cargo, lancement, benchmark, expédition ni manipulation du jeu ouvert.
+La méthode de lots/checks regroupés est une décision, pas un gain de temps mesuré.
+
+---
+
+# Réorientation P13 — documentation uniquement — 16 octobre 2026
+
+À la suite du retour utilisateur sur l’absence de boucle convaincante, la roadmap
+place une première aventure martienne complète avant les nouvelles extensions
+techniques. [P13_GAMEPLAY](P13_GAMEPLAY.md) définit le parcours, le périmètre et les
+critères à venir ; P14–P18 donnent une direction ajustable. **P13 non implémenté**,
+durée30–45min visée mais non mesurée, plaisir/équilibrage non validés. Les termes
+historiques « MVP » et « boucle complète » désignent les livraisons techniques.
+
+Changements documentaires seulement : README, roadmap, contrat P13 et passation.
+Relecture de cohérence et `git diff --check` ; aucun build, test Cargo, lancement,
+benchmark ou expédition. Aucune interaction avec le jeu potentiellement ouvert.
+Les preuves P12 ci-dessous restent celles de leurs exécutions respectives.
+
+---
+
+# P12 — démarrage Cargo réparé — 16 octobre 2026
+
+Le signalement « quand je fais cargo run, le jeu ne se lance pas » est reproduit :
+`alsa-sys` échoue car `alsa.pc` manque. Le lancement précédent dépendait d’un
+sysroot temporaire non chargé dans le terminal utilisateur. Ce défaut concerne
+la compilation audio Linux, avant le lancement du jeu.
+
+Sans installation système ni sudo, le véritable paquet Ubuntu
+`libasound2-dev 1.2.11-1ubuntu0.3`, correspondant au runtime installé, est extrait
+dans `.local-deps/` ignoré par Git. Son `alsa.pc` reçoit un préfixe relatif à son
+emplacement ; le lien de développement pointe sur le runtime système existant.
+`.cargo/config.toml` ajoute ce chemin pour la cible Linux GNU x86_64 ; les chemins
+système de pkg-config restent disponibles. Sur un autre poste, installer les
+prérequis normaux du README ; ce répertoire local n’est pas distribué.
+
+**Une commande `cargo run --locked` ordinaire réussit** : compilation dev optimisée
+20,15 s puis fenêtre X11 et surface martienne visibles. Aucun `source`, sysroot
+`/tmp`, scénario SOLAR ou contournement Mesa dans cet essai. Aucun nouveau
+changement Rust, test Cargo, release, benchmark ou trajet d’expédition exécuté.
+Aucun diagnostic pendant le contrôle du processus. Jeu laissé actif ; aucune
+entrée de jeu injectée pendant ce dépannage. Windows reste non vérifié.
+[Échec initial](p12-validation/2026-10-16/cargo-run/before.txt),
+[résultat](p12-validation/2026-10-16/cargo-run/result.json),
+[surface inspectée](p12-validation/2026-10-16/cargo-run/surface.png).
+
+---
+
+# P12 — lancement rapide autorisé — 16 octobre 2026
+
+À la demande « lance le jeu, voir que tout tourne bien quand même », une seule
+compilation `cargo build --locked` du profil **dev optimisé** réussit en28,19s,
+puis un lancement normal avec renderer Vulkan/NVK et backend audio. Aucun test
+Cargo, scénario automatique, benchmark ou trajet d’expédition lancé.
+
+Une copie isolée d’un ancien profil d’essai est chargée, avec récolte surK et
+construction surY préparées dans le snapshot. Les captures inspectées montrent
+Mars, le HUD et les deux rappels corrigés (« K à moins de2,5m », « Y : construction »),
+puis le menu. Aucun ERROR/WARN/panic dans le journal au contrôle. Ce démarrage
+n’est ni une validation complète du gameplay ni un benchmark ou une écoute.
+
+**Jeu laissé ouvert intentionnellement** sur la partie `Controle P12`, au menu,
+souris libre et survie suspendue. Aucun profil utilisateur modifié. Racine d’essai
+et PID dans [runtime.json](p12-validation/2026-10-16/quick-launch/runtime.json) ;
+[compilation](p12-validation/2026-10-16/quick-launch/build.txt),
+[journal](p12-validation/2026-10-16/quick-launch/game.log),
+[HUD inspecté](p12-validation/2026-10-16/quick-launch/capture-01.png).
+Les fichiers ALSA de développement ont été réextraits localement sous
+`/tmp/solar-p12-build-deps` (même version1.2.11-1ubuntu0.3 que le runtime), sans
+installation système. L’archive/release du15octobre n’a pas été reconstruite.
+
+---
+
+# P12 — deux rappels de touches corrigés — 16 octobre 2026
+
+Reprise à `808ed4d`, dépôt propre, contenant P12 et la campagne précédente.
+Les deux chaînes restantes de `src/ui/construction.rs` utilisent désormais
+`<key:KeyE>` pour l’approche d’une caisse et `<key:KeyB>` pour le catalogue.
+Le résolveur existant affiche l’affectation choisie ; aucun changement de logique.
+
+Relecture du diff et contrôle des espaces uniquement. **Aucune nouvelle
+compilation, suite Cargo, fenêtre, écoute, mesure ou passe d’expédition.** Les
+165 tests et les essais du 15 octobre ci-dessous portent sur le build précédent.
+Archive P12 du 15 octobre non reconstruite : elle précède ces deux corrections de
+texte. Les résultats de performance manquants et Windows/cible restent ouverts.
+[Contrat P12](P12_CONTROLS.md), [passation courante](NEXT_CHAT.md).
+
+---
+
 # P12 et campagne groupée — 15 octobre 2026 — arrêt demandé
 
 **165 tests CPU/ECS**, fmt/check all-targets, Clippy -D warnings et release

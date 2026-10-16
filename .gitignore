@@ -1,4 +1,5 @@
 /target/
+/.local-deps/
 *.log
 /saves/
 /dist/

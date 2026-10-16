@@ -1,0 +1,16 @@
+{
+  "date": "2026-10-16",
+  "command": "cargo run --locked",
+  "before": "Compilation alsa-sys refused: missing system alsa.pc / libasound2-dev.",
+  "fix": "Genuine Ubuntu libasound2-dev 1.2.11-1ubuntu0.3 unpacked into ignored .local-deps; relocatable alsa.pc and link to matching installed runtime. Target-scoped Cargo pkg-config fallback.",
+  "build_profile": "dev optimized",
+  "build_seconds": 20.15,
+  "launch": "Running target/debug/solar_survival; native X11 window visible; surface screenshot inspected.",
+  "pid_at_review": 18485,
+  "cargo_tool_session": 82592,
+  "environment": "Ordinary cargo invocation: no temporary sysroot, no manual source, no SOLAR_* or Mesa override. Cargo supplies the configured target pkg-config path.",
+  "diagnostics_at_review": [],
+  "scope": "One startup to verify the reported failure; no game input injected, no test suite, benchmark or expedition.",
+  "left_running": true,
+  "windows_validated": false
+}

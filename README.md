@@ -2,7 +2,14 @@
 
 Prototype d'exploration 3D de notre système solaire, fondation d'un jeu de survie spatial en première personne. **Les positions, rayons et distances physiques restent en mètres à l'échelle 1:1, en `f64`.** Bevy ne reçoit que des représentations relatives à la caméra.
 
-**P12, commandes remappables :** Options → Commandes permet de réaffecter 26 commandes, avec refus des conflits, annulation et réinitialisation. Les aides suivent les touches choisies ; positions physiques QWERTY/AZERTY. Écriture format 6, lecture 4/5 conservée. [Contrat et limites](docs/P12_CONTROLS.md). Menus720p/900p, reprise et archive contrôlés ; campagne arrêtée à la demande utilisateur. Deux rappels secondaires E/B restent à corriger ; comparaisons de performance et Windows/cible ouverts.
+**Direction actuelle : survie, construction et production, inspirées du principe
+indiqué par l’utilisateur avec Planet Crafter.** P13 est cadré, non implémenté :
+barre rapide d’outils, plusieurs matériaux, bâtiments aménageables et machines
+productives à poser à l’intérieur comme à l’extérieur. La suite développe habitat,
+fabrication, transformation planétaire, exploration et logistique.
+[Roadmap actuelle](docs/ROADMAP.md) · [Liste de travail P13](docs/P13_GAMEPLAY.md).
+
+**P12, commandes remappables :** Options → Commandes permet de réaffecter 26 commandes, avec refus des conflits, annulation et réinitialisation. Les aides suivent les touches choisies ; positions physiques QWERTY/AZERTY. Écriture format 6, lecture 4/5 conservée. [Contrat et limites](docs/P12_CONTROLS.md). Menus720p/900p, reprise et archive contrôlés ; campagne arrêtée à la demande utilisateur. Les deux derniers rappels E/B sont corrigés dans les sources le 16 octobre ; l’archive du 15 octobre précède cette retouche. Comparaisons de performance et Windows/cible ouverts.
 
 **P11, audio et alertes :** signaux de récolte, construction, relevé/rapport,
 transfert et refus ; alertes O₂ à 30 s et 10 s, recharge et épuisement. Volume
@@ -59,6 +66,14 @@ Rust stable et les extensions VS Code rust-analyzer / Even Better TOML sont inst
 source "$HOME/.cargo/env"
 cargo run
 ```
+
+Sur ce poste, les fichiers de développement ALSA sont installés localement dans
+`.local-deps/` (ignoré par Git), à partir du paquet Ubuntu correspondant au runtime
+installé. Cargo retrouve leur fichier `alsa.pc` via `.cargo/config.toml` : aucune
+commande `source` supplémentaire ni dépendance dans `/tmp` n’est nécessaire.
+Sur un autre poste, installer normalement `pkg-config` et `libasound2-dev` comme
+indiqué ci-dessous ; ce répertoire local n’est pas distribué. Le réglage de repli
+concerne uniquement la cible Linux GNU x86_64 et conserve les chemins système.
 
 La tâche VS Code **Solar Survival: lancer** fonctionne aussi avec `Terminal → Exécuter la tâche`. La première compilation Bevy peut prendre plusieurs minutes ; les suivantes réutilisent le cache. Pour obtenir de meilleures performances :
 

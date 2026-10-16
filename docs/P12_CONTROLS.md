@@ -81,8 +81,22 @@ P12/campagne groupée. Les tests CPU ne valent pas inspection ni essai matériel
 Menus inspectés à720p/900p, parcours graphique unique avec C/V, sauvegarde/reprise,
 archive et backend audio réel/absent ont des preuves dans les notes de campagne.
 **Ne plus lancer de validation ni répéter la passe d’expédition sans nouvelle
-demande explicite.** Deux rappels secondaires de `ui/construction.rs` (distance
-de caisse et rappel de catalogue) conservent encore E/B par défaut. Les autres
-aides principales sont remappées ; ne pas annoncer une couverture exhaustive.
-Comparaisons de performance et variantes restantes ouvertes, Windows/cible non
-validés. Les dernières modifications après l’arrêt sont documentaires.
+demande explicite.** Les deux rappels secondaires de `ui/construction.rs`
+(distance de caisse et rappel de catalogue) utilisent depuis le **16 octobre 2026**
+`<key:KeyE>` et `<key:KeyB>`, comme les autres aides. Ils suivent donc les
+réaffectations via le résolveur existant, sans changement des commandes.
+Cette retouche de deux chaînes n’a pas entraîné de nouvelle compilation, de test
+ou de lancement graphique ; seul le diff a été contrôlé. L’archive du 15 octobre
+ne contient pas cette correction. Les 165 tests et les preuves graphiques cités
+plus haut restent ceux du build précédent. Comparaisons de performance et
+variantes restantes ouvertes, Windows/cible non validés.
+
+
+### Lancement rapide ultérieur, le 16 octobre
+
+À la demande explicite de l’utilisateur, build dev optimisé puis lancement normal :
+les deux aidesK/Y sont confirmées à l’écran sur un profil d’essai préparé. Mars,
+HUD et menu inspectés ; aucun diagnostic observé, sans expédition ni benchmark.
+[Preuve](p12-validation/2026-10-16/quick-launch/capture-01.png). Le jeu est laissé
+ouvert au menu pour l’utilisateur. L’archive du15octobre reste antérieure à la
+retouche ; ce contrôle ne vaut pas validation générale ou native Windows.

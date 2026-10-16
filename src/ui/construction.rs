@@ -217,13 +217,13 @@ fn refresh(
                         "à droite"
                     };
                     format!(
-                        "Caisse dorée · {:.0} m · {direction} · E à moins de 2,5 m",
+                        "Caisse dorée · {:.0} m · {direction} · <key:KeyE> à moins de 2,5 m",
                         d.position_m.distance(feet)
                     )
                 })
         };
         **label.0 = format!(
-            "{header}\n{instruction}\nSources durables cyan/ocre : derrière l’arrivée à 12–16 m\nB : construction · {}",
+            "{header}\n{instruction}\nSources durables cyan/ocre : derrière l’arrivée à 12–16 m\n<key:KeyB> : construction · {}",
             c.message
         );
     }

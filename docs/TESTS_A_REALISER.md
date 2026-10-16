@@ -187,10 +187,20 @@ nécessaires ; ne pas supprimer un cas ouvert pour raccourcir la liste.
 | PERF-03/04 | Scénario64 équipements/audio actif-muet préparé mais non exécuté. RSS échantillonnée pendant validations, aucune attribution de coût ni mesure VRAM/staging complète. |
 | Windows/cible | Non exécutés : aucun hôte Windows11 ou RTX4050 accessible. |
 
-Deux aides secondaires de `src/ui/construction.rs` conservent encore les lettres
-E/B par défaut (distance de caisse et rappel de catalogue) : correction à faire
-lors d’une prochaine demande de code. Ne pas présenter P12 comme une validation
-exhaustive de toutes les aides/accessibilités.
+La limite des deux aides E/B fixes constatée le 15 octobre est corrigée dans
+les sources le **16 octobre 2026** : distance de caisse et rappel du catalogue
+utilisent les marqueurs des touches réaffectées. Diff contrôlé uniquement ; aucun
+nouveau test, build ou lancement. L’archive du 15 octobre est antérieure à cette
+retouche. Les cases ouvertes ci-dessus restent ouvertes, sans relance automatique.
 
 Aucun jeu, benchmark ou enregistrement laissé actif. Les validations ont cessé ;
 la mise à jour finale est documentaire, sans nouvelle exécution de tests.
+
+
+## Contrôle rapide distinct — 16 octobre 2026
+
+Sur demande explicite de lancer le jeu, un build dev optimisé et un lancement
+normal confirment Mars/HUD/menu et les deux aidesK/Y corrigées. Aucun test Cargo,
+benchmark ou trajet d’expédition répété. Le jeu est laissé au menu sur une partie
+d’essai isolée. [Résultat](VALIDATION.md). Aucune case de campagne supplémentaire
+cochée sur la base de ce seul démarrage.

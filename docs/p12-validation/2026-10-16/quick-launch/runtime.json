@@ -1,0 +1,24 @@
+{
+  "pid": 16108,
+  "binary": "/home/cfa_m2_cs/Documents/SOLAR_SURVIVAL/target/debug/solar_survival",
+  "binary_sha256": "8d3160f664e994f5194960ac8091ea758119993d280820253c755c077a835f2c",
+  "profile_root": "/tmp/solar-p12-quick-game-dlh6_lk7/profiles",
+  "profile": "Controle P12",
+  "profile_prepared": "Copy of the previous test profile; E remapped to K and B to Y, no user save modified.",
+  "build_profile": "dev optimized",
+  "scope": "One quick normal launch; no expedition, benchmark or automated scenario.",
+  "window": "0xa00004",
+  "running": true,
+  "left_open": "Main menu; mouse free and oxygen paused",
+  "captures": 3,
+  "diagnostics": [],
+  "running_at_review": true,
+  "inspected_captures": [
+    "capture-01.png",
+    "capture-02.png"
+  ],
+  "observed_hints": [
+    "K \u00e0 moins de 2,5 m",
+    "Y : construction"
+  ]
+}

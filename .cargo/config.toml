@@ -1,2 +1,6 @@
 [build]
 jobs = 4
+
+[env]
+# Repli local Ubuntu sans sudo ; pkg-config garde aussi ses chemins système.
+PKG_CONFIG_PATH_x86_64_unknown_linux_gnu = { value = ".local-deps/usr/lib/x86_64-linux-gnu/pkgconfig", relative = true }
